@@ -76,7 +76,6 @@ export default function B2CHeader() {
                 )}
               </div>
 
-              {/* Fixed navLinks mapping here */}
               {navLinks.map((link) => (
                 <Link 
                   key={link.name} 
@@ -94,7 +93,7 @@ export default function B2CHeader() {
               <Search className="w-5 h-5" />
             </button>
             <button className="hidden md:block bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest transition-all shadow-lg shadow-blue-600/20 active:scale-95">
-              Sign In
+              <Link href="/b2c/login">Sign In</Link>
             </button>
             
             <button onClick={() => setIsMobileMenuOpen(true)} className="lg:hidden p-2 text-white bg-white/5 rounded-lg">
@@ -104,7 +103,6 @@ export default function B2CHeader() {
         </div>
       </header>
 
-      {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div className="fixed inset-0 z-[200] bg-[#0a0a0a] animate-in slide-in-from-right duration-500 overflow-y-auto">
           <div className="p-6 flex flex-col min-h-screen">
@@ -133,7 +131,6 @@ export default function B2CHeader() {
               
               <div className="h-[1px] bg-white/10 my-4"></div>
               
-              {/* Corrected mobile nav links mapping */}
               {navLinks.map((link) => (
                 <Link 
                   key={link.name} 
@@ -147,13 +144,12 @@ export default function B2CHeader() {
             </div>
 
             <div className="mt-auto pt-12 flex flex-col gap-4">
-              <button className="w-full py-4 rounded-2xl bg-white/5 text-white font-bold uppercase tracking-widest text-xs">Login</button>
+              <Link href="/b2c/login"><button className="w-full py-4 rounded-2xl bg-white/5 text-white font-bold uppercase tracking-widest text-xs">Login</button></Link>
             </div>
           </div>
         </div>
       )}
 
-      {/* Search Modal - remains same but fixed for mobile scaling */}
       {isSearchOpen && (
         <div className="fixed inset-0 z-[200] bg-black/95 backdrop-blur-2xl p-6 flex flex-col items-center justify-center animate-in fade-in duration-300">
           <button onClick={() => setIsSearchOpen(false)} className="absolute top-10 right-10 text-slate-400 hover:text-white transition-colors">
