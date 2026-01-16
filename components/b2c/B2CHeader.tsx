@@ -13,6 +13,13 @@ const programs = [
   { name: 'InternX-Web3', href: '/b2c/internx-web3', desc: 'Semantic Web & AI' },
 ];
 
+const navLinks = [
+  { name: 'Masterclass', href: '/b2c/masterclass' },
+  { name: 'Alumni', href: '/b2c/alumni' },
+  { name: 'Research', href: '/b2c/research' },
+  { name: 'Advisory Council', href: '/b2c/advisory-council' },
+];
+
 export default function B2CHeader() {
   const [isProgramsOpen, setIsProgramsOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -47,6 +54,7 @@ export default function B2CHeader() {
               />
             </Link>
 
+            {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center gap-2">
               <div className="relative group h-20 flex items-center" 
                    onMouseEnter={() => setIsProgramsOpen(true)} 
@@ -54,6 +62,7 @@ export default function B2CHeader() {
                 <button className="flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-widest text-slate-400 hover:text-white transition-colors">
                   Programs <ChevronDown className={`w-3 h-3 transition-transform duration-300 ${isProgramsOpen ? 'rotate-180' : ''}`} />
                 </button>
+                
                 {isProgramsOpen && (
                   <div className="absolute top-full left-0 w-[320px] bg-[#0f172a] border border-white/10 shadow-2xl rounded-2xl py-6 animate-in fade-in slide-in-from-top-2">
                     <div className="px-6 mb-4 text-[10px] font-black text-blue-500 uppercase tracking-widest">InternX Ecosystem</div>
@@ -66,9 +75,15 @@ export default function B2CHeader() {
                   </div>
                 )}
               </div>
-              {['Masterclass', 'Alumni', 'Research', 'Advisory Council'].map((link) => (
-                <Link key={link} href="#" className="px-4 py-2 text-xs font-bold uppercase tracking-widest text-slate-400 hover:text-white transition-colors">
-                  {link}
+
+              {/* Fixed navLinks mapping here */}
+              {navLinks.map((link) => (
+                <Link 
+                  key={link.name} 
+                  href={link.href} 
+                  className="px-4 py-2 text-[10px] md:text-xs font-bold uppercase tracking-widest text-slate-400 hover:text-white transition-colors whitespace-nowrap"
+                >
+                  {link.name}
                 </Link>
               ))}
             </nav>
@@ -89,6 +104,7 @@ export default function B2CHeader() {
         </div>
       </header>
 
+      {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div className="fixed inset-0 z-[200] bg-[#0a0a0a] animate-in slide-in-from-right duration-500 overflow-y-auto">
           <div className="p-6 flex flex-col min-h-screen">
@@ -117,9 +133,15 @@ export default function B2CHeader() {
               
               <div className="h-[1px] bg-white/10 my-4"></div>
               
-              {['Masterclass', 'Alumni', 'Research'].map(link => (
-                <Link key={link} href="#" onClick={() => setIsMobileMenuOpen(false)} className="text-2xl font-bold text-white">
-                  {link}
+              {/* Corrected mobile nav links mapping */}
+              {navLinks.map((link) => (
+                <Link 
+                  key={link.name} 
+                  href={link.href} 
+                  onClick={() => setIsMobileMenuOpen(false)} 
+                  className="text-2xl font-bold text-white hover:text-blue-500 transition-colors"
+                >
+                  {link.name}
                 </Link>
               ))}
             </div>
@@ -131,6 +153,7 @@ export default function B2CHeader() {
         </div>
       )}
 
+      {/* Search Modal - remains same but fixed for mobile scaling */}
       {isSearchOpen && (
         <div className="fixed inset-0 z-[200] bg-black/95 backdrop-blur-2xl p-6 flex flex-col items-center justify-center animate-in fade-in duration-300">
           <button onClick={() => setIsSearchOpen(false)} className="absolute top-10 right-10 text-slate-400 hover:text-white transition-colors">
@@ -140,7 +163,7 @@ export default function B2CHeader() {
             <form onSubmit={handleSearch} className="relative">
               <input 
                 autoFocus 
-                className="w-full bg-transparent border-b-2 border-white/10 py-6 text-2xl text-white outline-none focus:border-blue-500 font-light transition-all"
+                className="w-full bg-transparent border-b-2 border-white/10 py-6 text-xl md:text-2xl text-white outline-none focus:border-blue-500 font-light transition-all"
                 placeholder="Ask about internships..." 
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -152,7 +175,7 @@ export default function B2CHeader() {
             {searchResult && (
               <div className="mt-12 p-8 rounded-3xl bg-blue-600/10 border border-blue-500/20 animate-in slide-in-from-bottom-4">
                 <p className="text-blue-400 text-[10px] font-black uppercase tracking-[0.2em] mb-4">AI Guidance</p>
-                <p className="text-slate-200 text-lg leading-relaxed italic">"{searchResult}"</p>
+                <p className="text-slate-200 text-base md:text-lg leading-relaxed italic">"{searchResult}"</p>
               </div>
             )}
           </div>
