@@ -10,11 +10,8 @@ export default function InternXBlockchain() {
     <main className="min-h-screen bg-[#000000] text-white selection:bg-blue-500/30">
       <B2CHeader />
 
-      {/* --- HERO: CLEAN & BOLD --- */}
       <section className="relative pt-40 pb-24 px-6 overflow-hidden">
-        {/* Ambient background glow - No extra CSS needed */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-900/20 via-transparent to-transparent pointer-events-none" />
-
         <div className="max-w-7xl mx-auto relative z-10 text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1 mb-8 rounded-full border border-blue-500/20 bg-blue-500/5 backdrop-blur-md">
             <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
@@ -42,12 +39,9 @@ export default function InternXBlockchain() {
         </div>
       </section>
 
-      {/* --- THE BENTO CORE: NO CUSTOM CSS --- */}
       <section className="py-20 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            
-            {/* Card 1: Large Typography */}
             <div className="md:col-span-2 p-12 bg-gradient-to-br from-[#0a0a0a] to-[#050505] border border-white/5 rounded-[3rem] flex flex-col justify-between h-[400px] group hover:border-blue-500/30 transition-all">
               <div className="flex justify-between items-start">
                 <div className="p-4 bg-blue-500/10 rounded-2xl">
@@ -69,7 +63,6 @@ export default function InternXBlockchain() {
                </div>
             </div>
 
-            {/* Row 2: Grid of 3 */}
             <div className="p-10 bg-[#080808] border border-white/5 rounded-[3rem] group hover:bg-blue-900/10 transition-colors">
                <Lock className="w-10 h-10 text-blue-500 mb-6" />
                <h4 className="text-xl font-black uppercase mb-3">Immutable</h4>
@@ -92,7 +85,6 @@ export default function InternXBlockchain() {
         </div>
       </section>
 
-      {/* --- FEATURE HIGHLIGHT --- */}
       <section className="py-24 px-6 bg-[#030303]">
         <div className="max-w-5xl mx-auto border border-white/10 rounded-[4rem] p-12 md:p-20 text-center relative overflow-hidden">
           <div className="absolute inset-0 bg-blue-600/5 pointer-events-none" />
