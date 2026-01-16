@@ -1,6 +1,7 @@
 import B2CHeader from '@/components/b2c/B2CHeader';
 import B2CHero from '@/components/b2c/B2CHero';
 import LMSPreview from '@/components/b2c/LMSPreview'; 
+import CourseGrid from '@/components/b2c/CourseGrid';
 import CurriculumSection from '@/components/b2c/CurriculumSection';
 import { ArrowRight, Brain, Shield, Database, LayoutPanelTop } from 'lucide-react';
 import MentorshipSection from '@/components/b2c/MentorshipSection';
@@ -47,6 +48,7 @@ export default function B2CPage() {
         </section>
 
         <LMSPreview />
+        <CourseGrid />
         <CurriculumSection />
         <MentorshipSection />
         <AlumniSuccess />
