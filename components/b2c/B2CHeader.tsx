@@ -59,7 +59,7 @@ export default function B2CHeader() {
                    onMouseEnter={() => setIsProgramsOpen(true)} 
                    onMouseLeave={() => setIsProgramsOpen(false)}>
                 <button className="flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-widest text-slate-400 hover:text-white transition-colors">
-                  Programs <ChevronDown className={`w-3 h-3 transition-transform duration-300 ${isProgramsOpen ? 'rotate-180' : ''}`} />
+                  Internship <ChevronDown className={`w-3 h-3 transition-transform duration-300 ${isProgramsOpen ? 'rotate-180' : ''}`} />
                 </button>
                 
                 {isProgramsOpen && (
