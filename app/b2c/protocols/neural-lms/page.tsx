@@ -1,156 +1,190 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import B2CHeader from '@/components/b2c/B2CHeader';
 import Footer from '@/components/b2c/Footer';
 import { 
-  Cpu, 
-  Brain, 
-  Bot, 
-  Zap, 
-  ShieldAlert, 
-  Network, 
-  Activity,
-  ChevronRight,
-  Terminal,
-  Search,
-  Sparkles
+  Cpu, Brain, Bot, Zap, ShieldAlert, Network, Activity,
+  ChevronRight, Terminal, Search, Sparkles, X, Fingerprint, 
+  FileCode, Send, User, Loader2
 } from 'lucide-react';
 
 export default function NeuralLMS() {
-  const [aiStatus, setAiStatus] = useState('ANALYZING_COGNITIVE_LOAD');
-  const [progress, setProgress] = useState(0);
+  const [activeModal, setActiveModal] = useState<'sync' | 'docs' | null>(null);
+  const [isChatting, setIsChatting] = useState(false);
+  const [messages, setMessages] = useState([
+    { role: 'ai', text: 'Neural Handshake successful. I am your Autonomous Learning Agent. What is your primary engineering goal?' }
+  ]);
+  const [input, setInput] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
+  const chatEndRef = useRef<HTMLDivElement>(null);
 
-  // AI Processing Simulation Effect
+  // Auto scroll to bottom of chat
   useEffect(() => {
-    const statuses = ['MAPPING_SKILL_GRAPH', 'OPTIMIZING_CONTENT_NODES', 'NEURAL_SYNC_ACTIVE', 'ANALYZING_COGNITIVE_LOAD'];
-    const interval = setInterval(() => {
-      setAiStatus(statuses[Math.floor(Math.random() * statuses.length)]);
-      setProgress(Math.floor(Math.random() * 100));
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, isTyping]);
+
+  const handleSendMessage = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim()) return;
+
+    const userMsg = input;
+    setMessages(prev => [...prev, { role: 'user', text: userMsg }]);
+    setInput('');
+    setIsTyping(true);
+
+    // Simulate AI thinking & response
+    setTimeout(() => {
+      setIsTyping(false);
+      setMessages(prev => [...prev, { 
+        role: 'ai', 
+        text: `Analysis complete for: "${userMsg}". Optimizing your neural path for Full-Stack AI development. Ready to begin?` 
+      }]);
+    }, 1500);
+  };
 
   return (
-    <main className="min-h-screen bg-[#020617] text-white selection:bg-blue-500/30 overflow-x-hidden">
+    <main className="min-h-screen bg-[#020617] text-white selection:bg-blue-500/30 overflow-x-hidden font-sans">
       <B2CHeader />
 
-      {/* --- HERO SECTION: THE AI BRAIN --- */}
+      {/* --- HERO SECTION --- */}
       <section className="relative pt-32 pb-20 px-6 overflow-hidden">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600/20 blur-[120px] rounded-full animate-pulse" />
-        
-        <div className="max-w-7xl mx-auto relative z-10">
-          <div className="flex flex-col items-center text-center space-y-8">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600/10 blur-[120px] rounded-full" />
+        <div className="max-w-7xl mx-auto relative z-10 text-center">
+          <div className="flex flex-col items-center space-y-8">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-blue-500/30 bg-blue-500/10 backdrop-blur-md">
               <Bot className="w-4 h-4 text-blue-400" />
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-400">Autonomous AI Agent Protocol v2.0</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-400">Autonomous Protocol Active</span>
             </div>
 
-            <h1 className="text-5xl md:text-9xl font-black uppercase italic tracking-tighter leading-[0.8] mb-4">
+            <h1 className="text-6xl md:text-9xl font-black uppercase italic tracking-tighter leading-[0.8]">
               NEURAL <span className="text-blue-600">LMS</span>
             </h1>
             
-            <p className="text-slate-400 text-base md:text-xl max-w-3xl mx-auto font-medium leading-relaxed">
-              Experience an Autonomous Learning Engine that evolves with your brain. Powered by Gemini-1.5-Pro to personalize every micro-module.
+            <p className="text-slate-400 text-lg md:text-xl max-w-2xl mx-auto font-medium">
+              The world's first AI-driven learning engine that builds itself around your brain.
             </p>
 
             <div className="flex flex-wrap justify-center gap-4 pt-4">
-              <button className="px-8 py-4 bg-blue-600 rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-white hover:text-black transition-all shadow-[0_0_30px_rgba(37,99,235,0.3)]">
-                Initialize Neural Sync
+              <button 
+                onClick={() => setActiveModal('sync')}
+                className="px-10 py-5 bg-blue-600 rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-white hover:text-black transition-all shadow-xl shadow-blue-600/20 flex items-center gap-2"
+              >
+                <Fingerprint size={18} /> Initialize Neural Sync
               </button>
-              <button className="px-8 py-4 border border-white/10 rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-white/5 transition-all">
-                View Documentation
+              <button 
+                onClick={() => setActiveModal('docs')}
+                className="px-10 py-5 border border-white/10 rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-white/5 transition-all flex items-center gap-2"
+              >
+                <FileCode size={18} /> View Docs
               </button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* --- AUTONOMOUS STATUS DASHBOARD --- */}
-      <section className="py-10 px-4">
-        <div className="max-w-6xl mx-auto bg-[#050814] border border-white/5 rounded-[2.5rem] p-6 md:p-10 relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-8 opacity-10">
-            <Network size={200} />
-          </div>
+      {/* --- POPUP MODAL --- */}
+      {activeModal && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-[#020617]/90 backdrop-blur-xl" onClick={() => setActiveModal(null)} />
+          
+          <div className="relative w-full max-w-2xl bg-[#0a0f1d] border border-white/10 rounded-[2.5rem] overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300">
+            <button 
+              onClick={() => setActiveModal(null)}
+              className="absolute top-6 right-6 p-2 z-50 hover:bg-white/10 rounded-full transition-all"
+            >
+              <X size={20} />
+            </button>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 relative z-10">
-            {/* Left: AI Terminal */}
-            <div className="lg:col-span-7 space-y-6">
-              <div className="flex items-center gap-3 mb-8">
-                <div className="w-12 h-12 bg-blue-600/20 rounded-2xl flex items-center justify-center text-blue-500 border border-blue-500/20">
-                  <Terminal size={24} />
+            {/* NEURAL SYNC CHAT INTERFACE */}
+            {activeModal === 'sync' && (
+              <div className="flex flex-col h-[600px] md:h-[700px]">
+                {/* Chat Header */}
+                <div className="p-8 border-b border-white/5 bg-blue-600/5">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-2xl bg-blue-600 flex items-center justify-center animate-pulse">
+                      <Brain className="text-white" size={24} />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-black uppercase italic tracking-tight">Neural Agent</h3>
+                      <p className="text-[10px] text-emerald-500 font-bold uppercase tracking-widest flex items-center gap-1">
+                         <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-ping" /> Real-time Sync Active
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-xl font-black uppercase italic">AI Autonomous Agent</h3>
-                  <p className="text-[10px] text-emerald-500 font-bold tracking-widest uppercase">● System Operational</p>
+
+                {/* Message Area */}
+                <div className="flex-1 overflow-y-auto p-8 space-y-6 no-scrollbar">
+                  {messages.map((msg, i) => (
+                    <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                      <div className={`max-w-[85%] flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
+                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${msg.role === 'user' ? 'bg-white/10' : 'bg-blue-600/20 text-blue-500'}`}>
+                          {msg.role === 'user' ? <User size={14} /> : <Bot size={14} />}
+                        </div>
+                        <div className={`p-4 rounded-2xl text-sm leading-relaxed ${msg.role === 'user' ? 'bg-blue-600 text-white font-bold' : 'bg-white/[0.03] border border-white/5 text-slate-300'}`}>
+                          {msg.text}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  {isTyping && (
+                    <div className="flex justify-start">
+                      <div className="bg-white/[0.03] border border-white/5 p-4 rounded-2xl flex items-center gap-2 text-slate-500">
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <span className="text-[10px] font-black uppercase tracking-widest">Agent Thinking...</span>
+                      </div>
+                    </div>
+                  )}
+                  <div ref={chatEndRef} />
+                </div>
+
+                {/* Input Area */}
+                <form onSubmit={handleSendMessage} className="p-6 border-t border-white/5 bg-black/20">
+                  <div className="relative">
+                    <input 
+                      type="text" 
+                      value={input}
+                      onChange={(e) => setInput(e.target.value)}
+                      placeholder="Type your goals (e.g. Master Generative AI)..."
+                      className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm focus:outline-none focus:border-blue-600 transition-all pr-14"
+                    />
+                    <button 
+                      type="submit"
+                      className="absolute right-2 top-2 bottom-2 w-10 bg-blue-600 hover:bg-blue-500 rounded-xl flex items-center justify-center transition-all"
+                    >
+                      <Send size={16} />
+                    </button>
+                  </div>
+                  <p className="text-center text-[8px] text-slate-600 mt-4 uppercase font-bold tracking-[0.2em]">
+                    Powered by Gemini 1.5 Pro • Career Lab Consulting
+                  </p>
+                </form>
+              </div>
+            )}
+
+            {/* DOCUMENTATION MODAL (Static) */}
+            {activeModal === 'docs' && (
+              <div className="p-10">
+                <h3 className="text-3xl font-black uppercase italic mb-8 flex items-center gap-3">
+                  <FileCode className="text-blue-500" /> System Protocols
+                </h3>
+                <div className="grid gap-4">
+                  {['Cognitive Pathing', 'Skill-to-Earn Ledger', 'Neural Grading'].map((item, i) => (
+                    <div key={i} className="p-6 rounded-3xl bg-white/[0.02] border border-white/5 hover:border-blue-500/50 transition-all cursor-pointer group flex justify-between items-center">
+                      <div>
+                        <h4 className="text-sm font-black uppercase text-blue-400 mb-1">{item}</h4>
+                        <p className="text-[10px] text-slate-500 uppercase tracking-tighter">Protocol v1.0.{i+1} active</p>
+                      </div>
+                      <ChevronRight className="group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  ))}
                 </div>
               </div>
-
-              <div className="bg-black/50 border border-white/10 rounded-2xl p-6 font-mono text-[11px] md:text-sm text-blue-400/80 space-y-2">
-                <p className="flex gap-2"><span>{'>'}</span> <span className="text-slate-500 italic">Initializing Gemini-v1.5 API...</span></p>
-                <p className="flex gap-2"><span>{'>'}</span> <span>Fetching cognitive weights for user_session_882</span></p>
-                <p className="flex gap-2 text-white"><span>{'>'}</span> <span className="animate-pulse">STATUS: {aiStatus}</span></p>
-                <div className="w-full bg-white/5 h-1.5 rounded-full mt-4 overflow-hidden">
-                   <div className="bg-blue-600 h-full transition-all duration-1000" style={{ width: `${progress}%` }} />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                 {[
-                   { label: 'Neural Nodes', val: '1.2M+', icon: <Network size={14}/> },
-                   { label: 'Latency', val: '42ms', icon: <Zap size={14}/> },
-                   { label: 'Cognitive IQ', val: '148', icon: <Brain size={14}/> }
-                 ].map((stat, i) => (
-                   <div key={i} className="p-4 rounded-2xl bg-white/[0.02] border border-white/5">
-                      <div className="text-slate-500 mb-1">{stat.icon}</div>
-                      <div className="text-lg font-black">{stat.val}</div>
-                      <div className="text-[8px] text-slate-500 uppercase font-bold tracking-widest">{stat.label}</div>
-                   </div>
-                 ))}
-              </div>
-            </div>
-
-            {/* Right: AI "Thought" Cards */}
-            <div className="lg:col-span-5 flex flex-col justify-center space-y-4">
-              <div className="p-6 bg-gradient-to-br from-blue-600/20 to-transparent border border-blue-500/20 rounded-[2rem] hover:scale-[1.02] transition-transform">
-                <Sparkles className="text-blue-500 mb-4" size={24} />
-                <h4 className="text-lg font-black uppercase italic mb-2">Self-Evolving Modules</h4>
-                <p className="text-xs text-slate-400 leading-relaxed font-medium">The Agent identifies your weak areas in Web3/AI and auto-generates custom practice labs to fill the gap.</p>
-              </div>
-              <div className="p-6 bg-white/[0.02] border border-white/5 rounded-[2rem] hover:scale-[1.02] transition-transform">
-                <Search className="text-slate-400 mb-4" size={24} />
-                <h4 className="text-lg font-black uppercase italic mb-2">Real-time Research</h4>
-                <p className="text-xs text-slate-400 leading-relaxed font-medium">Auto-scrapes the latest ArXiv papers to ensure your learning is never more than 24 hours behind industry tech.</p>
-              </div>
-            </div>
+            )}
           </div>
         </div>
-      </section>
-
-      {/* --- FEATURE SECTION: BENTO GRID --- */}
-      <section className="py-24 px-6 max-w-7xl mx-auto">
-         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div className="md:col-span-2 bg-white/[0.03] border border-white/5 p-8 rounded-[3rem] min-h-[300px] flex flex-col justify-between group">
-               <Cpu size={40} className="text-blue-600 group-hover:rotate-12 transition-transform" />
-               <div>
-                  <h3 className="text-3xl font-black uppercase italic mb-4">Autonomous <br /> Grade Engine</h3>
-                  <p className="text-sm text-slate-500 font-medium">Your code is analyzed for logic, efficiency, and security by a fleet of AI reviewers.</p>
-               </div>
-            </div>
-            <div className="bg-emerald-500/10 border border-emerald-500/20 p-8 rounded-[3rem] flex flex-col items-center text-center justify-center">
-               <Activity className="text-emerald-500 mb-4 animate-bounce" />
-               <h3 className="text-xl font-black uppercase italic">Live Sync</h3>
-               <p className="text-[10px] text-slate-400 mt-2">Connecting your neural state to the global ledger.</p>
-            </div>
-            <div className="bg-blue-600 p-8 rounded-[3rem] flex flex-col justify-between text-white">
-               <div className="flex justify-between items-start">
-                  <ShieldAlert size={32} />
-                  <ChevronRight size={20} />
-               </div>
-               <h3 className="text-xl font-black uppercase italic">Anti-Cheat <br /> Protocol</h3>
-            </div>
-         </div>
-      </section>
+      )}
 
       <Footer />
     </main>
