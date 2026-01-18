@@ -2,196 +2,175 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Mic, MicOff, Volume2, VolumeX, Sparkles, Zap, BrainCircuit, Bot } from 'lucide-react';
-import B2CHeader from '@/components/b2c/B2CHeader';
-import Footer from '@/components/b2c/Footer';
+import { Mic, MicOff, Volume2, Bot, Sparkles, MessageCircle, Phone, Building2, Users } from 'lucide-react';
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/sections/Footer";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY!);
+const CLC_CONTEXT = `
+You are the Official AI Career Expert for Career Lab Consulting (CLC) Pvt Ltd.
+Address: 5th Floor, Cyber Green Part-1, DLF Building No-2, Sector 25, Gurugram, Haryana 122002.
+B2C Services: Software Testing, Cloud Computing, Data Science, InternX-AI (₹1,00,000).
+B2B Services: Corporate Training, Bulk Talent Acquisition, Campus Recruitment.
+WhatsApp/Call: +91 8700236923.
+Tone: Professional and concise. Keep answers strictly under 25 words.
+`;
 
 export default function AIVoicePage() {
   const [isListening, setIsListening] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [aiResponse, setAiResponse] = useState('');
-  const [status, setStatus] = useState('Idle'); // Idle, Listening, Processing, Speaking
+  const [status, setStatus] = useState('Idle');
+  const [genderFilter, setGenderFilter] = useState<'male' | 'female'>('female');
 
   const recognitionRef = useRef<any>(null);
   const synthRef = useRef<SpeechSynthesis | null>(null);
 
+  const contactNumber = "+918700236923";
+
   useEffect(() => {
-    // Initialize Web Speech API
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const SpeechRecognition = typeof window !== 'undefined' && ((window as any).SpeechRecognition || (window as any).webkitSpeechRecognition);
+    
     if (SpeechRecognition) {
       recognitionRef.current = new SpeechRecognition();
-      recognitionRef.current.continuous = false;
-      recognitionRef.current.interimResults = false;
-      recognitionRef.current.lang = 'en-US';
+      recognitionRef.current.continuous = false; 
+      recognitionRef.current.interimResults = true;
+      recognitionRef.current.lang = 'en-IN';
 
-      recognitionRef.current.onresult = async (event: any) => {
-        const text = event.results[0][0].transcript;
+      recognitionRef.current.onstart = () => { setIsListening(true); setStatus('Listening...'); };
+      recognitionRef.current.onresult = (event: any) => {
+        const current = event.results[event.results.length - 1];
+        const text = current[0].transcript;
         setTranscript(text);
-        processWithAI(text);
+        if (current.isFinal) { processWithAI(text); recognitionRef.current.stop(); }
       };
-
-      recognitionRef.current.onend = () => {
-        if (isListening) setIsListening(false);
+      recognitionRef.current.onerror = (event: any) => {
+        setIsListening(false);
+        setStatus(event.error === 'no-speech' ? 'No speech detected.' : 'Error: ' + event.error);
       };
+      recognitionRef.current.onend = () => { setIsListening(false); setStatus((prev) => (prev === 'Listening...' ? 'Idle' : prev)); };
     }
-    synthRef.current = window.speechSynthesis;
+
+    if (typeof window !== 'undefined') synthRef.current = window.speechSynthesis;
+    return () => { if (synthRef.current) synthRef.current.cancel(); };
   }, []);
 
   const processWithAI = async (userInput: string) => {
-    setStatus('Processing');
+    if (!userInput.trim()) return;
+    setStatus('Thinking...');
     try {
+      const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+      if (!apiKey) return setStatus("API Key Missing");
+      const genAI = new GoogleGenerativeAI(apiKey);
       const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-      const prompt = `You are a helpful Career Lab Consulting (CLC) AI Assistant. Short and concise response only. Question: ${userInput}`;
-      
-      const result = await model.generateContent(prompt);
-      const response = await result.response;
-      const text = response.text();
-      
+      const result = await model.generateContent(`${CLC_CONTEXT}\nUser: ${userInput}\nResponse:`);
+      const text = result.response.text();
       setAiResponse(text);
       speak(text);
-    } catch (error) {
-      console.error("AI Error:", error);
-      setStatus('Idle');
-    }
+    } catch (error) { setStatus('AI Error. Try again.'); }
   };
 
   const speak = (text: string) => {
     if (!synthRef.current) return;
-    setStatus('Speaking');
-    setIsSpeaking(true);
-
+    synthRef.current.cancel(); 
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.onend = () => {
-      setIsSpeaking(false);
-      setStatus('Idle');
-    };
+    const voices = synthRef.current.getVoices();
+    utterance.voice = voices.find(v => genderFilter === 'female' ? v.name.includes('India') : v.name.includes('David')) || voices[0];
+    utterance.onstart = () => { setIsSpeaking(true); setStatus('Speaking...'); };
+    utterance.onend = () => { setIsSpeaking(false); setStatus('Idle'); };
     synthRef.current.speak(utterance);
   };
 
-  const toggleListening = () => {
-    if (isListening) {
-      recognitionRef.current?.stop();
-      setIsListening(false);
-      setStatus('Idle');
-    } else {
-      setTranscript('');
-      setAiResponse('');
-      recognitionRef.current?.start();
-      setIsListening(true);
-      setStatus('Listening');
+  const toggleMic = () => {
+    if (isListening) recognitionRef.current?.stop();
+    else {
+      setTranscript(''); setAiResponse('');
+      if (synthRef.current) synthRef.current.cancel();
+      try { recognitionRef.current?.start(); } catch (e) { console.error(e); }
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#020617] text-white flex flex-col selection:bg-blue-500/30">
-      <B2CHeader />
-
-      <main className="flex-grow flex flex-col items-center justify-center px-4 pt-20">
+    <div className="min-h-screen bg-[#020617] text-white flex flex-col">
+      <Navbar portal="B2B" />
+      
+      <main className="flex-grow flex flex-col items-center justify-center px-4 pt-10 pb-10">
         
-        {/* Top Branding */}
-        <motion.div 
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
-        >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold uppercase tracking-[0.3em] mb-4">
-            <BrainCircuit size={16} /> Neural Voice Engine
-          </div>
-          <h1 className="text-4xl md:text-6xl font-black italic uppercase tracking-tighter">
-            Speak with <span className="text-blue-500">CLC AI</span>
-          </h1>
-        </motion.div>
+        <div className="mb-8 text-center animate-fade-in">
+            <span className="bg-blue-600/20 text-blue-400 text-[10px] px-3 py-1 rounded-full border border-blue-600/30 font-bold tracking-tighter">B2B & CORPORATE SOLUTIONS AVAILABLE</span>
+        </div>
 
-        {/* AI Voice Visualizer Container */}
-        <div className="relative w-full max-w-2xl aspect-square md:aspect-video flex items-center justify-center bg-white/[0.02] border border-white/10 rounded-[60px] overflow-hidden shadow-3xl backdrop-blur-sm">
-          
-          {/* Animated Background Pulse */}
-          <AnimatePresence>
-            {(isListening || isSpeaking) && (
-              <motion.div 
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1.2, opacity: 1 }}
-                exit={{ scale: 0.8, opacity: 0 }}
-                transition={{ duration: 1, repeat: Infinity, repeatType: "reverse" }}
-                className={`absolute w-64 h-64 rounded-full blur-[100px] ${isListening ? 'bg-blue-600/30' : 'bg-purple-600/30'}`}
-              />
-            )}
-          </AnimatePresence>
+        <div className="flex bg-slate-900 border border-white/10 p-1 rounded-full mb-12">
+          {['female', 'male'].map((v) => (
+            <button key={v} onClick={() => setGenderFilter(v as any)}
+              className={`px-8 py-2 rounded-full text-[10px] font-bold uppercase transition-all ${genderFilter === v ? 'bg-blue-600 shadow-lg' : 'text-slate-400 hover:text-white'}`}>
+              {v} Voice
+            </button>
+          ))}
+        </div>
 
-          {/* Central Orbit / Brain */}
-          <div className="relative z-10 flex flex-col items-center gap-8">
-            <motion.div 
-              animate={isListening || isSpeaking ? {
-                scale: [1, 1.1, 1],
-                rotate: [0, 90, 180, 270, 360]
-              } : {}}
-              transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-              className="w-40 h-40 rounded-full border-2 border-dashed border-blue-500/50 flex items-center justify-center p-4"
-            >
-              <div className={`w-full h-full rounded-full flex items-center justify-center shadow-[0_0_50px_rgba(59,130,246,0.5)] transition-colors duration-500 ${isListening ? 'bg-blue-600' : 'bg-slate-800'}`}>
-                {isSpeaking ? <Volume2 size={40} className="animate-bounce" /> : <Bot size={40} />}
-              </div>
-            </motion.div>
-
-            {/* Status Text */}
-            <div className="text-center space-y-2">
-              <p className="text-blue-400 font-black uppercase tracking-widest text-sm animate-pulse">
-                {status}...
-              </p>
-              <p className="text-slate-400 italic text-sm max-w-sm px-6">
-                {transcript || "Click the mic and ask: 'How can CLC help me with my career?'"}
-              </p>
+        <div className="relative flex items-center justify-center">
+          <motion.div animate={isListening || isSpeaking ? { scale: [1, 1.25, 1], opacity: [0.2, 0.5, 0.2] } : {}}
+            transition={{ duration: 1.5, repeat: Infinity }}
+            className={`absolute w-80 h-80 rounded-full blur-[80px] ${isListening ? 'bg-blue-500/40' : isSpeaking ? 'bg-purple-600/40' : 'bg-transparent'}`}
+          />
+          <div className="relative w-64 h-64 bg-slate-900/80 border border-white/10 rounded-full flex flex-col items-center justify-center p-6 text-center backdrop-blur-md">
+            <div className={`mb-4 p-4 rounded-2xl ${isListening ? 'bg-blue-600' : 'bg-white/5'}`}>
+              {isSpeaking ? <Volume2 className="animate-pulse" /> : <Bot size={32} className={isListening ? 'text-white' : 'text-blue-400'} />}
             </div>
-          </div>
-
-          {/* Audio Waveform Simulation */}
-          <div className="absolute bottom-12 flex gap-1 h-12 items-center">
-            {[...Array(20)].map((_, i) => (
-              <motion.div
-                key={i}
-                animate={isListening || isSpeaking ? {
-                  height: [10, Math.random() * 40 + 10, 10]
-                } : { height: 4 }}
-                transition={{ duration: 0.5, repeat: Infinity, delay: i * 0.05 }}
-                className="w-1 bg-blue-500 rounded-full opacity-50"
-              />
-            ))}
+            <h3 className="text-blue-500 font-bold text-[10px] tracking-widest uppercase mb-2">{status}</h3>
+            <p className="text-xs text-slate-400 italic min-h-[3em]">{transcript || "Ask about Careers or B2B Training"}</p>
           </div>
         </div>
 
-        {/* Control Button */}
-        <div className="mt-12 flex flex-col items-center gap-4">
-          <button 
-            onClick={toggleListening}
-            className={`group relative p-8 rounded-full transition-all transform active:scale-90 ${isListening ? 'bg-red-500 shadow-[0_0_40px_rgba(239,68,68,0.4)]' : 'bg-blue-600 shadow-[0_0_40px_rgba(59,130,246,0.4)]'}`}
-          >
-            {isListening ? <MicOff size={32} /> : <Mic size={32} />}
-            <span className="absolute -bottom-10 left-1/2 -translate-x-1/2 text-[10px] font-black uppercase tracking-widest text-slate-500 whitespace-nowrap group-hover:text-blue-500 transition-colors">
-              {isListening ? 'Stop Recording' : 'Start Conversation'}
-            </span>
-          </button>
+        <div className="mt-12 flex items-center gap-6">
+            <a href={`tel:${contactNumber}`} className="p-4 rounded-full bg-slate-800 border border-white/10 hover:bg-slate-700 transition-all">
+                <Phone size={20} className="text-blue-400" />
+            </a>
+            <button onClick={toggleMic} className={`p-10 rounded-full transition-all relative ${isListening ? 'bg-red-500' : 'bg-blue-600 shadow-2xl shadow-blue-500/30'}`}>
+                {isListening ? <MicOff size={32} /> : <Mic size={32} />}
+                {isListening && <span className="absolute inset-0 rounded-full border-4 border-red-400 animate-ping opacity-75"></span>}
+            </button>
+            <a href={`https://wa.me/${contactNumber.replace('+', '')}`} target="_blank" className="p-4 rounded-full bg-slate-800 border border-white/10 hover:bg-slate-700 transition-all">
+                <MessageCircle size={20} className="text-green-400" />
+            </a>
         </div>
 
-        {/* AI Response Display (Subtitles style) */}
         <AnimatePresence>
           {aiResponse && (
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mt-16 p-8 bg-white/5 border border-white/10 rounded-[32px] max-w-3xl text-center italic text-slate-300"
-            >
-              "{aiResponse}"
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+              className="mt-10 p-6 bg-white/5 border border-white/10 rounded-3xl max-w-md text-center backdrop-blur-xl">
+              <p className="text-slate-200 italic text-sm mb-4">"{aiResponse}"</p>
+              <div className="flex justify-center gap-3">
+                <a href={`https://wa.me/${contactNumber.replace('+', '')}`} className="text-[10px] font-bold bg-green-600/20 text-green-400 px-4 py-2 rounded-full border border-green-600/30 flex items-center gap-2">
+                    <MessageCircle size={12} /> Connect on WhatsApp
+                </a>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
 
+        <div className="mt-20 grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-2xl px-4">
+            <div className="p-5 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all group">
+                <Building2 className="text-blue-500 mb-3 group-hover:scale-110 transition-transform" size={24} />
+                <h4 className="text-sm font-bold mb-1">Corporate Training</h4>
+                <p className="text-[11px] text-slate-400">Customized technology workshops for your engineering teams.</p>
+            </div>
+            <div className="p-5 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-all group">
+                <Users className="text-purple-500 mb-3 group-hover:scale-110 transition-transform" size={24} />
+                <h4 className="text-sm font-bold mb-1">B2B Hiring</h4>
+                <p className="text-[11px] text-slate-400">Get access to our top 1% pre-vetted tech talent pool.</p>
+            </div>
+        </div>
       </main>
 
       <Footer />
+
+      <a href={`https://wa.me/${contactNumber.replace('+', '')}`} target="_blank" 
+         className="fixed bottom-8 right-8 bg-green-600 p-4 rounded-full shadow-2xl hover:scale-110 transition-all z-50">
+          <MessageCircle size={28} />
+      </a>
     </div>
   );
 }
