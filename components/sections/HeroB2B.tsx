@@ -24,7 +24,6 @@ export default function HeroB2B() {
 
   return (
     <section className="relative min-h-[90vh] flex items-center justify-center py-20 px-4 overflow-hidden bg-[#020617]">
-      {/* Dynamic Background Elements */}
       <div className="absolute inset-0 z-0">
         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600/20 blur-[120px] rounded-full animate-pulse" />
         <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-600/20 blur-[120px] rounded-full" />
@@ -35,7 +34,6 @@ export default function HeroB2B() {
         initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}
         className="relative z-10 w-full max-w-6xl mx-auto text-center"
       >
-        {/* Floating Badge */}
         <motion.div 
           whileHover={{ scale: 1.05 }}
           className="mb-8 inline-flex items-center gap-3 px-4 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-xl shadow-[0_0_20px_rgba(59,130,246,0.2)]"
@@ -52,7 +50,6 @@ export default function HeroB2B() {
           </span>
         </motion.div>
 
-        {/* Headline */}
         <h1 className="text-5xl sm:text-7xl md:text-8xl font-extrabold text-white mb-8 tracking-tight leading-[0.95] md:leading-[1]">
           Scale Productivity <br /> 
           <span className="relative">
