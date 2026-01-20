@@ -1,167 +1,146 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { X, User, Building2, Briefcase, Mail, Sparkles, ArrowRight } from 'lucide-react';
 
 export default function HeroB2B() {
-  const [avatars, setAvatars] = useState<string[]>([]);
-  
-  // Real Logos (Aap yahan apni image files ka path daal sakte hain)
-  // Abhi ke liye main text aur icons ka mix use kar raha hoon jo image se match kare
-  const logos = [
-    "TECHFLOW", "QUANTUM", "SYNERGY", "NEXUS", "APEX", "CORE AI", "VELOCITY"
-  ];
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [formData, setFormData] = useState({ name: '', company: '', role: '', email: '' });
+
+  const OWNER_PHONE = "918700236923";
+  const avatars = ["1560250097-0b93528c311a", "1494790108377-be9c29b29330", "1507003211169-0a1dd7228f2d", "1599566150163-29194dcaad36"];
 
   useEffect(() => {
-    const avatarPool = [
-      "1560250097-0b93528c311a", "1494790108377-be9c29b29330", 
-      "1573496359-136d94205579", "1519085360753-af0119f7cbe7", 
-      "1507003211169-0a1dd7228f2d", "1500648767791-00dcc994a43e", 
-      "1438761681033-6461ffad8d80"
-    ];
-    const shuffled = [...avatarPool].sort(() => 0.5 - Math.random());
-    setAvatars(shuffled.slice(0, 3));
-  }, []);
+    document.body.style.overflow = isModalOpen ? 'hidden' : 'unset';
+  }, [isModalOpen]);
+
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const message = `*Strategy Call Request*%0A*Name:* ${formData.name}%0A*Company:* ${formData.company}%0A*Role:* ${formData.role}%0A*Email:* ${formData.email}`;
+    window.open(`https://wa.me/${OWNER_PHONE}?text=${message}`, '_blank');
+    setIsModalOpen(false);
+  };
 
   return (
-    <section className="relative min-h-screen pt-24 md:pt-32 pb-16 md:pb-24 px-4 overflow-hidden bg-[#020617] selection:bg-blue-500/30">
-      
-      {/* --- ENHANCED DYNAMIC BACKGROUND --- */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Animated Gradient Orbs */}
-        <motion.div 
-          animate={{ 
-            scale: [1, 1.2, 1], 
-            x: [0, 50, 0], 
-            y: [0, 30, 0],
-            opacity: [0.15, 0.3, 0.15] 
-          }}
-          transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-          className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] bg-blue-600/20 blur-[140px] rounded-full"
-        />
-        <motion.div 
-          animate={{ 
-            scale: [1.2, 1, 1.2], 
-            x: [0, -40, 0], 
-            y: [0, 50, 0],
-            opacity: [0.1, 0.2, 0.1] 
-          }}
-          transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
-          className="absolute bottom-[-10%] right-[-5%] w-[500px] h-[500px] bg-indigo-500/20 blur-[130px] rounded-full"
-        />
-
-        {/* Moving Grid Pattern */}
-        <motion.div 
-          animate={{ y: [0, -40, 0] }}
-          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          className="absolute inset-0 opacity-[0.15]" 
-          style={{ 
-            backgroundImage: `radial-gradient(circle at 1px 1px, rgba(255,255,255,0.15) 1px, transparent 0)`, 
-            backgroundSize: '48px 48px' 
-          }}
-        />
+    <section className="relative min-h-[90vh] flex items-center justify-center py-20 px-4 overflow-hidden bg-[#020617]">
+      {/* Dynamic Background Elements */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600/20 blur-[120px] rounded-full animate-pulse" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-600/20 blur-[120px] rounded-full" />
+        <div className="absolute inset-0 opacity-[0.15]" style={{ backgroundImage: 'radial-gradient(#ffffff 0.5px, transparent 0.5px)', backgroundSize: '30px 30px' }} />
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto flex flex-col items-center">
-        
-        {/* Trusted By Badge */}
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}
+        className="relative z-10 w-full max-w-6xl mx-auto text-center"
+      >
+        {/* Floating Badge */}
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="flex items-center gap-3 px-4 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-md mb-12 shadow-2xl"
+          whileHover={{ scale: 1.05 }}
+          className="mb-8 inline-flex items-center gap-3 px-4 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-xl shadow-[0_0_20px_rgba(59,130,246,0.2)]"
         >
           <div className="flex -space-x-2">
             {avatars.map((id, i) => (
-              <img key={i} src={`https://images.unsplash.com/photo-${id}?w=100&h=100&fit=crop`} className="w-8 h-8 rounded-full border-2 border-[#020617]" alt="user" />
+              <img key={i} src={`https://images.unsplash.com/photo-${id}?w=64&h=64&fit=crop`} className="w-6 h-6 rounded-full border-2 border-[#020617] object-cover" alt="user" />
             ))}
           </div>
-          <p className="text-blue-100 text-xs font-medium">Trusted by <span className="text-blue-400 font-bold">50+ Global Enterprises</span></p>
+          <div className="h-4 w-[1px] bg-white/20 mx-1" />
+          <span className="text-blue-100 text-[11px] md:text-xs font-semibold tracking-wide flex items-center gap-2">
+            <Sparkles size={14} className="text-blue-400" />
+            TRUSTED BY 50+ INNOVATIVE TEAMS
+          </span>
         </motion.div>
 
-        {/* Hero Title */}
-        <div className="text-center mb-12 space-y-8">
-          <motion.h1 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="text-5xl md:text-8xl lg:text-9xl font-black tracking-tighter text-white leading-[0.9]"
+        {/* Headline */}
+        <h1 className="text-5xl sm:text-7xl md:text-8xl font-extrabold text-white mb-8 tracking-tight leading-[0.95] md:leading-[1]">
+          Scale Productivity <br /> 
+          <span className="relative">
+            <span className="bg-gradient-to-r from-blue-400 via-cyan-300 to-indigo-400 bg-clip-text text-transparent italic">
+              Without Limits
+            </span>
+            <svg className="absolute -bottom-2 left-0 w-full h-3 text-blue-500/30" viewBox="0 0 100 10" preserveAspectRatio="none">
+              <path d="M0 5 Q 25 0, 50 5 T 100 5" stroke="currentColor" strokeWidth="2" fill="none" />
+            </svg>
+          </span>
+        </h1>
+
+        <p className="max-w-2xl mx-auto text-slate-400 text-lg md:text-xl mb-12 leading-relaxed">
+          Deploy AI agents that handle your operations, sales, and support 24/7. 
+          Stop managing tasks—start managing results.
+        </p>
+
+        {/* CTAs */}
+        <div className="flex flex-col sm:flex-row gap-5 justify-center items-center">
+          <motion.button 
+            onClick={() => window.open(`https://wa.me/${OWNER_PHONE}?text=Hello! I want to start my free trial.`, '_blank')}
+            whileHover={{ scale: 1.02, boxShadow: '0 0 30px rgba(37,99,235,0.4)' }}
+            whileTap={{ scale: 0.98 }}
+            className="group w-full sm:w-auto px-10 py-5 bg-blue-600 text-white font-bold rounded-2xl flex items-center justify-center gap-2 transition-all"
           >
-            Operate at the <br />
-            <span className="bg-gradient-to-b from-white via-blue-200 to-blue-600 bg-clip-text text-transparent italic">Speed of Thought</span>
-          </motion.h1>
+            Start Your Free AI Trial
+            <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
+          </motion.button>
           
-          <motion.p 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}
-            className="text-slate-400 text-lg md:text-2xl max-w-2xl mx-auto font-light"
+          <motion.button 
+            onClick={() => setIsModalOpen(true)}
+            whileHover={{ backgroundColor: 'rgba(255,255,255,0.1)' }}
+            className="w-full sm:w-auto px-10 py-5 bg-transparent border border-white/20 text-white font-bold rounded-2xl backdrop-blur-md transition-all"
           >
-            Deploy <span className="text-white font-medium">Autonomous Neural Agents</span> that master your business logic in hours.
-          </motion.p>
+            Book Strategy Call
+          </motion.button>
         </div>
+      </motion.div>
 
-        {/* CTA Buttons */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-          className="flex flex-col sm:flex-row gap-4 mb-24 w-full sm:w-auto"
-        >
-          <button className="px-10 py-5 bg-blue-600 text-white font-bold rounded-2xl hover:bg-blue-500 transition-all shadow-[0_0_30px_rgba(37,99,235,0.4)] active:scale-95">
-            Initialize AI Workforce
-          </button>
-          <button className="px-10 py-5 bg-white/5 border border-white/10 text-white font-bold rounded-2xl hover:bg-white/10 transition-all backdrop-blur-sm active:scale-95">
-            Watch System Demo
-          </button>
-        </motion.div>
-
-        {/* Stats Section */}
-        <motion.div 
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="w-full max-w-5xl bg-white/[0.03] border border-white/10 rounded-[2.5rem] backdrop-blur-3xl overflow-hidden mb-24 shadow-2xl"
-        >
-            <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-white/10">
-              {[
-                { title: 'Task Autonomy', val: '99.4%', color: 'text-blue-400' },
-                { title: 'Process Velocity', val: '22ms', color: 'text-cyan-400' },
-                { title: 'Cost Efficiency', val: '85%', color: 'text-indigo-400' }
-              ].map((stat, i) => (
-                <div key={i} className="p-10 group hover:bg-white/[0.02] transition-colors">
-                  <p className="text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em] mb-4">{stat.title}</p>
-                  <h3 className={`text-5xl font-black ${stat.color} tracking-tighter`}>{stat.val}</h3>
-                </div>
-              ))}
-            </div>
-        </motion.div>
-
-        {/* --- REFINED LOGO MARQUEE (Original Style) --- */}
-        <div className="w-full relative py-10 border-t border-white/5">
-          <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#020617] to-transparent z-10"></div>
-          <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#020617] to-transparent z-10"></div>
-          
-          <div className="flex overflow-hidden group">
+      <AnimatePresence>
+        {isModalOpen && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
             <motion.div 
-              className="flex gap-16 items-center whitespace-nowrap"
-              animate={{ x: [0, -1000] }}
-              transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              onClick={() => setIsModalOpen(false)}
+              className="absolute inset-0 bg-black/60 backdrop-blur-xl"
+            />
+            
+            <motion.div 
+              initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }}
+              className="relative w-full max-w-lg bg-[#0f172a] border border-blue-500/20 rounded-[2rem] p-8 md:p-12 shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
             >
-              {/* Double mapping for seamless loop */}
-              {[...logos, ...logos, ...logos].map((logo, i) => (
-                <div key={i} className="flex items-center gap-2">
-                   {/* Logo Placeholder - Aap yahan <img> tag use kar sakte hain */}
-                   <span className="text-white/30 text-2xl font-black tracking-[0.3em] hover:text-blue-400 transition-colors cursor-default">
-                    {logo}
-                  </span>
-                </div>
-              ))}
+              <button onClick={() => setIsModalOpen(false)} className="absolute top-6 right-6 text-slate-500 hover:text-white transition-colors">
+                <X size={24} />
+              </button>
+
+              <div className="mb-8">
+                <h2 className="text-3xl font-bold text-white mb-2">Let&apos;s Build.</h2>
+                <p className="text-slate-400">Enter your details and we&apos;ll reach out on WhatsApp.</p>
+              </div>
+              
+              <form onSubmit={handleFormSubmit} className="space-y-4">
+                {[
+                  { icon: User, name: 'name', placeholder: 'Full Name', type: 'text' },
+                  { icon: Building2, name: 'company', placeholder: 'Company Name', type: 'text' },
+                  { icon: Briefcase, name: 'role', placeholder: 'Designation', type: 'text' },
+                  { icon: Mail, name: 'email', placeholder: 'Work Email', type: 'email' },
+                ].map((field) => (
+                  <div key={field.name} className="relative group">
+                    <field.icon className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-blue-500 transition-colors" size={18} />
+                    <input 
+                      required 
+                      type={field.type}
+                      placeholder={field.placeholder} 
+                      className="w-full pl-12 pr-4 py-4 bg-white/[0.03] border border-white/10 rounded-xl text-white outline-none focus:border-blue-500/50 transition-all focus:bg-white/[0.05]" 
+                      onChange={(e) => setFormData({...formData, [field.name]: e.target.value})} 
+                    />
+                  </div>
+                ))}
+                
+                <button type="submit" className="w-full py-5 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl mt-4 shadow-lg shadow-blue-600/20 transition-all active:scale-95">
+                  Confirm & Schedule via WhatsApp
+                </button>
+              </form>
             </motion.div>
           </div>
-        </div>
-
-      </div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
