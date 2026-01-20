@@ -8,7 +8,7 @@ const reviews = [
     name: "Arjun Mehta",
     role: "Full Stack Dev @ Cred",
     image: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=100&auto=format&fit=crop",
-    quote: "The LMS environment is insane. I wasn't just watching videos; I was deploying actual microservices. The code reviews from FAANG mentors changed how I write JavaScript.",
+    quote: "The LMS environment is insane. I wasn't just watching videos; I was deploying actual microservices. The code reviews from FAANG mentors changed how I write Python.",
     hike: "140%",
     stack: ["Next.js", "Docker"]
   },

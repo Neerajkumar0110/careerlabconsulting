@@ -15,11 +15,9 @@ const mediaNews = [
 export default function MediaPresence() {
   const scrollRef = useRef(null);
 
-  // Manual Scroll Logic
   const scroll = (direction) => {
     if (scrollRef.current) {
       const { scrollLeft, clientWidth } = scrollRef.current;
-      // Card width + gap calculate karke scroll karna
       const offset = clientWidth > 768 ? 400 : 320; 
       const scrollTo = direction === 'left' ? scrollLeft - offset : scrollLeft + offset;
       
@@ -27,12 +25,10 @@ export default function MediaPresence() {
     }
   };
 
-  // Auto-Play Logic (Har 4 seconds mein next slide)
   useEffect(() => {
     const interval = setInterval(() => {
       if (scrollRef.current) {
         const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
-        // Agar end par pahuch gaye toh wapas start par le jao
         if (scrollLeft + clientWidth >= scrollWidth - 10) {
           scrollRef.current.scrollTo({ left: 0, behavior: 'smooth' });
         } else {
@@ -47,7 +43,6 @@ export default function MediaPresence() {
     <section className="py-20 px-4 bg-[#02040a] min-h-fit">
       <div className="max-w-7xl mx-auto">
         
-        {/* Header Section */}
         <div className="flex items-end justify-between mb-12">
           <div className="space-y-2">
             <p className="text-blue-500 font-bold text-xs uppercase tracking-[0.3em]">Recognition</p>
@@ -57,7 +52,6 @@ export default function MediaPresence() {
             </h3>
           </div>
           
-          {/* Navigation Buttons */}
           <div className="hidden md:flex gap-3">
             <button 
               onClick={() => scroll('left')}
@@ -74,7 +68,6 @@ export default function MediaPresence() {
           </div>
         </div>
 
-        {/* Scrollable Container */}
         <div 
           ref={scrollRef}
           className="flex overflow-x-auto gap-6 pb-12 no-scrollbar snap-x snap-mandatory touch-pan-x"

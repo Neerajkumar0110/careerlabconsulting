@@ -13,17 +13,15 @@ const stats = [
 ];
 
 export default function LMSPreview() {
-  const [activeView, setActiveView] = useState('ai'); // ai, terminal, code, security, layout
+  const [activeView, setActiveView] = useState('ai'); 
 
   return (
     <section className="py-12 md:py-32 bg-[#020617] border-t border-white/5 relative overflow-hidden">
-      {/* Background Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] md:w-[800px] h-[300px] md:h-[400px] bg-blue-600/5 blur-[80px] md:blur-[120px] rounded-full z-0" />
 
       <div className="max-w-[1400px] mx-auto px-4 md:px-6 relative z-10">
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-20 items-center">
           
-          {/* Left Content */}
           <div className="order-2 lg:order-1 text-center lg:text-left">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 mb-6">
               <Zap className="w-3 h-3 text-blue-400 fill-blue-400" />
@@ -201,7 +199,6 @@ export default function LMSPreview() {
               </div>
             </div>
 
-            {/* Floating Uptime Badge */}
             <div className="absolute -top-4 -right-2 md:-top-6 md:-right-4 bg-[#1e293b] border border-white/10 px-3 py-2 md:px-4 md:py-3 rounded-xl md:rounded-2xl shadow-2xl flex items-center gap-3 animate-bounce duration-[5000ms] z-20">
                <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center"><Activity className="w-4 h-4 text-emerald-400" /></div>
                <div><div className="text-[8px] text-slate-500 font-bold uppercase">Cloud Uptime</div><div className="text-[10px] md:text-xs font-black text-white italic">99.9% LIVE</div></div>

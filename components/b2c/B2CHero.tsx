@@ -5,7 +5,7 @@ import { ArrowRight, Play, Target, Award, CheckCircle2, Sparkles } from 'lucide-
 
 export default function B2CHero() {
   return (
-    <section className="relative min-h-screen pt-28 pb-12 md:pt-36 md:pb-20 overflow-hidden bg-[#020617] flex items-center">
+    <section className="relative min-h-screen pt-10 pb-12 md:pt-5 md:pb-20 overflow-hidden bg-[#020617] flex items-center">
       
       <div className="absolute inset-0 z-0">
         <div className="absolute top-[-10%] right-[-10%] w-[400px] md:w-[800px] h-[400px] md:h-[800px] bg-blue-600/20 blur-[100px] md:blur-[150px] rounded-full animate-pulse" />

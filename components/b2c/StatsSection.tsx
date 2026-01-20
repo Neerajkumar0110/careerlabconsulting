@@ -87,7 +87,6 @@ export default function GlobalImpactSection() {
         </div>
       </div>
 
-      {/* Side Decorative Glows */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-600/10 blur-[150px] -mr-64 pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-cyan-600/10 blur-[150px] -ml-64 pointer-events-none" />
     </section>
