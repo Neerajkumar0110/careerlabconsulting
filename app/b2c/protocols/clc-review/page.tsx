@@ -61,6 +61,9 @@ export default function CLCReviewPage() {
         setStatus('success');
         localStorage.setItem(`submitted_${userIp}`, 'true');
         setFormData({ name: '', text: '', rating: 5 });
+        setTimeout(() => {
+        window.open(GMB_REVIEW_URL, '_blank');
+        }, 2000);
       } else {
         throw new Error(result.error || "Failed to send");
       }
@@ -141,7 +144,7 @@ export default function CLCReviewPage() {
                 </div>
 
                 <button 
-                  disabled={isSubmitting}
+                  disabled={isSubmitting} onClick={() => window.open(GMB_REVIEW_URL, '_blank')}
                   className="w-full bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-black py-5 rounded-2xl flex items-center justify-center gap-3 transition-all uppercase tracking-widest shadow-xl shadow-blue-600/30 active:scale-[0.98]"
                 >
                   {isSubmitting ? 'Sending...' : 'Submit Review'} <Send size={18} />
