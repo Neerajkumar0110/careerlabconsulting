@@ -28,7 +28,7 @@ const FullEducationCapabilityPage = () => {
             <span className="text-[10px] font-black uppercase tracking-[0.3em] text-cyan-200">The Full Spectrum Intelligence</span>
           </div>
 
-          <h1 className="text-6xl md:text-9xl font-black tracking-tighter leading-[0.8] uppercase italic mb-12">
+          <h1 className="text-4xl md:text-7xl font-black tracking-tighter leading-[0.8] uppercase italic mb-12">
             The Integrated <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-200 via-blue-500 to-indigo-600">
               Future Academy
