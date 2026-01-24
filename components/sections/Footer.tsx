@@ -54,7 +54,6 @@ export default function B2BFooter() {
         <div className="max-w-[1400px] mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-20">
             
-            {/* Branding & Socials */}
             <div className="lg:col-span-3 flex flex-col items-start">
               <img src="/logo.png" alt="Career Lab" className="w-48 h-16 object-contain mb-6 filter drop-shadow-[0_0_15px_rgba(59,130,246,0.3)]" />
               <p className="text-slate-400 text-sm leading-relaxed font-medium mb-10">
@@ -156,12 +155,11 @@ export default function B2BFooter() {
             </div>
           </div>
 
-          {/* Bottom Bar */}
           <div className="pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
             <div className="flex flex-wrap justify-center items-center gap-x-8 gap-y-4">
               <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">© 2015 - {currentYear} Career Lab Consulting B2B</span>
-              <Link href="#" className="text-[10px] text-slate-500 font-bold uppercase tracking-widest hover:text-blue-400 transition-colors">Privacy Policy</Link>
-              <Link href="#" className="text-[10px] text-slate-500 font-bold uppercase tracking-widest hover:text-blue-400 transition-colors">Terms of Service</Link>
+              <Link href="/privacy-policy" className="text-[10px] text-slate-500 font-bold uppercase tracking-widest hover:text-blue-400 transition-colors">Privacy Policy</Link>
+              <Link href="/terms-of-service" className="text-[10px] text-slate-500 font-bold uppercase tracking-widest hover:text-blue-400 transition-colors">Terms of Service</Link>
             </div>
             <div className="flex items-center gap-3 px-5 py-2.5 bg-emerald-500/5 border border-emerald-500/10 rounded-full">
               <div className="relative flex items-center justify-center">
@@ -174,7 +172,6 @@ export default function B2BFooter() {
         </div>
       </footer>
 
-      {/* --- MOBILE PRODUCT POPUP & NAV (B2C Style) --- */}
       {isProductOpen && (
         <div className="md:hidden fixed inset-0 z-[110] flex items-end justify-center px-4 pb-24 bg-black/60 backdrop-blur-sm">
           <div className="w-full max-w-sm bg-[#0a0f1d]/95 border border-white/10 rounded-[2.5rem] p-6 shadow-2xl animate-in slide-in-from-bottom-10 duration-300 max-h-[70vh] overflow-y-auto">
