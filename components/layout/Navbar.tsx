@@ -6,7 +6,7 @@ import {
   Search, X, Menu, ChevronDown, Zap, Code, Globe, Shield, 
   Package, Layers, Cpu, CheckCircle2, ChevronRight, ArrowRight,
   HeartPulse, ShoppingCart, Landmark, Factory, 
-  Car, Scale, GraduationCap, Monitor, Mic, Sparkles
+  Car, Scale, GraduationCap, Monitor, Mic, Sparkles, Blocks
 } from 'lucide-react';
 
 const industriesMenu = [
@@ -159,21 +159,21 @@ const productMenu = [
 const servicesMenu = [
   {
     id: 'consulting',
-    title: 'AI & Transformation',
+    title: 'AI & Digital Transformation Consulting',
     layer: 'Consult & Design Layer',
     icon: Globe,
     items: [
       { name: "AI & LLM strategy and roadmap", href: "/services/ai-strategy" },
       { name: "Digital transformation consulting", href: "/services/digital-transformation" },
       { name: "AI readiness assessments", href: "/services/ai-readiness" },
-      { name: "Leadership workshops", href: "/services/workshops" },
-      { name: "ROI modeling", href: "/services/roi-modeling" },
-      { name: "Responsible AI & governance", href: "/services/responsible-ai" }
+      { name: "Leadership & technical workshops", href: "/services/workshops" },
+      { name: "ROI modeling & use-case prioritization", href: "/services/roi-modeling" },
+      { name: "Responsible AI & governance advisory", href: "/services/responsible-ai" }
     ]
   },
   {
     id: 'engineering',
-    title: 'Agentic Engineering',
+    title: 'AI & Agentic Systems Engineering',
     layer: 'Core AI Build Layer',
     icon: Zap,
     items: [
@@ -187,28 +187,71 @@ const servicesMenu = [
   },
   {
     id: 'development',
-    title: 'Platform Development',
+    title: 'Intelligent Application & Platform Development',
     layer: 'Software + AI Layer',
     icon: Code,
     items: [
       { name: "AI-powered web applications", href: "/services/web-apps" },
-      { name: "AI-powered mobile apps", href: "/services/mobile-apps" },
+      { name: "AI-powered mobile applications", href: "/services/mobile-apps" },
       { name: "Cloud-native platforms", href: "/services/cloud-platforms" },
       { name: "IoT + AI systems", href: "/services/iot-ai" },
       { name: "Enterprise applications", href: "/services/enterprise-apps" }
     ]
   },
   {
+    id: 'blockchain',
+    title: 'Blockchain & Web3 Services',
+    layer: 'Decentralized Tech Layer',
+    icon: Blocks,
+    items: [
+      { name: "Blockchain consulting", href: "/services/blockchain-consulting" },
+      { name: "Smart contracts and dApps", href: "/services/smart-contracts" },
+      { name: "Tokenization platforms", href: "/services/tokenization" },
+      { name: "Blockchain integration", href: "/services/blockchain-integration" },
+      { name: "Blockchain audits", href: "/services/blockchain-audits" }
+    ]
+  },
+  {
     id: 'security',
-    title: 'Security & Compliance',
+    title: 'Quality, Security & Compliance Services',
     layer: 'Trust & Safety Layer',
     icon: Shield,
     items: [
-      { name: "Functional & Performance testing", href: "/services/testing" },
+      { name: "Functional testing", href: "/services/functional-testing" },
+      { name: "Performance testing", href: "/services/performance-testing" },
       { name: "Security & penetration testing", href: "/services/security-audit" },
       { name: "AI model validation", href: "/services/model-validation" },
       { name: "RAG & LLM safety testing", href: "/services/safety-testing" },
-      { name: "Compliance audits (SOC2/ISO)", href: "/services/compliance" }
+      { name: "Compliance and audit testing", href: "/services/compliance" }
+    ]
+  },
+  {
+    id: 'operations',
+    title: 'Managed AI & Technology Operations',
+    layer: 'Operate & Optimize Layer',
+    icon: Cpu,
+    items: [
+      { name: "AI / LLM Ops", href: "/services/ai-ops" },
+      { name: "Monitoring and optimization", href: "/services/monitoring" },
+      { name: "Support and maintenance", href: "/services/support-maintenance" },
+      { name: "Version upgrades", href: "/services/upgrades" },
+      { name: "Client training and handover", href: "/services/training" },
+      { name: "Bronze – Monitoring + monthly optimization", href: "/services/bronze-tier" },
+      { name: "Silver – SLA support + incident handling", href: "/services/silver-tier" },
+      { name: "Gold – 24/7 support + governance", href: "/services/gold-tier" }
+    ]
+  },
+  {
+    id: 'talent',
+    title: 'Talent & Dedicated Teams',
+    layer: 'Scale & Augment Layer',
+    icon: Monitor,
+    items: [
+      { name: "AI engineers", href: "/services/ai-engineers" },
+      { name: "Full-stack developers", href: "/services/fullstack-developers" },
+      { name: "Prompt engineers", href: "/services/prompt-engineers" },
+      { name: "RAG specialists", href: "/services/rag-specialists" },
+      { name: "Dedicated delivery teams", href: "/services/dedicated-teams" }
     ]
   }
 ];
