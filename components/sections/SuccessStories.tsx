@@ -14,7 +14,7 @@ const stories = [
     metric1: { value: "45%", label: "reduction in hiring cost" },
     metric2: { value: "98.2%", label: "client satisfaction rate" },
     image: "https://images.unsplash.com/photo-1556761175-b413da4baf72?w=800&q=80",
-    videoUrl: "https://videocdn.cdnpk.net/videos/cddb02d1-16c4-5626-ae40-64a8066a412f/horizontal/previews/clear/large.mp4?token=exp=1768987700~hmac=0332071bb8f8a356965508a7929ec55208fea679424274d4d4c2b87beec52dd3" 
+    videoUrl: "https://videocdn.cdnpk.net/videos/3225a2e8-6132-5b47-857a-89863ddd26d7/horizontal/previews/clear/large.mp4?token=exp=1769270351~hmac=f90b2a82e11b6dcf620181cc2aab67324bfb29283bb8ac9412ce652c63cfdd0f" 
   },
   {
     id: 2,
@@ -23,7 +23,7 @@ const stories = [
     metric1: { value: "120%", label: "increase in lead volume" },
     metric2: { value: "3.5x", label: "ROI in first quarter" },
     image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80",
-    videoUrl: "https://videocdn.cdnpk.net/videos/3225a2e8-6132-5b47-857a-89863ddd26d7/horizontal/previews/clear/large.mp4?token=exp=1768987520~hmac=cba68afb636d8c2ebe7b77e1a2c35dc090562e14674fef9f9e91d203cfe09bdf"
+    videoUrl: "https://videocdn.cdnpk.net/videos/73b2d669-e98b-5002-ac5d-b56887129776/horizontal/previews/clear/large.mp4?token=exp=1769270425~hmac=eb81514515a3269743b774996e3515454e099e2c9e1425e4fce37a3385d6266c"
   }
 ];
 
@@ -38,7 +38,6 @@ export default function SuccessStories() {
     <section className="bg-[#020617] py-20 px-4 sm:px-6 overflow-hidden">
       <div className="max-w-7xl mx-auto">
         
-        {/* Header Section */}
         <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-8">
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
@@ -54,7 +53,6 @@ export default function SuccessStories() {
             </h2>
           </motion.div>
           
-          {/* Controls */}
           <div className="flex items-center gap-4 sm:gap-6 bg-white/5 p-2 rounded-full border border-white/10 self-start md:self-auto">
             <button onClick={prevSlide} className="p-3 rounded-full hover:bg-white/10 text-white transition-all active:scale-90">
               <ChevronLeft size={22} />
@@ -68,7 +66,6 @@ export default function SuccessStories() {
           </div>
         </div>
 
-        {/* Main Content Card */}
         <div className="relative bg-gradient-to-br from-white/[0.03] to-transparent border border-white/10 rounded-[2rem] sm:rounded-[3rem] overflow-hidden backdrop-blur-md">
           <AnimatePresence mode="wait">
             <motion.div
@@ -79,7 +76,6 @@ export default function SuccessStories() {
               transition={{ duration: 0.4 }}
               className="grid grid-cols-1 lg:grid-cols-2"
             >
-              {/* Text Side */}
               <div className="p-8 sm:p-12 md:p-16 flex flex-col justify-center">
                 <motion.h2 className="text-2xl sm:text-4xl font-bold text-white mb-6 leading-snug">
                   {stories[current].title}
@@ -88,7 +84,6 @@ export default function SuccessStories() {
                   {stories[current].description}
                 </p>
 
-                {/* Metrics */}
                 <div className="grid grid-cols-2 gap-6 py-8 border-y border-white/10 mb-8">
                   <div className="space-y-1">
                     <div className="text-3xl sm:text-4xl font-black text-white">{stories[current].metric1.value}</div>
@@ -100,7 +95,6 @@ export default function SuccessStories() {
                   </div>
                 </div>
 
-                {/* Premium Button */}
                 <motion.button 
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
@@ -117,7 +111,6 @@ export default function SuccessStories() {
                 </motion.button>
               </div>
 
-              {/* Visual Side (Image/Video Trigger) */}
               <div className="relative min-h-[350px] lg:h-auto group overflow-hidden">
                 <img 
                   src={stories[current].image} 
@@ -126,7 +119,6 @@ export default function SuccessStories() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent opacity-60 lg:bg-gradient-to-r lg:opacity-100" />
                 
-                {/* Play Button Overlay */}
                 <div className="absolute inset-0 flex items-center justify-center">
                   <motion.button 
                     onClick={() => setIsVideoOpen(true)}
@@ -146,53 +138,38 @@ export default function SuccessStories() {
             </motion.div>
           </AnimatePresence>
         </div>
-
-        {/* Lead Gen Footer */}
-        <motion.div 
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          className="mt-16 text-center"
-        >
-          <p className="text-slate-500 text-sm sm:text-base mb-4 font-medium tracking-wide">Ready for your own success story?</p>
-          <a 
-            href={`https://wa.me/${OWNER_PHONE}`}
-            className="text-xl sm:text-3xl font-bold text-white hover:text-blue-500 transition-all flex items-center justify-center gap-3 group"
-          >
-            Connect with an Expert
-            <div className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center group-hover:border-blue-500 transition-colors">
-              <ChevronRight size={20} />
-            </div>
-          </a>
-        </motion.div>
       </div>
 
-      {/* Video Modal (Popup) */}
       <AnimatePresence>
         {isVideoOpen && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
             <motion.div 
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               onClick={() => setIsVideoOpen(false)}
-              className="absolute inset-0 bg-black/90 backdrop-blur-md"
+              className="absolute inset-0 bg-black/95 backdrop-blur-md"
             />
             <motion.div 
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="relative w-full max-w-4xl aspect-video bg-black rounded-3xl overflow-hidden shadow-2xl"
+              className="relative w-full max-w-4xl aspect-video bg-black rounded-3xl overflow-hidden shadow-2xl border border-white/10"
             >
               <button 
                 onClick={() => setIsVideoOpen(false)}
-                className="absolute top-4 right-4 z-10 p-2 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors"
+                className="absolute top-4 right-4 z-20 p-2 bg-black/50 hover:bg-white/20 text-white rounded-full transition-colors backdrop-blur-md"
               >
                 <X size={24} />
               </button>
-              <iframe 
-                src={stories[current].videoUrl}
-                className="w-full h-full"
-                allow="autoplay; encrypted-media"
-                allowFullScreen
-              />
+              
+              <video 
+                key={stories[current].videoUrl}
+                className="w-full h-full object-contain"
+                controls
+                autoPlay
+                playsInline
+              >
+                <source src={stories[current].videoUrl} type="video/mp4" />
+              </video>
             </motion.div>
           </div>
         )}
