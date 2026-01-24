@@ -23,7 +23,7 @@ export default function HeroB2B() {
   };
 
   return (
-    <section className="relative min-h-[90vh] flex items-center justify-center py-20 px-4 overflow-hidden bg-[#020617]">
+    <section className="relative min-h-[90vh] flex items-center justify-center pt-40 pb-30 px-4 overflow-hidden bg-[#020617]">
       <div className="absolute inset-0 z-0">
         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600/20 blur-[120px] rounded-full animate-pulse" />
         <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-600/20 blur-[120px] rounded-full" />

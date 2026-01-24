@@ -9,23 +9,22 @@ import {
 
 const footerLinks = {
   "Solutions": [
-    { name: 'AI Agents', href: '#' },
-    { name: 'Neural Training', href: '#' },
-    { name: 'Custom LLMs', href: '#' },
-    { name: 'Security Protocol', href: '#' },
-    { name: 'CEO Portal (TwinX)', href: '#' },
+    { name: 'AI Agents', href: 'ai-agents' },
+    { name: 'Neural Training', href: 'neural-training' },
+    { name: 'Custom LLMs', href: 'custom-llms' },
+    { name: 'Security Protocol', href: 'security-protocol' },
   ],
   "Business Hub": [
-    { name: 'AI Employers (Jobs)', href: '#' },
-    { name: 'Freelancer Platform', href: '#' },
-    { name: 'Project Development', href: '#' },
-    { name: 'Individual Projects', href: '#' },
+    { name: 'AI Employers (Jobs)', href: 'ai-employers' },
+    { name: 'Freelancer Platform', href: 'freelancer-platform' },
+    { name: 'Project Development', href: 'project-development' },
+    { name: 'Individual Projects', href: 'individual-projects' },
   ],
   "Infrastructure": [
-    { name: 'About Us', href: '#' },
-    { name: 'Case Studies', href: '#' },
-    { name: 'Documentation', href: '#' },
-    { name: 'Contact Tech', href: '#' },
+    { name: 'About Us', href: 'about' },
+    { name: 'Case Studies', href: 'case-studies' },
+    { name: 'Documentation', href: 'documentation' },
+    { name: 'Contact', href: 'contact' },
   ],
 };
 
