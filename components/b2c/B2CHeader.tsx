@@ -26,7 +26,7 @@ const megaMenuCategories = [
     title: 'AI & Data',
     icon: Cpu,
     programs: [
-      { name: 'InternX-AI Engineer', href: '/b2c/internx-ai-engineer' },
+      { name: 'InternX-AI Developer', href: '/b2c/internx-ai-engineer' },
       { name: 'InternX-Data Engineer', href: '/b2c/internx-data-engineer' },
       { name: 'InternX-AI Quality & Safety Engineer', href: '/b2c/internx-ai-quality-safety-engineer' },
     ],
@@ -94,6 +94,8 @@ const navLinks = [
   { name: 'Alumni', href: '/b2c/alumni' },
   { name: 'Research', href: '/b2c/research' },
   { name: 'Advisory Council', href: '/b2c/advisory-council' },
+  { name: 'Freelancer', href: '#' },
+  { name: 'Job Portal', href: '#' },
 ];
 
 export default function B2CHeader() {
@@ -187,7 +189,6 @@ export default function B2CHeader() {
             })}
           </div>
 
-          {/* RIGHT – PROGRAMS */}
           <div className="p-6">
             <h4 className="text-xs uppercase tracking-widest text-blue-400 font-black mb-4">
               {activeCategory.title} Programs
@@ -212,7 +213,6 @@ export default function B2CHeader() {
           </div>
         </div>
 
-        {/* FOOTER */}
         <div className="px-8 py-4 border-t border-white/10 flex justify-between items-center bg-[#0a0d16]">
           <p className="text-sm text-slate-400">
             Not sure which program fits you?
