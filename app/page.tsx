@@ -1,4 +1,3 @@
-// app/page.tsx
 import Navbar from "@/components/layout/Navbar";
 import HeroB2B from "@/components/sections/HeroB2B";
 import ProductMatrix from "@/components/sections/ProductMatrix";
@@ -13,6 +12,8 @@ import LLMServicesSection from "@/components/sections/LLMServicesSection";
 import TrustAndArticles from "@/components/sections/TrustAndArticles";
 import FaqSection from "@/components/sections/FaqSection";
 import Footer from "@/components/sections/Footer";
+import PricingSection from "@/components/b2c/PricingSection"; 
+import { Analytics } from "@vercel/analytics/next"; 
 
 export default function B2BHome() {
   return (
@@ -20,6 +21,7 @@ export default function B2BHome() {
       <Navbar />
       <HeroB2B />
       <ProductMatrix />
+      <PricingSection />
       <FeatureGrid />
       <TrustSection />
       <ExecutionFlow /> 
@@ -31,6 +33,7 @@ export default function B2BHome() {
       <TrustAndArticles />
       <FaqSection />
       <Footer />
+      <Analytics /> 
     </main>
   );
 }
