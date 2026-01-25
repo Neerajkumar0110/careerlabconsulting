@@ -12,7 +12,7 @@ import LLMServicesSection from "@/components/sections/LLMServicesSection";
 import TrustAndArticles from "@/components/sections/TrustAndArticles";
 import FaqSection from "@/components/sections/FaqSection";
 import Footer from "@/components/sections/Footer";
-import PricingSection from "@/components/b2c/PricingSection"; 
+import B2BPricingSection from "@/components/sections/B2BPricingSection"; 
 import { Analytics } from "@vercel/analytics/next"; 
 
 export default function B2BHome() {
@@ -21,7 +21,7 @@ export default function B2BHome() {
       <Navbar />
       <HeroB2B />
       <ProductMatrix />
-      <PricingSection />
+      <B2BPricingSection />
       <FeatureGrid />
       <TrustSection />
       <ExecutionFlow /> 
