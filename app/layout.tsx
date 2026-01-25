@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Career Lab Consulting | B2B & B2C Career Solutions",
-    template: "%s | Career Lab Consulting",
+    default: "The Complete AI Solution Ecosystem - Career Lab Consulting",
+    template: "%s - Career Lab Consulting",
   },
   description: "Career Lab Consulting offers expert B2B and B2C solutions, bridging the gap between talent and industry through professional career coaching and business consulting.",
   keywords: ["Career Consulting", "B2B Solutions", "B2C Career Growth", "Job Placement", "Business Consulting"],

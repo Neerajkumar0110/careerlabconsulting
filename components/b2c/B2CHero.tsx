@@ -259,12 +259,12 @@ export default function B2CHero() {
                   <div className="bg-[#0f172a] p-4 rounded-3xl border border-white/5 text-center">
                     <Globe size={20} className="text-blue-500 mx-auto mb-2" />
                     <p className="text-slate-500 text-[8px] font-bold uppercase">Uptime</p>
-                    <p className="text-white font-black text-lg">{selectedProfile.uptime}</p>
+                    <p className="text-white font-black text-xs">{selectedProfile.uptime}</p>
                   </div>
                   <div className="bg-[#0f172a] p-4 rounded-3xl border border-white/5 text-center">
                     <Code size={20} className="text-purple-500 mx-auto mb-2" />
                     <p className="text-slate-500 text-[8px] font-bold uppercase">Nodes</p>
-                    <p className="text-white font-black text-lg">{selectedProfile.projects}</p>
+                    <p className="text-white font-black text-xs">{selectedProfile.projects}</p>
                   </div>
                   <div className="bg-[#0f172a] p-4 rounded-3xl border border-white/5 text-center">
                     <Hash size={20} className="text-emerald-500 mx-auto mb-2" />
