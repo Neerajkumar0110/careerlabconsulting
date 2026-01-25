@@ -38,7 +38,7 @@ const partners = [
   { name: "HDFC", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/HDFC_Bank_Logo.svg/960px-HDFC_Bank_Logo.svg.png" },
   { name: "ICICI", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/ICICI_Bank_Logo.svg/3840px-ICICI_Bank_Logo.svg.png" },
   { name: "Bajaj Finance", logo: "https://i.logos-download.com/104038/25954-og-3eb91e8f96281f00288cb76528c38928.png/Bajaj_Finserv_Logo_og.png" },
-  { name: "Propel", logo: "https://contact.pepsico.com/files/propel/brands/1675181018/Propel_Small%20Use%20Logo%20Blue%20Orange_RGB@2x.png" },
+  { name: "Propel", logo: "https://niuonline.edu.in/wp-content/uploads/2025/08/Propelld-Blue-Logo-3-2-1024x177.webp" },
   { name: "ShopSe", logo: "https://framerusercontent.com/images/rmJzwShQEM78IdCVmymj1i9K7M.svg?width=1343&height=300" }
 ];
 
@@ -177,7 +177,7 @@ export default function PricingSection() {
                                src={p.logo} 
                                alt={p.name} 
                                title={p.name} 
-                               className="h-10 w-auto object-contain mx-auto bg-white p-1 rounded-sm" 
+                               className="h-5 w-auto object-contain mx-auto bg-white p-1 rounded-sm" 
                              />
                            ))}
                         </div>

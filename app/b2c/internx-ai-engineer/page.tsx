@@ -144,7 +144,6 @@ export default function InternXAI() {
             {mentors.map((mentor, i) => (
               <div key={i} className="group relative overflow-hidden rounded-[2.5rem] bg-[#0a0a0a] border border-white/10 hover:border-blue-500/50 transition-all">
                 <div className="aspect-[4/5] bg-slate-800 relative grayscale group-hover:grayscale-0 transition-all duration-500">
-                  {/* Image Placeholder */}
                   <div className="absolute inset-0 flex items-center justify-center text-slate-700">
                     <Users className="w-20 h-20" />
                   </div>
