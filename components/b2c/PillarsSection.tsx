@@ -13,7 +13,6 @@ import {
 } from 'lucide-react';
 
 const pillars = [
-  // Pillar 1
   {
     category: "Center of Technology and AI",
     title: "Shape the Technological Landscape",
@@ -26,7 +25,6 @@ const pillars = [
     ],
     accent: "from-blue-600 to-cyan-500"
   },
-  // Pillar 2
   {
     category: "Learning Management System",
     title: "Strategic Education Hub",
@@ -39,7 +37,6 @@ const pillars = [
     ],
     accent: "from-purple-600 to-blue-500"
   },
-  // Pillar 3
   {
     category: "Corporate Excellence",
     title: "Leadership & Strategy",
@@ -52,12 +49,11 @@ const pillars = [
     ],
     accent: "from-emerald-600 to-teal-500"
   },
-  // Pillar 4
   {
-    category: "Innovation Lab",
+    category: "Innovation Hub",
     title: "Research & Development",
     desc: "A dedicated space for experimenting with emerging technologies. From Blockchain to Quantum Computing, we stay ahead of the curve.",
-    image: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&q=80&w=800",
+    image: "https://media.istockphoto.com/id/2148178472/photo/hispanic-programmers-collaborating-on-software-development-in-a-modern-office-setting.webp?a=1&b=1&s=612x612&w=0&k=20&c=cOn7tCfq87FzKSSp1Vn2j0b0c8Puw0eKD-GY6JKexJU=",
     stats: [
       { label: "Projects", value: "85+", icon: Lightbulb },
       { label: "Patents", value: "12", icon: CheckCircle2 },
@@ -65,12 +61,11 @@ const pillars = [
     ],
     accent: "from-amber-600 to-orange-500"
   },
-  // Pillar 5
   {
     category: "Talent Acquisition",
     title: "Career Placement Services",
     desc: "Connecting top-tier talent with industry giants. Our recruitment drives ensure that our graduates land their dream roles instantly.",
-    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=800",
+    image: "https://media.istockphoto.com/id/2197955227/photo/humans-are-using-laptops-and-computers-to-interact-with-ai-helping-them-create-code-train-ai.webp?a=1&b=1&s=612x612&w=0&k=20&c=p8GsIZS4sS58ubkyslWk6ChVyDe5S4HDwxxznIsm-v4=",
     stats: [
       { label: "Placed", value: "12k+", icon: Briefcase },
       { label: "Avg Hike", value: "60%", icon: ArrowUpRight },
@@ -78,12 +73,11 @@ const pillars = [
     ],
     accent: "from-pink-600 to-rose-500"
   },
-  // Pillar 6
   {
     category: "Global Certification",
     title: "International Partnerships",
     desc: "Validating skills on a global scale. Our certifications are recognized across borders, opening doors to international career opportunities.",
-    image: "https://images.unsplash.com/photo-1529400971008-f566de0e6dfc?auto=format&fit=crop&q=80&w=800",
+    image: "https://plus.unsplash.com/premium_photo-1664474503673-5febe9ca12b9?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8SW50ZXJuYXRpb25hbCUyMFBhcnRuZXJzaGlwc3xlbnwwfHwwfHx8MA%3D%3D",
     stats: [
       { label: "Countries", value: "25+", icon: Globe2 },
       { label: "Alumni", value: "100k", icon: Users2 },

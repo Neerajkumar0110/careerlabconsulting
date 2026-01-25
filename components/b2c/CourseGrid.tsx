@@ -3,104 +3,48 @@
 import React, { useState } from 'react';
 import { Play, Star, Users, ArrowRight, Download, X } from 'lucide-react';
 
-const courseData = {
-  "Top Internship": [
-    {
-      title: "InternX-AI: Autonomous Agent Deployment",
-      duration: "4-10 MONTHS",
-      rating: "4.9/5",
-      students: "15k+ Students",
-      enrolled: "2152+ students enrolled in Jan 2026",
-      image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=1000", 
-      category: "AI & ML",
-      videoId: "whqLvigQWoE" 
-    },
-    {
-      title: "InternX-Cyber Security: Threat Intelligence",
-      duration: "4-10 MONTHS",
-      rating: "4.9/5",
-      students: "12k+ Students",
-      enrolled: "1817+ students enrolled in Jan 2026",
-      image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1000",
-      category: "SECURITY",
-      videoId: "vViMFjvVT9E"
-    },
-    {
-      title: "InternX-Blockchain: Smart Contract AI",
-      duration: "4-10 MONTHS",
-      rating: "4.9/5",
-      students: "13k+ Students",
-      enrolled: "1777+ students enrolled in Jan 2026",
-      image: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=1000",
-      category: "WEB3",
-      videoId: "qOVAbKKSH10"
-    }
+const allInternships = {
+  "AI & Data": [
+    { title: "InternX-AI Developer", id: "ai-dev", videoId: "whqLvigQWoE", image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=1000" },
+    { title: "InternX-Data Engineer", id: "data-eng", videoId: "kriafQfqGZE", image: "https://media.istockphoto.com/id/2159731054/photo/governmental-hacker-examines-info-on-a-big-screen-in-agency-office.webp?a=1&b=1&s=612x612&w=0&k=20&c=VuDS2ogcwfAAu74RVbcY7gAwUaKHoSMLwX41EQR2-yE=" },
+    { title: "InternX-AI Quality & Safety Engineer", id: "ai-safety", videoId: "vViMFjvVT9E", image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1000" },
   ],
-  "Technology & AI": [
-    {
-      title: "InternX-AI: Neural Training Protocols",
-      duration: "6 MONTHS",
-      rating: "4.9/5",
-      students: "10k+ Students",
-      enrolled: "1200+ enrolled",
-      image: "https://images.unsplash.com/photo-1615938165708-feda49ca470c?q=80&w=1000",
-      category: "AI",
-      videoId: "whqLvigQWoE"
-    },
-    {
-      title: "InternX-Cloud & DevOps: Global Infra",
-      duration: "4-10 MONTHS",
-      rating: "4.8/5",
-      students: "9k+ Students",
-      enrolled: "1100+ enrolled",
-      image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1000",
-      category: "CLOUD",
-      videoId: "kriafQfqGZE"
-    }
+  "Cloud & Infra": [
+    { title: "InternX-Cloud & AI Engineer", id: "cloud-ai", videoId: "kriafQfqGZE", image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=1000" },
+  ],
+  "Cybersecurity": [
+    { title: "InternX-Cyber Security Expert", id: "cyber-exp", videoId: "vViMFjvVT9E", image: "https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=1000" },
   ],
   "Web3 & Blockchain": [
-    {
-      title: "InternX-Web3: DApp Development",
-      duration: "4 MONTHS",
-      rating: "4.7/5",
-      students: "8k+ Students",
-      enrolled: "950+ enrolled",
-      image: "https://images.unsplash.com/photo-1620321023374-d1a68fbc720d?q=80&w=1000",
-      category: "BLOCKCHAIN",
-      videoId: "4XO3g7Rfamk"
-    }
+    { title: "InternX-Blockchain Developer", id: "eth-dev", videoId: "qOVAbKKSH10", image: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=1000" },
   ],
-  "Security & Cloud": [
-    {
-      title: "InternX-Cyber Security: Advanced Ops",
-      duration: "5 MONTHS",
-      rating: "4.9/5",
-      students: "5k+ Students",
-      enrolled: "600+ enrolled",
-      image: "https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=1000",
-      category: "CYBER",
-      videoId: "vViMFjvVT9E"
-    },
-    {
-      title: "InternX-Cloud & DevOps: AI Scaling",
-      duration: "4 MONTHS",
-      rating: "4.9/5",
-      students: "7k+ Students",
-      enrolled: "850+ enrolled",
-      image: "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?q=80&w=1000",
-      category: "DEVOPS",
-      videoId: "kriafQfqGZE"
-    }
+  "Product & Growth": [
+    { title: "InternX-AI Product Manager", id: "ai-pm", videoId: "4XO3g7Rfamk", image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1000" },
+    { title: "InternX-AI Marketing Specialist", id: "ai-mkt", videoId: "whqLvigQWoE", image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1000" },
+  ],
+  "Industry-Specific AI": [
+    { title: "InternX-FinTech AI Specialist", id: "fintech-ai", videoId: "qOVAbKKSH10", image: "https://media.istockphoto.com/id/2185214215/photo/businessman-using-ai-technology-with-business-operations-automation-systems-to-help-make.webp?a=1&b=1&s=612x612&w=0&k=20&c=1pAq5ww9tjjKySiiuPSZk71N8fDsN_GvwkKmZ3ssAA8=" },
+    { title: "InternX-HealthTech AI Specialist", id: "health-ai", videoId: "vViMFjvVT9E", image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=1000" },
+  ],
+  "Robotics & IoT": [
+    { title: "InternX-Robotics Engineer", id: "robot-eng", videoId: "kriafQfqGZE", image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1000" },
+    { title: "InternX-AI & IoT Engineer", id: "iot-eng", videoId: "whqLvigQWoE", image: "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1000" },
+    { title: "InternX-Drone & Automation Engineer", id: "drone-eng", videoId: "4XO3g7Rfamk", image: "https://images.unsplash.com/photo-1508614589041-895b88991e3e?q=80&w=1000" },
+  ],
+  "Future Tech": [
+    { title: "InternX-Humanoid Robotics Engineer", id: "humanoid", videoId: "vViMFjvVT9E", image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?q=80&w=1000" },
+    { title: "InternX-Smart Mobility Engineer", id: "mobility", videoId: "kriafQfqGZE", image: "https://media.istockphoto.com/id/1637506537/photo/multiracial-tachnicial-engineer-training-with-robot-arm.webp?a=1&b=1&s=612x612&w=0&k=20&c=XXV_xLuijifwyHFnxTBfWORRKNBCMLtcdtBmATZsRww=" },
+    { title: "InternX-XR & AI Developer", id: "xr-ai", videoId: "4XO3g7Rfamk", image: "https://media.istockphoto.com/id/1449176968/photo/freelancer-program-developer-working-on-new-app-software-typing-in-front-of-pc-checking-coding.webp?a=1&b=1&s=612x612&w=0&k=20&c=CICIx5gemDE1u3Xh3O4qOVjggZe2nPksn303opWupZs=" },
   ]
 };
 
-type TabName = keyof typeof courseData;
+type CategoryName = keyof typeof allInternships;
 
 export default function CourseGrid() {
-  const [activeTab, setActiveTab] = useState<TabName>("Top Internship");
+  const [activeTab, setActiveTab] = useState<CategoryName>("AI & Data");
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
 
-  const tabs: TabName[] = ['Top Internship', 'Technology & AI', 'Web3 & Blockchain', 'Security & Cloud'];
+  const tabs = Object.keys(allInternships) as CategoryName[];
 
   return (
     <section className="py-16 md:py-24 bg-[#020617] relative">
@@ -108,7 +52,7 @@ export default function CourseGrid() {
         
         <div className="text-center mb-10 md:mb-16">
           <h2 className="text-3xl md:text-5xl font-black text-white mb-6 tracking-tighter uppercase leading-tight">
-            Internship Tailored to your <span className="text-blue-500 italic block sm:inline">Learning Goals</span>
+            Explore All <span className="text-blue-500 italic block sm:inline">InternX Programs</span>
           </h2>
           
           <div className="flex overflow-x-auto no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0 sm:justify-center gap-2 mt-8">
@@ -129,9 +73,9 @@ export default function CourseGrid() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 min-h-[400px]">
-          {courseData[activeTab].map((course, idx) => (
+          {allInternships[activeTab].map((course, idx) => (
             <div 
-              key={`${activeTab}-${idx}`} 
+              key={`${course.id}-${idx}`} 
               className="group bg-[#0a1229] border border-white/10 rounded-[2.5rem] overflow-hidden hover:border-blue-500/50 transition-all duration-500 animate-in fade-in slide-in-from-bottom-4"
             >
               <div 
@@ -153,7 +97,7 @@ export default function CourseGrid() {
 
                 <div className="absolute top-4 left-4">
                   <span className="bg-blue-600 text-white text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-tighter">
-                    {course.category}
+                    {activeTab}
                   </span>
                 </div>
               </div>
@@ -165,16 +109,16 @@ export default function CourseGrid() {
 
                 <div className="space-y-3 mb-6">
                   <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest">
-                    <span className="text-slate-500">{course.duration}</span>
+                    <span className="text-slate-500">4-10 MONTHS</span>
                     <span className="flex items-center gap-1 text-yellow-500">
-                      <Star className="w-3 h-3 fill-current" /> {course.rating}
+                      <Star className="w-3 h-3 fill-current" /> 4.9/5
                     </span>
                   </div>
                   <div className="flex items-center gap-2 text-blue-400 text-[10px] font-black uppercase">
-                    <Users className="w-3 h-3" /> {course.students}
+                    <Users className="w-3 h-3" /> Industry-Grade Internship
                   </div>
                   <div className="text-slate-500 text-[9px] font-medium border-t border-white/5 pt-3 italic">
-                    {course.enrolled}
+                    Next Cohort: Jan 2026 Enrollment Open
                   </div>
                 </div>
 
@@ -192,7 +136,6 @@ export default function CourseGrid() {
         </div>
       </div>
 
-      {/* Video Modal Popup */}
       {selectedVideo && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-0 sm:p-4">
           <div className="absolute inset-0 bg-black/98 backdrop-blur-md" onClick={() => setSelectedVideo(null)} />
