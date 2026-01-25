@@ -10,6 +10,7 @@ import AdvantagesSection from '@/components/b2c/AdvantagesSection';
 import PillarsSection from '@/components/b2c/PillarsSection';
 import GlobalNetwork from '@/components/b2c/GlobalNetwork';
 import MediaPresence from '@/components/b2c/MediaPresence';
+import MasterClassSection from '@/components/b2c/MasterClassSection';
 import LogoSection from '@/components/b2c/LogoSection';
 import CurriculumSection from '@/components/b2c/CurriculumSection';
 import MentorshipSection from '@/components/b2c/MentorshipSection';
@@ -33,6 +34,7 @@ export default function B2CPage() {
         <PillarsSection />
         <GlobalNetwork />
         <MediaPresence />
+        <MasterClassSection />
         <LogoSection />
         <CurriculumSection />
         <MentorshipSection />
