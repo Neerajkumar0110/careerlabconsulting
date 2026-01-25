@@ -76,8 +76,8 @@ export default function B2BPricingSection() {
       
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="text-5xl md:text-7xl font-black tracking-tighter uppercase mb-6">
-            B2B <span className="text-blue-500">Solutions</span>
+          <h2 className="text-5xl md:text-7xl font-black tracking-tighter capitalise mb-6">
+            SaaS <span className="text-blue-500">Solutions Eco-System</span>
           </h2>
           
           <div className="inline-flex p-1 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-md">
