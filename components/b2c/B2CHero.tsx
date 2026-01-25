@@ -43,7 +43,7 @@ const students: Student[] = [
     batch: "Neural Ops", 
     country: "USA", 
     id: "IX-2026-US-8821", 
-    img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200", 
+    img: "https://images.unsplash.com/photo-1610462679603-785caa71c4b9?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fFNhcmFoJTIwSmVua2luc3xlbnwwfHwwfHx8MA%3D%3D", 
     progress: "94%", 
     rank: "#12", 
     score: "S",
