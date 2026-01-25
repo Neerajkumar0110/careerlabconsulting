@@ -33,7 +33,7 @@ const students: Student[] = [
     batchNumber: "B-26/01",
     country: "India", 
     id: "IX-2026-IN-1024", 
-    img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200", 
+    img: "https://plus.unsplash.com/premium_photo-1682089892133-556bde898f2c?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8aW5kaWFuJTIwYm95fGVufDB8fDB8fHww", 
     progress: "88%", 
     rank: "#42", 
     performanceScore: "94.2",
@@ -43,12 +43,12 @@ const students: Student[] = [
     uptime: "99.8%"
   },
   { 
-    name: "Sarah Jenkins", 
+    name: "Priya Patel", 
     batch: "Neural Ops", 
     batchNumber: "B-26/04",
-    country: "USA", 
-    id: "IX-2026-US-8821", 
-    img: "https://images.unsplash.com/photo-1610462679603-785caa71c4b9?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fFNhcmFoJTIwSmVua2luc3xlbnwwfHwwfHx8MA%3D%3D", 
+    country: "India", 
+    id: "IX-2026-IN-8821", 
+    img: "https://images.unsplash.com/photo-1622049605334-72e1e4432346?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8aW5kaWFuJTIwZ2lybHxlbnwwfHwwfHx8MA%3D%3D", 
     progress: "94%", 
     rank: "#12", 
     performanceScore: "98.5",
@@ -58,12 +58,12 @@ const students: Student[] = [
     uptime: "100%"
   },
   { 
-    name: "Omar Al-Zayed", 
+    name: "Ishaan Verma", 
     batch: "Agentic Systems", 
     batchNumber: "B-26/02",
-    country: "Dubai", 
-    id: "IX-2026-DXB-4402", 
-    img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=200", 
+    country: "India", 
+    id: "IX-2026-IN-4402", 
+    img: "https://plus.unsplash.com/premium_photo-1661713385270-83f8d2ad6b21?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8aW5kaWFuJTIwYm95fGVufDB8fDB8fHww", 
     progress: "76%", 
     rank: "#108", 
     performanceScore: "82.1",
@@ -83,7 +83,7 @@ export default function B2CHero() {
     if (!selectedProfile) {
       const timer = setInterval(() => {
         setIndex((prev) => (prev + 1) % students.length);
-      }, 20000); 
+      }, 8000); 
       return () => clearInterval(timer);
     }
   }, [selectedProfile]);
@@ -160,7 +160,7 @@ export default function B2CHero() {
 
                 <div className="flex items-center gap-5 mb-8">
                   <div className="relative">
-                    <img src={activeStudent.img} className="w-20 h-20 rounded-3xl object-cover border-2 border-blue-500/30 shadow-lg" alt="" />
+                    <img src={activeStudent.img} className="w-20 h-20 rounded-3xl object-cover border-2 border-blue-500/30 shadow-lg" alt={activeStudent.name} />
                     <div className="absolute -bottom-2 -right-2 bg-blue-600 p-1.5 rounded-xl border-4 border-[#0a0f1d]">
                       <Zap size={14} className="text-white" />
                     </div>
@@ -185,17 +185,17 @@ export default function B2CHero() {
                 <div className="grid grid-cols-3 gap-4 mb-8">
                   <div className="bg-white/[0.02] border border-white/5 rounded-3xl p-4 text-left">
                     <Target className="w-5 h-5 text-blue-400 mb-2" />
-                    <p className="text-slate-500 text-[8px] font-black uppercase mb-1">Success</p>
+                    <p className="text-slate-400 text-[11px] font-bold uppercase mb-1">Success</p>
                     <p className="text-white font-black text-xl">{activeStudent.progress}</p>
                   </div>
                   <div className="bg-white/[0.02] border border-white/5 rounded-3xl p-4 text-left">
                     <TrendingUp className="w-5 h-5 text-purple-400 mb-2" />
-                    <p className="text-slate-500 text-[8px] font-black uppercase mb-1">Perf. Score</p>
+                    <p className="text-slate-400 text-[11px] font-bold uppercase mb-1">Perf. Score</p>
                     <p className="text-white font-black text-xl">{activeStudent.performanceScore}</p>
                   </div>
                   <div className="bg-white/[0.02] border border-white/5 rounded-3xl p-4 text-left">
                     <Award className="w-5 h-5 text-emerald-400 mb-2" />
-                    <p className="text-slate-500 text-[8px] font-black uppercase mb-1">Grade</p>
+                    <p className="text-slate-400 text-[11px] font-bold uppercase mb-1">Grade</p>
                     <p className="text-white font-black text-xl">{activeStudent.score}</p>
                   </div>
                 </div>
@@ -204,11 +204,11 @@ export default function B2CHero() {
                    <div className="flex gap-6">
                       <div className="text-left">
                         <div className="text-blue-500 font-black text-2xl tracking-tighter">{activeStudent.rank}</div>
-                        <div className="text-[8px] text-slate-500 font-black uppercase tracking-widest">Batch Rank</div>
+                        <div className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Batch Rank</div>
                       </div>
                       <div className="text-left border-l border-white/10 pl-6">
                         <div className="text-white font-black text-2xl tracking-tighter">{activeStudent.batchNumber}</div>
-                        <div className="text-[8px] text-slate-500 font-black uppercase tracking-widest">Batch No.</div>
+                        <div className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Batch No.</div>
                       </div>
                    </div>
                    <button 
@@ -258,22 +258,22 @@ export default function B2CHero() {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
                   <div className="bg-[#0f172a] p-4 rounded-3xl border border-white/5 text-center">
                     <Globe size={20} className="text-blue-500 mx-auto mb-2" />
-                    <p className="text-slate-500 text-[7px] font-black uppercase">Uptime</p>
+                    <p className="text-slate-500 text-[8px] font-bold uppercase">Uptime</p>
                     <p className="text-white font-black text-lg">{selectedProfile.uptime}</p>
                   </div>
                   <div className="bg-[#0f172a] p-4 rounded-3xl border border-white/5 text-center">
                     <Code size={20} className="text-purple-500 mx-auto mb-2" />
-                    <p className="text-slate-500 text-[7px] font-black uppercase">Nodes</p>
+                    <p className="text-slate-500 text-[8px] font-bold uppercase">Nodes</p>
                     <p className="text-white font-black text-lg">{selectedProfile.projects}</p>
                   </div>
                   <div className="bg-[#0f172a] p-4 rounded-3xl border border-white/5 text-center">
                     <Hash size={20} className="text-emerald-500 mx-auto mb-2" />
-                    <p className="text-slate-500 text-[7px] font-black uppercase">ID</p>
+                    <p className="text-slate-500 text-[8px] font-bold uppercase">ID</p>
                     <p className="text-white font-black text-[10px] mt-1 uppercase">{selectedProfile.id.split('-').pop()}</p>
                   </div>
                   <div className="bg-[#0f172a] p-4 rounded-3xl border border-white/5 text-center">
                     <CheckCircle2 size={20} className="text-blue-400 mx-auto mb-2" />
-                    <p className="text-slate-500 text-[7px] font-black uppercase">Status</p>
+                    <p className="text-slate-500 text-[8px] font-bold uppercase">Status</p>
                     <p className="text-white font-black text-[10px] mt-1 uppercase">Certified</p>
                   </div>
                 </div>
@@ -305,4 +305,4 @@ export default function B2CHero() {
       </AnimatePresence>
     </section>
   );
-}   
+}
