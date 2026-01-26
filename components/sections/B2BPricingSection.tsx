@@ -3,8 +3,9 @@
 import React, { useState } from 'react';
 import { 
   Check, Zap, Crown, Building2, 
-  Calendar, Loader2, ShieldCheck, Rocket
+  Calendar, Loader2, ShieldCheck, Rocket, ArrowRight, Info
 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import Script from 'next/script';
 import ScheduleMeetingModal from './ScheduleMeetingModal'; 
 
@@ -17,33 +18,40 @@ interface PricingTier {
   features: string[];
   icon: any;
   isEnterprise?: boolean;
+  description: string;
 }
 
 const CATEGORIES: Record<PricingCategory, PricingTier[]> = {
   'Single Product': [
-    { name: 'Starter', price: '₹25,000', rawPrice: 2500000, icon: Rocket, features: ['1 Core Module', 'Email Support', 'Basic Analytics'] },
-    { name: 'Growth', price: '₹50,000', rawPrice: 5000000, icon: Zap, features: ['3 Core Modules', 'Priority Support', 'Advanced Analytics'] },
-    { name: 'Advanced', price: '₹1,00,000', rawPrice: 10000000, icon: Crown, features: ['All Core Modules', '24/7 Support', 'Custom Reporting'] },
-    { name: 'Enterprise', price: 'Custom', isEnterprise: true, icon: Building2, features: ['Dedicated Infrastructure', 'SLA Guarantee', 'Custom Workflows'] },
+    { name: 'Starter', price: '₹25,000', rawPrice: 2500000, icon: Rocket, description: 'Perfect for small teams starting their journey.', features: ['1 Core Module', 'Email Support', 'Basic Analytics', 'Single User Access'] },
+    { name: 'Growth', price: '₹50,000', rawPrice: 5000000, icon: Zap, description: 'Scaling tools for growing businesses.', features: ['3 Core Modules', 'Priority Support', 'Advanced Analytics', '5 User Access'] },
+    { name: 'Advanced', price: '₹1,00,000', rawPrice: 10000000, icon: Crown, description: 'The power of full modular control.', features: ['All Core Modules', '24/7 Support', 'Custom Reporting', 'Unlimited Users'] },
+    { name: 'Enterprise', price: 'Custom', isEnterprise: true, icon: Building2, description: 'Custom infrastructure for big players.', features: ['Dedicated Infra', 'SLA Guarantee', 'Custom Workflows', 'On-Premise Option'] },
   ],
   'Combo': [
-    { name: 'Starter', price: '₹50,000', rawPrice: 5000000, icon: Rocket, features: ['2 Product Suite', 'Shared Data Lake', 'Basic Automations'] },
-    { name: 'Growth', price: '₹1,00,000', rawPrice: 10000000, icon: Zap, features: ['4 Product Suite', 'Unified Dashboard', 'Advance Automations'] },
-    { name: 'Advanced', price: '₹2,00,000', rawPrice: 20000000, icon: Crown, features: ['Complete Product Suite', 'AI Insights', 'Custom Integrations'] },
-    { name: 'Enterprise', price: 'Custom', isEnterprise: true, icon: Building2, features: ['Unlimited Users', 'Data Sovereignty', 'Custom Development'] },
+    { name: 'Starter', price: '₹50,000', rawPrice: 5000000, icon: Rocket, description: 'Bundled essentials for startups.', features: ['2 Product Suite', 'Shared Data Lake', 'Basic Automations', 'Standard Security'] },
+    { name: 'Growth', price: '₹1,00,000', rawPrice: 10000000, icon: Zap, description: 'Full synergy across your business.', features: ['4 Product Suite', 'Unified Dashboard', 'Advance Automations', 'Audit Logs'] },
+    { name: 'Advanced', price: '₹2,00,000', rawPrice: 20000000, icon: Crown, description: 'Intelligence-driven enterprise suite.', features: ['Complete Product Suite', 'AI Insights', 'Custom Integrations', 'White-labeling'] },
+    { name: 'Enterprise', price: 'Custom', isEnterprise: true, icon: Building2, description: 'Maximum scale, zero compromise.', features: ['Unlimited Users', 'Data Sovereignty', 'Custom Development', 'VIP Support'] },
   ],
   'All-in-One': [
-    { name: 'Starter', price: '₹10,00,000', rawPrice: 100000000, icon: Rocket, features: ['Full Ecosystem Access', 'Enterprise Security', 'Regional Hosting'] },
-    { name: 'Growth', price: '₹15,00,000', rawPrice: 150000000, icon: Zap, features: ['Scaling Infrastructure', 'Global CDN', 'AI Operations Pack'] },
-    { name: 'Advanced', price: '₹25,00,000', rawPrice: 250000000, icon: Crown, features: ['Unlimited Scaling', 'Custom LLM Training', 'Full Source Audit'] },
-    { name: 'Enterprise', price: 'Custom', isEnterprise: true, icon: Building2, features: ['Government Grade Security', 'On-Premise Option', 'Bespoke AI Solutions'] },
+    { name: 'Starter', price: '₹10,00,000', rawPrice: 100000000, icon: Rocket, description: 'Total ecosystem access for regions.', features: ['Full Ecosystem Access', 'Enterprise Security', 'Regional Hosting', 'Training Portal'] },
+    { name: 'Growth', price: '₹15,00,000', rawPrice: 150000000, icon: Zap, description: 'The ultimate scaling powerhouse.', features: ['Scaling Infrastructure', 'Global CDN', 'AI Operations Pack', '24/7 Dedicated Ops'] },
+    { name: 'Advanced', price: '₹25,00,000', rawPrice: 250000000, icon: Crown, description: 'The pinnacle of B2B SaaS tech.', features: ['Unlimited Scaling', 'Custom LLM Training', 'Full Source Audit', 'Infinite API calls'] },
+    { name: 'Enterprise', price: 'Custom', isEnterprise: true, icon: Building2, description: 'Bespoke government-grade tech.', features: ['Gov-Grade Security', 'On-Premise Option', 'Bespoke AI Solutions', 'Lifetime Updates'] },
   ]
 };
 
 export default function B2BPricingSection() {
   const [activeTab, setActiveTab] = useState<PricingCategory>('Single Product');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<{category: string, tier: string} | null>(null);
   const [loading, setLoading] = useState<string | null>(null);
+
+  const openBooking = (tierName: string) => {
+    setSelectedPlan({ category: activeTab, tier: tierName });
+    setIsModalOpen(true);
+  };
 
   const handlePayment = (tier: PricingTier) => {
     if (!tier.rawPrice) return;
@@ -56,90 +64,169 @@ export default function B2BPricingSection() {
       name: "CareerLab B2B",
       description: `${tier.name} - ${activeTab} Plan`,
       handler: (response: any) => {
-        window.open(`https://wa.me/918700236923?text=B2B_Payment_Success_ID_${response.razorpay_payment_id}`, '_blank');
+        window.open(`https://wa.me/918700236923?text=B2B_Payment_Success_Plan_${activeTab}_Tier_${tier.name}_ID_${response.razorpay_payment_id}`, '_blank');
         setLoading(null);
       },
-      theme: { color: "#3b82f6" },
+      prefill: {
+        name: "B2B Client",
+        email: "client@company.com"
+      },
+      theme: { color: "#2563eb" },
     };
 
     if ((window as any).Razorpay) {
-      new (window as any).Razorpay(options).open();
+      const rzp = new (window as any).Razorpay(options);
+      rzp.open();
     } else {
-      alert("Razorpay SDK is loading, please try again in a moment.");
+      alert("Razorpay SDK not loaded. Please check your internet connection.");
     }
     setLoading(null);
   };
 
   return (
-    <section className="py-24 bg-[#020617] text-white">
+    <section className="relative py-24 bg-[#020617] text-white overflow-hidden">
+      {/* Dynamic Background */}
+      <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-600/10 blur-[120px] rounded-full" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-600/10 blur-[120px] rounded-full" />
+      </div>
+
       <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
       
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-5xl md:text-7xl font-black tracking-tighter capitalise mb-6">
-            SaaS <span className="text-blue-500">Solutions Eco-System</span>
-          </h2>
+      <div className="relative z-10 max-w-7xl mx-auto px-6">
+        <div className="text-center mb-12">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <h2 className="text-5xl md:text-7xl font-black tracking-tighter mb-4">
+              Flexible <span className="text-blue-500">Pricing</span>
+            </h2>
+            <p className="text-slate-400 max-w-2xl mx-auto text-lg mb-10">
+              Scale your business infrastructure with our modular SaaS solutions. No hidden fees.
+            </p>
+          </motion.div>
           
-          <div className="inline-flex p-1 bg-white/5 rounded-2xl border border-white/10 backdrop-blur-md">
+          {/* Animated Tab Switcher */}
+          <div className="inline-flex p-1.5 bg-white/5 border border-white/10 rounded-2xl backdrop-blur-xl mb-12">
             {(Object.keys(CATEGORIES) as PricingCategory[]).map((cat) => (
               <button
                 key={cat}
                 onClick={() => setActiveTab(cat)}
-                className={`px-6 py-2.5 rounded-xl text-xs font-bold transition-all duration-300 ${
-                  activeTab === cat ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-400 hover:text-white'
+                className={`relative px-6 py-3 rounded-xl text-xs md:text-sm font-bold transition-all duration-300 ${
+                  activeTab === cat ? 'text-white' : 'text-slate-400 hover:text-white'
                 }`}
               >
-                {cat}
+                {activeTab === cat && (
+                  <motion.div 
+                    layoutId="activeTabGlow"
+                    className="absolute inset-0 bg-blue-600 rounded-xl shadow-[0_0_20px_rgba(37,99,235,0.4)]"
+                  />
+                )}
+                <span className="relative z-10">{cat}</span>
               </button>
             ))}
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {CATEGORIES[activeTab].map((tier) => (
-            <div 
-              key={tier.name}
-              className={`relative p-8 rounded-[2.5rem] border transition-all duration-500 flex flex-col ${
-                tier.name === 'Growth' ? 'bg-blue-600/10 border-blue-500/50 scale-105 z-10' : 'bg-white/[0.02] border-white/10'
-              }`}
-            >
-              <tier.icon className={`w-12 h-12 mb-6 ${tier.name === 'Growth' ? 'text-blue-400' : 'text-slate-500'}`} />
-              <h3 className="text-2xl font-black uppercase mb-1">{tier.name}</h3>
-              <div className="text-3xl font-bold mb-6 text-blue-400">{tier.price}</div>
-              
-              <div className="space-y-4 mb-8 flex-1">
-                {tier.features.map((f) => (
-                  <div key={f} className="flex items-center gap-3 text-sm text-slate-400">
-                    <Check className="w-4 h-4 text-blue-500" /> {f}
+        {/* Pricing Cards */}
+        <motion.div 
+          layout
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+        >
+          <AnimatePresence mode="wait">
+            {CATEGORIES[activeTab].map((tier, idx) => (
+              <motion.div 
+                key={`${activeTab}-${tier.name}`}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.3, delay: idx * 0.05 }}
+                className={`group relative p-8 rounded-[2.5rem] border transition-all duration-500 flex flex-col ${
+                  tier.name === 'Growth' 
+                    ? 'bg-blue-600/5 border-blue-500/50 scale-100 lg:scale-105 shadow-[0_20px_50px_rgba(37,99,235,0.15)] z-20' 
+                    : 'bg-white/[0.02] border-white/10 hover:border-white/30'
+                }`}
+              >
+                {tier.name === 'Growth' && (
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-blue-500 text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-[0.2em] shadow-xl">
+                    Recommended
                   </div>
-                ))}
-              </div>
+                )}
 
-              {tier.isEnterprise ? (
+                <div className="mb-6 flex justify-between items-start">
+                  <div className={`p-3 rounded-2xl ${tier.name === 'Growth' ? 'bg-blue-500 text-white' : 'bg-white/5 text-blue-400'}`}>
+                    <tier.icon size={28} />
+                  </div>
+                </div>
+
+                <h3 className="text-2xl font-black uppercase mb-1">{tier.name}</h3>
+                <p className="text-slate-500 text-xs mb-6 line-clamp-2 h-8">{tier.description}</p>
+                
+                <div className="mb-8">
+                  <div className="text-4xl font-bold text-white tracking-tight">{tier.price}</div>
+                  {!tier.isEnterprise && <div className="text-slate-500 text-xs mt-1 uppercase tracking-widest">Single License</div>}
+                </div>
+                
+                <div className="space-y-4 mb-10 flex-1">
+                  {tier.features.map((f) => (
+                    <div key={f} className="flex items-start gap-3 text-sm text-slate-300">
+                      <div className="mt-1 bg-blue-500/20 p-0.5 rounded-full">
+                        <Check className="w-3 h-3 text-blue-500" />
+                      </div>
+                      {f}
+                    </div>
+                  ))}
+                </div>
+
                 <button 
-                  onClick={() => setIsModalOpen(true)}
-                  className="w-full py-4 rounded-xl bg-white text-black font-bold uppercase tracking-widest text-[10px] hover:bg-slate-200 transition-colors flex items-center justify-center gap-2"
-                >
-                  <Calendar className="w-4 h-4" /> Book Appointment
-                </button>
-              ) : (
-                <button 
-                  onClick={() => handlePayment(tier)}
+                  onClick={() => tier.isEnterprise ? openBooking(tier.name) : handlePayment(tier)}
                   disabled={loading === tier.name}
-                  className="w-full py-4 rounded-xl bg-blue-600 text-white font-bold uppercase tracking-widest text-[10px] hover:bg-blue-500 transition-all flex items-center justify-center gap-2"
+                  className={`w-full py-4 rounded-2xl font-black uppercase tracking-[0.15em] text-[11px] transition-all flex items-center justify-center gap-3 active:scale-[0.98] ${
+                    tier.name === 'Growth' 
+                      ? 'bg-blue-600 hover:bg-blue-500 text-white' 
+                      : 'bg-white text-black hover:bg-slate-200'
+                  }`}
                 >
-                  {loading === tier.name ? <Loader2 className="animate-spin" /> : <ShieldCheck className="w-4 h-4" />} Get Started
+                  {loading === tier.name ? (
+                    <Loader2 className="animate-spin" />
+                  ) : tier.isEnterprise ? (
+                    <><Calendar className="w-4 h-4" /> Book Call</>
+                  ) : (
+                    <><ShieldCheck className="w-4 h-4" /> Get Started <ArrowRight className="w-3 h-3" /></>
+                  )}
                 </button>
-              )}
-            </div>
-          ))}
-        </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </motion.div>
 
-        <ScheduleMeetingModal 
-          isOpen={isModalOpen} 
-          onClose={() => setIsModalOpen(false)} 
-        />
+        {/* Floating Trust Banner */}
+        <div className="mt-20 p-8 rounded-[3rem] bg-gradient-to-r from-blue-600/10 via-transparent to-purple-600/10 border border-white/10 flex flex-col md:flex-row items-center justify-between gap-6 backdrop-blur-sm">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
+              <Info className="text-blue-400" />
+            </div>
+            <div>
+              <h4 className="font-bold text-lg">Need a customized solution?</h4>
+              <p className="text-slate-400 text-sm">Talk to our architecture experts for white-label requirements.</p>
+            </div>
+          </div>
+          <button 
+            onClick={() => openBooking('Custom Architecture')}
+            className="px-8 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl font-bold transition-all text-sm"
+          >
+            Contact Sales
+          </button>
+        </div>
       </div>
+
+      <ScheduleMeetingModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        planInfo={selectedPlan}
+      />
     </section>
   );
 }
