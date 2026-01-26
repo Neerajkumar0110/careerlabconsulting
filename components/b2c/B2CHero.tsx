@@ -49,13 +49,17 @@ export default function B2CHero() {
       const skill = skills[i % skills.length];
       const countryCode = country.slice(0, 2).toUpperCase();
       
+      // Professional young adult headshots ke liye specific IDs ka use
+      const imageId = (i % 50) + 10; 
+      
       return {
         name: name,
         batch: skill,
         batchNumber: `CLC/25-26/${1016 + i}`,
         country: country,
         id: `IX-2026-${countryCode}-${1024 + (i * 7)}`,
-        img: `https://i.pravatar.cc/300?u=${country}`, 
+        // Updated Image URL: Young, professional looking avatars
+        img: `https://i.pravatar.cc/300?img=${imageId}`, 
         progress: `${85 + (i % 12)}%`,
         rank: `#${i + 1}`,
         performanceScore: (90 + (i % 9.5)).toFixed(1),
@@ -86,6 +90,7 @@ export default function B2CHero() {
   return (
     <section className="relative min-h-screen pt-24 pb-12 md:pt-10 md:pb-20 overflow-hidden bg-[#020617] flex items-center">
       
+      {/* Background Effects */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="absolute top-[-5%] right-[-5%] w-[300px] md:w-[800px] h-[300px] md:h-[800px] bg-blue-600/10 blur-[80px] md:blur-[150px] rounded-full animate-pulse will-change-transform" />
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:30px_30px] md:bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
@@ -94,6 +99,7 @@ export default function B2CHero() {
       <div className="max-w-[1400px] mx-auto px-5 md:px-6 relative z-10 w-full">
         <div className="flex flex-col lg:grid lg:grid-cols-12 gap-10 md:gap-12 items-center">
           
+          {/* Content Left */}
           <div className="w-full lg:col-span-6 flex flex-col items-center lg:items-start text-center lg:text-left order-1">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-2xl bg-white/[0.03] border border-white/10 mb-6 md:mb-8 backdrop-blur-md">
               <Sparkles className="w-3 h-3 text-blue-400" />
@@ -129,6 +135,7 @@ export default function B2CHero() {
             </div>
           </div>
 
+          {/* Student Card Right */}
           <div className="w-full lg:col-span-6 flex justify-center order-2 mt-4 md:mt-0">
             <AnimatePresence mode="wait">
               <motion.div 
@@ -215,6 +222,7 @@ export default function B2CHero() {
         </div>
       </div>
 
+      {/* Profile Detail Overlay */}
       <AnimatePresence>
         {selectedProfile && (
           <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
@@ -276,6 +284,7 @@ export default function B2CHero() {
         )}
       </AnimatePresence>
 
+      {/* Video Modal */}
       <AnimatePresence>
         {isVideoOpen && (
           <div className="fixed inset-0 z-[120] flex items-center justify-center p-2 md:p-4">

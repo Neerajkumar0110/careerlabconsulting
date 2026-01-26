@@ -9,7 +9,7 @@ const LLMServices = () => {
       title: "RAG Engineering",
       icon: <BrainCircuit className="w-8 h-8 text-blue-400" />,
       description: "We implement tailored RAG pipelines using state-of-the-art techniques to automate complex processes while eliminating hallucinations.",
-      image: "https://images.pexels.com/photos/373543/pexels-photo-373543.jpeg"
+      image: "https://img.freepik.com/free-photo/woman-working-with-big-ruler-pen-table_23-2148039879.jpg"
     },
     {
       title: "AI Consulting",
@@ -27,13 +27,12 @@ const LLMServices = () => {
       title: "LLMOps",
       icon: <Settings2 className="w-8 h-8 text-emerald-400" />,
       description: "Efficient optimization, scaling, and management of your models using tailored LLM solutions and monitoring tools.",
-      image: "https://images.pexels.com/photos/373543/pexels-photo-373543.jpeg"
+      image: "https://img.freepik.com/free-photo/hand-using-laptop-computer-with-virtual-screen-document-online-approve-paperless-quality-assurance-erp-management-concept_616485-61.jpg"
     }
   ];
 
   return (
     <section className="py-24 px-4 md:px-12 bg-[#020617] relative overflow-hidden">
-      {/* Background Glows for Premium Look */}
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-600/10 blur-[120px] rounded-full" />
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-600/10 blur-[120px] rounded-full" />
 
