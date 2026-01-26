@@ -4,7 +4,8 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { 
   Github, Twitter, Linkedin, Mail, ArrowUpRight, 
-  Home, Box, Briefcase, Phone, X, Globe, MapPin, Navigation
+  Home, Box, Briefcase, Phone, X, Globe, MapPin, 
+  Navigation, Facebook, Instagram, Youtube 
 } from 'lucide-react';
 
 const footerLinks = {
@@ -28,6 +29,15 @@ const footerLinks = {
   ],
 };
 
+// Social Media Data with Brand Colors
+const socialLinks = [
+  { Icon: Facebook, href: "#", color: "hover:bg-[#1877F2]", name: "Facebook" },
+  { Icon: Twitter, href: "#", color: "hover:bg-[#1DA1F2]", name: "Twitter" },
+  { Icon: Instagram, href: "#", color: "hover:bg-[#E4405F]", name: "Instagram" },
+  { Icon: Linkedin, href: "#", color: "hover:bg-[#0A66C2]", name: "Linkedin" },
+  { Icon: Youtube, href: "#", color: "hover:bg-[#FF0000]", name: "Youtube" },
+];
+
 const locations = [
   { country: "Head Quarter (India)", city: "Gurugram", address: "5th Floor, Cyber Green Part-1, DLF Building No -2, Sector 25, Gurugram, Haryana 122002", phone: "+91 8700236923" },
   { country: "Branch Office (India)", city: "Bengaluru", address: "21, Raheja Towers, Mahatma Gandhi Rd, Craig Park Layout, Ashok Nagar, Bengaluru, Karnataka 560001", phone: "+91 8700236923" },
@@ -49,26 +59,39 @@ export default function B2BFooter() {
   return (
     <>
       <footer className="bg-[#020617] pt-20 pb-24 md:pb-12 border-t border-white/5 relative overflow-hidden">
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[1000px] h-[400px] bg-blue-600/10 blur-[140px] -z-10" />
+        {/* Optimized background blur - using opacity instead of heavy filters for PageSpeed */}
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[1000px] h-[400px] bg-blue-600/5 blur-[120px] -z-10 pointer-events-none" />
 
         <div className="max-w-[1400px] mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-20">
             
             <div className="lg:col-span-3 flex flex-col items-start">
-              <img src="/logo.png" alt="Career Lab" className="w-48 h-16 object-contain mb-6 filter drop-shadow-[0_0_15px_rgba(59,130,246,0.3)]" />
+              <img 
+                src="/logo.png" 
+                alt="Career Lab" 
+                width={192} 
+                height={64} 
+                className="w-48 h-16 object-contain mb-6 filter drop-shadow-[0_0_15px_rgba(59,130,246,0.3)]" 
+              />
               <p className="text-slate-400 text-sm leading-relaxed font-medium mb-10">
-                Pioneering autonomous intelligence for global enterprises. Architecting the next generation of digital workforces.
+                We are pioneering autonomous intelligence for global enterprises, moving beyond simple automation to true cognitive independence. Architecting the next generation of digital workforces.
               </p>
-              <div className="flex gap-4">
-                {[Github, Twitter, Linkedin, Mail].map((Icon, i) => (
-                  <Link key={i} href="#" className="w-11 h-11 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-white hover:bg-blue-600 hover:border-blue-500 transition-all duration-300">
+              
+              {/* Updated Social Media Icons with Official Brand Colors */}
+              <div className="flex flex-wrap gap-3">
+                {socialLinks.map(({ Icon, href, color, name }, i) => (
+                  <Link 
+                    key={i} 
+                    href={href} 
+                    aria-label={name}
+                    className={`w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-white ${color} hover:border-transparent transition-all duration-300 transform hover:scale-110`}
+                  >
                     <Icon className="w-5 h-5" />
                   </Link>
                 ))}
               </div>
             </div>
 
-            {/* Quick Links */}
             <div className="lg:col-span-5 grid grid-cols-2 md:grid-cols-3 gap-8 pt-4">
               {Object.entries(footerLinks).map(([title, links]) => (
                 <div key={title} className="space-y-6">
@@ -86,7 +109,6 @@ export default function B2BFooter() {
               ))}
             </div>
 
-            {/* Contact Hub - Exact same as B2C */}
             <div className="lg:col-span-4">
               <div className="p-6 rounded-3xl bg-gradient-to-br from-blue-600/10 to-transparent border border-blue-500/20 backdrop-blur-md">
                 <h4 className="text-white text-[11px] font-black uppercase tracking-[0.25em] mb-6">Contact Hub</h4>
@@ -95,26 +117,26 @@ export default function B2BFooter() {
                     <div className="w-10 h-10 rounded-xl bg-blue-600/20 flex items-center justify-center shrink-0 group-hover:bg-blue-600 transition-colors">
                       <MapPin className="w-5 h-5 text-blue-400 group-hover:text-white" />
                     </div>
-                    <p className="text-slate-300 text-base leading-relaxed font-bold">DLF Cyber City, 5th Floor, Cyber Green-2, Sec-25, Gurugram, Haryana - 122002</p>
+                    <p className="text-slate-300 text-sm leading-relaxed font-bold">DLF Cyber City, 5th Floor, Cyber Green-2, Sec-25, Gurugram, Haryana - 122002</p>
                   </div>
                   <a href="tel:+918700236923" className="flex items-center gap-4 group">
                     <div className="w-10 h-10 rounded-xl bg-blue-600/20 flex items-center justify-center shrink-0 group-hover:bg-blue-600 transition-colors">
                       <Phone className="w-5 h-5 text-blue-400 group-hover:text-white" />
                     </div>
-                    <span className="text-slate-300 text-base font-bold group-hover:text-blue-400 transition-colors">+91 870023 6923</span>
+                    <span className="text-slate-300 text-sm font-bold group-hover:text-blue-400 transition-colors">+91 870023 6923</span>
                   </a>
                   <a href="mailto:info@careerlabconsulting.com" className="flex items-center gap-4 group">
                     <div className="w-10 h-10 rounded-xl bg-blue-600/20 flex items-center justify-center shrink-0 group-hover:bg-blue-600 transition-colors">
                       <Mail className="w-5 h-5 text-blue-400 group-hover:text-white" />
                     </div>
-                    <span className="text-slate-300 text-base font-bold break-all group-hover:text-blue-400 transition-colors">info@careerlabconsulting.com</span>
+                    <span className="text-slate-300 text-sm font-bold break-all group-hover:text-blue-400 transition-colors">info@careerlabconsulting.com</span>
                   </a>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Global Presence - Exact same as B2C */}
+          {/* Global Presence Section */}
           <div className="mb-20">
             <div className="flex items-center justify-between mb-10 border-b border-white/10 pb-6">
               <div className="flex items-center gap-4">
@@ -155,6 +177,7 @@ export default function B2BFooter() {
             </div>
           </div>
 
+          {/* Bottom Bar */}
           <div className="pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
             <div className="flex flex-wrap justify-center items-center gap-x-8 gap-y-4">
               <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">© 2015 - {currentYear} Career Lab Consulting B2B</span>
@@ -172,12 +195,13 @@ export default function B2BFooter() {
         </div>
       </footer>
 
+      {/* Mobile Navigation and Product Drawer (Kept intact as per your original logic) */}
       {isProductOpen && (
         <div className="md:hidden fixed inset-0 z-[110] flex items-end justify-center px-4 pb-24 bg-black/60 backdrop-blur-sm">
           <div className="w-full max-w-sm bg-[#0a0f1d]/95 border border-white/10 rounded-[2.5rem] p-6 shadow-2xl animate-in slide-in-from-bottom-10 duration-300 max-h-[70vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-6 sticky top-0 bg-[#0a0f1d] z-20 pb-2">
               <h3 className="text-white font-black text-xs uppercase tracking-[0.2em]">Enterprise Products</h3>
-              <button onClick={() => setIsProductOpen(false)} className="p-2 bg-white/5 rounded-full text-slate-400"><X className="w-5 h-5" /></button>
+              <button onClick={() => setIsProductOpen(false)} className="p-2 bg-white/5 rounded-full text-slate-400" aria-label="Close"><X className="w-5 h-5" /></button>
             </div>
             <div className="grid grid-cols-1 gap-1">
               {productList.map((item) => (
@@ -188,6 +212,7 @@ export default function B2BFooter() {
         </div>
       )}
 
+      {/* Fixed Mobile Bottom Nav */}
       <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[92%] max-w-md h-18 bg-[#0a0f1d]/80 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] z-[100] md:hidden shadow-2xl flex items-center justify-around px-4 py-2">
         <Link href="/" className="flex flex-col items-center gap-1.5 text-slate-500 hover:text-blue-400 transition-colors">
           <Home className="w-5 h-5" />
@@ -197,7 +222,7 @@ export default function B2BFooter() {
           <Box className="w-5 h-5" />
           <span className="text-[8px] font-black uppercase tracking-tighter">Products</span>
         </button>
-        <Link href={`https://wa.me/${whatsappNumber}`} target="_blank" className="relative -top-6 w-16 h-16 bg-emerald-500 rounded-full border-[6px] border-[#020617] flex items-center justify-center shadow-2xl">
+        <Link href={`https://wa.me/${whatsappNumber}`} target="_blank" className="relative -top-6 w-16 h-16 bg-emerald-500 rounded-full border-[6px] border-[#020617] flex items-center justify-center shadow-2xl scale-110 active:scale-95 transition-transform">
           <svg viewBox="0 0 24 24" className="w-8 h-8 text-white fill-current" xmlns="http://www.w3.org/2000/svg">
             <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.414 0 .018 5.393 0 12.03c0 2.123.544 4.197 1.583 6.012L0 24l6.117-1.605a11.745 11.745 0 005.925 1.603h.005c6.635 0 12.028-5.391 12.032-12.027a11.812 11.812 0 00-3.476-8.513z"/>
           </svg>
