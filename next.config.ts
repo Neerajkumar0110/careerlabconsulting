@@ -11,6 +11,19 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'videocdn.cdnpk.net' } 
     ],
   },
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: '*',
+          },
+        ],
+      },
+    ];
+  },
   experimental: {
     optimizePackageImports: [
       "lucide-react",
