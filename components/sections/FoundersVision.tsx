@@ -25,7 +25,7 @@ const FoundersVision = () => {
             </div>
             <div>
               <p className="text-[10px] uppercase tracking-[0.2em] text-blue-300 font-bold">Nominated</p>
-              <p className="text-sm font-bold text-white">B2B Leaders 2024</p>
+              <p className="text-sm font-bold text-white">Leaders 2024</p>
             </div>
           </div>
 
@@ -38,7 +38,6 @@ const FoundersVision = () => {
           </div>
         </div>
 
-        {/* Right Side: High-Conversion Content */}
         <div className="w-full lg:w-1/2 space-y-10">
           <div className="space-y-6">
             <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20">
@@ -54,11 +53,10 @@ const FoundersVision = () => {
           <div className="relative">
             <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-gradient-to-b from-blue-500 to-transparent rounded-full"></div>
             <p className="pl-8 text-slate-300 text-lg md:text-xl leading-relaxed font-medium">
-              At <span className="text-white font-bold border-b-2 border-blue-500/30">Career Lab Consulting</span>, our mission is deeply personal. We believe B2B growth is only transformative when it solves real human problems. We are laser-focused on helping organizations implement <span className="text-blue-400 font-semibold italic">Agentic AI</span> in mission-critical processes.
+              At <span className="text-white font-bold border-b-2 border-blue-500/30">Career Lab Consulting</span>, our mission is deeply personal. We believe growth is only transformative when it solves real human problems. We are laser-focused on helping organizations implement <span className="text-blue-400 font-semibold italic">Agentic AI</span> in mission-critical processes.
             </p>
           </div>
 
-          {/* CTA Buttons */}
           <div className="pt-6 space-y-8">
             <div className="flex flex-col sm:flex-row gap-5">
               <a 
@@ -75,7 +73,6 @@ const FoundersVision = () => {
               </button>
             </div>
             
-            {/* Trust Indicator */}
             <div className="flex items-center gap-4 text-slate-400 bg-white/5 w-fit px-5 py-3 rounded-xl border border-white/5">
               <div className="flex -space-x-2">
                 {[1,2,3].map((i) => (
@@ -86,7 +83,7 @@ const FoundersVision = () => {
               </div>
               <p className="text-xs md:text-sm font-medium">
                 <span className="text-emerald-400 font-bold tracking-widest uppercase text-[10px] block">Live Status</span>
-                Accepting New B2B Partnerships for Q3 2024
+                Accepting New Partnerships for Q3 2024
               </p>
             </div>
           </div>
