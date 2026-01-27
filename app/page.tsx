@@ -5,6 +5,7 @@ import FeatureGrid from "@/components/sections/FeatureGrid";
 import CompanyJourney from "@/components/sections/CompanyJourney";
 import TrustSection from "@/components/sections/TrustSection";
 import ExecutionFlow from "@/components/sections/ExecutionFlow"; 
+import B2BProductTabs from "@/components/sections/B2BProductTabs";
 import SuccessStories from "@/components/sections/SuccessStories";
 import FoundersVision from "@/components/sections/FoundersVision";
 import MethodologySection from "@/components/sections/MethodologySection";
@@ -27,6 +28,7 @@ export default function B2BHome() {
       <CompanyJourney />
       <TrustSection />
       <ExecutionFlow /> 
+      <B2BProductTabs />
       <SuccessStories />
       <FoundersVision />
       <MethodologySection />

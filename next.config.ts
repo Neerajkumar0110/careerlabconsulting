@@ -5,6 +5,8 @@ const nextConfig: NextConfig = {
   images: {
     formats: ['image/avif', 'image/webp'],
     remotePatterns: [
+      { protocol: 'https', hostname: 'images.pexels.com' }, 
+      { protocol: 'https', hostname: 'media.licdn.com' }, 
       { protocol: 'https', hostname: 'images.unsplash.com' }, 
       { protocol: 'https', hostname: 'plus.unsplash.com' },
       { protocol: 'https', hostname: 'i.pravatar.cc' }, 
