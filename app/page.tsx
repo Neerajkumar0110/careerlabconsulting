@@ -13,6 +13,7 @@ import TabbedServices from "@/components/sections/TabbedServices";
 import LLMServicesSection from "@/components/sections/LLMServicesSection";
 import TrustAndArticles from "@/components/sections/TrustAndArticles";
 import FaqSection from "@/components/sections/FaqSection";
+import LiveTrafficSection from "@/components/sections/LiveTrafficSection";
 import Footer from "@/components/sections/Footer";
 import B2BPricingSection from "@/components/sections/B2BPricingSection"; 
 import { Analytics } from "@vercel/analytics/next"; 
@@ -36,6 +37,7 @@ export default function B2BHome() {
       <LLMServicesSection />
       <TrustAndArticles />
       <FaqSection />
+      <LiveTrafficSection />
       <Footer />
       <Analytics /> 
     </main>

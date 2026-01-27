@@ -19,6 +19,7 @@ import AlumniSuccess from '@/components/b2c/AlumniSuccess';
 import FAQSection from '@/components/b2c/FAQSection';
 import PricingSection from '@/components/b2c/PricingSection';
 import { Analytics } from '@vercel/analytics/next';
+import LiveTrafficSection from '@/components/sections/LiveTrafficSection';
 import Footer from '@/components/b2c/Footer';
 import { ArrowRight, Brain, Shield, Database, LayoutPanelTop, Box } from 'lucide-react';
 
@@ -44,6 +45,7 @@ export default function B2CPage() {
         <AlumniSuccess />
         <FAQSection />
         <PricingSection />
+        <LiveTrafficSection />
         <Footer />
       </div>
     </main>

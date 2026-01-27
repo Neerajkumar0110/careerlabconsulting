@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next"; 
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,13 +41,18 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body 
-        className={`${geistSans.variable} ${geistMono.variable} antialiased font-sans min-h-screen`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased font-sans min-h-screen bg-black text-white`}
       >
         {children}
+        <SpeedInsights />
       </body>
     </html>
   );
