@@ -79,7 +79,7 @@ const pillars = [
     desc: "Validating skills on a global scale. Our certifications are recognized across borders, opening doors to international career opportunities.",
     image: "https://plus.unsplash.com/premium_photo-1664474503673-5febe9ca12b9?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8SW50ZXJuYXRpb25hbCUyMFBhcnRuZXJzaGlwc3xlbnwwfHwwfHx8MA%3D%3D",
     stats: [
-      { label: "Countries", value: "25+", icon: Globe2 },
+      { label: "Countries", value: "27+", icon: Globe2 },
       { label: "Alumni", value: "100k", icon: Users2 },
       { label: "Badges", value: "50+", icon: Star },
     ],

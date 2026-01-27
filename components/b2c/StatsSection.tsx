@@ -7,10 +7,10 @@ import {
 } from 'lucide-react';
 
 const impactStats = [
-  { label: 'Countries', value: '7+', icon: Globe2, color: 'text-blue-400', glow: 'group-hover:shadow-[0_0_25px_rgba(96,165,250,0.4)]' },
+  { label: 'Countries', value: '27+', icon: Globe2, color: 'text-blue-400', glow: 'group-hover:shadow-[0_0_25px_rgba(96,165,250,0.4)]' },
   { label: 'Internx Batches', value: '103+', icon: Zap, color: 'text-amber-400', glow: 'group-hover:shadow-[0_0_25px_rgba(251,191,36,0.4)]' },
   { label: 'Global Corporate Partners', value: '260+', icon: Building2, color: 'text-emerald-400', glow: 'group-hover:shadow-[0_0_25px_rgba(52,211,153,0.4)]' },
-  { label: 'Internx Trained Students', value: '1200+', icon: Users2, color: 'text-purple-400', glow: 'group-hover:shadow-[0_0_25px_rgba(192,132,252,0.4)]' },
+  { label: 'Internx Trained Students', value: '15000+', icon: Users2, color: 'text-purple-400', glow: 'group-hover:shadow-[0_0_25px_rgba(192,132,252,0.4)]' },
   { label: 'Training Hours Completed', value: '1+ Million', icon: Clock, color: 'text-cyan-400', glow: 'group-hover:shadow-[0_0_25px_rgba(34,211,238,0.4)]' },
   { label: 'Industry Trainers', value: '718+', icon: Award, color: 'text-rose-400', glow: 'group-hover:shadow-[0_0_25px_rgba(251,113,133,0.4)]' },
 ];
