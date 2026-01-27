@@ -53,8 +53,6 @@ export default function RootLayout({
       >
         {children}
         <SpeedInsights />
-
-        <script src='https://artomatic.in/Modules/Chatbot/Resources/assets/js/chatbot-widget.min.js'  data-iframe-src="https://artomatic.in/chatbot/embed/chatbot_code=003705bffc5842a/welcome" data-iframe-height="532" data-iframe-width="400"></script>
       </body>
     </html>
   );
