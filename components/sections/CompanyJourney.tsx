@@ -1,106 +1,161 @@
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 
 const steps = [
-  { solutions: "45+", logos: ["P&G", "3M", "ESPN", "Hershey's"], tech: ["Web", "iOS", "Android"], height: "h-32" },
-  { solutions: "80+", logos: ["Eton", "Budweiser", "Siemens"], tech: ["AWS", "Microservices"], height: "h-40" },
-  { solutions: "90+", logos: ["Hawaii Revealed", "Trace RX"], tech: ["DevOps", "Blockchain"], height: "h-48" },
-  { solutions: "100+", logos: ["Kinesis", "Oman"], tech: ["AR", "Alexa Skills"], height: "h-56" },
-  { solutions: "125+", logos: ["XinFin", "Sight Sciences"], tech: ["Metaverse", "NFT"], height: "h-64" },
-  { solutions: "150+", logos: ["Rackspace", "NSG"], tech: ["Web 3", "Generative AI"], height: "h-72" },
-  { solutions: "160+", logos: ["Quic", "Regal"], tech: ["Machine Learning"], height: "h-80" },
+  { year: "2015", solutions: 45, logos: ["P&G", "3M"], tech: ["Web", "iOS"], height: "h-32", color: "from-blue-600/40" },
+  { year: "2017", solutions: 80, logos: ["ESPN", "Hershey"], tech: ["AWS", "Micro"], height: "h-44", color: "from-blue-500/40" },
+  { year: "2019", solutions: 90, logos: ["Siemens", "Bud"], tech: ["DevOps", "Web3"], height: "h-56", color: "from-indigo-500/40" },
+  { year: "2021", solutions: 110, logos: ["Trace RX", "Oman"], tech: ["AR/VR", "Alexa"], height: "h-64", color: "from-purple-500/40" },
+  { year: "2023", solutions: 135, logos: ["XinFin", "Sight"], tech: ["Meta", "NFT"], height: "h-72", color: "from-pink-500/40" },
+  { year: "2025", solutions: 155, logos: ["Rackspace", "NSG"], tech: ["Gen AI", "ML"], height: "h-80", color: "from-emerald-500/40" },
+  { year: "2026", solutions: 175, logos: ["Quic", "Regal"], tech: ["Quantum", "LLM"], height: "h-[380px]", color: "from-cyan-400/50" },
 ];
 
 const CompanyJourney = () => {
+  const [counts, setCounts] = useState(steps.map(() => 0));
+  const sectionRef = useRef<HTMLElement>(null);
+  const [hasAnimated, setHasAnimated] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !hasAnimated) {
+          setHasAnimated(true);
+          animateNumbers();
+        }
+      },
+      { threshold: 0.2 }
+    );
+
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, [hasAnimated]);
+
+  const animateNumbers = () => {
+    const duration = 2000; // 2 seconds
+    const startTime = performance.now();
+
+    const update = (currentTime: number) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      // Ease out quad function
+      const easeProgress = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+
+      setCounts(steps.map(step => Math.floor(easeProgress * step.solutions)));
+
+      if (progress < 1) {
+        requestAnimationFrame(update);
+      }
+    };
+
+    requestAnimationFrame(update);
+  };
+
   return (
-    <section className="relative pt-20 bg-[#01040d] overflow-hidden min-h-[900px] flex flex-col justify-center font-sans">
-      
-      <div className="absolute inset-0 z-0 opacity-40">
-        <div 
-          className="w-full h-full bg-repeat animate-[move-stars_120s_linear_infinite]"
-          style={{ backgroundImage: "url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/123163/stars.png')", backgroundSize: '700px auto' }}
-        ></div>
+    <section 
+      ref={sectionRef} 
+      className="relative py-20 bg-[#01030a] overflow-hidden min-h-screen flex flex-col justify-center font-sans"
+      aria-labelledby="journey-title"
+    >
+      {/* Background for SEO/UX - Low contrast grid */}
+      <div className="absolute inset-0 z-0 opacity-10 pointer-events-none" aria-hidden="true">
+        <div className="w-full h-full bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:4rem_4rem]"></div>
       </div>
-
-      <div className="absolute inset-0 z-0 opacity-10 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:4rem_4rem]"></div>
       
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[120px] -translate-y-1/2 translate-x-1/4"></div>
-      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[120px] translate-y-1/2 -translate-x-1/4"></div>
-
       <div className="container mx-auto px-4 relative z-10">
-        
-        <div className="text-center mb-32 relative">
-          <span className="text-blue-500 font-mono text-sm tracking-[0.5em] uppercase mb-4 block animate-pulse">
-            Evolution Timeline
+        <header className="text-center mb-16 md:mb-24">
+          <span className="text-cyan-500 font-mono text-xs tracking-[0.4em] uppercase mb-4 block">
+            Digital Growth Evolution
           </span>
-          <h2 className="text-5xl md:text-7xl font-black tracking-tighter text-white">
-            OUR <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-300 to-purple-500 drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]">COSMIC</span> JOURNEY
+          <h2 id="journey-title" className="text-5xl md:text-8xl font-black text-white tracking-tighter mb-6">
+            LEVELING <span className="text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-600">UP</span>
           </h2>
-          <div className="mt-6 flex justify-center items-center gap-4">
-            <div className="h-[1px] w-12 bg-gradient-to-r from-transparent to-blue-500"></div>
-            <p className="text-gray-400 text-sm max-w-md font-light tracking-wide italic">
-              Pushing the boundaries of digital space since day one
-            </p>
-            <div className="h-[1px] w-12 bg-gradient-to-l from-transparent to-blue-500"></div>
-          </div>
-        </div>
+          <p className="sr-only">Our company's journey from 2015 to 2026 showing solution growth and technology stacks.</p>
+          <div className="h-1.5 w-20 bg-cyan-500 mx-auto rounded-full shadow-[0_0_20px_#22d3ee]"></div>
+        </header>
 
-        <div className="flex items-end justify-between min-h-[550px] relative pt-20 overflow-x-auto lg:overflow-x-visible pb-10 scrollbar-hide">
-          
+        {/* Responsive Graph Wrapper */}
+        <div 
+          className="flex items-end justify-between gap-4 md:gap-8 h-[500px] md:h-[600px] overflow-x-auto pb-8 scrollbar-hide border-b border-white/10"
+          role="img" 
+          aria-label="Bar graph showing growth in digital solutions over the years"
+        >
           {steps.map((step, index) => (
-            <div key={index} className="flex-1 min-w-[150px] flex flex-col items-center group relative">
+            <figure key={step.year} className="flex-1 min-w-[110px] md:min-w-[140px] group relative flex flex-col items-center">
               
-              <div className="mb-10 flex flex-col items-center space-y-2 opacity-50 group-hover:opacity-100 transform group-hover:-translate-y-4 transition-all duration-500">
-                {step.tech.map((t, i) => (
-                  <span key={i} className="text-[9px] font-bold uppercase tracking-widest text-cyan-300 bg-blue-900/20 border border-cyan-500/20 px-3 py-1 rounded-full backdrop-blur-sm">
+              {/* Tech Stack Popups - Optimized for touch/hover */}
+              <div className="absolute -top-16 flex flex-wrap justify-center gap-1 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0 z-30">
+                {step.tech.map((t) => (
+                  <span key={t} className="bg-blue-600/90 backdrop-blur-sm text-white text-[9px] font-bold px-2 py-0.5 rounded shadow-lg">
                     {t}
                   </span>
                 ))}
               </div>
 
-              <div className="mb-8 flex flex-col items-center justify-end h-32 space-y-6">
-                {step.logos.map((logo, i) => (
-                  <div key={i} className="text-[11px] font-extrabold text-gray-500 group-hover:text-blue-200 transition-all duration-300 tracking-wider uppercase">
-                    {logo}
-                  </div>
-                ))}
-              </div>
-
-              <div className={`w-full relative transition-all duration-1000 ${step.height} 
-                flex flex-col items-center justify-end pb-10
-                bg-gradient-to-t from-blue-900/90 via-blue-700 to-blue-500
-                shadow-[0_-10px_30px_-5px_rgba(37,99,235,0.3)]
-                group-hover:shadow-[0_-20px_50px_-10px_rgba(59,130,246,0.6)]
-                group-hover:scale-[1.02] origin-bottom
-                border-t border-blue-400/50
-                `}>
-                
-                <div className="absolute -top-2.5 w-5 h-5 bg-white rounded-full shadow-[0_0_20px_#22d3ee,0_0_40px_#22d3ee] flex items-center justify-center">
-                   <div className="w-2 h-2 bg-cyan-500 rounded-full animate-ping"></div>
-                </div>
-                
-                <div className="text-white text-center z-10 px-2 pointer-events-none">
-                  <p className="text-3xl font-black tracking-tighter drop-shadow-lg">{step.solutions}</p>
-                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-blue-100 opacity-80">Digital Solutions</p>
+              {/* Graphical Pillar */}
+              <div 
+                className={`relative w-full ${step.height} transition-all duration-1000 ease-out
+                  bg-gradient-to-t ${step.color} to-transparent
+                  border-t border-x border-white/5 rounded-t-2xl
+                  group-hover:border-cyan-400/40 group-hover:shadow-[0_0_40px_rgba(34,211,238,0.1)]
+                  flex flex-col items-center justify-start pt-6 md:pt-10 overflow-hidden
+                `}
+                style={{ transitionDelay: `${index * 50}ms` }}
+              >
+                {/* Real-time Counter */}
+                <div className="text-center z-10 px-2">
+                  <span className="text-white text-3xl md:text-5xl font-black tracking-tighter block leading-none">
+                    {counts[index]}+
+                  </span>
+                  <figcaption className="text-[9px] md:text-[11px] text-cyan-200/70 font-bold uppercase tracking-widest mt-2">
+                    Solutions
+                  </figcaption>
                 </div>
 
-                <div className="absolute top-4 right-2 w-[2px] h-12 bg-gradient-to-b from-white/20 to-transparent"></div>
+                {/* Animated Scanline */}
+                <div className="absolute top-0 left-0 w-full h-[2px] bg-cyan-400/40 shadow-[0_0_15px_#22d3ee] animate-scanline"></div>
               </div>
-              
-              <div className="w-full h-3 bg-blue-950/80 border-t border-blue-500/30"></div>
-            </div>
+
+              {/* Base Timeline Labels */}
+              <div className="mt-6 text-center w-full">
+                <time className="text-white text-xl md:text-2xl font-black group-hover:text-cyan-400 transition-colors block">
+                  {step.year}
+                </time>
+                <div className="mt-2 min-h-[40px] flex flex-col items-center">
+                  {step.logos.map((logo) => (
+                    <span key={logo} className="text-[10px] text-gray-500 font-bold uppercase tracking-tight line-clamp-1">
+                      {logo}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Desktop Indicator Dot */}
+              <div className="absolute bottom-[-4px] w-2 h-2 bg-cyan-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity blur-[2px]"></div>
+            </figure>
           ))}
         </div>
       </div>
 
       <style jsx>{`
-        @keyframes move-stars {
-          from { background-position: 0 0; }
-          to { background-position: -800px -800px; }
+        @keyframes scanline {
+          0% { transform: translateY(-10px); opacity: 0; }
+          50% { opacity: 1; }
+          100% { transform: translateY(500px); opacity: 0; }
         }
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
+        .animate-scanline {
+          animation: scanline 4s linear infinite;
+        }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Mobile Specific Optimization */
+        @media (max-width: 768px) {
+          .animate-scanline {
+            animation-duration: 6s;
+          }
         }
       `}</style>
     </section>

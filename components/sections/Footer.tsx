@@ -187,7 +187,7 @@ export default function B2BFooter() {
 
           <div className="pt-10 border-t border-white/5 flex flex-col md:row justify-between items-center gap-8">
             <div className="flex flex-wrap justify-center items-center gap-x-8 gap-y-4">
-              <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">© 2015 - {currentYear} Career Lab Consulting B2B</span>
+              <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">© 2015 - {currentYear} Career Lab Consulting</span>
               {['Privacy Policy', 'Terms of Service', 'Refund Policy', 'Examination Policy', 'Escalation Policy'].map((item) => (
                 <Link key={item} href={`/${item.toLowerCase().replace(/ /g, '-')}`} className="text-[10px] text-slate-500 font-bold uppercase tracking-widest hover:text-blue-400 transition-colors">
                   {item}
