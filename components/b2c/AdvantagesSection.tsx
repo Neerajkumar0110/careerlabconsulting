@@ -75,7 +75,7 @@ export default function AdvantagesSection() {
             <span className="text-blue-400 text-[10px] font-black uppercase tracking-widest">Why Choose Us</span>
           </div>
           <h2 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter leading-tight">
-            The <span className="text-blue-500 italic">Career Lab</span> <br className="hidden md:block" /> Advantage
+            The <span className="text-blue-500 italic">Career Lab Consulting</span> <br className="hidden md:block" /> Advantage
           </h2>
           <div className="h-1.5 w-24 bg-gradient-to-r from-transparent via-blue-600 to-transparent mx-auto mt-6 rounded-full" />
         </div>

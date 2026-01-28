@@ -36,11 +36,11 @@ declare global {
 }
 
 const partners = [
-  { name: "HDFC", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/HDFC_Bank_Logo.svg/960px-HDFC_Bank_Logo.svg.png" },
+  { name: "HDFC", logo: "https://cdn.worldvectorlogo.com/logos/hdfc-bank-logo.svg" },
   { name: "ICICI", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/ICICI_Bank_Logo.svg/3840px-ICICI_Bank_Logo.svg.png" },
-  { name: "Bajaj Finance", logo: "https://i.logos-download.com/104038/25954-og-3eb91e8f96281f00288cb76528c38928.png/Bajaj_Finserv_Logo_og.png" },
+  { name: "Bajaj Finance", logo: "https://brandlogos.net/wp-content/uploads/2021/10/Bajaj-Finance-logo-.png" },
   { name: "Propel", logo: "https://niuonline.edu.in/wp-content/uploads/2025/08/Propelld-Blue-Logo-3-2-1024x177.webp" },
-  { name: "ShopSe", logo: "https://framerusercontent.com/images/rmJzwShQEM78IdCVmymj1i9K7M.svg?width=1343&height=300" }
+  { name: "ShopSe", logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBNp2z8bJCidU0Z4TCfjF4JARJkY4Gh1_5Qw&s" }
 ];
 
 const tiers: Tier[] = [
