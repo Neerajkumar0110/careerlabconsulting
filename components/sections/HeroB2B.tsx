@@ -90,7 +90,7 @@ export default function HeroB2B() {
   }, []);
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center pt-20 pb-20 px-4 overflow-hidden bg-[#020617]">
+    <section className="relative min-h-screen flex items-center justify-center pt-30 pb-20 px-4 overflow-hidden bg-[#020617]">
       <canvas ref={canvasRef} className="absolute inset-0 z-0 pointer-events-none" aria-hidden="true" />
       
       <div className="absolute inset-0 z-[1] pointer-events-none">
@@ -119,13 +119,13 @@ export default function HeroB2B() {
               ))}
             </div>
             <div className="h-4 w-px bg-white/20" />
-            <p className="text-blue-200 text-[10px] md:text-xs font-bold tracking-widest uppercase flex items-center gap-2">
+            <p className="text-blue-200 text-[6px] md:text-xs font-bold tracking-widest uppercase flex items-center gap-2">
               <Sparkles size={14} className="text-blue-400" />
               The Future of Work is Autonomous
             </p>
           </motion.div>
 
-          <h1 className="text-5xl sm:text-6xl md:text-[8rem] font-black text-white mb-8 tracking-tighter leading-[0.85]">
+          <h1 className="text-4xl sm:text-6xl md:text-[8rem] font-black text-white mb-8 tracking-tighter leading-[0.85]">
             Command Your <br /> 
             <span className="text-transparent bg-clip-text bg-gradient-to-b from-white via-blue-200 to-blue-500">
               AI Empire
@@ -133,7 +133,7 @@ export default function HeroB2B() {
           </h1>
         </header>
 
-        <p className="max-w-2xl mx-auto text-slate-300 text-lg md:text-xl mb-12 leading-relaxed px-4">
+        <p className="max-w-2xl mx-auto text-slate-300 text-sm md:text-xl mb-12 leading-relaxed px-4">
           Deploy custom AI workforces that <strong>execute tasks</strong> autonomously. 
           Reduce overhead by 70% and scale your business without increasing headcount.
         </p>
