@@ -17,7 +17,7 @@ const footerLinks = {
     { name: 'Security Protocol', href: '/security-protocol' },
   ],
   "Business Hub": [
-    { name: 'AI Employers', href: '/ai-employers' },
+    { name: 'AI Employers (Jobs)', href: '/ai-employers' },
     { name: 'Freelancer Platform', href: '/freelancer-platform' },
     { name: 'Project Development', href: '/project-development' },
     { name: 'Individual Projects', href: '/individual-projects' },
@@ -62,27 +62,8 @@ export default function B2BFooter() {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Organization",
-            "name": "Career Lab Consulting",
-            "url": "https://yourdomain.com",
-            "logo": "https://yourdomain.com/logo.png",
-            "contactPoint": {
-              "@type": "ContactPoint",
-              "telephone": "+918700236923",
-              "contactType": "customer service"
-            },
-            "sameAs": socialLinks.map(link => link.href)
-          })
-        }}
-      />
-
       <footer className="bg-[#020617] pt-20 pb-24 md:pb-12 border-t border-white/5 relative overflow-hidden" aria-labelledby="footer-heading">
-        <h2 id="footer-heading" className="sr-only">Career Lab Consulting - Global Enterprise AI Solutions</h2>
+        <h2 id="footer-heading" className="sr-only">Career Lab Consulting - Enterprise AI Solutions</h2>
         
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[1000px] h-[400px] bg-blue-600/5 blur-[120px] -z-10 pointer-events-none" />
 
@@ -97,7 +78,7 @@ export default function B2BFooter() {
                   width={192} 
                   height={64} 
                   priority
-                  className="w-48 h-auto mb-6 drop-shadow-[0_0_15px_rgba(59,130,246,0.2)]" 
+                  className="w-48 h-auto mb-6 filter drop-shadow-[0_0_15px_rgba(59,130,246,0.3)]" 
                 />
               </Link>
               <p className="text-slate-400 text-sm leading-relaxed font-medium mb-10">
@@ -112,7 +93,7 @@ export default function B2BFooter() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={`Follow us on ${name}`}
-                    className={`w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-white ${color} transition-all duration-300 transform hover:scale-110`}
+                    className={`w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-white ${color} hover:border-transparent transition-all duration-300 transform hover:scale-110`}
                   >
                     <Icon className="w-5 h-5" />
                   </a>
@@ -124,10 +105,10 @@ export default function B2BFooter() {
               {Object.entries(footerLinks).map(([title, links]) => (
                 <nav key={title} className="space-y-6">
                   <h3 className="text-white text-[11px] font-black uppercase tracking-[0.25em] opacity-80">{title}</h3>
-                  <ul className="space-y-4">
+                  <ul className="space-y-4 text-slate-400 text-sm font-semibold">
                     {links.map((link) => (
                       <li key={link.name}>
-                        <Link href={link.href} className="text-slate-400 hover:text-blue-400 transition-colors flex items-center gap-1 group text-sm font-semibold">
+                        <Link href={link.href} className="hover:text-blue-400 transition-colors flex items-center gap-1 group">
                           {link.name} <ArrowUpRight className="w-3 h-3 text-blue-500/50 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                         </Link>
                       </li>
@@ -138,10 +119,10 @@ export default function B2BFooter() {
             </div>
 
             <div className="lg:col-span-4">
-              <div className="p-6 rounded-3xl bg-blue-600/5 border border-blue-500/20 backdrop-blur-md">
+              <div className="p-6 rounded-3xl bg-gradient-to-br from-blue-600/10 to-transparent border border-blue-500/20 backdrop-blur-md">
                 <h3 className="text-white text-[11px] font-black uppercase tracking-[0.25em] mb-6">Contact Hub</h3>
                 <address className="not-italic space-y-5">
-                  <div className="flex items-start gap-4">
+                  <div className="flex items-start gap-4 group">
                     <div className="w-10 h-10 rounded-xl bg-blue-600/20 flex items-center justify-center shrink-0">
                       <MapPin className="w-5 h-5 text-blue-400" />
                     </div>
@@ -164,20 +145,22 @@ export default function B2BFooter() {
             </div>
           </div>
 
-          <section className="mb-20" aria-label="Global Presence">
-            <div className="flex items-center gap-4 mb-10 border-b border-white/10 pb-6">
-              <div className="w-10 h-10 rounded-full bg-blue-600/10 flex items-center justify-center">
-                <Globe className="w-5 h-5 text-blue-500" />
-              </div>
-              <div>
-                <h3 className="text-white font-black text-sm tracking-widest uppercase">Global Presence</h3>
-                <p className="text-slate-500 text-[10px] font-bold uppercase tracking-wider mt-1">Operating across 8 primary tech hubs</p>
+          <section className="mb-20" aria-label="Global Locations">
+            <div className="flex items-center justify-between mb-10 border-b border-white/10 pb-6">
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 rounded-full bg-blue-600/10 flex items-center justify-center">
+                  <Globe className="w-5 h-5 text-blue-500" />
+                </div>
+                <div>
+                  <h3 className="text-white font-black text-sm tracking-widest uppercase">Global Presence</h3>
+                  <p className="text-slate-500 text-[10px] font-bold uppercase tracking-wider mt-1">Operating across 8 primary tech hubs</p>
+                </div>
               </div>
             </div>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {locations.map((loc, idx) => (
-                <div key={idx} className="group bg-white/[0.02] hover:bg-white/[0.05] border border-white/5 hover:border-blue-500/40 rounded-3xl p-7 transition-all duration-500 flex flex-col h-full hover:-translate-y-2">
+                <div key={idx} className="group relative bg-white/[0.02] hover:bg-white/[0.05] border border-white/5 hover:border-blue-500/40 rounded-3xl p-7 transition-all duration-500 flex flex-col h-full hover:-translate-y-2">
                   <div className="flex items-center justify-between mb-6">
                     <div className="space-y-2">
                       <span className="inline-block px-2.5 py-1 rounded-lg bg-blue-600/20 text-blue-400 font-black text-[9px] uppercase tracking-[0.2em] border border-blue-500/30">{loc.country}</span>
@@ -208,7 +191,7 @@ export default function B2BFooter() {
           <div className="pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
             <div className="flex flex-wrap justify-center items-center gap-x-8 gap-y-4">
               <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">© 2015 - {currentYear} Career Lab Consulting</span>
-              {['Privacy Policy', 'Terms of Service', 'Refund Policy'].map((item) => (
+              {['Privacy Policy', 'Terms of Service', 'Refund Policy', 'Examination Policy', 'Escalation Policy'].map((item) => (
                 <Link key={item} href={`/${item.toLowerCase().replace(/ /g, '-')}`} className="text-[10px] text-slate-500 font-bold uppercase tracking-widest hover:text-blue-400 transition-colors">
                   {item}
                 </Link>
@@ -226,19 +209,15 @@ export default function B2BFooter() {
       </footer>
 
       {isProductOpen && (
-        <div className="md:hidden fixed inset-0 z-[110] flex items-end justify-center px-4 pb-24 bg-black/60 backdrop-blur-sm transition-opacity">
-          <div className="w-full max-w-sm bg-[#0a0f1d] border border-white/10 rounded-[2.5rem] p-6 shadow-2xl overflow-hidden animate-in slide-in-from-bottom duration-300">
+        <div className="md:hidden fixed inset-0 z-[110] flex items-end justify-center px-4 pb-24 bg-black/60 backdrop-blur-sm">
+          <div className="w-full max-w-sm bg-[#0a0f1d] border border-white/10 rounded-[2.5rem] p-6 shadow-2xl overflow-hidden max-h-[70vh]">
              <div className="flex justify-between items-center mb-6">
               <h3 className="text-white font-black text-xs uppercase tracking-[0.2em]">Enterprise Products</h3>
-              <button onClick={() => setIsProductOpen(false)} className="p-2 bg-white/5 rounded-full text-slate-400" aria-label="Close menu">
-                <X className="w-6 h-6" />
-              </button>
+              <button onClick={() => setIsProductOpen(false)} className="p-2 bg-white/5 rounded-full text-slate-400" aria-label="Close menu"><X className="w-6 h-6" /></button>
             </div>
-            <div className="grid grid-cols-1 gap-1 overflow-y-auto max-h-[50vh] pr-2 custom-scrollbar">
+            <div className="grid grid-cols-1 gap-1 overflow-y-auto max-h-[50vh] pr-2">
               {productList.map((item) => (
-                <Link key={item} href={`/products/${item.toLowerCase().replace(/ /g, '-')}`} onClick={() => setIsProductOpen(false)} className="text-left text-slate-400 hover:text-blue-400 text-sm font-bold py-4 border-b border-white/5 transition-colors uppercase tracking-wider">
-                  {item}
-                </Link>
+                <Link key={item} href={`/products/${item.toLowerCase().replace(/ /g, '-')}`} onClick={() => setIsProductOpen(false)} className="text-left text-slate-400 hover:text-blue-400 text-sm font-bold py-4 border-b border-white/5 transition-colors uppercase tracking-wider">{item}</Link>
               ))}
             </div>
           </div>
