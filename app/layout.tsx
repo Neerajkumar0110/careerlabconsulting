@@ -53,17 +53,7 @@ export default function RootLayout({
       >
         {children}
         <SpeedInsights />
-
-        <div 
-  data-chat-widget 
-  data-widget-id="69792b644a54c4c911655299" 
-  data-location-id="i8XZhzGKuyPerdOqLznm"  > 
- </div> 
-<script 
-  src="https://widgets.leadconnectorhq.com/loader.js"  
-  data-resources-url="https://widgets.leadconnectorhq.com/chat-widget/loader.js" 
- data-widget-id="69792b644a54c4c911655299"   > 
- </script>
+        
       </body>
     </html>
   );
