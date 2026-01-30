@@ -44,15 +44,15 @@ const lmsUsers: User[] = [
   { id: 6, name: "Siti Nur", course: "Cyber Security", img: "https://i.pravatar.cc/150?u=6", lat: 3.13, lng: 101.68, country: "Malaysia", city: "Kuala Lumpur" },
   { id: 7, name: "Min-jun Kim", course: "Web3 Dev", img: "https://i.pravatar.cc/150?u=7", lat: 37.56, lng: 126.97, country: "South Korea", city: "Seoul" },
 
-  { id: 8, name: "James Wilson", course: "Cyber Security", img: "https://i.pravatar.cc/150?u=8", lat: 51.50, lng: -0.12, country: "UK", city: "London" },
-  { id: 9, name: "Lucas Müller", course: "Cloud Arch", img: "https://i.pravatar.cc/150?u=9", lat: 52.52, lng: 13.40, country: "Germany", city: "Berlin" },
+  { id: 8, name: "James Wilson", course: "Cyber Security", img: "https://i.pravatar.cc/150?u=34", lat: 51.50, lng: -0.12, country: "UK", city: "London" },
+  { id: 9, name: "Lucas Müller", course: "Cloud Arch", img: "https://i.pravatar.cc/150?u=33", lat: 52.52, lng: 13.40, country: "Germany", city: "Berlin" },
   { id: 10, name: "Elena Rossi", course: "Python Dev", img: "https://i.pravatar.cc/150?u=10", lat: 41.90, lng: 12.49, country: "Italy", city: "Rome" },
   { id: 11, name: "Sophie Martin", course: "Frontend", img: "https://i.pravatar.cc/150?u=11", lat: 48.85, lng: 2.35, country: "France", city: "Paris" },
   { id: 12, name: "Viktor Petrov", course: "Backend", img: "https://i.pravatar.cc/150?u=12", lat: 55.75, lng: 37.61, country: "Russia", city: "Moscow" },
   { id: 13, name: "Ana Silva", course: "Full Stack", img: "https://i.pravatar.cc/150?u=13", lat: 38.72, lng: -9.13, country: "Portugal", city: "Lisbon" },
 
   { id: 14, name: "Sarah Chen", course: "Data Science", img: "https://i.pravatar.cc/150?u=14", lat: 40.71, lng: -74.00, country: "USA", city: "New York" },
-  { id: 15, name: "Carlos Gomes", course: "Mobile App Dev", img: "https://i.pravatar.cc/150?u=15", lat: -23.55, lng: -46.63, country: "Brazil", city: "Sao Paulo" },
+  { id: 15, name: "Carlos Gomes", course: "Mobile App Dev", img: "https://i.pravatar.cc/150?u=22", lat: -23.55, lng: -46.63, country: "Brazil", city: "Sao Paulo" },
   { id: 16, name: "Liam Smith", course: "DevOps", img: "https://i.pravatar.cc/150?u=16", lat: 43.65, lng: -79.38, country: "Canada", city: "Toronto" },
   { id: 17, name: "Maria Garcia", course: "AI Engineer", img: "https://i.pravatar.cc/150?u=17", lat: 19.43, lng: -99.13, country: "Mexico", city: "Mexico City" },
   { id: 18, name: "John Doe", course: "SRE", img: "https://i.pravatar.cc/150?u=18", lat: 34.05, lng: -118.24, country: "USA", city: "Los Angeles" },
