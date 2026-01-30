@@ -3,11 +3,9 @@
 import React, { useState } from 'react';
 import { 
   Check, Zap, Crown, Terminal, ShieldCheck, Sparkles, 
-  Loader2, CreditCard, X, TrendingUp, Calendar, User, Mail, Phone, MessageSquare, ChevronRight, Clock 
+  Loader2, CreditCard, X, TrendingUp, Calendar, User, Mail, Phone, MessageSquare, ChevronRight, Clock, ArrowLeft 
 } from 'lucide-react';
 import Script from 'next/script';
-
-// --- Interfaces ---
 
 interface RazorpayResponse {
   razorpay_payment_id: string;
@@ -59,8 +57,8 @@ const tiers: Tier[] = [
     id: "plan-foundation",
     name: "Foundation",
     duration: "6 Months",
-    priceINR: "₹99,999",
-    rawAmount: 9999900,
+    priceINR: "₹1,49,999", 
+    rawAmount: 14999900, // 1,49,999 INR in paise
     emiAmount: 520800, 
     emiText: "EMI starts from: 5208 INR",
     description: "Build your first AI career asset with ResumeNFT visibility.",
@@ -81,7 +79,7 @@ const tiers: Tier[] = [
     name: "Elite",
     duration: "12 Months",
     priceINR: "₹2,49,999",
-    rawAmount: 24999900,
+    rawAmount: 24999900, // 2,49,999 INR in paise
     emiAmount: 520800, 
     emiText: "EMI starts from: 5208 INR",
     description: "Top-tier program for international roles with legal job.",
@@ -106,6 +104,7 @@ export default function PricingSection() {
   
   // Registration Flow State
   const [registerStep, setRegisterStep] = useState<'selection' | 'form'>('selection');
+  const [paymentType, setPaymentType] = useState<'full' | 'seat'>('seat'); 
   
   // Demo Booking State
   const [demoStep, setDemoStep] = useState<'calendar' | 'form'>('calendar');
@@ -148,35 +147,21 @@ export default function PricingSection() {
     waMessage += `*Type:* ${type}%0A`;
     waMessage += `*Amount Paid:* ${amountPaid}%0A`;
     waMessage += `*Payment ID:* ${response.razorpay_payment_id}%0A`;
-    
-    if (type === 'Seat Registration') {
-      waMessage += `*Student Name:* ${formData.name}%0A`;
-      waMessage += `*Email:* ${formData.email}%0A`;
-      waMessage += `*Phone:* ${formData.phone}%0A`;
-    }
+    waMessage += `*Student Name:* ${formData.name}%0A`;
+    waMessage += `*Email:* ${formData.email}%0A`;
+    waMessage += `*Phone:* ${formData.phone}%0A`;
 
     const whatsappUrl = `https://wa.me/${ownerPhone}?text=${waMessage}`;
 
     try {
       // Optional: Save to your DB via API
-       await fetch('/api/send-confirmation', {
-         method: 'POST',
-         headers: { 'Content-Type': 'application/json' },
-         body: JSON.stringify({ 
-           planName: tier.name, 
-           amount: amountPaid, 
-           paymentId: response.razorpay_payment_id, 
-           type,
-           user: formData
-         }),
-       });
+      // await fetch('/api/send-confirmation', ... );
       
       // Redirect to WhatsApp
       window.open(whatsappUrl, '_blank');
       resetModals();
     } catch (err) { 
       console.error("Error logging payment:", err); 
-      // Still open WhatsApp even if API fails
       window.open(whatsappUrl, '_blank');
       resetModals();
     }
@@ -208,16 +193,18 @@ export default function PricingSection() {
     }
   };
 
-  const handleFullPaymentClick = () => {
-    if (!selectedTier) return;
-    initRazorpay(selectedTier.rawAmount, `Full Payment - ${selectedTier.name}`, 'Full Payment');
-  };
-
-  const handleSeatRegistrationSubmit = (e: React.FormEvent) => {
+  // Unified Payment Submit Handler
+  const handlePaymentFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedTier) return;
-    // 10,000 INR = 1000000 Paise
-    initRazorpay(1000000, `Seat Registration - ${selectedTier.name}`, 'Seat Registration');
+    
+    if (paymentType === 'full') {
+        // Full Payment - Use Tier Amount
+        initRazorpay(selectedTier.rawAmount, `Full Payment - ${selectedTier.name}`, 'Full Payment');
+    } else {
+        // Seat Registration - Fixed 10,000 INR (1000000 Paise)
+        initRazorpay(1000000, `Seat Registration - ${selectedTier.name}`, 'Seat Registration');
+    }
   };
 
   // --- Demo Booking Logic ---
@@ -226,19 +213,9 @@ export default function PricingSection() {
     e.preventDefault();
     setLoadingId('booking-demo');
 
-    const emailBody = {
-      to: 'info@careerlabconsulting.com',
-      subject: 'New Demo Request',
-      details: {
-        ...formData,
-        requestedDate: selectedDate,
-        requestedTime: selectedTime,
-        planInterest: selectedTier?.name
-      }
-    };
-
+    // Email logic placeholder
+    
     try {
-      // Simulate API call to send email
       await new Promise(resolve => setTimeout(resolve, 1500)); 
       alert("Demo request sent successfully! We will contact you shortly.");
       resetModals();
@@ -261,8 +238,6 @@ export default function PricingSection() {
   };
 
   return (
-    // NOTE: Removed 'overflow-hidden' from section to ensure sticky elements work if needed, 
-    // but Modal is now fixed to viewport so it won't care about section overflow.
     <section className="py-20 md:py-32 bg-[#020617] text-white font-sans relative">
       <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
 
@@ -326,11 +301,11 @@ export default function PricingSection() {
               </div>
 
               <div className="flex flex-col gap-4 mt-auto">
-                {/* BUTTONS WITH EXPLICIT CURSOR POINTER */}
                 <button 
                   onClick={() => {
                     setSelectedTier(tier);
                     setActiveModal('register');
+                    setRegisterStep('selection'); 
                   }} 
                   className="w-full py-5 rounded-2xl font-black uppercase tracking-widest text-[11px] flex items-center justify-center gap-3 transition-all bg-blue-600 hover:bg-blue-500 text-white shadow-lg shadow-blue-600/20 cursor-pointer relative z-30"
                 >
@@ -403,13 +378,8 @@ export default function PricingSection() {
         </div>
       </div>
 
-      {/* ================= MODAL OVERLAY (FIXED POSITION) ================= */}
-      {/* Uses 'fixed inset-0' to stick to viewport (screen), not the page.
-          Uses 'z-[9999]' to appear above everything else.
-          'flex items-center justify-center' ensures horizontal and vertical centering.
-      */}
       {activeModal && selectedTier && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-[9999] flex items-end justify-center px-4 pb-[3200px] bg-black/80 backdrop-blur-sm animate-in fade-in slide-in-from-bottom-10 duration-200">
           
           {/* REGISTER MODAL */}
           {activeModal === 'register' && (
@@ -417,7 +387,7 @@ export default function PricingSection() {
                 <div className="p-6 border-b border-white/10 flex justify-between items-center bg-white/5">
                 <h3 className="text-xl font-black uppercase tracking-tight flex items-center gap-2 text-white">
                     <Crown className="w-5 h-5 text-blue-400" /> 
-                    {registerStep === 'selection' ? `Join ${selectedTier.name}` : 'Seat Reservation'}
+                    {registerStep === 'selection' ? `Join ${selectedTier.name}` : (paymentType === 'full' ? 'Complete Enrollment' : 'Seat Reservation')}
                 </h3>
                 <button onClick={resetModals} className="p-2 hover:bg-white/10 rounded-full transition-colors cursor-pointer">
                     <X className="w-5 h-5 text-slate-400" />
@@ -430,7 +400,10 @@ export default function PricingSection() {
                     <p className="text-slate-400 text-sm mb-6">Select how you would like to proceed with your enrollment.</p>
                     
                     <button 
-                        onClick={handleFullPaymentClick}
+                        onClick={() => {
+                            setPaymentType('full');
+                            setRegisterStep('form');
+                        }}
                         className="w-full p-6 rounded-2xl bg-blue-600 hover:bg-blue-500 border border-blue-400/20 flex items-center justify-between group transition-all cursor-pointer"
                     >
                         <div className="text-left">
@@ -441,7 +414,10 @@ export default function PricingSection() {
                     </button>
 
                     <button 
-                        onClick={() => setRegisterStep('form')}
+                        onClick={() => {
+                            setPaymentType('seat');
+                            setRegisterStep('form');
+                        }}
                         className="w-full p-6 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 flex items-center justify-between group transition-all cursor-pointer"
                     >
                         <div className="text-left">
@@ -453,7 +429,7 @@ export default function PricingSection() {
                     <p className="text-[10px] text-slate-500 text-center mt-4">Full payment secures instant access. Seat registration reserves your spot.</p>
                     </div>
                 ) : (
-                    <form onSubmit={handleSeatRegistrationSubmit} className="space-y-4">
+                    <form onSubmit={handlePaymentFormSubmit} className="space-y-4">
                         <div className="space-y-4">
                         <div className="relative">
                             <User className="absolute left-4 top-3.5 w-4 h-4 text-slate-500" />
@@ -489,11 +465,14 @@ export default function PricingSection() {
                         </div>
                         </div>
 
-                        <button type="submit" className="w-full mt-6 py-4 bg-green-600 hover:bg-green-500 text-white font-bold uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-green-900/20 cursor-pointer">
-                            Pay ₹10,000 to Reserve
+                        <button 
+                            type="submit" 
+                            className={`w-full mt-6 py-4 text-white font-bold uppercase tracking-widest rounded-xl transition-all cursor-pointer shadow-lg ${paymentType === 'full' ? 'bg-blue-600 hover:bg-blue-500 shadow-blue-900/20' : 'bg-green-600 hover:bg-green-500 shadow-green-900/20'}`}
+                        >
+                            {paymentType === 'full' ? `Pay ${selectedTier.priceINR} Securely` : 'Pay ₹10,000 to Reserve'}
                         </button>
-                        <button type="button" onClick={() => setRegisterStep('selection')} className="w-full py-2 text-xs text-slate-500 hover:text-white transition-colors cursor-pointer">
-                            Back to Options
+                        <button type="button" onClick={() => setRegisterStep('selection')} className="w-full py-2 text-xs text-slate-500 hover:text-white transition-colors cursor-pointer flex items-center justify-center gap-1">
+                           <ArrowLeft className="w-3 h-3" /> Back to Options
                         </button>
                     </form>
                 )}
