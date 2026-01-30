@@ -84,7 +84,7 @@ const steps = [
 const CompanyJourney = () => {
   const [counts, setCounts] = useState(steps.map(() => 0));
   const [isLoaded, setIsLoaded] = useState(false);
-  const sectionRef = useRef<HTMLElement>(null);
+  const sectionRef = useRef(null);
 
   useEffect(() => {
     setIsLoaded(true);
@@ -173,7 +173,7 @@ const CompanyJourney = () => {
                 <div className="absolute top-0 left-0 w-full h-[2px] bg-cyan-400/40 animate-scanline pointer-events-none" aria-hidden="true"></div>
               </div>
 
-              <div className="mt-6 text-center w-full bg-[#0a0c14]/50 backdrop-blur-sm p-4 rounded-b-2xl border-x border-b border-white/5">
+              <div className="mt-6 text-center w-full bg-[#0a0c14]/50 backdrop-blur-sm p-4 rounded-b-2xl border-x border-b border-white/5 group-hover:bg-[#0a0c14] transition-colors duration-500">
                 <time className="text-xl md:text-3xl font-black text-gray-400 group-hover:text-cyan-400 transition-colors block mb-4 italic tracking-tighter">
                   {step.year}
                 </time>
@@ -182,13 +182,13 @@ const CompanyJourney = () => {
                   {step.logos.map((logo, lIdx) => (
                     <div 
                       key={`${logo.name}-${lIdx}`} 
-                      className={`bg-white/[0.03] hover:bg-white p-1.5 rounded-lg w-full h-8 md:h-10 flex items-center justify-center border border-white/5 transition-all duration-500 group-hover:border-cyan-500/20 ${step.logos.length % 2 !== 0 && lIdx === step.logos.length - 1 ? 'col-span-2 mx-auto max-w-[50%]' : ''}`}
+                      className={`bg-white/[0.03] group-hover:bg-white p-2 rounded-lg w-full h-8 md:h-10 flex items-center justify-center border border-white/5 transition-all duration-500 group-hover:border-cyan-500/20 group-hover:shadow-[0_0_15px_rgba(255,255,255,0.3)] ${step.logos.length % 2 !== 0 && lIdx === step.logos.length - 1 ? 'col-span-2 mx-auto max-w-[50%]' : ''}`}
                     >
                       <img 
                         src={logo.url} 
                         alt={logo.name}
                         loading="lazy"
-                        className="max-h-full max-w-full object-contain opacity-40 group-hover:opacity-100 transition-opacity duration-500 filter grayscale group-hover:grayscale-0"
+                        className="max-h-full max-w-full object-contain opacity-50 group-hover:opacity-100 transition-all duration-500 filter grayscale group-hover:grayscale-0"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;
                           target.src = `https://ui-avatars.com/api/?name=${logo.name}&background=1e293b&color=22d3ee&bold=true`;

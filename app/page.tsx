@@ -1,7 +1,6 @@
 import dynamic from 'next/dynamic';
 import Navbar from "@/components/layout/Navbar";
 import HeroB2B from "@/components/sections/HeroB2B";
-import ProductMatrix from "@/components/sections/ProductMatrix";
 import { Analytics } from "@vercel/analytics/next"; 
 
 const B2BPricingSection = dynamic(() => import("@/components/sections/B2BPricingSection"));
@@ -25,8 +24,6 @@ export default function B2BHome() {
     <main className="min-h-screen bg-[#020617] selection:bg-blue-500/30">
       <Navbar />
       <HeroB2B />
-      <ProductMatrix />
-
       <B2BPricingSection />
       <FeatureGrid />
       <CompanyJourney />
