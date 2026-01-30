@@ -27,14 +27,12 @@ export default function FAQSection() {
 
   return (
     <section className="py-24 md:py-32 bg-[#020617] relative overflow-hidden">
-      {/* Dynamic Background Elements */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-500/10 via-transparent to-transparent opacity-50 pointer-events-none" />
       <div className="absolute -left-24 top-1/2 w-64 h-64 bg-cyan-500/10 blur-[100px] rounded-full" />
       <div className="absolute -right-24 bottom-1/2 w-64 h-64 bg-blue-600/10 blur-[100px] rounded-full" />
 
       <div className="max-w-4xl mx-auto px-4 md:px-6 relative z-10">
         
-        {/* Header Section */}
         <div className="text-center mb-16 md:mb-24">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/5 border border-blue-500/20 mb-6 backdrop-blur-sm">
             <HelpCircle className="w-3.5 h-3.5 text-blue-400" />
@@ -48,7 +46,6 @@ export default function FAQSection() {
           </p>
         </div>
 
-        {/* FAQ Accordion Grid */}
         <div className="grid gap-4">
           {faqs.map((faq, i) => (
             <div 
@@ -92,7 +89,6 @@ export default function FAQSection() {
           ))}
         </div>
 
-        {/* Support CTA Card */}
         <div className="mt-20 md:mt-28 relative group">
             <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-[3rem] blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
             <div className="relative bg-[#0a0f1d] border border-white/10 rounded-[2.5rem] p-8 md:p-12 text-center overflow-hidden">

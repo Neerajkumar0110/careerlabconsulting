@@ -45,12 +45,10 @@ const roadmap = [
 export default function DeploymentRoadmap() {
   return (
     <section className="py-24 bg-[#020617] relative overflow-hidden">
-      {/* Background Decor */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(37,99,235,0.05)_0,transparent_70%)]" />
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         
-        {/* Section Header */}
         <div className="text-center mb-20">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 mb-4">
             <Star className="w-3 h-3 text-blue-400 fill-blue-400" />

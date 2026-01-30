@@ -54,13 +54,11 @@ export default function LMSPreview() {
             </div>
           </div>
 
-          {/* Right Dashboard (Interactive UI) */}
           <div className="relative group order-1 lg:order-2">
             <div className="absolute -inset-4 bg-blue-600/10 rounded-[3rem] blur-3xl opacity-50 group-hover:opacity-100 transition duration-1000"></div>
             
             <div className="relative bg-[#0a0f1d] border border-white/10 rounded-2xl md:rounded-[2.5rem] p-2 md:p-4 shadow-2xl backdrop-blur-md overflow-hidden">
               
-              {/* Browser Header */}
               <div className="flex items-center gap-2 mb-3 px-4 py-2 border-b border-white/5">
                 <div className="flex gap-1.5">
                   <div className="w-2 md:w-2.5 h-2 md:h-2.5 rounded-full bg-red-500/40" />
@@ -73,7 +71,6 @@ export default function LMSPreview() {
               </div>
 
               <div className="flex gap-2 md:gap-4 min-h-[400px] md:min-h-[480px]">
-                {/* Sidebar Navigation */}
                 <div className="w-12 md:w-16 bg-white/[0.03] rounded-xl md:rounded-3xl flex flex-col items-center py-6 gap-6 border border-white/5">
                   {[
                     { id: 'ai', icon: Activity },
@@ -96,7 +93,6 @@ export default function LMSPreview() {
                   ))}
                 </div>
 
-                {/* Main Content Area */}
                 <div className="flex-1 space-y-4 pr-1 md:pr-2 overflow-hidden">
                   <div className="flex justify-between items-center">
                     <div className="flex items-center gap-2">
@@ -105,7 +101,6 @@ export default function LMSPreview() {
                     </div>
                   </div>
 
-                  {/* Dynamic Views */}
                   <div className="h-full">
                     {activeView === 'ai' && (
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-in fade-in slide-in-from-right-4 duration-500">
@@ -182,7 +177,6 @@ export default function LMSPreview() {
                     )}
                   </div>
 
-                  {/* Footer Status Bar */}
                   <div className="p-3 md:p-4 bg-white/[0.03] border border-white/5 rounded-2xl flex items-center justify-between mt-auto">
                     <div className="flex items-center gap-3">
                       <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" />

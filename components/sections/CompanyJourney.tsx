@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
-import Image from 'next/image';
 
 const steps = [
   { 
@@ -10,55 +9,75 @@ const steps = [
       { name: "P&G", url: "https://upload.wikimedia.org/wikipedia/commons/8/85/Procter_%26_Gamble_logo.svg" },
       { name: "3M", url: "https://upload.wikimedia.org/wikipedia/commons/1/15/3M_wordmark.svg" }
     ], 
-    tech: ["Web", "iOS"], height: "h-32", color: "from-blue-600/40" 
+    tech: ["Web", "iOS"], height: "h-32", color: "from-blue-600/30" 
   },
   { 
     year: "2017", solutions: 80, 
     logos: [
       { name: "ESPN", url: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/ESPN_wordmark.svg/1280px-ESPN_wordmark.svg.png" },
-      { name: "Hershey", url: "https://brandlogos.net/wp-content/uploads/2022/11/hershey_company-logo_brandlogos.net_pcliv.png" }
+      { name: "Hershey", url: "https://brandlogos.net/wp-content/uploads/2022/11/hershey_company-logo_brandlogos.net_pcliv.png" },
+      { name: "CocaCola", url: "https://upload.wikimedia.org/wikipedia/commons/c/ce/Coca-Cola_logo.svg" }
     ], 
-    tech: ["AWS", "Micro"], height: "h-44", color: "from-blue-500/40" 
+    tech: ["AWS", "Micro"], height: "h-44", color: "from-blue-500/30" 
   },
   { 
     year: "2019", solutions: 90, 
     logos: [
       { name: "SIEMENS", url: "https://upload.wikimedia.org/wikipedia/commons/5/5f/Siemens-logo.svg" },
-      { name: "BUDWEISER", url: "https://upload.wikimedia.org/wikipedia/commons/5/5e/Budweiser_Anheuser-Busch_logo.svg" }
+      { name: "BUDWEISER", url: "https://upload.wikimedia.org/wikipedia/commons/5/5e/Budweiser_Anheuser-Busch_logo.svg" },
+      { name: "IBM", url: "https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg" },
+      { name: "Intel", url: "https://upload.wikimedia.org/wikipedia/commons/7/7d/Intel_logo_%282006-2020%29.svg" }
     ], 
-    tech: ["DevOps", "Web3"], height: "h-56", color: "from-indigo-500/40" 
+    tech: ["DevOps", "Web3"], height: "h-56", color: "from-indigo-500/30" 
   },
   { 
     year: "2021", solutions: 110, 
     logos: [
       { name: "TRACE RX", url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT5vUsGHUoQFVaDROLI3W545bwiGP1DY0__Ag&s" }, 
-      { name: "OMAN", url: "https://upload.wikimedia.org/wikipedia/commons/3/30/National_emblem_Sultanate_of_Oman.png" }
+      { name: "OMAN", url: "https://upload.wikimedia.org/wikipedia/commons/3/30/National_emblem_Sultanate_of_Oman.png" },
+      { name: "Nike", url: "https://upload.wikimedia.org/wikipedia/commons/a/a6/Logo_NIKE.svg" },
+      { name: "Adidas", url: "https://upload.wikimedia.org/wikipedia/commons/2/20/Adidas_Logo.svg" },
+      { name: "Puma", url: "https://upload.wikimedia.org/wikipedia/commons/8/88/Puma-Logo.png" }
     ], 
-    tech: ["AR/VR", "Alexa"], height: "h-64", color: "from-purple-500/40" 
+    tech: ["AR/VR", "Alexa"], height: "h-64", color: "from-purple-500/30" 
   },
   { 
     year: "2023", solutions: 135, 
     logos: [
       { name: "XINFIN", url: "https://static.news.bitcoin.com/wp-content/uploads/2017/08/uaaXrQLw-xinfin-logo.png" },
-      { name: "SIGHT", url: "https://static.vecteezy.com/system/resources/previews/059/409/178/non_2x/woman-eye-logo-symbol-free-vector.jpg" }
+      { name: "SIGHT", url: "https://static.vecteezy.com/system/resources/previews/059/409/178/non_2x/woman-eye-logo-symbol-free-vector.jpg" },
+      { name: "Google", url: "https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" },
+      { name: "Microsoft", url: "https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg" },
+      { name: "Meta", url: "https://upload.wikimedia.org/wikipedia/commons/7/7b/Meta_Platforms_Inc._logo.svg" },
+      { name: "Netflix", url: "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg" }
     ], 
-    tech: ["Meta", "NFT"], height: "h-72", color: "from-pink-500/40" 
+    tech: ["Meta", "NFT"], height: "h-72", color: "from-pink-500/30" 
   },
   { 
     year: "2025", solutions: 155, 
     logos: [
       { name: "RACKSPACE", url: "https://jupiterwebsitedesign.com/wp-content/uploads/2018/08/Rackspace-Logo-png.png" },
-      { name: "NSG", url: "https://upload.wikimedia.org/wikipedia/commons/9/90/National_security_guard_logo.png" }
+      { name: "NSG", url: "https://upload.wikimedia.org/wikipedia/commons/9/90/National_security_guard_logo.png" },
+      { name: "Amazon", url: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" },
+      { name: "Tesla", url: "https://upload.wikimedia.org/wikipedia/commons/b/bd/Tesla_Motors.svg" },
+      { name: "SpaceX", url: "https://upload.wikimedia.org/wikipedia/commons/2/2e/SpaceX_logo_black.svg" },
+      { name: "Apple", url: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" },
+      { name: "Samsung", url: "https://upload.wikimedia.org/wikipedia/commons/2/24/Samsung_Logo.svg" }
     ], 
-    tech: ["Gen AI", "ML"], height: "h-80", color: "from-emerald-500/40" 
+    tech: ["Gen AI", "ML"], height: "h-80", color: "from-emerald-500/30" 
   },
   { 
     year: "2026", solutions: 175, 
     logos: [
       { name: "QUIC", url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX0EonJQm2CUNqhvBBItn07Pwv9Uje0sNtWw&s" },
-      { name: "REGAL", url: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Regal_Cinemas_logo_2018.svg/3840px-Regal_Cinemas_logo_2018.svg.png" }
+      { name: "REGAL", url: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Regal_Cinemas_logo_2018.svg/3840px-Regal_Cinemas_logo_2018.svg.png" },
+      { name: "OpenAI", url: "https://upload.wikimedia.org/wikipedia/commons/4/4d/OpenAI_Logo.svg" },
+      { name: "Nvidia", url: "https://upload.wikimedia.org/wikipedia/commons/2/21/Nvidia_logo.svg" },
+      { name: "Oracle", url: "https://upload.wikimedia.org/wikipedia/commons/5/50/Oracle_logo.svg" },
+      { name: "Adobe", url: "https://upload.wikimedia.org/wikipedia/commons/d/d3/Adobe_Corporate_logo.svg" },
+      { name: "Slack", url: "https://upload.wikimedia.org/wikipedia/commons/d/d5/Slack_icon_2019.svg" }
     ], 
-    tech: ["Quantum", "LLM"], height: "h-[380px]", color: "from-cyan-400/50" 
+    tech: ["Quantum", "LLM"], height: "h-[380px]", color: "from-cyan-400/30" 
   },
 ];
 
@@ -83,12 +102,12 @@ const CompanyJourney = () => {
   }, []);
 
   const animateNumbers = () => {
-    const duration = 2000;
+    const duration = 2500;
     const startTime = performance.now();
     const update = (currentTime: number) => {
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      const easeProgress = 1 - Math.pow(1 - progress, 3);
+      const easeProgress = 1 - Math.pow(1 - progress, 4); 
       
       setCounts(steps.map(step => Math.floor(easeProgress * step.solutions)));
       if (progress < 1) requestAnimationFrame(update);
@@ -99,82 +118,80 @@ const CompanyJourney = () => {
   return (
     <section 
       ref={sectionRef} 
-      className="relative py-24 bg-[#01030a] overflow-hidden min-h-screen flex flex-col justify-center font-sans text-white"
-      aria-label="Company Growth Journey"
+      className="relative py-20 bg-[#01030a] overflow-hidden min-h-screen flex flex-col justify-center font-sans text-white select-none"
     >
-      <div className="absolute inset-0 z-0 opacity-10 pointer-events-none" aria-hidden="true">
-        <div className="w-full h-full bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:4rem_4rem]"></div>
+      <div className="absolute inset-0 z-0 opacity-20 pointer-events-none" aria-hidden="true">
+        <div className="w-full h-full bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:3rem_3rem]"></div>
+        <div className="absolute inset-0 bg-radial-at-t from-cyan-500/10 via-transparent to-transparent"></div>
       </div>
       
-      <div className="container mx-auto px-6 relative z-10">
-        <header className="text-center mb-16 md:mb-28">
-          <span className="text-cyan-400 font-mono text-xs tracking-[0.5em] uppercase mb-4 block animate-pulse">
-            Digital Growth Evolution
+      <div className="container mx-auto px-4 relative z-10">
+        <header className="text-center mb-12 md:mb-24">
+          <span className="text-cyan-400 font-mono text-[10px] md:text-xs tracking-[0.5em] uppercase mb-4 block animate-pulse">
+            Institutional Growth Matrix
           </span>
-          <h2 className="text-6xl md:text-9xl font-black tracking-tighter mb-8 leading-none">
-            LEVELING <span className="text-transparent bg-clip-text bg-gradient-to-b from-white to-gray-700">UP</span>
+          <h2 className="text-5xl md:text-8xl font-black tracking-tighter mb-6 leading-none italic">
+            EVOLUTION <span className="text-transparent bg-clip-text bg-gradient-to-b from-white to-white/20">TIMELINE</span>
           </h2>
-          <div className="h-1.5 w-24 bg-cyan-500 mx-auto rounded-full shadow-[0_0_25px_#22d3ee]"></div>
+          <div className="h-1 w-20 md:w-32 bg-cyan-500 mx-auto rounded-full blur-[1px] shadow-[0_0_20px_#22d3ee]"></div>
         </header>
 
         <div 
-          className="flex items-end justify-between gap-4 md:gap-10 h-[550px] md:h-[700px] overflow-x-auto pb-12 scrollbar-hide border-b border-white/10"
+          className="flex items-end justify-start md:justify-between gap-6 md:gap-8 h-[600px] md:h-[750px] overflow-x-auto pb-8 scrollbar-hide snap-x snap-mandatory border-b border-white/5"
           style={{ scrollBehavior: 'smooth' }}
         >
           {steps.map((step, index) => (
             <figure 
               key={step.year} 
-              className="flex-1 min-w-[140px] md:min-w-[180px] group relative flex flex-col items-center"
+              className="flex-shrink-0 w-[180px] md:w-auto md:flex-1 group relative flex flex-col items-center snap-center"
             >
-              <div className="absolute -top-16 flex flex-wrap justify-center gap-1.5 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0 z-30 pointer-events-none">
+              <div className="absolute -top-12 flex flex-wrap justify-center gap-1 opacity-0 group-hover:opacity-100 transition-all duration-500 -translate-y-2 group-hover:translate-y-0 z-30">
                 {step.tech.map((t) => (
-                  <span key={t} className="bg-cyan-600 px-2.5 py-1 rounded text-[10px] font-bold shadow-2xl border border-cyan-400/30">
+                  <span key={t} className="bg-white/10 backdrop-blur-md px-2 py-0.5 rounded-full text-[9px] font-bold border border-white/20 text-cyan-300">
                     {t}
                   </span>
                 ))}
               </div>
 
               <div 
-                className={`relative w-full ${step.height} transition-all duration-[1500ms] ease-out bg-gradient-to-t ${step.color} to-transparent border-t border-x border-white/5 rounded-t-3xl group-hover:border-cyan-400/40 flex flex-col items-center justify-start pt-8 overflow-hidden`}
+                className={`relative w-full ${step.height} transition-all duration-[2000ms] cubic-bezier(0.34, 1.56, 0.64, 1) bg-gradient-to-t ${step.color} to-transparent border-t border-x border-white/10 rounded-t-2xl group-hover:border-cyan-400/50 flex flex-col items-center justify-start pt-6 overflow-hidden shadow-[inset_0_20px_50px_rgba(0,0,0,0.5)]`}
                 style={{ 
                    transform: isLoaded ? 'scaleY(1)' : 'scaleY(0)',
                    transformOrigin: 'bottom',
-                   transitionDelay: `${index * 100}ms`
+                   transitionDelay: `${index * 150}ms`
                 }}
               >
-                <div className="text-center z-10">
-                  <b className="text-4xl md:text-6xl font-black tracking-tighter block leading-none">
+                <div className="text-center z-10 transition-transform duration-500 group-hover:-translate-y-1">
+                  <span className="text-3xl md:text-5xl font-black tracking-tighter block leading-none drop-shadow-lg">
                     {counts[index]}+
-                  </b>
-                  <figcaption className="text-[10px] md:text-[12px] text-cyan-200/60 font-black uppercase tracking-[0.2em] mt-3">
+                  </span>
+                  <figcaption className="text-[9px] text-cyan-100/40 font-bold uppercase tracking-[0.15em] mt-2">
                     Solutions
                   </figcaption>
                 </div>
                 
-                <div className="absolute top-0 left-0 w-full h-[3px] bg-cyan-400/30 animate-scanline" aria-hidden="true"></div>
+                <div className="absolute top-0 left-0 w-full h-[2px] bg-cyan-400/40 animate-scanline pointer-events-none" aria-hidden="true"></div>
               </div>
 
-              <div className="mt-8 text-center w-full">
-                <time className="text-2xl md:text-4xl font-black group-hover:text-cyan-400 transition-colors block mb-6 italic tracking-tight">
+              <div className="mt-6 text-center w-full bg-[#0a0c14]/50 backdrop-blur-sm p-4 rounded-b-2xl border-x border-b border-white/5">
+                <time className="text-xl md:text-3xl font-black text-gray-400 group-hover:text-cyan-400 transition-colors block mb-4 italic tracking-tighter">
                   {step.year}
                 </time>
                 
-                <div className="min-h-[120px] flex flex-col items-center justify-center gap-4">
-                  {step.logos.map((logo) => (
+                <div className="grid grid-cols-2 gap-1.5 md:gap-2 min-h-[120px] content-start">
+                  {step.logos.map((logo, lIdx) => (
                     <div 
-                      key={logo.name} 
-                      className="bg-white p-2 rounded-xl w-full max-w-[110px] md:max-w-[140px] h-12 md:h-14 flex items-center justify-center shadow-lg hover:shadow-cyan-500/10 transition-all duration-300 group-hover:scale-110"
+                      key={`${logo.name}-${lIdx}`} 
+                      className={`bg-white/[0.03] hover:bg-white p-1.5 rounded-lg w-full h-8 md:h-10 flex items-center justify-center border border-white/5 transition-all duration-500 group-hover:border-cyan-500/20 ${step.logos.length % 2 !== 0 && lIdx === step.logos.length - 1 ? 'col-span-2 mx-auto max-w-[50%]' : ''}`}
                     >
                       <img 
                         src={logo.url} 
-                        alt={`${logo.name} partner logo`}
+                        alt={logo.name}
                         loading="lazy"
-                        className="max-h-full max-w-[85%] object-contain"
-                        width={120}
-                        height={40}
+                        className="max-h-full max-w-full object-contain opacity-40 group-hover:opacity-100 transition-opacity duration-500 filter grayscale group-hover:grayscale-0"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;
-                          target.src = `https://logo.clearbit.com/${logo.name.toLowerCase().replace(/\s/g, '')}.com`;
+                          target.src = `https://ui-avatars.com/api/?name=${logo.name}&background=1e293b&color=22d3ee&bold=true`;
                         }}
                       />
                     </div>
@@ -188,13 +205,20 @@ const CompanyJourney = () => {
 
       <style jsx>{`
         @keyframes scanline { 
-          0% { transform: translateY(-20px); opacity: 0; } 
-          50% { opacity: 0.8; } 
+          0% { transform: translateY(-100%); opacity: 0; } 
+          50% { opacity: 1; } 
           100% { transform: translateY(500px); opacity: 0; } 
         }
-        .animate-scanline { animation: scanline 3s linear infinite; }
+        .animate-scanline { animation: scanline 4s linear infinite; }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        @media (max-width: 768px) {
+          .snap-x { 
+            scroll-padding-left: 2rem; 
+            scroll-padding-right: 2rem;
+          }
+        }
       `}</style>
     </section>
   );

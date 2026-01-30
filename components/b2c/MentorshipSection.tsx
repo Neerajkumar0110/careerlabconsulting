@@ -32,13 +32,11 @@ const mentors = [
 export default function MentorshipSection() {
   return (
     <section className="py-16 md:py-24 bg-[#020617] relative overflow-hidden">
-      {/* Background Glow */}
       <div className="absolute bottom-0 right-0 w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-blue-600/5 blur-[80px] md:blur-[120px] rounded-full translate-x-1/2 translate-y-1/2 pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           
-          {/* Left Side: Stats and Feature Cards */}
           <div className="order-2 lg:order-1 relative">
             <div className="grid grid-cols-2 gap-3 md:gap-6">
               

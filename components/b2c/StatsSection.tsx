@@ -19,21 +19,18 @@ export default function GlobalImpactSection() {
   return (
     <section className="py-24 bg-[#020617] relative overflow-hidden min-h-screen flex items-center">
       
-      {/* --- Background Image Implementation --- */}
       <div className="absolute inset-0 z-0">
         <img 
           src="https://bostoninstituteofanalytics.b-cdn.net/wp-content/uploads/2023/12/video-placeholder.webp"
           alt="Background"
           className="w-full h-full object-cover opacity-40"
         />
-        {/* Layered Gradient for Dark Theme Consistency */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#020617] via-[#020617]/80 to-[#020617]" />
         <div className="absolute inset-0 bg-black/40" />
       </div>
 
       <div className="max-w-7xl mx-auto px-6 relative z-10 w-full">
         
-        {/* Header Section - Centered */}
         <div className="text-center flex flex-col items-center mb-20">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 mb-6 backdrop-blur-xl">
             <Globe2 className="w-4 h-4 text-blue-400" />

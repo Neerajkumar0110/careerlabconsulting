@@ -40,21 +40,17 @@ export default function AlumniSuccess() {
           </motion.div>
         </div>
 
-        {/* Logo Slider Container */}
         <div className="relative w-full flex items-center overflow-hidden">
-          {/* FIX: Client mentioned logos turning black on left/right. 
-              Removed heavy dark gradients and replaced with subtle transparency.
-          */}
           <div className="absolute inset-y-0 left-0 w-10 md:w-32 bg-gradient-to-r from-[#020617] to-transparent z-20 pointer-events-none" />
           <div className="absolute inset-y-0 right-0 w-10 md:w-32 bg-gradient-to-l from-[#020617] to-transparent z-20 pointer-events-none" />
 
           <motion.div 
             className="flex whitespace-nowrap items-center py-6"
-            animate={{ x: ["0%", "-50%"] }} // Adjusted for duplicated array size
+            animate={{ x: ["0%", "-50%"] }} 
             transition={{
               repeat: Infinity,
               ease: "linear",
-              duration: 20, // Slightly faster for a modern feel
+              duration: 20, 
             }}
           >
             {duplicatedLogos.map((logo, index) => (
@@ -65,7 +61,6 @@ export default function AlumniSuccess() {
                 <img 
                   src={logo.url} 
                   alt={logo.name} 
-                  // Pure original colors with no filters
                   className="h-6 md:h-10 w-auto object-contain transition-transform duration-300 hover:scale-110" 
                   loading={index < 8 ? "eager" : "lazy"}
                 />
