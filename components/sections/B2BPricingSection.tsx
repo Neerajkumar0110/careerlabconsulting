@@ -3,11 +3,18 @@
 import React, { useState } from 'react';
 import { 
   Check, Zap, Crown, Building2, 
-  Calendar, Loader2, ShieldCheck, Rocket, ArrowRight, Info
+  Calendar, Loader2, ShieldCheck, Rocket, ArrowRight, Info,
+  Phone, Mail, MessageCircle
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Script from 'next/script';
 import ScheduleMeetingModal from './ScheduleMeetingModal'; 
+
+// --- Client Contact Details ---
+const CONTACT_INFO = {
+  whatsapp: "918700236923",
+  email: "info@careerlabconsulting.com"
+};
 
 type PricingCategory = 'Single Product' | 'Combo' | 'All-in-One';
 
@@ -53,6 +60,11 @@ export default function B2BPricingSection() {
     setIsModalOpen(true);
   };
 
+  const openWhatsApp = () => {
+    const message = `Hi, I am interested in the Enterprise Plan (${activeTab}). Can we talk?`;
+    window.open(`https://wa.me/${CONTACT_INFO.whatsapp}?text=${encodeURIComponent(message)}`, '_blank');
+  };
+
   const handlePayment = (tier: PricingTier) => {
     if (!tier.rawPrice) return;
     setLoading(tier.name);
@@ -64,7 +76,7 @@ export default function B2BPricingSection() {
       name: "CareerLab B2B",
       description: `${tier.name} - ${activeTab} Plan`,
       handler: (response: any) => {
-        window.open(`https://wa.me/918700236923?text=B2B_Payment_Success_Plan_${activeTab}_Tier_${tier.name}_ID_${response.razorpay_payment_id}`, '_blank');
+        window.open(`https://wa.me/${CONTACT_INFO.whatsapp}?text=B2B_Payment_Success_Plan_${activeTab}_Tier_${tier.name}_ID_${response.razorpay_payment_id}`, '_blank');
         setLoading(null);
       },
       prefill: {
@@ -85,7 +97,6 @@ export default function B2BPricingSection() {
 
   return (
     <section className="relative py-24 bg-[#020617] text-white overflow-hidden">
-      {/* Dynamic Background */}
       <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-600/10 blur-[120px] rounded-full" />
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-600/10 blur-[120px] rounded-full" />
@@ -108,7 +119,6 @@ export default function B2BPricingSection() {
             </p>
           </motion.div>
           
-          {/* Animated Tab Switcher */}
           <div className="inline-flex p-1.5 bg-white/5 border border-white/10 rounded-2xl backdrop-blur-xl mb-12">
             {(Object.keys(CATEGORIES) as PricingCategory[]).map((cat) => (
               <button
@@ -130,7 +140,6 @@ export default function B2BPricingSection() {
           </div>
         </div>
 
-        {/* Pricing Cards */}
         <motion.div 
           layout
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
@@ -180,44 +189,66 @@ export default function B2BPricingSection() {
                   ))}
                 </div>
 
-                <button 
-                  onClick={() => tier.isEnterprise ? openBooking(tier.name) : handlePayment(tier)}
-                  disabled={loading === tier.name}
-                  className={`w-full py-4 rounded-2xl font-black uppercase tracking-[0.15em] text-[11px] transition-all flex items-center justify-center gap-3 active:scale-[0.98] ${
-                    tier.name === 'Growth' 
-                      ? 'bg-blue-600 hover:bg-blue-500 text-white' 
-                      : 'bg-white text-black hover:bg-slate-200'
-                  }`}
-                >
-                  {loading === tier.name ? (
-                    <Loader2 className="animate-spin" />
-                  ) : tier.isEnterprise ? (
-                    <><Calendar className="w-4 h-4" /> Book Call</>
-                  ) : (
-                    <><ShieldCheck className="w-4 h-4" /> Get Started <ArrowRight className="w-3 h-3" /></>
-                  )}
-                </button>
+                {tier.isEnterprise ? (
+                    <div className="flex flex-col gap-3">
+                        <button 
+                            onClick={openWhatsApp}
+                            className="w-full py-3 rounded-2xl font-black uppercase tracking-wider text-[11px] bg-white text-black hover:bg-slate-200 transition-all flex items-center justify-center gap-2"
+                        >
+                            <MessageCircle className="w-4 h-4" /> Contact Sales
+                        </button>
+                        
+                        <button 
+                            onClick={() => openBooking(tier.name)}
+                            className="w-full py-3 rounded-2xl font-black uppercase tracking-wider text-[11px] bg-white/5 border border-white/10 hover:bg-white/10 transition-all flex items-center justify-center gap-2 text-slate-300"
+                        >
+                            <Calendar className="w-4 h-4" /> Book Calendar
+                        </button>
+
+                        <div className="text-center mt-2">
+                             <a href={`mailto:${CONTACT_INFO.email}`} className="text-[10px] text-slate-500 hover:text-white transition-colors flex items-center justify-center gap-1">
+                                <Mail className="w-3 h-3" /> {CONTACT_INFO.email}
+                             </a>
+                        </div>
+                    </div>
+                ) : (
+                    <button 
+                      onClick={() => handlePayment(tier)}
+                      disabled={loading === tier.name}
+                      className={`w-full py-4 rounded-2xl font-black uppercase tracking-[0.15em] text-[11px] transition-all flex items-center justify-center gap-3 active:scale-[0.98] ${
+                        tier.name === 'Growth' 
+                          ? 'bg-blue-600 hover:bg-blue-500 text-white' 
+                          : 'bg-white text-black hover:bg-slate-200'
+                      }`}
+                    >
+                      {loading === tier.name ? (
+                        <Loader2 className="animate-spin" />
+                      ) : (
+                        <><ShieldCheck className="w-4 h-4" /> Get Started <ArrowRight className="w-3 h-3" /></>
+                      )}
+                    </button>
+                )}
               </motion.div>
             ))}
           </AnimatePresence>
         </motion.div>
 
-        {/* Floating Trust Banner */}
         <div className="mt-20 p-8 rounded-[3rem] bg-gradient-to-r from-blue-600/10 via-transparent to-purple-600/10 border border-white/10 flex flex-col md:flex-row items-center justify-between gap-6 backdrop-blur-sm">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
-              <Info className="text-blue-400" />
+              <Phone className="text-blue-400" />
             </div>
             <div>
-              <h4 className="font-bold text-lg">Need a customized solution?</h4>
-              <p className="text-slate-400 text-sm">Talk to our architecture experts for white-label requirements.</p>
+              <h4 className="font-bold text-lg">Prefer to talk directly?</h4>
+              <p className="text-slate-400 text-sm">Call us at <span className="text-white font-semibold">+91 870023 6923</span> or book a consultation.</p>
             </div>
           </div>
           <button 
             onClick={() => openBooking('Custom Architecture')}
-            className="px-8 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl font-bold transition-all text-sm"
+            className="px-8 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl font-bold transition-all text-sm flex items-center gap-2"
           >
-            Contact Sales
+            <Calendar className="w-4 h-4" />
+            Book Consultation
           </button>
         </div>
       </div>

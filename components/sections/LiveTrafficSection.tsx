@@ -17,10 +17,31 @@ const DynamicCounter: React.FC<CounterProps> = ({ initialValue, min, max, interv
   useEffect(() => {
     const interval = setInterval(() => {
       setCount((prev) => {
-        const fluctuation = Math.floor(Math.random() * 5) - 2; // -2 se +2 ka badlav
-        const nextValue = prev + fluctuation;
-        if (nextValue < min) return min + 2;
-        if (nextValue > max) return max - 2;
+        // Logic for "Real" feel:
+        // Kam, Medium aur Zyada fluctuation ka mixture
+        const volatility = Math.random();
+        let change = 0;
+
+        if (volatility > 0.9) {
+          // 10% Chance: Bada Spike (High Fluctuation: 20-35)
+          change = Math.floor(Math.random() * 16) + 20; 
+        } else if (volatility > 0.6) {
+          // 30% Chance: Medium Fluctuation (6-19)
+          change = Math.floor(Math.random() * 14) + 6;
+        } else {
+          // 60% Chance: Chhota Change (Low Fluctuation: 1-5)
+          change = Math.floor(Math.random() * 5) + 1;
+        }
+
+        // 50% chance ki value badhegi ya ghategi
+        const direction = Math.random() > 0.5 ? 1 : -1;
+        
+        const nextValue = prev + (change * direction);
+
+        // Bounds check (Taaki min/max se bahar na jaye)
+        if (nextValue < min) return min + Math.floor(Math.random() * 10);
+        if (nextValue > max) return max - Math.floor(Math.random() * 10);
+        
         return nextValue;
       });
     }, intervalMs);
@@ -31,9 +52,10 @@ const DynamicCounter: React.FC<CounterProps> = ({ initialValue, min, max, interv
     <AnimatePresence mode="wait">
       <motion.span
         key={count}
-        initial={{ y: 5, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        exit={{ y: -5, opacity: 0 }}
+        initial={{ y: 10, opacity: 0, filter: "blur(5px)" }} // Thoda blur effect add kiya smooth feel ke liye
+        animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
+        exit={{ y: -10, opacity: 0, filter: "blur(5px)" }}
+        transition={{ duration: 0.3, ease: "easeOut" }} // Duration thoda tez kiya taaki lag na lage
         className="tabular-nums inline-block"
       >
         {count.toLocaleString()}{suffix}
@@ -41,6 +63,8 @@ const DynamicCounter: React.FC<CounterProps> = ({ initialValue, min, max, interv
     </AnimatePresence>
   );
 };
+
+// --- Baaki Components Same Rahenge ---
 
 interface StatCardProps {
   title: string;
@@ -117,9 +141,10 @@ const LiveTrafficSection: React.FC = () => {
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {/* Note: Interval change karke randomness feel badha di */}
           <StatCard 
             title="Global Visitors"
-            value={<DynamicCounter initialValue={8420} min={8000} max={9500} suffix="+" />}
+            value={<DynamicCounter initialValue={8420} min={8000} max={9500} suffix="+" intervalMs={3500} />}
             subtitle="Active users exploring from across the globe."
             icon={Globe}
             colorClass="bg-blue-600"
@@ -128,7 +153,7 @@ const LiveTrafficSection: React.FC = () => {
 
           <StatCard 
             title="Indian Visitors"
-            value={<DynamicCounter initialValue={3150} min={3000} max={4000} />}
+            value={<DynamicCounter initialValue={3150} min={3000} max={4000} intervalMs={2800} />}
             subtitle="Real-time traffic originating from India."
             icon={Users}
             colorClass="bg-orange-500"
@@ -137,7 +162,7 @@ const LiveTrafficSection: React.FC = () => {
 
           <StatCard 
             title="API Requests"
-            value={<DynamicCounter initialValue={142} min={120} max={180} suffix="/s" />}
+            value={<DynamicCounter initialValue={142} min={120} max={180} suffix="/s" intervalMs={2000} />}
             subtitle="Current requests being processed by our edge."
             icon={Zap}
             colorClass="bg-purple-600"
@@ -146,7 +171,7 @@ const LiveTrafficSection: React.FC = () => {
 
           <StatCard 
             title="Active Projects"
-            value={<DynamicCounter initialValue={512} min={510} max={525} />}
+            value={<DynamicCounter initialValue={512} min={510} max={525} intervalMs={4500} />}
             subtitle="Ongoing enterprise projects powered by AI."
             icon={FolderKanban}
             colorClass="bg-emerald-600"
