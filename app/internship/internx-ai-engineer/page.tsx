@@ -12,10 +12,51 @@ import {
   Users, Coins, Zap, Code2, 
   Layout, Server, BrainCircuit, Network, Trophy, 
   FileCheck, Medal, Timer, Play, ChevronDown, Plus,
-  TrendingUp, Wallet, Check, AlertTriangle
+  TrendingUp, Wallet, AlertTriangle, Check, X,
+  Target, BarChart3, Fingerprint, Laptop, UserCheck, 
+  RefreshCw, Home
 } from 'lucide-react';
 
-// --- ICONS & BRAND ASSETS ---
+// --- DATA CONSTANTS ---
+
+const personasData = [
+  {
+    title: "Students & Freshers",
+    desc: "No prior coding required. Structured entry into AI with portfolio readiness.",
+    icon: <GraduationCap className="w-6 h-6 text-blue-400" />
+  },
+  {
+    title: "Tech Professionals",
+    desc: "Transition into GenAI & MLOps. Work on real agentic systems.",
+    icon: <Laptop className="w-6 h-6 text-purple-400" />
+  },
+  {
+    title: "Non-Tech Professionals",
+    desc: "Learn AI tools, automation & workflows. No heavy math/theory overload.",
+    icon: <UserCheck className="w-6 h-6 text-green-400" />
+  },
+  {
+    title: "Career Re-starters",
+    desc: "Weekend-only model. Practical, skill-first approach to return to work.",
+    icon: <RefreshCw className="w-6 h-6 text-orange-400" />
+  }
+];
+
+const careerGrowthData = {
+  india: [
+    { year: "Year 1", role: "Jr. AI Engineer", ctc: "₹4L - ₹7L", h: "25%", color: "from-slate-600 to-slate-500" },
+    { year: "Year 2", role: "AI Engineer / Backend", ctc: "₹7L - ₹12L", h: "45%", color: "from-blue-900 to-blue-700" },
+    { year: "Year 3", role: "Sr. ML Engineer", ctc: "₹12L - ₹18L", h: "65%", color: "from-blue-700 to-blue-500" },
+    { year: "Year 5", role: "AI Architect", ctc: "₹25L - ₹50L+", h: "90%", color: "from-blue-500 to-cyan-400" },
+  ],
+  global: [
+    { year: "Year 1", role: "Remote AI Dev", ctc: "$5K - $8K", h: "25%", color: "from-slate-600 to-slate-500" },
+    { year: "Year 2", role: "AI Engineer", ctc: "$8K - $12K", h: "45%", color: "from-green-900 to-green-700" },
+    { year: "Year 3", role: "Sr. AI Engineer", ctc: "$15K - $40K", h: "65%", color: "from-green-700 to-green-500" },
+    { year: "Year 5", role: "Global AI Lead", ctc: "$60K - $100K+", h: "90%", color: "from-green-500 to-emerald-400" },
+  ]
+};
+
 const BrandIcons = {
   Python: () => (
     <svg viewBox="0 0 256 256" className="w-12 h-12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -59,8 +100,6 @@ const BrandIcons = {
     </svg>
   )
 };
-
-// --- DATA CONSTANTS ---
 
 const industryDomains = [
   { 
@@ -195,18 +234,89 @@ const eliteSyllabus = [
   }
 ];
 
-// Updated based on PDF page 35: Added 1:1 Mentorship and Job Guarantee rows
-const competitors = [
-  { feature: "Live Weekend Delivery", internx: true, bootcamps: true, recorded: false },
-  { feature: "Real Startup Projects", internx: true, bootcamps: false, recorded: false },
-  { feature: "Public GitHub Portfolio", internx: true, bootcamps: "Optional", recorded: false },
-  { feature: "ResumeNFT Proof", internx: true, bootcamps: false, recorded: false },
-  { feature: "Elite Career Pathway", internx: true, bootcamps: false, recorded: false },
-  { feature: "Agentic AI & GenAI Systems", internx: true, bootcamps: "Limited", recorded: false },
-  { feature: "Legal Job Guarantee (Elite)", internx: true, bootcamps: "Conditional", recorded: false },
-  { feature: "1:1 Mentorship", internx: "Weekly", bootcamps: true, recorded: false },
-  { feature: "Full Ecosystem Access", internx: true, bootcamps: false, recorded: false },
-];
+const competitorData = {
+    headers: ["Key Feature", "InternX-AI", "Internshala", "Forage", "LinkedIn Learning", "Springboard", "Career Foundry", "Scaler", "Microverse"],
+    rows: [
+        { feature: "Real Startup Projects", values: ["yes", "no", "no", "no", "limited", "simulated", "partial", "yes"] },
+        { feature: "GitHub Portfolio", values: ["yes", "no", "no", "no", "optional", "manual", "yes", "yes"] },
+        { feature: "ResumeNFT Proof Credentials", values: ["yes", "no", "no", "no", "no", "no", "no", "no"] },
+        { feature: "Global Startup Exposure", values: ["yes", "no", "no", "limited", "no", "limited", "no", "yes"] },
+        { feature: "Legal Job Guarantee (Elite)", values: ["yes", "no", "no", "no", "yes", "no", "conditional", "no"] },
+        { feature: "AI & Agentic Workflows", values: ["yes", "no", "no", "no", "limited", "no", "no", "no"] },
+        { feature: "1:1 Mentorship", values: ["weekly", "no", "no", "no", "yes", "yes", "yes", "yes"] },
+        { feature: "Entry Pricing (India)", values: ["₹50K-₹1L", "₹2K-₹5K", "₹5L+", "₹1-2K/mo", "₹6.5L+", "₹6L+", "₹2.5L+", "₹12L (ISA)"] },
+    ]
+};
+
+const splitComparisons = {
+    roles: [
+        { foundation: "Junior AI Developer", elite: "AI / ML Engineer" },
+        { foundation: "AI Intern", elite: "GenAI Engineer" },
+        { foundation: "Prompt Engineer (Entry)", elite: "Agentic AI Engineer" },
+        { foundation: "AI Support Engineer", elite: "AI Systems Engineer" },
+        { foundation: "Automation Assistant", elite: "AI Architect (Growth path)" },
+    ],
+    ctc: {
+        india: [
+            { year: "Year 1", foundation: "₹4–6 LPA", elite: "₹9–12 LPA" },
+            { year: "Year 2", foundation: "₹6–9 LPA", elite: "₹12–15 LPA" },
+            { year: "Year 3", foundation: "₹9–12 LPA", elite: "₹15–20 LPA" },
+            { year: "Year 4", foundation: "₹12–15 LPA", elite: "₹20–30 LPA" },
+            { year: "Year 5", foundation: "₹15–20+ LPA", elite: "₹30–50+ LPA" },
+        ],
+        global: [
+            { year: "Year 1", foundation: "$5K–8K", elite: "$10K–15K" },
+            { year: "Year 2", foundation: "$8K–12K", elite: "$16K–25K" },
+            { year: "Year 3", foundation: "$12K–15K", elite: "$25K–40K" },
+            { year: "Year 4", foundation: "$15K–20K", elite: "$40K–60K" },
+            { year: "Year 5", foundation: "$20K–30K+", elite: "$60K–100K+" },
+        ]
+    },
+    tools: [
+        { tool: "Python", foundation: "Yes", elite: "Advanced" },
+        { tool: "SQL", foundation: "Yes", elite: "Advanced" },
+        { tool: "ML Libraries", foundation: "Basics", elite: "Production-grade" },
+        { tool: "PyTorch", foundation: "Intro only", elite: "Deep usage" },
+        { tool: "GPT / LLM APIs", foundation: "Usage", elite: "Engineering" },
+        { tool: "LangChain / LangGraph", foundation: "No", elite: "Yes" },
+        { tool: "Vector Databases", foundation: "No", elite: "Yes" },
+        { tool: "MLOps", foundation: "No", elite: "Yes" },
+        { tool: "LLM Ops", foundation: "No", elite: "Yes" },
+    ],
+    projects: [
+        { aspect: "Project Type", foundation: "Guided", elite: "Guided + Custom" },
+        { aspect: "Industry Problems", foundation: "Yes", elite: "Advanced" },
+        { aspect: "Difficulty Level", foundation: "Entry", elite: "Enterprise-grade" },
+        { aspect: "GitHub Depth", foundation: "Basic", elite: "Full system repos" },
+        { aspect: "Live Defense", aspectType: "bad", foundation: "Limited", elite: "Mandatory" },
+        { aspect: "Anti-Cheat Controls", aspectType: "warn", foundation: "Medium", elite: "Very Strong" },
+    ],
+    features: [
+        { feature: "Live Learning", foundation: "Yes (Weekend syllabus)", elite: "Yes" },
+        { feature: "Weekday Practice Sessions", foundation: "Complimentary", elite: "Included" },
+        { feature: "Real Industry Projects", foundation: "Guided", elite: "Guided + Custom" },
+        { feature: "Custom Project Selection", foundation: "No", elite: "Yes" },
+        { feature: "AI Lab Access", foundation: "No", elite: "Yes" },
+        { feature: "Personal AI Assistant", foundation: "No", elite: "Yes" },
+        { feature: "ResumeNFT", foundation: "Foundation tier", elite: "Advanced tier" },
+        { feature: "Interview Opportunities", foundation: "Multiple", elite: "Unlimited till selection" },
+        { feature: "Global Hiring Exposure", foundation: "Limited", elite: "Strong" },
+    ],
+    usps: [
+        { usp: "Beginner Friendly", foundation: "Very High", elite: "Moderate" },
+        { usp: "Engineering Depth", foundation: "Basic", elite: "Advanced" },
+        { usp: "Proof-Based Hiring", foundation: "Yes", elite: "Strong" },
+        { usp: "Real Industry Exposure", foundation: "Guided", elite: "Custom" },
+        { usp: "Career Acceleration", foundation: "Entry", elite: "Fast-track" },
+        { usp: "Elite Branding", foundation: "No", elite: "Yes" }
+    ],
+    fees: [
+        { item: "Program Fee (India)", foundation: "₹1,49,999", elite: "₹2,49,999" },
+        { item: "Program Fee (Global)", foundation: "~$2,000", elite: "~$3,000" },
+        { item: "Scholarship (Test-based)", foundation: "Up to 30%", elite: "Up to 40%" },
+        { item: "EMI (India Only)", foundation: "Available", elite: "Available" }
+    ]
+};
 
 const ecosystem = [
   { title: "Products", desc: "AI SaaS Platforms (Sales, Marketing)", icon: <Layers /> },
@@ -217,14 +327,14 @@ const ecosystem = [
 ];
 
 const tools = [
-  { name: "Python", icon: <BrandIcons.Python /> },
-  { name: "OpenAI API", icon: <BrandIcons.OpenAI /> },
-  { name: "LangChain", icon: <BrandIcons.LangChain /> },
-  { name: "GitHub", icon: <BrandIcons.GitHub /> },
-  { name: "SQL", icon: <BrandIcons.SQL /> },
-  { name: "Zapier/Make", icon: <BrandIcons.Zapier /> },
-  { name: "PyTorch", icon: <BrandIcons.PyTorch /> },
-  { name: "FastAPI", icon: <BrandIcons.FastAPI /> }
+  { name: "Python", icon: <BrandIcons.Python />, desc: "Core language for AI." },
+  { name: "OpenAI API", icon: <BrandIcons.OpenAI />, desc: "Build GenAI apps." },
+  { name: "LangChain", icon: <BrandIcons.LangChain />, desc: "Chain AI reasoning." },
+  { name: "GitHub", icon: <BrandIcons.GitHub />, desc: "Portfolio proof." },
+  { name: "SQL", icon: <BrandIcons.SQL />, desc: "Data handling." },
+  { name: "Zapier/Make", icon: <BrandIcons.Zapier />, desc: "No-code automation." },
+  { name: "PyTorch", icon: <BrandIcons.PyTorch />, desc: "Deep Learning." },
+  { name: "FastAPI", icon: <BrandIcons.FastAPI />, desc: "Deploy AI APIs." }
 ];
 
 const gamificationData = [
@@ -286,65 +396,16 @@ const faqs = [
   { q: "How do the weekend classes work?", a: "Classes are live on Saturday & Sunday. Weekdays (Mon-Fri) are for optional practice sessions and mentor support." }
 ];
 
-// Updated based on PDF Page 16 & 33: Added Global ($) Career Growth Data
-const careerGrowthData = {
-  india: [
-    { year: "Year 1", role: "Jr. AI Engineer", ctc: "₹4L - ₹7L", h: "25%", color: "from-slate-600 to-slate-500" },
-    { year: "Year 2", role: "AI Engineer / Backend", ctc: "₹7L - ₹12L", h: "45%", color: "from-blue-900 to-blue-700" },
-    { year: "Year 3", role: "Sr. ML Engineer", ctc: "₹12L - ₹18L", h: "65%", color: "from-blue-700 to-blue-500" },
-    { year: "Year 5", role: "AI Architect", ctc: "₹25L - ₹50L+", h: "90%", color: "from-blue-500 to-cyan-400" },
-  ],
-  global: [
-    { year: "Year 1", role: "Remote AI Dev", ctc: "$5K - $8K", h: "25%", color: "from-slate-600 to-slate-500" },
-    { year: "Year 2", role: "AI Engineer", ctc: "$8K - $12K", h: "45%", color: "from-green-900 to-green-700" },
-    { year: "Year 3", role: "Sr. AI Engineer", ctc: "$15K - $40K", h: "65%", color: "from-green-700 to-green-500" },
-    { year: "Year 5", role: "Global AI Lead", ctc: "$60K - $100K+", h: "90%", color: "from-green-500 to-emerald-400" },
-  ]
-};
-
 const hiringPartners = ["Zapier", "Notion", "Turing", "Freshworks", "Loom", "OutSystems", "HubSpot", "Monday.com"];
 
-// Updated based on PDF Page 32/33: Added Personal AI Assistant, Lab Access, Custom Projects
-const foundationVsEliteData = [
-    {
-        category: "Features & Delivery",
-        rows: [
-            { feature: "Duration", foundation: "6 Months", elite: "12 Months (Foundation Included)" },
-            { feature: "Live Learning", foundation: "Weekend Syllabus", elite: "Weekend Syllabus" },
-            { feature: "Projects", foundation: "Guided Industry Projects", elite: "Guided + Custom Choice" },
-            { feature: "Mentorship", foundation: "Weekly 1:1", elite: "Weekly 1:1 + Tech Deep Dive" },
-            { feature: "Personal AI Assistant", foundation: "No", elite: "Yes (Included)" },
-            { feature: "AI Lab Access", foundation: "No", elite: "Yes" },
-        ]
-    },
-    {
-        category: "Tools & Tech Stack",
-        rows: [
-            { feature: "Python", foundation: "Basics & Fundamentals", elite: "Advanced Engineering" },
-            { feature: "AI/ML Depth", foundation: "Concepts & Application", elite: "Production Pipelines & MLOps" },
-            { feature: "GenAI & LLMs", foundation: "Prompting & API Usage", elite: "RAG, Vector DBs, Fine-tuning" },
-            { feature: "Agentic AI", foundation: "No", elite: "Multi-Agent Systems (LangGraph)" },
-            { feature: "Deployment", foundation: "Basic API (Flask)", elite: "Scalable Cloud Architecture" },
-        ]
-    },
-    {
-        category: "Career & Outcomes",
-        rows: [
-            { feature: "Job Roles", foundation: "Jr. AI Developer, Intern", elite: "AI/ML Engineer, GenAI Engineer" },
-            { feature: "Interview Opps", foundation: "Multiple", elite: "Unlimited till Selection" },
-            { feature: "Avg CTC (India)", foundation: "₹4L - ₹6L (Entry)", elite: "₹9L - ₹15L (Accelerated)" },
-            { feature: "Avg CTC (Global)", foundation: "$5K - $8K", elite: "$15K - $25K+" },
-            { feature: "ResumeNFT Tier", foundation: "Foundation Tier", elite: "Advanced Tier" },
-        ]
-    }
-];
 
+// --- COMPONENT ---
 
 export default function InternXAIPage() {
   const [activeTab, setActiveTab] = useState('foundation');
   const [activeGamification, setActiveGamification] = useState(gamificationData[0]);
   const [activeFaqIndex, setActiveFaqIndex] = useState<number | null>(0);
-  const [comparisonCategory, setComparisonCategory] = useState(foundationVsEliteData[0]);
+  const [comparisonCategory, setComparisonCategory] = useState<'features' | 'tools' | 'roles' | 'projects' | 'ctc' | 'usps' | 'fees'>('features');
   const [earningsRegion, setEarningsRegion] = useState<'india' | 'global'>('india');
 
   const handlePayment = (planName: string, amount: number) => {
@@ -377,6 +438,22 @@ export default function InternXAIPage() {
     rzp1.open();
   };
 
+  // Helper to render check/cross/text for competitor table
+  const renderCompetitorValue = (val: string) => {
+      const v = val.toLowerCase();
+      if (v === 'yes' || v === 'weekly') return <Check className="w-5 h-5 text-green-500 mx-auto" strokeWidth={3} />;
+      if (v === 'no') return <X className="w-5 h-5 text-red-500 mx-auto opacity-70" />;
+      if (v === 'limited' || v === 'simulated' || v === 'partial' || v === 'optional' || v === 'manual' || v === 'conditional') {
+          return (
+            <div className="flex flex-col items-center gap-1">
+                 <AlertTriangle className="w-4 h-4 text-yellow-500" />
+                 <span className="text-[10px] text-yellow-500 font-bold uppercase">{val}</span>
+            </div>
+          );
+      }
+      return <span className="text-xs font-bold text-slate-300">{val}</span>;
+  };
+
   return (
     <div className="bg-[#020617] min-h-screen flex flex-col font-sans text-slate-100 overflow-x-hidden selection:bg-blue-500/30 selection:text-blue-200">
       <B2CHeader />
@@ -385,6 +462,7 @@ export default function InternXAIPage() {
 
       <main className="flex-grow">
         
+        {/* --- HERO SECTION --- */}
         <section className="relative pt-32 pb-10 px-6 overflow-hidden">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80vw] h-[500px] bg-blue-600/10 rounded-full blur-[120px] -z-10" />
           
@@ -421,13 +499,13 @@ export default function InternXAIPage() {
               </Link>
             </div>
 
+            {/* UPDATED STATS FROM PDF PAGE 16 */}
             <div className="mt-16 pt-8 border-t border-white/5 grid grid-cols-2 md:grid-cols-4 gap-8 opacity-80">
               {[
                 { val: "15,000+", label: "Learners Trained" },
-                { val: "27+", label: "Countries" },
-                { val: "3,500+", label: "Projects Shipped" },
-                // Updated based on PDF page 2 & 3: Added specific certification names
-                { val: "Microsoft / IBM / CLC", label: "Global Certifications" },
+                { val: "11.80 LPA", label: "Avg CTC (India)" },
+                { val: "88%", label: "Job Conversion Rate" },
+                { val: "260+", label: "Hiring Startups" },
               ].map((stat, i) => (
                 <div key={i} className="flex flex-col items-center">
                   <span className="text-xl md:text-2xl font-black text-white">{stat.val}</span>
@@ -438,6 +516,40 @@ export default function InternXAIPage() {
           </article>
         </section>
 
+        {/* --- POSITIONING STATEMENT (VISUAL BLOCK) --- */}
+        <section className="py-12 px-6">
+            <div className="max-w-5xl mx-auto bg-gradient-to-r from-blue-900/20 to-purple-900/20 border-y border-white/10 p-8 md:p-12 text-center rounded-3xl backdrop-blur-sm">
+                <h2 className="text-2xl md:text-4xl font-black italic text-white mb-6">
+                    "Real AI Careers. Built with Projects. Verified with Proof. Hired with Confidence."
+                </h2>
+                <div className="flex flex-wrap justify-center gap-4 md:gap-8">
+                    <span className="flex items-center gap-2 text-slate-300 font-bold"><XCircle className="text-red-500 w-5 h-5"/> No course fatigue</span>
+                    <span className="flex items-center gap-2 text-slate-300 font-bold"><XCircle className="text-red-500 w-5 h-5"/> No fake resumes</span>
+                    <span className="flex items-center gap-2 text-white font-bold"><CheckCircle2 className="text-green-500 w-5 h-5"/> Only proof-driven careers</span>
+                </div>
+            </div>
+        </section>
+
+         {/* --- WHO IS THIS FOR (PERSONAS) --- */}
+        <section className="py-20 px-6">
+             <div className="max-w-6xl mx-auto">
+                <div className="text-center mb-12">
+                     <h2 className="text-3xl font-black uppercase text-white mb-4">Who is InternX-AI For?</h2>
+                     <p className="text-slate-400">Designed for serious career builders across all backgrounds.</p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {personasData.map((p, i) => (
+                        <div key={i} className="bg-white/5 border border-white/10 p-6 rounded-2xl hover:border-blue-500/50 transition-all hover:-translate-y-1">
+                            <div className="bg-slate-900 p-3 rounded-lg w-fit mb-4">{p.icon}</div>
+                            <h3 className="font-bold text-white text-lg mb-2">{p.title}</h3>
+                            <p className="text-slate-400 text-sm leading-relaxed">{p.desc}</p>
+                        </div>
+                    ))}
+                </div>
+             </div>
+        </section>
+
+        {/* --- PRICING --- */}
         <section id="pricing" className="py-24 px-6 bg-[#03081a]">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
@@ -449,7 +561,6 @@ export default function InternXAIPage() {
               <div className="bg-white/5 border border-white/10 rounded-3xl p-8 hover:border-blue-500/50 transition-all group relative">
                 <h3 className="text-2xl font-bold mb-2 text-white">Foundation</h3>
                 <p className="text-slate-400 text-sm mb-6">6 Months • Beginner Friendly</p>
-                {/* Updated based on PDF Page 32: Added Dual Currency */}
                 <div className="flex items-end gap-2 mb-1">
                   <div className="text-4xl font-black text-white">₹1,49,999</div>
                   <div className="text-xl font-bold text-slate-500 mb-1">/ ~$2,000</div>
@@ -474,7 +585,6 @@ export default function InternXAIPage() {
                 <div className="absolute top-0 right-0 bg-purple-600 text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl uppercase">Career Accelerator</div>
                 <h3 className="text-2xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">Elite</h3>
                 <p className="text-slate-400 text-sm mb-6">12 Months • Full Career Path</p>
-                {/* Updated based on PDF Page 32: Added Dual Currency */}
                 <div className="flex items-end gap-2 mb-1">
                   <div className="text-4xl font-black text-white">₹2,49,999</div>
                   <div className="text-xl font-bold text-slate-500 mb-1">/ ~$3,000</div>
@@ -498,19 +608,7 @@ export default function InternXAIPage() {
           </div>
         </section>
 
-        <section className="py-12 bg-blue-950/20 border-y border-white/5">
-          <div className="max-w-5xl mx-auto text-center px-6">
-            <h2 className="text-xl md:text-3xl font-black italic text-white/90 leading-normal">
-              &quot;Real AI Careers. Built with Projects. Verified with Proof. Hired with Confidence.&quot;
-            </h2>
-            <div className="flex flex-wrap justify-center gap-4 md:gap-6 mt-6 text-sm font-bold text-slate-400">
-              <span className="flex items-center gap-2"><XCircle className="w-4 h-4 text-red-500" /> No Course Fatigue</span>
-              <span className="flex items-center gap-2"><XCircle className="w-4 h-4 text-red-500" /> No Fake Resumes</span>
-              <span className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-green-500" /> Proof-Driven Careers</span>
-            </div>
-          </div>
-        </section>
-
+        {/* --- PROBLEM STATEMENT --- */}
         <section className="py-24 px-6">
           <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div>
@@ -531,20 +629,28 @@ export default function InternXAIPage() {
               </div>
             </div>
             
+            {/* UPDATED LEARNING JOURNEY (Timeline Style as per PDF p. 16) */}
             <div className="relative border border-white/10 rounded-3xl p-6 md:p-8 bg-gradient-to-br from-slate-900 to-slate-800 shadow-2xl">
-              <h3 className="text-white font-bold mb-6 text-center border-b border-white/10 pb-4">Full Learning Journey</h3>
-              <div className="space-y-6">
+              <h3 className="text-white font-bold mb-6 text-center border-b border-white/10 pb-4">Career Roadmap</h3>
+              <div className="space-y-0">
                 {[
-                  { step: "1", text: "Learn AI Fundamentals" },
-                  { step: "2", text: "Build Real Projects" },
-                  { step: "3", text: "Publish GitHub Portfolio" },
-                  { step: "4", text: "Earn ResumeNFT Proof" },
-                  { step: "5", text: "Qualify for Elite" },
+                  { title: "Learner", desc: "Start with zero coding knowledge" },
+                  { title: "Builder", desc: "Ship real industry projects" },
+                  { title: "Portfolio Pro", desc: "Publish to GitHub & ResumeNFT" },
+                  { title: "Interview Ready", desc: "Crack technical rounds" },
+                  { title: "Elite Eligible", desc: "Unlock Advanced AI Careers" },
                 ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-4 group">
-                    <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-xs font-bold text-white group-hover:scale-110 transition-transform shrink-0">{item.step}</div>
-                    <div className="h-0.5 flex-1 bg-white/10 group-hover:bg-blue-500/50 transition-colors"></div>
-                    <span className="text-sm font-bold text-slate-300 group-hover:text-white transition-colors">{item.text}</span>
+                  <div key={i} className="flex gap-4 group">
+                    <div className="flex flex-col items-center">
+                        <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-xs font-bold text-white group-hover:scale-110 transition-transform shrink-0 z-10 border-4 border-slate-900">
+                            {i + 1}
+                        </div>
+                        {i !== 4 && <div className="w-0.5 h-12 bg-white/10 group-hover:bg-blue-500/50 transition-colors"></div>}
+                    </div>
+                    <div className="pb-8">
+                        <h4 className="text-white font-bold text-sm group-hover:text-blue-400 transition-colors">{item.title}</h4>
+                        <p className="text-xs text-slate-400">{item.desc}</p>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -552,26 +658,7 @@ export default function InternXAIPage() {
           </div>
         </section>
 
-        <section className="py-20 bg-[#03081a] px-6">
-          <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-4 text-white">The CLC Ecosystem</h2>
-              <p className="text-slate-400">InternX-AI operates inside the full Career Lab Consulting ecosystem.</p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
-              {ecosystem.map((item, i) => (
-                <div key={i} className="bg-white/5 border border-white/10 p-6 rounded-2xl hover:bg-white/10 transition-colors text-center group">
-                  <div className="mx-auto w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center text-blue-400 mb-4 group-hover:scale-110 transition-transform">
-                    {item.icon}
-                  </div>
-                  <h4 className="font-bold text-white mb-2">{item.title}</h4>
-                  <p className="text-xs text-slate-400">{item.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
+        {/* --- SYLLABUS --- */}
         <section className="py-24 px-6">
           <div className="max-w-6xl mx-auto">
             <div className="flex justify-center mb-12 overflow-x-auto pb-4 no-scrollbar">
@@ -669,22 +756,7 @@ export default function InternXAIPage() {
           </div>
         </section>
 
-        <section className="py-12 bg-white/5 border-y border-white/5 overflow-hidden">
-          <div className="max-w-7xl mx-auto px-6">
-            <h3 className="text-center text-sm font-black uppercase tracking-widest text-slate-500 mb-8">Tools You Will Master</h3>
-            <div className="flex flex-wrap justify-center gap-10 md:gap-16 opacity-80 hover:opacity-100 transition-all duration-500">
-              {tools.map((tool, i) => (
-                <div key={i} className="flex flex-col items-center gap-3 group">
-                  <div className="transform group-hover:scale-110 transition-transform duration-300">
-                    {tool.icon}
-                  </div>
-                  <span className="text-xs font-bold text-white group-hover:text-blue-400 transition-colors">{tool.name}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
+        {/* --- ELIGIBILITY --- */}
         <section id="eligibility" className="py-24 px-6 relative overflow-hidden bg-gradient-to-b from-[#020617] to-indigo-950/20">
           <div className="max-w-5xl mx-auto border border-blue-500/30 bg-[#03081a] rounded-3xl p-8 md:p-12 relative z-10 shadow-2xl shadow-blue-900/20">
             <div className="absolute top-0 right-0 p-4">
@@ -726,48 +798,199 @@ export default function InternXAIPage() {
             </div>
           </div>
         </section>
-        
-        {/* --- FOUNDATION VS ELITE COMPARISON TABLES --- */}
+
+        <section className="py-24 px-6 bg-slate-900/20">
+          <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white">Earnings Projection</h2>
+              <div className="flex justify-center gap-4 mt-6">
+                  <button onClick={() => setEarningsRegion('india')} className={`px-4 py-1 rounded-full text-sm font-bold ${earningsRegion === 'india' ? 'bg-blue-600 text-white' : 'bg-white/10 text-slate-400'}`}>India (INR)</button>
+                  <button onClick={() => setEarningsRegion('global')} className={`px-4 py-1 rounded-full text-sm font-bold ${earningsRegion === 'global' ? 'bg-green-600 text-white' : 'bg-white/10 text-slate-400'}`}>Global (USD)</button>
+              </div>
+              <p className="text-slate-400 mt-4">Typical career progression for AI Engineers with real project experience.</p>
+            </div>
+            
+            <div className="bg-[#020617] p-8 md:p-12 rounded-3xl border border-white/10 relative shadow-2xl overflow-hidden">
+               <div className="absolute top-0 right-0 p-6 opacity-10 pointer-events-none">
+                  <TrendingUp className="w-32 h-32 text-blue-500" />
+               </div>
+
+               <div className="flex flex-col gap-8 md:hidden relative z-10 pt-4">
+                  {careerGrowthData[earningsRegion].map((item, idx) => (
+                    <div key={idx} className="w-full">
+                        <div className="flex justify-between items-center mb-2">
+                           <span className="text-[10px] font-black uppercase text-slate-500 tracking-widest">{item.year}</span>
+                           <span className="text-xs font-bold text-white">{item.role}</span>
+                        </div>
+                        <div className="relative h-10 w-full bg-white/5 rounded-r-full flex items-center">
+                           <div 
+                              className={`h-full rounded-r-full bg-gradient-to-r ${item.color} shadow-lg relative flex items-center animate-in slide-in-from-left duration-1000`}
+                              style={{ width: item.h }}
+                           >
+                              <div className="absolute right-4 text-white text-xs font-bold whitespace-nowrap flex items-center gap-1 drop-shadow-md">
+                                 <Wallet className="w-3 h-3" /> {item.ctc}
+                              </div>
+                           </div>
+                        </div>
+                    </div>
+                  ))}
+               </div>
+
+               <div className="hidden md:flex flex-row items-end justify-center gap-8 h-96 relative z-10 pt-10">
+                  {careerGrowthData[earningsRegion].map((item, idx) => (
+                      <div key={idx} className="w-1/4 h-full flex flex-col justify-end group">
+                          <div className="relative flex-grow flex items-end justify-center mb-4">
+                             <div 
+                                className={`w-24 rounded-t-lg bg-gradient-to-t ${item.color} shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-all duration-700 ease-out group-hover:scale-105 group-hover:brightness-110 relative`}
+                                style={{ height: item.h }}
+                             >
+                                <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-white text-blue-950 px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap shadow-lg flex items-center gap-1 opacity-100 transition-all">
+                                   <Wallet className="w-3 h-3" />
+                                   {item.ctc}
+                                </div>
+                             </div>
+                          </div>
+                          <div className="text-center border-t border-white/10 pt-4">
+                             <div className="text-[10px] font-black uppercase text-slate-500 tracking-widest mb-1">{item.year}</div>
+                             <div className="text-sm font-bold text-white group-hover:text-blue-400 transition-colors">{item.role}</div>
+                          </div>
+                      </div>
+                  ))}
+               </div>
+               <div className="mt-8 pt-6 border-t border-white/5 text-center">
+                   <p className="text-[10px] text-slate-600 italic">
+                      Disclaimer: Salaries depend on skills, performance, interviews, and market conditions. No guarantees are made.
+                      <br/>
+                      "AI won't take your job. Someone trained in Agentic AI will. Be that someone."
+                   </p>
+               </div>
+            </div>
+          </div>
+        </section>
+
         <section className="py-24 px-6 bg-[#020617] border-t border-white/10">
             <div className="max-w-6xl mx-auto">
                 <div className="text-center mb-16">
-                    <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white mb-4">Choose Your Track</h2>
-                    <p className="text-slate-400">Detailed comparison of Foundation vs. Elite tracks.</p>
+                    <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white mb-4">Foundation vs Elite</h2>
+                    <p className="text-slate-400">The detailed breakdown of what you unlock at each level.</p>
                 </div>
 
+                {/* Tabs */}
                 <div className="flex justify-center mb-8 gap-2 flex-wrap">
-                    {foundationVsEliteData.map((cat, i) => (
-                        <button 
-                            key={i}
-                            onClick={() => setComparisonCategory(cat)}
-                            className={`px-4 py-2 rounded-full text-sm font-bold border transition-all ${
-                                comparisonCategory.category === cat.category 
-                                ? 'bg-white text-black border-white' 
-                                : 'bg-transparent text-slate-400 border-white/20 hover:border-white/50'
-                            }`}
-                        >
-                            {cat.category}
-                        </button>
-                    ))}
+                   {['features', 'roles', 'ctc', 'tools', 'projects', 'usps', 'fees'].map((tab) => (
+                      <button 
+                        key={tab}
+                        onClick={() => setComparisonCategory(tab as any)}
+                        className={`px-5 py-2.5 rounded-full text-sm font-bold border transition-all uppercase tracking-wide ${
+                            comparisonCategory === tab 
+                            ? 'bg-white text-black border-white shadow-[0_0_15px_rgba(255,255,255,0.3)]' 
+                            : 'bg-transparent text-slate-500 border-white/10 hover:border-white/30 hover:text-white'
+                        }`}
+                      >
+                          {tab}
+                      </button>
+                   ))}
                 </div>
 
-                <div className="bg-[#0b0f1f] rounded-2xl border border-white/10 overflow-hidden">
+                <div className="bg-[#0b0f1f] rounded-2xl border border-white/10 overflow-hidden shadow-2xl">
                     <div className="grid grid-cols-3 bg-white/5 border-b border-white/10 text-xs md:text-sm font-black uppercase tracking-widest text-slate-500">
-                        <div className="p-4 md:p-6">Feature</div>
-                        <div className="p-4 md:p-6 text-blue-400 bg-blue-900/10 border-x border-white/5">Foundation</div>
-                        <div className="p-4 md:p-6 text-purple-400 bg-purple-900/10">Elite</div>
+                        <div className="p-4 md:p-6">Category</div>
+                        <div className="p-4 md:p-6 text-blue-400 bg-blue-900/10 border-x border-white/5 flex items-center gap-2">
+                            <span className="w-2 h-2 rounded-full bg-blue-500"></span> Foundation
+                        </div>
+                        <div className="p-4 md:p-6 text-purple-400 bg-purple-900/10 flex items-center gap-2">
+                             <span className="w-2 h-2 rounded-full bg-purple-500 animate-pulse"></span> Elite
+                        </div>
                     </div>
-                    {comparisonCategory.rows.map((row, idx) => (
-                        <div key={idx} className="grid grid-cols-3 border-b border-white/5 hover:bg-white/5 transition-colors">
-                            <div className="p-4 md:p-6 text-sm font-bold text-white flex items-center">{row.feature}</div>
+
+                    {/* FEATURES CONTENT */}
+                    {comparisonCategory === 'features' && splitComparisons.features.map((row, idx) => (
+                         <div key={idx} className="grid grid-cols-3 border-b border-white/5 hover:bg-white/5 transition-colors">
+                            <div className="p-4 md:p-6 text-sm font-bold text-white">{row.feature}</div>
+                            <div className="p-4 md:p-6 text-sm text-slate-300 border-x border-white/5 bg-blue-900/5">{row.foundation}</div>
+                            <div className="p-4 md:p-6 text-sm text-white font-semibold bg-purple-900/5 flex items-center gap-2">
+                                <CheckCircle2 className="w-4 h-4 text-purple-500" /> {row.elite}
+                            </div>
+                         </div>
+                    ))}
+
+                    {/* ROLES CONTENT */}
+                    {comparisonCategory === 'roles' && splitComparisons.roles.map((row, idx) => (
+                         <div key={idx} className="grid grid-cols-3 border-b border-white/5 hover:bg-white/5 transition-colors">
+                            <div className="p-4 md:p-6 text-sm font-bold text-slate-400 flex items-center">Job Role {idx + 1}</div>
+                            <div className="p-4 md:p-6 text-sm text-slate-300 border-x border-white/5 bg-blue-900/5">{row.foundation}</div>
+                            <div className="p-4 md:p-6 text-sm text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 font-bold bg-purple-900/5">{row.elite}</div>
+                         </div>
+                    ))}
+
+                    {/* CTC CONTENT */}
+                    {comparisonCategory === 'ctc' && (
+                        <div>
+                             <div className="p-4 border-b border-white/10 flex justify-center gap-4 bg-white/5">
+                                <button onClick={() => setEarningsRegion('india')} className={`text-xs font-bold px-3 py-1 rounded ${earningsRegion === 'india' ? 'bg-blue-500 text-white' : 'bg-white/10 text-slate-400'}`}>INDIA (INR)</button>
+                                <button onClick={() => setEarningsRegion('global')} className={`text-xs font-bold px-3 py-1 rounded ${earningsRegion === 'global' ? 'bg-green-500 text-white' : 'bg-white/10 text-slate-400'}`}>GLOBAL (USD)</button>
+                             </div>
+                             {splitComparisons.ctc[earningsRegion].map((row, idx) => (
+                                <div key={idx} className="grid grid-cols-3 border-b border-white/5 hover:bg-white/5 transition-colors">
+                                    <div className="p-4 md:p-6 text-sm font-bold text-white">{row.year}</div>
+                                    <div className="p-4 md:p-6 text-sm text-slate-300 border-x border-white/5 bg-blue-900/5 font-mono">{row.foundation}</div>
+                                    <div className="p-4 md:p-6 text-sm text-green-400 font-bold bg-purple-900/5 font-mono">{row.elite}</div>
+                                </div>
+                             ))}
+                        </div>
+                    )}
+
+                    {/* TOOLS CONTENT */}
+                    {comparisonCategory === 'tools' && splitComparisons.tools.map((row, idx) => (
+                         <div key={idx} className="grid grid-cols-3 border-b border-white/5 hover:bg-white/5 transition-colors">
+                            <div className="p-4 md:p-6 text-sm font-bold text-white">{row.tool}</div>
+                            <div className="p-4 md:p-6 text-sm text-slate-300 border-x border-white/5 bg-blue-900/5 flex items-center gap-2">
+                                {row.foundation === 'No' ? <XCircle className="w-4 h-4 text-red-500/50" /> : <CheckCircle2 className="w-4 h-4 text-blue-500/50" />}
+                                {row.foundation}
+                            </div>
+                            <div className="p-4 md:p-6 text-sm text-white font-semibold bg-purple-900/5 flex items-center gap-2">
+                                <CheckCircle2 className="w-4 h-4 text-purple-500" /> {row.elite}
+                            </div>
+                         </div>
+                    ))}
+
+                    {/* PROJECTS CONTENT */}
+                    {comparisonCategory === 'projects' && splitComparisons.projects.map((row, idx) => (
+                         <div key={idx} className="grid grid-cols-3 border-b border-white/5 hover:bg-white/5 transition-colors">
+                            <div className="p-4 md:p-6 text-sm font-bold text-white">{row.aspect}</div>
+                            <div className="p-4 md:p-6 text-sm text-slate-300 border-x border-white/5 bg-blue-900/5 flex items-center gap-2">
+                                {row.aspectType === 'bad' && <XCircle className="w-4 h-4 text-red-500" />}
+                                {row.aspectType === 'warn' && <AlertTriangle className="w-4 h-4 text-yellow-500" />}
+                                {row.foundation}
+                            </div>
+                            <div className="p-4 md:p-6 text-sm text-white font-semibold bg-purple-900/5 flex items-center gap-2">
+                                <CheckCircle2 className="w-4 h-4 text-purple-500" /> {row.elite}
+                            </div>
+                         </div>
+                    ))}
+
+                    {/* USPS CONTENT (ADDED) */}
+                    {comparisonCategory === 'usps' && splitComparisons.usps.map((row, idx) => (
+                         <div key={idx} className="grid grid-cols-3 border-b border-white/5 hover:bg-white/5 transition-colors">
+                            <div className="p-4 md:p-6 text-sm font-bold text-white">{row.usp}</div>
                             <div className="p-4 md:p-6 text-sm text-slate-300 border-x border-white/5 bg-blue-900/5">{row.foundation}</div>
                             <div className="p-4 md:p-6 text-sm text-white font-semibold bg-purple-900/5">{row.elite}</div>
-                        </div>
+                         </div>
+                    ))}
+
+                    {/* FEES CONTENT (ADDED) */}
+                    {comparisonCategory === 'fees' && splitComparisons.fees.map((row, idx) => (
+                         <div key={idx} className="grid grid-cols-3 border-b border-white/5 hover:bg-white/5 transition-colors">
+                            <div className="p-4 md:p-6 text-sm font-bold text-white">{row.item}</div>
+                            <div className="p-4 md:p-6 text-sm text-slate-300 border-x border-white/5 bg-blue-900/5 font-mono">{row.foundation}</div>
+                            <div className="p-4 md:p-6 text-sm text-white font-bold bg-purple-900/5 font-mono">{row.elite}</div>
+                         </div>
                     ))}
                 </div>
             </div>
         </section>
 
+        {/* --- GAMIFICATION --- */}
         <section className="py-24 px-6 bg-[#050b24]">
           <div className="max-w-6xl mx-auto">
              <div className="text-center mb-12">
@@ -847,6 +1070,7 @@ export default function InternXAIPage() {
           </div>
         </section>
 
+        {/* --- DOMAINS --- */}
         <section className="py-20 bg-white/5 border-y border-white/5 px-6">
           <div className="max-w-7xl mx-auto text-center">
             <h2 className="text-3xl font-black uppercase mb-8 text-white">
@@ -877,114 +1101,89 @@ export default function InternXAIPage() {
           </div>
         </section>
 
+        {/* --- TOOLS (TECH STACK) --- */}
+        <section className="py-24 px-6">
+             <div className="max-w-6xl mx-auto">
+                 <div className="text-center mb-16">
+                     <h2 className="text-3xl font-black uppercase text-white mb-4">Tools & Tech Stack</h2>
+                     <p className="text-slate-400">Learners don't need 100 tools. They need the right ones used by real companies.</p>
+                 </div>
+                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                     {tools.map((t, i) => (
+                         <div key={i} className="bg-slate-900 border border-white/10 p-6 rounded-2xl flex flex-col items-center hover:border-blue-500/50 transition-colors">
+                             <div className="mb-4">{t.icon}</div>
+                             <h4 className="font-bold text-white mb-1">{t.name}</h4>
+                             <p className="text-xs text-slate-500">{t.desc}</p>
+                         </div>
+                     ))}
+                 </div>
+             </div>
+        </section>
+
+
+        {/* --- COMPETITOR COMPARISON SECTION --- */}
         <section className="py-24 px-6 bg-[#03081a]">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-center mb-16 text-white">InternX-AI vs The Rest</h2>
-            <div className="overflow-x-auto rounded-xl border border-white/10">
-              <table className="w-full text-left border-collapse min-w-[800px]">
+          <div className="max-w-7xl mx-auto">
+            <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-center mb-16 text-white">Competitor Comparison</h2>
+            
+            <div className="overflow-x-auto rounded-3xl border border-white/10 shadow-2xl">
+              <table className="w-full text-left border-collapse min-w-[1000px]">
                 <thead>
-                  <tr className="bg-white/5">
-                    <th className="p-6 text-xs font-black uppercase tracking-widest text-slate-500">Feature</th>
-                    <th className="p-6 text-lg font-black uppercase text-blue-400 bg-blue-900/10 border-x border-blue-500/20 text-center">InternX-AI</th>
-                    <th className="p-6 text-xs font-black uppercase tracking-widest text-slate-500 text-center">Bootcamps</th>
-                    <th className="p-6 text-xs font-black uppercase tracking-widest text-slate-500 text-center">Recorded Courses</th>
+                  <tr className="bg-[#0b0f1f]">
+                    {competitorData.headers.map((h, i) => (
+                        <th key={i} className={`p-4 text-xs font-black uppercase tracking-widest text-slate-500 text-center ${i===0 ? 'text-left sticky left-0 bg-[#0b0f1f] z-10 border-r border-white/10' : ''} ${i===1 ? 'bg-blue-900/10 text-blue-400 border-x border-blue-500/20' : ''}`}>
+                            {h}
+                        </th>
+                    ))}
                   </tr>
                 </thead>
                 <tbody>
-                  {competitors.map((row, i) => (
-                    <tr key={i} className="border-t border-white/5 hover:bg-white/5">
-                      <td className="p-6 font-bold text-sm text-white">{row.feature}</td>
-                      <td className="p-6 text-center bg-blue-900/5 border-x border-blue-500/10">
-                        {row.internx === true ? <CheckCircle2 className="w-6 h-6 text-green-400 mx-auto" /> : <span className="text-white font-bold">{row.internx}</span>}
+                  {competitorData.rows.map((row, i) => (
+                    <tr key={i} className="border-t border-white/5 hover:bg-white/5 transition-colors">
+                      <td className="p-4 font-bold text-sm text-white sticky left-0 bg-[#020617] z-10 border-r border-white/10 shadow-[2px_0_10px_rgba(0,0,0,0.5)]">
+                          {row.feature}
                       </td>
-                      <td className="p-6 text-center">
-                        {row.bootcamps === true ? <CheckCircle2 className="w-6 h-6 text-green-400 mx-auto" /> : 
-                        row.bootcamps === false ? <XCircle className="w-6 h-6 text-red-500 mx-auto opacity-50" /> : 
-                        <span className="text-slate-500 text-xs font-bold">{row.bootcamps}</span>}
-                      </td>
-                      <td className="p-6 text-center">
-                        <XCircle className="w-6 h-6 text-red-500 mx-auto opacity-50" />
-                      </td>
+                      {row.values.map((val, idx) => (
+                          <td key={idx} className={`p-4 text-center ${idx===0 ? 'bg-blue-900/5 border-x border-blue-500/10' : ''}`}>
+                             {renderCompetitorValue(val)}
+                          </td>
+                      ))}
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
-            <p className="text-center text-slate-500 mt-6 text-sm">Competitor data based on standard industry offerings as of 2025.</p>
+            <p className="text-center text-slate-500 mt-6 text-xs italic">
+                Comparison data based on publicly available features as of 2026.
+            </p>
           </div>
         </section>
 
-        <section className="py-24 px-6 bg-slate-900/20">
-          <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white">Earnings Projection</h2>
-              <div className="flex justify-center gap-4 mt-6">
-                  <button onClick={() => setEarningsRegion('india')} className={`px-4 py-1 rounded-full text-sm font-bold ${earningsRegion === 'india' ? 'bg-blue-600 text-white' : 'bg-white/10 text-slate-400'}`}>India (INR)</button>
-                  <button onClick={() => setEarningsRegion('global')} className={`px-4 py-1 rounded-full text-sm font-bold ${earningsRegion === 'global' ? 'bg-green-600 text-white' : 'bg-white/10 text-slate-400'}`}>Global (USD)</button>
-              </div>
-              <p className="text-slate-400 mt-4">Typical career progression for AI Engineers with real project experience.</p>
+        {/* --- STRATEGIC OUTCOMES (ADDED FROM PDF Page 15) --- */}
+        <section className="py-24 px-6 bg-slate-900/30">
+            <div className="max-w-6xl mx-auto">
+                <div className="text-center mb-16">
+                    <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white mb-4">Strategic Outcomes</h2>
+                    <p className="text-slate-400">Why leading companies trust InternX-AI graduates.</p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {[
+                        { title: "Verified Issuance", desc: "Credentials issued by verified startups & CLC partners.", icon: <Shield className="w-8 h-8 text-blue-400" /> },
+                        { title: "Verifiable Assets", desc: "ResumeNFT + GitHub Commit History. No fake PDFs.", icon: <Fingerprint className="w-8 h-8 text-purple-400" /> },
+                        { title: "Proof-Based Hiring", desc: "Skip resume filtering. Employers see your code first.", icon: <Target className="w-8 h-8 text-green-400" /> },
+                        { title: "Career Flywheel", desc: "InternX → ResumeNFT → HireX → Upskilling.", icon: <BarChart3 className="w-8 h-8 text-orange-400" /> }
+                    ].map((item, i) => (
+                        <div key={i} className="bg-white/5 p-6 rounded-2xl border border-white/10 hover:bg-white/10 transition-colors">
+                            <div className="mb-4 bg-slate-950 p-3 rounded-lg w-fit">{item.icon}</div>
+                            <h4 className="font-bold text-white mb-2">{item.title}</h4>
+                            <p className="text-sm text-slate-400">{item.desc}</p>
+                        </div>
+                    ))}
+                </div>
             </div>
-            
-            <div className="bg-[#020617] p-8 md:p-12 rounded-3xl border border-white/10 relative shadow-2xl overflow-hidden">
-               <div className="absolute top-0 right-0 p-6 opacity-10 pointer-events-none">
-                  <TrendingUp className="w-32 h-32 text-blue-500" />
-               </div>
-
-               <div className="flex flex-col gap-8 md:hidden relative z-10 pt-4">
-                  {careerGrowthData[earningsRegion].map((item, idx) => (
-                    <div key={idx} className="w-full">
-                       <div className="flex justify-between items-center mb-2">
-                          <span className="text-[10px] font-black uppercase text-slate-500 tracking-widest">{item.year}</span>
-                          <span className="text-xs font-bold text-white">{item.role}</span>
-                       </div>
-                       <div className="relative h-10 w-full bg-white/5 rounded-r-full flex items-center">
-                          <div 
-                             className={`h-full rounded-r-full bg-gradient-to-r ${item.color} shadow-lg relative flex items-center animate-in slide-in-from-left duration-1000`}
-                             style={{ width: item.h }}
-                          >
-                             <div className="absolute right-4 text-white text-xs font-bold whitespace-nowrap flex items-center gap-1 drop-shadow-md">
-                                <Wallet className="w-3 h-3" /> {item.ctc}
-                             </div>
-                          </div>
-                       </div>
-                    </div>
-                  ))}
-               </div>
-
-               <div className="hidden md:flex flex-row items-end justify-center gap-8 h-96 relative z-10 pt-10">
-                  {careerGrowthData[earningsRegion].map((item, idx) => (
-                      <div key={idx} className="w-1/4 h-full flex flex-col justify-end group">
-                         <div className="relative flex-grow flex items-end justify-center mb-4">
-                            <div 
-                               className={`w-24 rounded-t-lg bg-gradient-to-t ${item.color} shadow-[0_0_20px_rgba(59,130,246,0.3)] transition-all duration-700 ease-out group-hover:scale-105 group-hover:brightness-110 relative`}
-                               style={{ height: item.h }}
-                            >
-                               <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-white text-blue-950 px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap shadow-lg flex items-center gap-1 opacity-100 transition-all">
-                                  <Wallet className="w-3 h-3" />
-                                  {item.ctc}
-                               </div>
-                            </div>
-                         </div>
-                         <div className="text-center border-t border-white/10 pt-4">
-                            <div className="text-[10px] font-black uppercase text-slate-500 tracking-widest mb-1">{item.year}</div>
-                            <div className="text-sm font-bold text-white group-hover:text-blue-400 transition-colors">{item.role}</div>
-                         </div>
-                      </div>
-                  ))}
-               </div>
-
-               {/* Updated based on PDF Page 16: Mandatory Disclaimer */}
-               <div className="mt-8 pt-6 border-t border-white/5 text-center">
-                   <p className="text-[10px] text-slate-600 italic">
-                      Disclaimer: Salaries depend on skills, performance, interviews, and market conditions. No guarantees are made.
-                      <br/>
-                      "AI won't take your job. Someone trained in Agentic AI will. Be that someone."
-                   </p>
-               </div>
-            </div>
-          </div>
         </section>
 
+        {/* --- FAQ & ECOSYSTEM --- */}
         <section className="py-24 px-6">
           <div className="max-w-3xl mx-auto">
             <h2 className="text-3xl font-black uppercase mb-12 text-center text-white">Frequently Asked Questions</h2>
@@ -1008,6 +1207,26 @@ export default function InternXAIPage() {
                   >
                     {faq.a}
                   </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="py-20 bg-[#03081a] px-6">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-4 text-white">The CLC Ecosystem</h2>
+              <p className="text-slate-400">InternX-AI operates inside the full Career Lab Consulting ecosystem.</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
+              {ecosystem.map((item, i) => (
+                <div key={i} className="bg-white/5 border border-white/10 p-6 rounded-2xl hover:bg-white/10 transition-colors text-center group">
+                  <div className="mx-auto w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center text-blue-400 mb-4 group-hover:scale-110 transition-transform">
+                    {item.icon}
+                  </div>
+                  <h4 className="font-bold text-white mb-2">{item.title}</h4>
+                  <p className="text-xs text-slate-400">{item.desc}</p>
                 </div>
               ))}
             </div>
