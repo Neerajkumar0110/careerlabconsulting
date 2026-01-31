@@ -29,7 +29,9 @@ interface PricingTier {
 
 const CATEGORIES: Record<PricingCategory, PricingTier[]> = {
   'Single Product': [
-    { name: 'Starter', price: '₹10', rawPrice: 10, icon: Rocket, description: 'Perfect for small teams starting their journey.', features: ['1 Core Module', 'Email Support', 'Basic Analytics', 'Single User Access'] },
+    // FIX 1: rawPrice changed to 1000 (1000 paise = ₹10). 
+    // Razorpay minimum is ₹1.
+    { name: 'Starter', price: '₹10', rawPrice: 1000, icon: Rocket, description: 'Perfect for small teams starting their journey.', features: ['1 Core Module', 'Email Support', 'Basic Analytics', 'Single User Access'] },
     { name: 'Growth', price: '₹50,000', rawPrice: 5000000, icon: Zap, description: 'Scaling tools for growing businesses.', features: ['3 Core Modules', 'Priority Support', 'Advanced Analytics', '5 User Access'] },
     { name: 'Advanced', price: '₹1,00,000', rawPrice: 10000000, icon: Crown, description: 'The power of full modular control.', features: ['All Core Modules', '24/7 Support', 'Custom Reporting', 'Unlimited Users'] },
     { name: 'Enterprise', price: 'Custom', isEnterprise: true, icon: Building2, description: 'Custom infrastructure for big players.', features: ['Dedicated Infra', 'SLA Guarantee', 'Custom Workflows', 'On-Premise Option'] },
@@ -64,8 +66,16 @@ export default function B2BPricingSection() {
     window.open(`https://wa.me/${CONTACT_INFO.whatsapp}?text=${encodeURIComponent(message)}`, '_blank');
   };
 
+  // FIX 2: Updated Payment Handler Logic
   const handlePayment = (tier: PricingTier) => {
     if (!tier.rawPrice) return;
+    
+    // Check if Razorpay is loaded
+    if (!(window as any).Razorpay) {
+      alert("Payment gateway is loading. Please try again in 3 seconds.");
+      return;
+    }
+
     setLoading(tier.name);
     
     const options = {
@@ -74,24 +84,41 @@ export default function B2BPricingSection() {
       currency: "INR",
       name: "CareerLab B2B",
       description: `${tier.name} - ${activeTab} Plan`,
+      image: "", // You can add your logo URL here if needed
+      
       handler: (response: any) => {
         window.open(`https://wa.me/${CONTACT_INFO.whatsapp}?text=B2B_Payment_Success_Plan_${activeTab}_Tier_${tier.name}_ID_${response.razorpay_payment_id}`, '_blank');
         setLoading(null);
       },
+      
+      // Crucial: Clear loading state if user closes the modal
+      modal: {
+        ondismiss: () => {
+          setLoading(null);
+        }
+      },
+      
       prefill: {
         name: "B2B Client",
-        email: "client@company.com"
+        email: "client@company.com",
+        contact: ""
       },
       theme: { color: "#2563eb" },
     };
 
-    if ((window as any).Razorpay) {
+    try {
       const rzp = new (window as any).Razorpay(options);
+      
+      rzp.on('payment.failed', function (response: any){
+        alert(`Payment Failed: ${response.error.description}`);
+        setLoading(null);
+      });
+
       rzp.open();
-    } else {
-      alert("Razorpay SDK not loaded. Please check your internet connection.");
+    } catch (error) {
+      console.error("Payment initialization failed", error);
+      setLoading(null);
     }
-    setLoading(null);
   };
 
   return (
