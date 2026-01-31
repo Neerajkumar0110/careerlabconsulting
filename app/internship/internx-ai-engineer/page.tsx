@@ -12,9 +12,10 @@ import {
   Users, Coins, Zap, Code2, 
   Layout, Server, BrainCircuit, Network, Trophy, 
   FileCheck, Medal, Timer, Play, ChevronDown, Plus,
-  TrendingUp, Wallet, Check
+  TrendingUp, Wallet, Check, AlertTriangle
 } from 'lucide-react';
 
+// --- ICONS & BRAND ASSETS ---
 const BrandIcons = {
   Python: () => (
     <svg viewBox="0 0 256 256" className="w-12 h-12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -58,6 +59,8 @@ const BrandIcons = {
     </svg>
   )
 };
+
+// --- DATA CONSTANTS ---
 
 const industryDomains = [
   { 
@@ -192,6 +195,7 @@ const eliteSyllabus = [
   }
 ];
 
+// Updated based on PDF page 35: Added 1:1 Mentorship and Job Guarantee rows
 const competitors = [
   { feature: "Live Weekend Delivery", internx: true, bootcamps: true, recorded: false },
   { feature: "Real Startup Projects", internx: true, bootcamps: false, recorded: false },
@@ -199,6 +203,8 @@ const competitors = [
   { feature: "ResumeNFT Proof", internx: true, bootcamps: false, recorded: false },
   { feature: "Elite Career Pathway", internx: true, bootcamps: false, recorded: false },
   { feature: "Agentic AI & GenAI Systems", internx: true, bootcamps: "Limited", recorded: false },
+  { feature: "Legal Job Guarantee (Elite)", internx: true, bootcamps: "Conditional", recorded: false },
+  { feature: "1:1 Mentorship", internx: "Weekly", bootcamps: true, recorded: false },
   { feature: "Full Ecosystem Access", internx: true, bootcamps: false, recorded: false },
 ];
 
@@ -280,39 +286,25 @@ const faqs = [
   { q: "How do the weekend classes work?", a: "Classes are live on Saturday & Sunday. Weekdays (Mon-Fri) are for optional practice sessions and mentor support." }
 ];
 
-const careerGrowth = [
-  { 
-    year: "Year 1", 
-    role: "Jr. AI Engineer / Analyst", 
-    ctc: "₹4L - ₹7L", 
-    h: "25%", 
-    color: "from-slate-600 to-slate-500" 
-  },
-  { 
-    year: "Year 2", 
-    role: "AI Engineer / Backend (AI)", 
-    ctc: "₹7L - ₹12L", 
-    h: "45%", 
-    color: "from-blue-900 to-blue-700" 
-  },
-  { 
-    year: "Year 3", 
-    role: "Sr. ML Engineer / AI Lead", 
-    ctc: "₹12L - ₹18L", 
-    h: "65%", 
-    color: "from-blue-700 to-blue-500" 
-  },
-  { 
-    year: "Year 5", 
-    role: "AI Architect / Product Mgr", 
-    ctc: "₹25L+", 
-    h: "90%", 
-    color: "from-blue-500 to-cyan-400" 
-  },
-];
+// Updated based on PDF Page 16 & 33: Added Global ($) Career Growth Data
+const careerGrowthData = {
+  india: [
+    { year: "Year 1", role: "Jr. AI Engineer", ctc: "₹4L - ₹7L", h: "25%", color: "from-slate-600 to-slate-500" },
+    { year: "Year 2", role: "AI Engineer / Backend", ctc: "₹7L - ₹12L", h: "45%", color: "from-blue-900 to-blue-700" },
+    { year: "Year 3", role: "Sr. ML Engineer", ctc: "₹12L - ₹18L", h: "65%", color: "from-blue-700 to-blue-500" },
+    { year: "Year 5", role: "AI Architect", ctc: "₹25L - ₹50L+", h: "90%", color: "from-blue-500 to-cyan-400" },
+  ],
+  global: [
+    { year: "Year 1", role: "Remote AI Dev", ctc: "$5K - $8K", h: "25%", color: "from-slate-600 to-slate-500" },
+    { year: "Year 2", role: "AI Engineer", ctc: "$8K - $12K", h: "45%", color: "from-green-900 to-green-700" },
+    { year: "Year 3", role: "Sr. AI Engineer", ctc: "$15K - $40K", h: "65%", color: "from-green-700 to-green-500" },
+    { year: "Year 5", role: "Global AI Lead", ctc: "$60K - $100K+", h: "90%", color: "from-green-500 to-emerald-400" },
+  ]
+};
 
 const hiringPartners = ["Zapier", "Notion", "Turing", "Freshworks", "Loom", "OutSystems", "HubSpot", "Monday.com"];
 
+// Updated based on PDF Page 32/33: Added Personal AI Assistant, Lab Access, Custom Projects
 const foundationVsEliteData = [
     {
         category: "Features & Delivery",
@@ -320,8 +312,9 @@ const foundationVsEliteData = [
             { feature: "Duration", foundation: "6 Months", elite: "12 Months (Foundation Included)" },
             { feature: "Live Learning", foundation: "Weekend Syllabus", elite: "Weekend Syllabus" },
             { feature: "Projects", foundation: "Guided Industry Projects", elite: "Guided + Custom Choice" },
-            { feature: "Mentorship", foundation: "Weekly 1:1", elite: "Weekly 1:1 + Technical Deep Dive" },
-            { feature: "Global Hiring Exposure", foundation: "Limited", elite: "Strong Focus" },
+            { feature: "Mentorship", foundation: "Weekly 1:1", elite: "Weekly 1:1 + Tech Deep Dive" },
+            { feature: "Personal AI Assistant", foundation: "No", elite: "Yes (Included)" },
+            { feature: "AI Lab Access", foundation: "No", elite: "Yes" },
         ]
     },
     {
@@ -352,6 +345,7 @@ export default function InternXAIPage() {
   const [activeGamification, setActiveGamification] = useState(gamificationData[0]);
   const [activeFaqIndex, setActiveFaqIndex] = useState<number | null>(0);
   const [comparisonCategory, setComparisonCategory] = useState(foundationVsEliteData[0]);
+  const [earningsRegion, setEarningsRegion] = useState<'india' | 'global'>('india');
 
   const handlePayment = (planName: string, amount: number) => {
     if (typeof window === 'undefined' || !(window as any).Razorpay) {
@@ -432,7 +426,8 @@ export default function InternXAIPage() {
                 { val: "15,000+", label: "Learners Trained" },
                 { val: "27+", label: "Countries" },
                 { val: "3,500+", label: "Projects Shipped" },
-                { val: "Certifications", label: "Microsoft / IBM" },
+                // Updated based on PDF page 2 & 3: Added specific certification names
+                { val: "Microsoft / IBM / CLC", label: "Global Certifications" },
               ].map((stat, i) => (
                 <div key={i} className="flex flex-col items-center">
                   <span className="text-xl md:text-2xl font-black text-white">{stat.val}</span>
@@ -454,9 +449,13 @@ export default function InternXAIPage() {
               <div className="bg-white/5 border border-white/10 rounded-3xl p-8 hover:border-blue-500/50 transition-all group relative">
                 <h3 className="text-2xl font-bold mb-2 text-white">Foundation</h3>
                 <p className="text-slate-400 text-sm mb-6">6 Months • Beginner Friendly</p>
-                <div className="text-4xl font-black mb-1 text-white">₹1,49,999</div>
+                {/* Updated based on PDF Page 32: Added Dual Currency */}
+                <div className="flex items-end gap-2 mb-1">
+                  <div className="text-4xl font-black text-white">₹1,49,999</div>
+                  <div className="text-xl font-bold text-slate-500 mb-1">/ ~$2,000</div>
+                </div>
                 <div className="mb-6 p-3 bg-blue-500/10 rounded-lg text-xs font-bold text-blue-400 text-center">
-                    EMI starts at ₹5,208/month
+                    EMI starts at ₹5,208/month (India Only)
                 </div>
                 <ul className="space-y-3 mb-8">
                   <li className="flex gap-2 text-sm text-slate-300"><CheckCircle2 className="w-4 h-4 text-green-400 shrink-0" /> Weekend Live Classes</li>
@@ -475,7 +474,11 @@ export default function InternXAIPage() {
                 <div className="absolute top-0 right-0 bg-purple-600 text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl uppercase">Career Accelerator</div>
                 <h3 className="text-2xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">Elite</h3>
                 <p className="text-slate-400 text-sm mb-6">12 Months • Full Career Path</p>
-                <div className="text-4xl font-black mb-1 text-white">₹2,49,999</div>
+                {/* Updated based on PDF Page 32: Added Dual Currency */}
+                <div className="flex items-end gap-2 mb-1">
+                  <div className="text-4xl font-black text-white">₹2,49,999</div>
+                  <div className="text-xl font-bold text-slate-500 mb-1">/ ~$3,000</div>
+                </div>
                 <div className="mb-6 p-3 bg-purple-500/10 rounded-lg text-xs font-bold text-purple-400 text-center">
                     Includes Foundation + Advanced Layer
                 </div>
@@ -516,7 +519,7 @@ export default function InternXAIPage() {
                 <ul className="space-y-4">
                   <li className="flex gap-3 text-slate-300 text-sm md:text-base"><XCircle className="w-5 h-5 text-red-500 shrink-0" /> Most learners jump straight into advanced AI and fail.</li>
                   <li className="flex gap-3 text-slate-300 text-sm md:text-base"><XCircle className="w-5 h-5 text-red-500 shrink-0" /> Certificates without proof don&apos;t help in hiring.</li>
-                  <li className="flex gap-3 text-slate-300 text-sm md:text-base"><XCircle className="w-5 h-5 text-red-500 shrink-0" /> Recruiters care about what you&apos;ve built, not watched.</li>
+                  <li className="flex gap-3 text-slate-300 text-sm md:text-base"><XCircle className="w-5 h-5 text-red-500 shrink-0" /> Recruiters care about what you&apos;ve built, not what you&apos;ve watched.</li>
                 </ul>
               </div>
               <div>
@@ -590,7 +593,7 @@ export default function InternXAIPage() {
 
             {activeTab === 'foundation' ? (
               <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                 <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4">
+                  <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4">
                   <div>
                     <h2 className="text-3xl md:text-6xl font-black uppercase tracking-tighter text-white">Foundation Syllabus</h2>
                     <p className="text-blue-400 font-bold uppercase tracking-widest mt-2 text-sm">Weekend-Only • Assessed • Certified</p>
@@ -627,7 +630,7 @@ export default function InternXAIPage() {
               </div>
             ) : (
               <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                 <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4">
+                  <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4">
                   <div>
                     <h2 className="text-3xl md:text-6xl font-black uppercase tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">Elite Syllabus</h2>
                     <p className="text-purple-400 font-bold uppercase tracking-widest mt-2 text-sm">Advanced AI Engineering • System Design</p>
@@ -693,7 +696,7 @@ export default function InternXAIPage() {
                 The Qualification <span className="text-blue-500">Gate</span>
               </h2>
               <p className="text-slate-400 max-w-2xl mx-auto text-sm md:text-base">
-                Serious learners only. You must pass the <strong>Unified Qualification Test</strong>.
+                Serious learners only. You must pass the <strong>Unified Qualification Test</strong>. 
                 This ensures outsourcing and copy-pasting shortcuts do not work.
               </p>
             </div>
@@ -724,7 +727,7 @@ export default function InternXAIPage() {
           </div>
         </section>
         
-        {/* --- ADDED: FOUNDATION VS ELITE COMPARISON TABLES --- */}
+        {/* --- FOUNDATION VS ELITE COMPARISON TABLES --- */}
         <section className="py-24 px-6 bg-[#020617] border-t border-white/10">
             <div className="max-w-6xl mx-auto">
                 <div className="text-center mb-16">
@@ -913,8 +916,12 @@ export default function InternXAIPage() {
 
         <section className="py-24 px-6 bg-slate-900/20">
           <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white">Earnings Projection (India)</h2>
+            <div className="text-center mb-8">
+              <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white">Earnings Projection</h2>
+              <div className="flex justify-center gap-4 mt-6">
+                  <button onClick={() => setEarningsRegion('india')} className={`px-4 py-1 rounded-full text-sm font-bold ${earningsRegion === 'india' ? 'bg-blue-600 text-white' : 'bg-white/10 text-slate-400'}`}>India (INR)</button>
+                  <button onClick={() => setEarningsRegion('global')} className={`px-4 py-1 rounded-full text-sm font-bold ${earningsRegion === 'global' ? 'bg-green-600 text-white' : 'bg-white/10 text-slate-400'}`}>Global (USD)</button>
+              </div>
               <p className="text-slate-400 mt-4">Typical career progression for AI Engineers with real project experience.</p>
             </div>
             
@@ -924,7 +931,7 @@ export default function InternXAIPage() {
                </div>
 
                <div className="flex flex-col gap-8 md:hidden relative z-10 pt-4">
-                  {careerGrowth.map((item, idx) => (
+                  {careerGrowthData[earningsRegion].map((item, idx) => (
                     <div key={idx} className="w-full">
                        <div className="flex justify-between items-center mb-2">
                           <span className="text-[10px] font-black uppercase text-slate-500 tracking-widest">{item.year}</span>
@@ -945,7 +952,7 @@ export default function InternXAIPage() {
                </div>
 
                <div className="hidden md:flex flex-row items-end justify-center gap-8 h-96 relative z-10 pt-10">
-                  {careerGrowth.map((item, idx) => (
+                  {careerGrowthData[earningsRegion].map((item, idx) => (
                       <div key={idx} className="w-1/4 h-full flex flex-col justify-end group">
                          <div className="relative flex-grow flex items-end justify-center mb-4">
                             <div 
@@ -964,6 +971,15 @@ export default function InternXAIPage() {
                          </div>
                       </div>
                   ))}
+               </div>
+
+               {/* Updated based on PDF Page 16: Mandatory Disclaimer */}
+               <div className="mt-8 pt-6 border-t border-white/5 text-center">
+                   <p className="text-[10px] text-slate-600 italic">
+                      Disclaimer: Salaries depend on skills, performance, interviews, and market conditions. No guarantees are made.
+                      <br/>
+                      "AI won't take your job. Someone trained in Agentic AI will. Be that someone."
+                   </p>
                </div>
             </div>
           </div>
