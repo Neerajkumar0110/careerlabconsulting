@@ -74,7 +74,7 @@ const LLMServices = () => {
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 opacity-40 group-hover:opacity-100"
                     loading={index < 2 ? "eager" : "lazy"}
-                    onLoadingComplete={(img) => img.classList.remove('opacity-0')}
+                    onLoad={(e) => e.currentTarget.classList.remove('opacity-0')}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-80" />
                 </div>

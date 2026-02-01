@@ -3,9 +3,10 @@
 import React, { useState } from 'react';
 import { 
   Check, Zap, Crown, Building2, 
-  Calendar, Loader2, ShieldCheck, Rocket, ArrowRight, Info,
-  Phone, Mail, MessageCircle
+  Calendar, Loader2, ShieldCheck, Rocket, ArrowRight, 
+  Phone, Mail, MessageCircle, X
 } from 'lucide-react';
+// Framer motion sirf Modal animation ke liye rakha hai, Layout se hata diya hai
 import { motion, AnimatePresence } from 'framer-motion';
 import Script from 'next/script';
 import ScheduleMeetingModal from './ScheduleMeetingModal'; 
@@ -25,6 +26,12 @@ interface PricingTier {
   icon: any;
   isEnterprise?: boolean;
   description: string;
+}
+
+interface UserDetails {
+  name: string;
+  email: string;
+  phone: string;
 }
 
 const CATEGORIES: Record<PricingCategory, PricingTier[]> = {
@@ -50,13 +57,24 @@ const CATEGORIES: Record<PricingCategory, PricingTier[]> = {
 
 export default function B2BPricingSection() {
   const [activeTab, setActiveTab] = useState<PricingCategory>('Single Product');
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState<{category: string, tier: string} | null>(null);
-  const [loading, setLoading] = useState<string | null>(null);
+  
+  // Modals State
+  const [isMeetingModalOpen, setIsMeetingModalOpen] = useState(false);
+  const [isLeadFormOpen, setIsLeadFormOpen] = useState(false);
+  
+  // Selection State
+  const [selectedPlanForBooking, setSelectedPlanForBooking] = useState<{category: string, tier: string} | null>(null);
+  const [pendingPaymentTier, setPendingPaymentTier] = useState<PricingTier | null>(null);
+  
+  // Form & Loading State
+  const [loading, setLoading] = useState<boolean>(false);
+  const [userDetails, setUserDetails] = useState<UserDetails>({ name: '', email: '', phone: '' });
+
+  // --- Handlers ---
 
   const openBooking = (tierName: string) => {
-    setSelectedPlan({ category: activeTab, tier: tierName });
-    setIsModalOpen(true);
+    setSelectedPlanForBooking({ category: activeTab, tier: tierName });
+    setIsMeetingModalOpen(true);
   };
 
   const openWhatsApp = () => {
@@ -64,63 +82,89 @@ export default function B2BPricingSection() {
     window.open(`https://wa.me/${CONTACT_INFO.whatsapp}?text=${encodeURIComponent(message)}`, '_blank');
   };
 
-  // FIX 2: Updated Payment Handler Logic
-  const handlePayment = (tier: PricingTier) => {
-    if (!tier.rawPrice) return;
+  const initiateCheckout = (tier: PricingTier) => {
+    setPendingPaymentTier(tier);
+    setIsLeadFormOpen(true);
+  };
+
+  const handleLeadFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!pendingPaymentTier || !pendingPaymentTier.rawPrice) return;
     
-    // Check if Razorpay is loaded
     if (!(window as any).Razorpay) {
       alert("Payment gateway is loading. Please try again in 3 seconds.");
       return;
     }
 
-    setLoading(tier.name);
-    
+    setLoading(true);
+
     const options = {
       key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID, 
-      amount: tier.rawPrice,
+      amount: pendingPaymentTier.rawPrice,
       currency: "INR",
       name: "CareerLab B2B",
-      description: `${tier.name} - ${activeTab} Plan`,
-      image: "", // You can add your logo URL here if needed
+      description: `${pendingPaymentTier.name} Plan`,
+      image: "",
       
-      handler: (response: any) => {
-        window.open(`https://wa.me/${CONTACT_INFO.whatsapp}?text=B2B_Payment_Success_Plan_${activeTab}_Tier_${tier.name}_ID_${response.razorpay_payment_id}`, '_blank');
-        setLoading(null);
+      prefill: {
+        name: userDetails.name,
+        email: userDetails.email,
+        contact: userDetails.phone
       },
       
-      // Crucial: Clear loading state if user closes the modal
-      modal: {
-        ondismiss: () => {
-          setLoading(null);
+      handler: async (response: any) => {
+        setIsLeadFormOpen(false);
+        setPendingPaymentTier(null);
+
+        try {
+          await fetch('/api/payment-success', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              paymentId: response.razorpay_payment_id,
+              userDetails: userDetails,
+              planDetails: {
+                name: pendingPaymentTier.name,
+                category: activeTab,
+                price: pendingPaymentTier.price
+              }
+            })
+          });
+
+          window.open(`https://wa.me/${CONTACT_INFO.whatsapp}?text=Payment_Success_Plan_${pendingPaymentTier.name}_ID_${response.razorpay_payment_id}`, '_blank');
+          
+        } catch (error) {
+          console.error("Email sending failed", error);
+        } finally {
+          setLoading(false);
+          alert("Payment Successful! Confirmation email sent.");
         }
       },
       
-      prefill: {
-        name: "B2B Client",
-        email: "client@company.com",
-        contact: ""
+      modal: {
+        ondismiss: () => {
+          setLoading(false);
+        }
       },
       theme: { color: "#2563eb" },
     };
 
     try {
       const rzp = new (window as any).Razorpay(options);
-      
       rzp.on('payment.failed', function (response: any){
         alert(`Payment Failed: ${response.error.description}`);
-        setLoading(null);
+        setLoading(false);
       });
-
       rzp.open();
     } catch (error) {
       console.error("Payment initialization failed", error);
-      setLoading(null);
+      setLoading(false);
     }
   };
 
   return (
-    <section className="relative py-24 bg-[#020617] text-white overflow-hidden">
+    <section className="relative py-24 bg-[#020617] text-white overflow-hidden" id="pricing">
+      {/* Background - Static Divs ab use honge */}
       <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-600/10 blur-[120px] rounded-full" />
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-600/10 blur-[120px] rounded-full" />
@@ -130,18 +174,15 @@ export default function B2BPricingSection() {
       
       <div className="relative z-10 max-w-7xl mx-auto px-6">
         <div className="text-center mb-12">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
+          {/* Static Title (No motion) */}
+          <div className="animate-fade-in-up">
             <h2 className="text-5xl md:text-7xl font-black tracking-tighter mb-4">
               Flexible <span className="text-blue-500">Pricing</span>
             </h2>
             <p className="text-slate-400 max-w-2xl mx-auto text-lg mb-10">
               Scale your business infrastructure with our modular SaaS solutions. No hidden fees.
             </p>
-          </motion.div>
+          </div>
           
           <div className="inline-flex p-1.5 bg-white/5 border border-white/10 rounded-2xl backdrop-blur-xl mb-12">
             {(Object.keys(CATEGORIES) as PricingCategory[]).map((cat) => (
@@ -149,37 +190,26 @@ export default function B2BPricingSection() {
                 key={cat}
                 onClick={() => setActiveTab(cat)}
                 className={`relative px-6 py-3 rounded-xl text-xs md:text-sm font-bold transition-all duration-300 ${
-                  activeTab === cat ? 'text-white' : 'text-slate-400 hover:text-white'
+                  activeTab === cat ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/25' : 'text-slate-400 hover:text-white hover:bg-white/5'
                 }`}
               >
-                {activeTab === cat && (
-                  <motion.div 
-                    layoutId="activeTabGlow"
-                    className="absolute inset-0 bg-blue-600 rounded-xl shadow-[0_0_20px_rgba(37,99,235,0.4)]"
-                  />
-                )}
-                <span className="relative z-10">{cat}</span>
+                {cat}
               </button>
             ))}
           </div>
         </div>
 
-        <motion.div 
-          layout
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
-        >
-          <AnimatePresence mode="wait">
+        {/* MAJOR FIX: Changed motion.div to standard div. 
+          Removed AnimatePresence from Grid.
+        */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {CATEGORIES[activeTab].map((tier, idx) => (
-              <motion.div 
+              <div 
                 key={`${activeTab}-${tier.name}`}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.3, delay: idx * 0.05 }}
-                className={`group relative p-8 rounded-[2.5rem] border transition-all duration-500 flex flex-col ${
+                className={`group relative p-8 rounded-[2.5rem] border transition-all duration-500 flex flex-col hover:-translate-y-2 ${
                   tier.name === 'Growth' 
                     ? 'bg-blue-600/5 border-blue-500/50 scale-100 lg:scale-105 shadow-[0_20px_50px_rgba(37,99,235,0.15)] z-20' 
-                    : 'bg-white/[0.02] border-white/10 hover:border-white/30'
+                    : 'bg-white/[0.02] border-white/10 hover:border-white/30 hover:shadow-xl'
                 }`}
               >
                 {tier.name === 'Growth' && (
@@ -228,34 +258,22 @@ export default function B2BPricingSection() {
                         >
                             <Calendar className="w-4 h-4" /> Book Calendar
                         </button>
-
-                        <div className="text-center mt-2">
-                             <a href={`mailto:${CONTACT_INFO.email}`} className="text-[10px] text-slate-500 hover:text-white transition-colors flex items-center justify-center gap-1">
-                                <Mail className="w-3 h-3" /> {CONTACT_INFO.email}
-                             </a>
-                        </div>
                     </div>
                 ) : (
                     <button 
-                      onClick={() => handlePayment(tier)}
-                      disabled={loading === tier.name}
-                      className={`w-full py-4 rounded-2xl font-black uppercase tracking-[0.15em] text-[11px] transition-all flex items-center justify-center gap-3 active:scale-[0.98] ${
+                      onClick={() => initiateCheckout(tier)}
+                      className={`w-full py-4 rounded-2xl font-black uppercase tracking-[0.15em] text-[11px] transition-all flex items-center justify-center gap-3 active:scale-[0.95] ${
                         tier.name === 'Growth' 
                           ? 'bg-blue-600 hover:bg-blue-500 text-white' 
                           : 'bg-white text-black hover:bg-slate-200'
                       }`}
                     >
-                      {loading === tier.name ? (
-                        <Loader2 className="animate-spin" />
-                      ) : (
-                        <><ShieldCheck className="w-4 h-4" /> Get Started <ArrowRight className="w-3 h-3" /></>
-                      )}
+                        <ShieldCheck className="w-4 h-4" /> Get Started <ArrowRight className="w-3 h-3" />
                     </button>
                 )}
-              </motion.div>
+              </div>
             ))}
-          </AnimatePresence>
-        </motion.div>
+        </div>
 
         <div className="mt-20 p-8 rounded-[3rem] bg-gradient-to-r from-blue-600/10 via-transparent to-purple-600/10 border border-white/10 flex flex-col md:flex-row items-center justify-between gap-6 backdrop-blur-sm">
           <div className="flex items-center gap-4">
@@ -278,10 +296,106 @@ export default function B2BPricingSection() {
       </div>
 
       <ScheduleMeetingModal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
-        planInfo={selectedPlan}
+        isOpen={isMeetingModalOpen} 
+        onClose={() => setIsMeetingModalOpen(false)} 
+        planInfo={selectedPlanForBooking}
       />
+
+      {/* CHECKOUT MODAL 
+        Kyunki ab parent div mein koi transform nahi hai,
+        yeh 'fixed' position ab perfectly kaam karegi bina Portal ke bhi.
+      */}
+      <AnimatePresence>
+        {isLeadFormOpen && pendingPaymentTier && (
+          <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4">
+            {/* Backdrop */}
+            <motion.div 
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+              onClick={() => setIsLeadFormOpen(false)}
+            />
+            
+            {/* Content */}
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="bg-[#0f172a] border border-white/10 w-full max-w-md p-8 rounded-3xl relative overflow-hidden shadow-2xl z-10"
+            >
+              <button 
+                onClick={() => setIsLeadFormOpen(false)}
+                className="absolute top-4 right-4 p-2 bg-white/5 rounded-full hover:bg-white/10 transition-colors z-50"
+              >
+                <X size={20} className="text-slate-400" />
+              </button>
+
+              <div className="mb-6">
+                <h3 className="text-2xl font-bold text-white mb-2">Checkout Details</h3>
+                <p className="text-slate-400 text-sm">
+                  Complete your details to purchase the <span className="text-blue-400 font-semibold">{pendingPaymentTier.name}</span> plan.
+                </p>
+              </div>
+
+              <form onSubmit={handleLeadFormSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-semibold uppercase text-slate-500 mb-1.5 ml-1">Full Name</label>
+                  <input 
+                    type="text" 
+                    required
+                    value={userDetails.name}
+                    onChange={(e) => setUserDetails({...userDetails, name: e.target.value})}
+                    placeholder="John Doe"
+                    className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all placeholder:text-slate-600"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-xs font-semibold uppercase text-slate-500 mb-1.5 ml-1">Email Address</label>
+                  <input 
+                    type="email" 
+                    required
+                    value={userDetails.email}
+                    onChange={(e) => setUserDetails({...userDetails, email: e.target.value})}
+                    placeholder="john@company.com"
+                    className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all placeholder:text-slate-600"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold uppercase text-slate-500 mb-1.5 ml-1">Phone Number</label>
+                  <input 
+                    type="tel" 
+                    required
+                    value={userDetails.phone}
+                    onChange={(e) => setUserDetails({...userDetails, phone: e.target.value})}
+                    placeholder="+91 98765 43210"
+                    className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all placeholder:text-slate-600"
+                  />
+                </div>
+
+                <div className="pt-4">
+                  <button 
+                    type="submit"
+                    disabled={loading}
+                    className="w-full bg-blue-600 hover:bg-blue-500 text-white py-4 rounded-xl font-bold uppercase tracking-wider text-sm transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {loading ? (
+                      <Loader2 className="animate-spin w-5 h-5" />
+                    ) : (
+                      <>
+                        Pay {pendingPaymentTier.price} <ArrowRight className="w-4 h-4" />
+                      </>
+                    )}
+                  </button>
+                  <p className="text-center text-[10px] text-slate-500 mt-3">
+                    Secure payment powered by Razorpay.
+                  </p>
+                </div>
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
