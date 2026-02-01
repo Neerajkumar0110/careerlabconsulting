@@ -17,9 +17,9 @@ interface Tier {
   id: string;
   name: string;
   duration: string;
-  priceDisplay: string; // Dynamic Display Price (₹ or $)
-  rawAmountINR: number; // Always keep base calculation in INR paise
-  rawAmountUSD: number; // Amount in Cents (for future reference or display calc)
+  priceDisplay: string; 
+  rawAmountINR: number; 
+  rawAmountUSD: number; 
   emiAmount: number; 
   emiText: string;
   description: string;
@@ -36,14 +36,12 @@ interface UserFormData {
   message: string;
 }
 
-// --- Global Declaration for Razorpay ---
 declare global {
   interface Window {
     Razorpay: any;
   }
 }
 
-// --- Data Constants ---
 const partners = [
   { name: "HDFC", logo: "https://cdn.worldvectorlogo.com/logos/hdfc-bank-logo.svg" },
   { name: "ICICI", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/ICICI_Bank_Logo.svg/3840px-ICICI_Bank_Logo.svg.png" },
@@ -57,21 +55,17 @@ export default function PricingSection() {
   const [activeModal, setActiveModal] = useState<'register' | 'demo' | null>(null);
   const [selectedTier, setSelectedTier] = useState<Tier | null>(null);
   
-  // Country & Currency State
-  const [countryCode, setCountryCode] = useState<string>('IN'); // Default to India
+  const [countryCode, setCountryCode] = useState<string>('IN'); 
   const [currencySymbol, setCurrencySymbol] = useState<string>('₹');
   const [isInternational, setIsInternational] = useState<boolean>(false);
 
-  // Registration Flow State
   const [registerStep, setRegisterStep] = useState<'selection' | 'form'>('selection');
   const [paymentType, setPaymentType] = useState<'full' | 'seat'>('seat'); 
   
-  // Demo Booking State
   const [demoStep, setDemoStep] = useState<'calendar' | 'form'>('calendar');
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
 
-  // Shared Form State
   const [formData, setFormData] = useState<UserFormData>({
     name: '',
     email: '',
@@ -81,7 +75,6 @@ export default function PricingSection() {
 
   const ownerPhone = "918700236923";
 
-  // --- 1. Automatic Location Detection ---
   useEffect(() => {
     const checkLocation = async () => {
       try {
@@ -96,20 +89,17 @@ export default function PricingSection() {
         }
       } catch (error) {
         console.error("Failed to detect location, defaulting to INR", error);
-        // Fallback is already IN/₹
       }
     };
     checkLocation();
   }, []);
 
-  // --- 2. Dynamic Pricing Logic ---
-  // We define prices dynamically based on the state
   const tiers: Tier[] = [
     {
       id: "plan-foundation",
       name: "Foundation",
       duration: "6 Months",
-      priceDisplay: isInternational ? "$1,999" : "₹1,49,999", // $1999 approx for international
+      priceDisplay: isInternational ? "$1,999" : "₹1,49,999", 
       rawAmountINR: 14999900, 
       rawAmountUSD: 199900, 
       emiAmount: 520800, 
@@ -131,7 +121,7 @@ export default function PricingSection() {
       id: "plan-elite",
       name: "Elite",
       duration: "12 Months",
-      priceDisplay: isInternational ? "$3,499" : "₹2,49,999", // $3499 approx for international
+      priceDisplay: isInternational ? "$3,499" : "₹2,49,999", 
       rawAmountINR: 24999900,
       rawAmountUSD: 349900,
       emiAmount: 520800, 
@@ -151,7 +141,6 @@ export default function PricingSection() {
     }
   ];
 
-  // --- Reset handlers ---
   const resetModals = () => {
     setActiveModal(null);
     setSelectedTier(null);
@@ -166,14 +155,10 @@ export default function PricingSection() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // --- Payment Logic ---
-
   const handlePaymentSuccess = async (response: RazorpayResponse, tier: Tier, type: 'Full Payment' | 'Seat Registration') => {
-    // Determine amount text based on currency
     const seatPrice = isInternational ? "$150" : "₹10,000";
     const amountPaid = type === 'Seat Registration' ? seatPrice : tier.priceDisplay;
     
-    // Construct WhatsApp Message
     let waMessage = `*New Enrollment Confirmation* %0A%0A`;
     waMessage += `*Plan:* ${tier.name}%0A`;
     waMessage += `*Type:* ${type}%0A`;
@@ -187,7 +172,6 @@ export default function PricingSection() {
     const whatsappUrl = `https://wa.me/${ownerPhone}?text=${waMessage}`;
 
     try {
-      // API call to send email (make sure your API handles the 'user' object)
        await fetch('/api/send-confirmation', {
          method: 'POST',
          headers: { 'Content-Type': 'application/json' },
@@ -196,11 +180,10 @@ export default function PricingSection() {
            amount: amountPaid, 
            paymentId: response.razorpay_payment_id, 
            type,
-           user: formData // Sending user data to API
+           user: formData 
          }),
        });
       
-      // Redirect to WhatsApp
       window.open(whatsappUrl, '_blank');
       resetModals();
     } catch (err) { 
@@ -216,7 +199,7 @@ export default function PricingSection() {
     const options = {
       key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID, 
       amount: amount, 
-      currency: currency, // Dynamic Currency
+      currency: currency, 
       name: "InternX AI",
       description: description,
       handler: (res: RazorpayResponse) => handlePaymentSuccess(res, selectedTier, type),
@@ -236,15 +219,9 @@ export default function PricingSection() {
     }
   };
 
-  // Unified Payment Submit Handler
   const handlePaymentFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedTier) return;
-    
-    // Determine Currency and Amount
-    // Note: Razorpay accepts international payments in USD if enabled in dashboard. 
-    // Otherwise, we calculate equivalent INR. 
-    // Here we will use the currency detected.
     
     const currency = isInternational ? "USD" : "INR";
     
@@ -279,7 +256,6 @@ export default function PricingSection() {
     }
   };
 
-  // --- Helper to get next 5 days for calendar ---
   const getNextDays = () => {
     const dates = [];
     for (let i = 0; i < 5; i++) {
@@ -294,7 +270,6 @@ export default function PricingSection() {
     <section className="py-20 md:py-32 bg-[#020617] text-white font-sans relative">
       <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
 
-      {/* Main Content Wrapper */}
       <div className="max-w-6xl mx-auto px-6 relative z-10">
         <header className="text-center mb-20">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 mb-6">
@@ -304,7 +279,6 @@ export default function PricingSection() {
           <h2 className="text-4xl md:text-7xl font-black tracking-tighter uppercase leading-none">
             Choose Your <span className="italic text-slate-500 font-serif lowercase">Evolution</span>
           </h2>
-          {/* Location Indicator */}
           <div className="mt-4 flex justify-center">
              <div className="flex items-center gap-2 text-xs font-bold text-slate-500 bg-white/5 px-3 py-1 rounded-full border border-white/5">
                 <Globe className="w-3 h-3" />
@@ -328,7 +302,6 @@ export default function PricingSection() {
                     <span className="text-blue-300 text-sm font-bold uppercase">{tier.targetCTC}</span>
                   </div>
                   
-                  {/* Show EMI options only for India or generic text for Intl */}
                   <div className="bg-green-500/10 border border-green-500/20 rounded-xl p-4 mt-2">
                     <span className="text-green-400 text-sm font-bold flex items-center gap-2 italic mb-3">
                       <Zap className="w-4 h-4 fill-green-400" /> {tier.emiText}
@@ -389,7 +362,6 @@ export default function PricingSection() {
           ))}
         </div>
 
-        {/* --- Table Section --- */}
         <div className="mt-20 border-t border-white/10 pt-20">
           <div className="text-center mb-12">
             <h3 className="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-4">InternX Learning <span className="text-slate-500 italic font-serif">vs</span> Traditional Learning</h3>
@@ -444,7 +416,6 @@ export default function PricingSection() {
       {activeModal && selectedTier && (
         <div className="fixed inset-0 z-[9999] flex items-end justify-center px-4 pb-[3200px] bg-black/80 backdrop-blur-sm animate-in fade-in slide-in-from-bottom-10 duration-200">
           
-          {/* REGISTER MODAL */}
           {activeModal === 'register' && (
             <div className="bg-[#0f172a] border border-blue-500/20 rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl relative">
                 <div className="p-6 border-b border-white/10 flex justify-between items-center bg-white/5">
@@ -548,7 +519,6 @@ export default function PricingSection() {
             </div>
           )}
 
-          {/* DEMO BOOKING MODAL */}
           {activeModal === 'demo' && (
             <div className="bg-[#0f172a] border border-white/10 rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl relative">
                 <div className="p-6 border-b border-white/10 flex justify-between items-center bg-white/5">
