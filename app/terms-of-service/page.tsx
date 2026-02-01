@@ -4,6 +4,7 @@ import React from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/sections/Footer';
 import { 
+  Link as LinkIcon, 
   FileText, 
   Gavel, 
   AlertCircle, 
@@ -12,6 +13,7 @@ import {
   ArrowRight,
   ShieldAlert
 } from 'lucide-react';
+import Link from 'next/link';
 
 const TermsOfService = () => {
   const lastUpdated = "January 24, 2026";
@@ -97,12 +99,12 @@ const TermsOfService = () => {
 
           <div className="mt-24 text-center border-t border-white/5 pt-12">
             <p className="text-slate-500 text-sm mb-6 font-light">In terms se judi koi bhi clarify chahiye?</p>
-            <button 
-              onClick={() => window.location.href = '/contact'}
+            <Link 
+              href="/contact"
               className="group flex items-center gap-3 mx-auto text-blue-400 font-black uppercase italic tracking-widest text-xs hover:text-white transition-all"
             >
               Contact Legal Team <ArrowRight size={14} className="group-hover:translate-x-2 transition-transform" />
-            </button>
+            </Link>
           </div>
 
         </div>

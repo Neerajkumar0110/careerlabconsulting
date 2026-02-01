@@ -15,6 +15,7 @@ import {
   MessageSquare,
   Cpu
 } from 'lucide-react';
+import Link from 'next/link';
 
 const GoldTierPage = () => {
   const goldBenefits = [
@@ -55,12 +56,12 @@ const GoldTierPage = () => {
             <p className="max-w-xl text-slate-400 text-lg font-light leading-relaxed mb-10">
               Uptime is revenue. Gold Tier aapko wahi reliability aur speed deta hai jo industry leaders demand karte hain. Scaling without the friction.
             </p>
-            <button 
-              onClick={() => window.location.href = '/contact'}
+            <Link 
+              href="/contact"
               className="bg-gradient-to-r from-amber-600 to-yellow-500 hover:scale-105 text-black px-10 py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] flex items-center gap-3 transition-all shadow-xl shadow-amber-500/20"
             >
               Secure Gold Access <ArrowRight size={16} />
-            </button>
+            </Link>
           </div>
 
           <div className="lg:w-1/2 relative group w-full">
@@ -137,12 +138,12 @@ const GoldTierPage = () => {
               Elite Support <br /> For <span className="text-amber-500">Industry Leaders.</span>
             </h2>
             <p className="text-slate-400 mb-12 max-w-lg mx-auto italic font-light">"Gold Tier isn't just a package; it's a technical partnership designed to win."</p>
-            <button 
-              onClick={() => window.location.href = '/contact'}
-              className="bg-white text-black px-12 py-5 rounded-2xl font-black text-xs uppercase tracking-[0.3em] hover:scale-105 transition-all shadow-2xl shadow-white/10"
+            <Link 
+              href="/contact"
+              className="inline-block bg-white text-black px-12 py-5 rounded-2xl font-black text-xs uppercase tracking-[0.3em] hover:scale-105 transition-all shadow-2xl shadow-white/10"
             >
               Apply for Gold Tier
-            </button>
+            </Link>
           </div>
         </div>
       </section>

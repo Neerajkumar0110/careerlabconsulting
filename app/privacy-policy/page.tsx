@@ -96,12 +96,12 @@ const PrivacyPolicy = () => {
               <div className="space-y-4">
                 <h3 className="text-white font-black italic uppercase tracking-tighter text-2xl">Questions?</h3>
                 <p className="text-slate-400 text-sm mb-4">Contact our compliance team:</p>
-                <button 
-                  onClick={() => window.location.href = 'mailto:privacy@yourdomain.com'}
-                  className="bg-white text-black px-8 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-blue-400 transition-all"
+                <a 
+                  href="mailto:privacy@yourdomain.com"
+                  className="inline-block bg-white text-black px-8 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-blue-400 transition-all"
                 >
                   Email Compliance
-                </button>
+                </a>
               </div>
             </div>
           </article>

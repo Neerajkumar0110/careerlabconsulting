@@ -15,6 +15,7 @@ import {
   HardDrive,
   LifeBuoy
 } from 'lucide-react';
+import Link from 'next/link';
 
 const BronzeTierPage = () => {
   const essentials = [
@@ -55,12 +56,12 @@ const BronzeTierPage = () => {
             <p className="max-w-xl text-slate-400 text-lg font-light leading-relaxed mb-10">
               Low volume but high importance? Hamara Bronze Tier un teams ke liye hai jo professional maintenance chahti hain on a lean budget. No fluff, just the essentials.
             </p>
-            <button 
-              onClick={() => window.location.href = '/contact'}
+            <Link 
+              href="/contact"
               className="bg-orange-700 hover:bg-orange-600 text-white px-10 py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] flex items-center gap-3 transition-all shadow-xl shadow-orange-900/20"
             >
               Get Essential Coverage <ArrowRight size={16} />
-            </button>
+            </Link>
           </div>
 
           <div className="lg:w-1/2 relative group w-full">
@@ -123,12 +124,12 @@ const BronzeTierPage = () => {
             Don't Leave It <br /> To <span className="text-orange-600">Chance.</span>
           </h2>
           <p className="text-slate-400 mb-12 max-w-lg mx-auto italic font-light">"Choti team ka matlab ye nahi ki support chota ho. Get professional coverage today."</p>
-          <button 
-            onClick={() => window.location.href = '/contact'}
-            className="bg-orange-700 text-white px-12 py-5 rounded-2xl font-black text-xs uppercase tracking-[0.3em] hover:scale-105 transition-all shadow-2xl shadow-orange-900/40"
+          <Link 
+            href="/contact"
+            className="inline-block bg-orange-700 text-white px-12 py-5 rounded-2xl font-black text-xs uppercase tracking-[0.3em] hover:scale-105 transition-all shadow-2xl shadow-orange-900/40"
           >
             Claim Bronze Access
-          </button>
+          </Link>
         </div>
       </section>
 

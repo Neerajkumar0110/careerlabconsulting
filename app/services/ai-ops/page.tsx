@@ -15,6 +15,8 @@ import {
   Microchip,
   Globe
 } from 'lucide-react';
+import Link from 'next/link';
+import Image from 'next/image';
 
 const AIOpsPage = () => {
   const features = [
@@ -52,12 +54,12 @@ const AIOpsPage = () => {
             <p className="max-w-xl text-slate-400 text-lg font-light leading-relaxed mb-10">
               Transform your IT operations from reactive to proactive. Hum AI ka use karte hain aapke cloud infrastructure ko monitor, manage aur self-heal karne ke liye.
             </p>
-            <button 
-              onClick={() => window.location.href = '/contact'}
+            <Link 
+              href="/contact"
               className="bg-purple-600 hover:bg-purple-500 text-white px-10 py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] flex items-center gap-3 transition-all shadow-xl shadow-purple-600/20"
             >
               Deploy AI Agent <ArrowRight size={16} />
-            </button>
+            </Link>
           </div>
 
           <div className="lg:w-1/2 relative group w-full">
@@ -117,7 +119,13 @@ const AIOpsPage = () => {
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
           {features.map((feature, i) => (
             <div key={i} className="group relative rounded-[3rem] overflow-hidden border border-white/5 bg-slate-900/40 hover:border-purple-500/30 transition-all duration-500">
-              <img src={feature.img} className="absolute inset-0 w-full h-full object-cover opacity-10 grayscale group-hover:scale-110 transition-transform duration-1000" />
+              <Image 
+                src={feature.img} 
+                alt={feature.title}
+                fill
+                className="object-cover opacity-10 grayscale group-hover:scale-110 transition-transform duration-1000"
+                sizes="(max-width: 768px) 100vw, 50vw"
+              />
               <div className="relative p-12 bg-gradient-to-t from-[#020617] via-[#020617]/95 to-transparent">
                 <div className="mb-6 p-4 bg-purple-500/10 rounded-2xl w-fit text-purple-400 group-hover:bg-purple-600 group-hover:text-white transition-all">
                   {React.createElement(feature.icon, { size: 30 })}
@@ -140,12 +148,12 @@ const AIOpsPage = () => {
               Stop Firefighting. <br /> Start <span className="text-purple-500">Automating.</span>
             </h2>
             <p className="text-slate-400 mb-12 max-w-lg mx-auto font-light leading-relaxed">Infrastructure manage karne ka naya tareeka yahan hai. Get rid of operational manual labor with AI.</p>
-            <button 
-              onClick={() => window.location.href = '/contact'}
-              className="bg-white text-black px-12 py-5 rounded-2xl font-black text-xs uppercase tracking-[0.3em] hover:scale-105 transition-all"
+            <Link 
+              href="/contact"
+              className="inline-block bg-white text-black px-12 py-5 rounded-2xl font-black text-xs uppercase tracking-[0.3em] hover:scale-105 transition-all"
             >
               Get Free Ops Audit
-            </button>
+            </Link>
           </div>
         </div>
       </section>
