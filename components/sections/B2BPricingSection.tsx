@@ -1,12 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { 
   Check, Zap, Crown, Building2, 
   Calendar, Loader2, ShieldCheck, Rocket, ArrowRight, 
   Phone, Mail, MessageCircle, X
 } from 'lucide-react';
-// Framer motion sirf Modal animation ke liye rakha hai, Layout se hata diya hai
 import { motion, AnimatePresence } from 'framer-motion';
 import Script from 'next/script';
 import ScheduleMeetingModal from './ScheduleMeetingModal'; 
@@ -69,6 +69,11 @@ export default function B2BPricingSection() {
   // Form & Loading State
   const [loading, setLoading] = useState<boolean>(false);
   const [userDetails, setUserDetails] = useState<UserDetails>({ name: '', email: '', phone: '' });
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // --- Handlers ---
 
@@ -301,10 +306,8 @@ export default function B2BPricingSection() {
         planInfo={selectedPlanForBooking}
       />
 
-      {/* CHECKOUT MODAL 
-        Kyunki ab parent div mein koi transform nahi hai,
-        yeh 'fixed' position ab perfectly kaam karegi bina Portal ke bhi.
-      */}
+      {/* CHECKOUT MODAL */}
+      {mounted && createPortal(
       <AnimatePresence>
         {isLeadFormOpen && pendingPaymentTier && (
           <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4">
@@ -395,7 +398,7 @@ export default function B2BPricingSection() {
             </motion.div>
           </div>
         )}
-      </AnimatePresence>
+      </AnimatePresence>, document.body)}
     </section>
   );
 }

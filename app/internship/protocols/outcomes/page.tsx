@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import B2CHeader from '@/components/b2c/B2CHeader';
 import Footer from '@/components/b2c/Footer';
 import { 
@@ -13,6 +14,11 @@ export default function CareerOutcomes() {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [verificationCode, setVerificationCode] = useState("");
   const [isVerified, setIsVerified] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   
   const projectedSalary = currentSalary * 2.8;
 
@@ -128,8 +134,8 @@ export default function CareerOutcomes() {
       </section>
 
       {/* --- VERIFICATION POPUP (MODAL) --- */}
-      {isPopupOpen && (
-        <div className="fixed inset-0 z-[300] flex items-center justify-center p-4">
+      {mounted && isPopupOpen && createPortal(
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-[#020617]/95 backdrop-blur-xl" onClick={() => setIsPopupOpen(false)} />
           <div className="relative w-full max-w-lg bg-[#0a0f1d] border border-emerald-500/20 rounded-[2.5rem] overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300">
             
@@ -199,7 +205,7 @@ export default function CareerOutcomes() {
             </div>
           </div>
         </div>
-      )}
+      , document.body)}
 
       {/* --- OUTCOME CARDS --- */}
       <section className="py-24 px-6 max-w-7xl mx-auto">
