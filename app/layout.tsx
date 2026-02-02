@@ -106,7 +106,21 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </main>
         
         <SpeedInsights />
-        
+        <Script 
+          src="https://manee-ai.vercel.app/embed.js" 
+          strategy="lazyOnload" 
+        />
+        <Script id="manee-ai-init" strategy="lazyOnload">
+          {`
+            window.onload = function() {
+              if (window.ManeeAI) {
+                ManeeAI.init({ 
+                  apiKey: "manee-667cc928-c3a9-41fa-9842-cc439a794ae8" 
+                });
+              }
+            };
+          `}
+        </Script>
       </body>
     </html>
   );

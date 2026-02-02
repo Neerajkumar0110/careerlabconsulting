@@ -1600,7 +1600,6 @@ export default function InternXAIPage() {
                     <p className="text-slate-400">The detailed breakdown of what you unlock at each level.</p>
                 </div>
 
-                {/* Tabs */}
                 <div className="flex justify-center mb-8 gap-2 flex-wrap">
                    {['features', 'roles', 'ctc', 'tools', 'projects', 'usps', 'fees'].map((tab) => (
                       <button 
