@@ -107,7 +107,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         
         <SpeedInsights />
         <Script 
-          src="https://manee-ai.vercel.app/embed.js?v=3.0" 
+          src="https://manee-ai.vercel.app/embed.js?v=5.0" 
           strategy="lazyOnload" 
         />
         <Script id="manee-ai-init" strategy="lazyOnload">
