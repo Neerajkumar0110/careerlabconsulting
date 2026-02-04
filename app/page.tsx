@@ -16,6 +16,7 @@ const TabbedServices = dynamic(() => import("@/components/sections/TabbedService
 const LLMServicesSection = dynamic(() => import("@/components/sections/LLMServicesSection"));
 const TrustAndArticles = dynamic(() => import("@/components/sections/TrustAndArticles"));
 const FaqSection = dynamic(() => import("@/components/sections/FaqSection"));
+const GlobalB2BSection = dynamic(() => import("@/components/sections/GlobalB2BSection"));
 const LiveTrafficSection = dynamic(() => import("@/components/sections/LiveTrafficSection"));
 const Footer = dynamic(() => import("@/components/sections/Footer"));
 
@@ -37,6 +38,7 @@ export default function B2BHome() {
       <LLMServicesSection />
       <TrustAndArticles />
       <FaqSection />
+      <GlobalB2BSection />
       <LiveTrafficSection />
       <Footer />
       <Analytics /> 
