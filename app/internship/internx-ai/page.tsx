@@ -68,11 +68,11 @@ const fallbackQuestions: Question[] = [
 
 const studentProjects = [
   {
-    title: "AI Legal Doc Analyzer",
-    desc: "Automated contract review system reducing legal costs by 60%. Uses OCR + LLM to flag risky clauses.",
+    title: "AI Doc Analyzer",
+    desc: "Automated contract review system reducing costs by 60%. Uses OCR + LLM to flag risky clauses.",
     tech: ["Python", "LangChain", "OpenAI", "React"],
     author: "Rohan M.",
-    role: "Placed at LegalTech Startup",
+    role: "Placed at Tech Startup",
     image: "https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&q=80&w=600"
   },
   {
@@ -2018,10 +2018,10 @@ export default function InternXAIPage() {
               Start with Foundation
             </button>
             <button 
-              onClick={handleBookDemo}
-              className="px-8 py-4 border border-white/20 hover:bg-white/10 text-white font-bold rounded-xl transition-all"
+              onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })}
+              className="px-8 py-4 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-xl transition-all shadow-lg shadow-purple-900/50"
             >
-              Book Free Career Call
+              Start with Elite
             </button>
           </div>
           <p className="mt-6 text-slate-500 text-sm">Elite is earned, not enrolled.</p>
