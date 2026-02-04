@@ -6,7 +6,6 @@ import dynamic from 'next/dynamic';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, MapPin, Compass } from 'lucide-react';
 
-// --- Types ---
 interface GlobeMethods {
   controls: () => {
     autoRotate: boolean;
@@ -27,7 +26,6 @@ interface User {
   city: string;
 }
 
-// --- Dynamic Import ---
 const Globe = dynamic(() => import('react-globe.gl'), { 
   ssr: false,
   loading: () => (
@@ -38,7 +36,6 @@ const Globe = dynamic(() => import('react-globe.gl'), {
   )
 });
 
-// --- Dummy Data ---
 const lmsUsers: User[] = [
   { id: 1, name: "Arjun Mehta", course: "Full Stack Dev", img: "https://i.pravatar.cc/150?u=1", lat: 28.61, lng: 77.20, country: "India", city: "New Delhi" },
   { id: 2, name: "Yuki Tanaka", course: "AI & ML", img: "https://i.pravatar.cc/150?u=2", lat: 35.67, lng: 139.65, country: "Japan", city: "Tokyo" },
@@ -76,7 +73,7 @@ export default function GlobalLmsNetwork() {
   const globeRef = useRef<any>(null);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [mounted, setMounted] = useState(false);
-  const [isZoomed, setIsZoomed] = useState(false); // State to track zoom level
+  const [isZoomed, setIsZoomed] = useState(false); 
 
   useEffect(() => {
     setMounted(true);
@@ -90,7 +87,6 @@ export default function GlobalLmsNetwork() {
           controls.autoRotate = true;
           controls.autoRotateSpeed = 0.5;
           controls.enableZoom = true;
-          // Set min/max distance if you want to restrict zoom
           controls.minDistance = 120;
           controls.maxDistance = 500;
         }
@@ -114,10 +110,7 @@ export default function GlobalLmsNetwork() {
 
   return (
     <div className="relative w-full h-screen bg-[#00050a] overflow-hidden">
-      
-      {/* --- TITLE SECTION --- */}
       <div className="absolute top-10 left-0 right-0 z-20 text-center pointer-events-none">
-        {/* We use motion.div to fade out the title when zoomed in (isZoomed) */}
         <motion.div
            animate={{ 
              opacity: isZoomed ? 0 : 1, 
@@ -147,10 +140,7 @@ export default function GlobalLmsNetwork() {
           bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
           backgroundImageUrl="//unpkg.com/three-globe/example/img/night-sky.png"
           
-          // Trigger when user zooms
           onZoom={(zoom: { altitude: number }) => {
-            // Default altitude is around 2.5. 
-            // If user zooms in closer than 1.8, we consider it "Zoomed In"
             if (zoom.altitude < 1.8) {
               if (!isZoomed) setIsZoomed(true);
             } else {
@@ -178,7 +168,6 @@ export default function GlobalLmsNetwork() {
             `;
             
             el.style.cursor = 'pointer';
-            // --- FIX 1: Centering the marker so it doesn't drift when zooming ---
             el.style.transform = 'translate(-50%, -50%)'; 
             
             el.onclick = () => handleUserClick(user);
