@@ -36,7 +36,6 @@ export default function B2CPage() {
         <CompanyJourney />
         <AdvantagesSection />
         <PillarsSection />
-        <GlobalNetwork />
         <MediaPresence />
         <MasterClassSection />
         <LogoSection />
@@ -45,6 +44,7 @@ export default function B2CPage() {
         <AlumniSuccess />
         <FAQSection />
         <PricingSection />
+        <GlobalNetwork />
         <LiveTrafficSection />
         <Footer />
       </div>

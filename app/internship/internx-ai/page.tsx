@@ -8,6 +8,7 @@ import Script from 'next/script';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import B2CHeader from '@/components/b2c/B2CHeader';
 import Footer from '@/components/b2c/Footer';
+import GlobalNetwork from '@/components/b2c/GlobalNetwork';
 import { 
   Terminal, Database, Activity, Cpu, Bot, Rocket, 
   Shield, Lock, CheckCircle2, XCircle, ChevronRight, 
@@ -2026,6 +2027,8 @@ export default function InternXAIPage() {
           <p className="mt-6 text-slate-500 text-sm">Elite is earned, not enrolled.</p>
         </section>
       </main>
+
+      <GlobalNetwork />
 
       <Footer />
     </div>
