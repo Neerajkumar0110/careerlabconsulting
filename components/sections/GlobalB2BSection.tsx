@@ -384,5 +384,6 @@ export default function GlobalB2BSection() {
         )}
       </AnimatePresence>
     </div>
+    
   );
 }
