@@ -106,22 +106,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </main>
         
         <SpeedInsights />
-        <Script 
-          src="https://manee-ai.vercel.app/embed.js?v=6.0" 
-          strategy="lazyOnload" 
-        />
-        <Script id="manee-ai-init" strategy="lazyOnload">
-          {`
-            var checkManee = setInterval(function() {
-              if (typeof window.ManeeAI !== 'undefined') {
-                ManeeAI.init({ 
-                  apiKey: "manee-667cc928-c3a9-41fa-9842-cc439a794ae8" 
-                });
-                clearInterval(checkManee); 
-              }
-            }, 100);
-          `}
-        </Script>
       </body>
     </html>
   );
