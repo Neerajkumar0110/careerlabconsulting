@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = 'force-dynamic';
+
 import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { GoogleGenerativeAI } from "@google/generative-ai";
@@ -55,13 +57,26 @@ function ScholarshipTestContent() {
   useEffect(() => {
     const checkLocation = async () => {
       try {
-        const response = await fetch('https://ipapi.co/json/');
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 3000); 
+
+        const response = await fetch('https://ipapi.co/json/', { 
+            signal: controller.signal 
+        });
+        
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        
         const data = await response.json();
         if (data && data.country_code !== 'IN') {
           setIsInternational(true);
         }
       } catch (error) {
-        console.error("Failed to detect location", error);
+        console.warn("Location detection blocked (likely by AdBlocker). Defaulting to India (INR).", error);
+        setIsInternational(false);
       }
     };
     checkLocation();
