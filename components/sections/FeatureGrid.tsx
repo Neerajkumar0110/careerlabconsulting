@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import React from 'react';
 import { 
   Zap, 
@@ -125,12 +126,14 @@ export default function FeatureGrid() {
                 </p>
             </div>
             
-            <button 
-              aria-label="Start your free enterprise trial"
-              className="relative z-10 whitespace-nowrap px-12 py-5 bg-white text-blue-700 font-black uppercase text-xs tracking-widest rounded-2xl hover:bg-blue-50 hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)] transition-all active:scale-95"
-            >
+            <Link href="/contact">
+              <button 
+                aria-label="Start your free enterprise trial"
+                className="relative z-10 whitespace-nowrap px-12 py-5 bg-white text-blue-700 font-black uppercase text-xs tracking-widest rounded-2xl hover:bg-blue-50 hover:shadow-[0_20px_40px_rgba(0,0,0,0.3)] transition-all active:scale-95"
+              >
                 Start Free Trial
-            </button>
+              </button>
+            </Link>
         </div>
       </div>
     </section>
