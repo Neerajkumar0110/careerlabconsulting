@@ -1,16 +1,16 @@
 'use client';
 
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import { createPortal } from 'react-dom';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation'; // Navigation ke liye
 import { 
-  ArrowRight, Play, Target, Award, CheckCircle2, 
-  Sparkles, X, MapPin, Cpu, Zap, Activity,
-  Globe, Code, MessageSquare, ShieldCheck, Hash, TrendingUp
+  ArrowRight, Play, Target, Award, Zap, 
+  Sparkles, MapPin, Cpu, TrendingUp
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const OWNER_PHONE = "918700236923";
+const DEMO_VIDEO_URL = "https://www.youtube.com/watch?v=IWFJ_IWr6kg";
 
 interface Student {
   name: string;
@@ -59,10 +59,8 @@ const SpaceBackground = () => {
     const draw = () => {
       ctx.fillStyle = '#020617';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-
       const cx = canvas.width / 2;
       const cy = canvas.height / 2;
-
       ctx.fillStyle = 'white'; 
       
       stars.forEach((star) => {
@@ -72,7 +70,6 @@ const SpaceBackground = () => {
           star.x = Math.random() * canvas.width - canvas.width / 2;
           star.y = Math.random() * canvas.height - canvas.height / 2;
         }
-
         const x = (star.x / star.z) * cx + cx;
         const y = (star.y / star.z) * cy + cy;
         const r = (1 - star.z / canvas.width) * 2;
@@ -85,7 +82,6 @@ const SpaceBackground = () => {
         }
       });
       ctx.globalAlpha = 1.0; 
-
       animationFrameId = requestAnimationFrame(draw);
     };
 
@@ -108,23 +104,12 @@ const SpaceBackground = () => {
 };
 
 export default function B2CHero() {
-  const [isVideoOpen, setIsVideoOpen] = useState(false);
-  const [selectedProfile, setSelectedProfile] = useState<Student | null>(null);
+  const router = useRouter();
   const [index, setIndex] = useState(0);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const students: Student[] = useMemo(() => {
     const cohortData = [
-      { 
-        name: "Aryan Sharma", 
-        country: "India", 
-        imgId: 11,
-        customImg: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?q=80&w=300&auto=format&fit=crop" 
-      },
+      { name: "Aryan Sharma", country: "India", imgId: 11, customImg: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?q=80&w=300&auto=format&fit=crop" },
       { name: "Liam Smith", country: "USA", imgId: 12 },
       { name: "Lukas Meyer", country: "Germany", imgId: 14 },
       { name: "Sofia Rossi", country: "Italy", imgId: 16 },
@@ -143,7 +128,6 @@ export default function B2CHero() {
     return cohortData.map((data, i) => {
       const skill = skills[i % skills.length];
       const countryCode = data.country.slice(0, 2).toUpperCase();
-      
       return {
         name: data.name,
         batch: skill,
@@ -163,24 +147,31 @@ export default function B2CHero() {
   }, []);
 
   useEffect(() => {
-    if (!selectedProfile && !isVideoOpen) {
-      const timer = setInterval(() => {
-        setIndex((prev) => (prev + 1) % students.length);
-      }, 6000); 
-      return () => clearInterval(timer);
-    }
-  }, [selectedProfile, isVideoOpen, students.length]);
+    const timer = setInterval(() => {
+      setIndex((prev) => (prev + 1) % students.length);
+    }, 6000); 
+    return () => clearInterval(timer);
+  }, [students.length]);
 
   const activeStudent = students[index];
 
-  const handleWhatsAppConnect = useCallback((studentName = "the cohort") => {
-    const message = encodeURIComponent(`Hi, I'm interested in the Elite Engineers Cohort. I just saw ${studentName}'s profile on the dashboard.`);
+  const handleWhatsAppConnect = useCallback(() => {
+    const message = encodeURIComponent(`Hi, I'm interested in the Elite Engineers Cohort.`);
     window.open(`https://wa.me/${OWNER_PHONE}?text=${message}`, '_blank');
   }, []);
 
+  // 1. Launch Demo - Direct YouTube Link
+  const handleLaunchDemo = () => {
+    window.open(DEMO_VIDEO_URL, '_blank');
+  };
+
+  // 2. Profile Details - Redirect to Page
+  const handleProfileRedirect = (id: string) => {
+    router.push(`/profile/${id}`);
+  };
+
   return (
-    <section className="relative min-h-screen pt-24 pb-12 md:pt-10 md:pb-20 overflow-hidden bg-[#020617] flex items-center" aria-label="Hero Section">
-      
+    <section className="relative min-h-screen pt-24 pb-12 md:pt-10 md:pb-20 overflow-hidden bg-[#020617] flex items-center">
       <SpaceBackground />
 
       <div className="max-w-[1400px] mx-auto px-5 md:px-6 relative z-10 w-full">
@@ -201,7 +192,7 @@ export default function B2CHero() {
               BEYOND <br/> 
               <span className="relative inline-block italic text-blue-400">
                 LEARNING.
-                <svg className="absolute -bottom-1 md:-bottom-2 left-0 w-full" viewBox="0 0 300 12" fill="none" aria-hidden="true">
+                <svg className="absolute -bottom-1 md:-bottom-2 left-0 w-full" viewBox="0 0 300 12" fill="none">
                     <path d="M1 9.5C50.5 3.5 150.5 1.5 299 9.5" stroke="#3b82f6" strokeWidth="3" strokeLinecap="round"/>
                 </svg>
               </span> <br/>
@@ -214,16 +205,14 @@ export default function B2CHero() {
 
             <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
               <button 
-                onClick={() => handleWhatsAppConnect()}
+                onClick={handleWhatsAppConnect}
                 className="w-full sm:w-auto px-8 md:px-10 py-4 md:py-5 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-black uppercase text-[10px] md:text-xs tracking-widest transition-all hover:scale-105 shadow-[0_0_30px_-5px_rgba(37,99,235,0.5)] flex items-center justify-center gap-3"
-                aria-label="Join the mission on WhatsApp"
               >
                 Join the Mission <ArrowRight size={16} />
               </button>
               <button 
-                onClick={() => setIsVideoOpen(true)} 
+                onClick={handleLaunchDemo} 
                 className="w-full sm:w-auto px-8 md:px-10 py-4 md:py-5 bg-white/[0.03] hover:bg-white/[0.08] text-white border border-white/10 rounded-2xl font-black uppercase text-[10px] md:text-xs tracking-widest transition-all flex items-center justify-center gap-3 backdrop-blur-md"
-                aria-label="Watch demo video"
               >
                 <Play className="w-4 h-4 fill-white" /> Launch Demo
               </button>
@@ -238,7 +227,7 @@ export default function B2CHero() {
                 animate={{ opacity: 1, scale: 1, rotateY: 0 }}
                 exit={{ opacity: 0, scale: 1.1, rotateY: -20 }}
                 transition={{ duration: 0.7, ease: [0.23, 1, 0.32, 1] }}
-                className="w-full max-w-[480px] bg-white/[0.02] backdrop-blur-3xl border border-white/10 rounded-[2.5rem] md:rounded-[3.5rem] p-6 md:p-10 shadow-[0_0_80px_-15px_rgba(59,130,246,0.3)] relative overflow-hidden will-change-transform"
+                className="w-full max-w-[480px] bg-white/[0.02] backdrop-blur-3xl border border-white/10 rounded-[2.5rem] md:rounded-[3.5rem] p-6 md:p-10 shadow-[0_0_80px_-15px_rgba(59,130,246,0.3)] relative overflow-hidden"
               >
                 <div className="flex items-center justify-between mb-8">
                   <div className="px-1 pt-0 pb-1 bg-blue-500/10 border border-blue-500/20 rounded-lg">
@@ -309,7 +298,7 @@ export default function B2CHero() {
                       </div>
                     </div>
                     <button 
-                      onClick={() => setSelectedProfile(activeStudent)}
+                      onClick={() => handleProfileRedirect(activeStudent.id)}
                       className="w-full sm:w-auto px-8 py-4 bg-white text-black text-[11px] font-black uppercase rounded-2xl hover:bg-blue-600 hover:text-white transition-all shadow-xl active:scale-95"
                     >
                       Profile Details
@@ -320,92 +309,6 @@ export default function B2CHero() {
           </div>
         </div>
       </div>
-
-      {mounted && createPortal(
-        <>
-          <AnimatePresence>
-            {selectedProfile && (
-              <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedProfile(null)} className="absolute inset-0 bg-[#020617]/98 backdrop-blur-xl" />
-                <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className="relative w-full max-w-2xl bg-[#0a0f1d] border border-white/10 rounded-[3rem] overflow-hidden shadow-2xl">
-                  <button onClick={() => setSelectedProfile(null)} className="absolute top-6 right-6 text-slate-500 hover:text-white z-20 p-2 bg-white/5 rounded-full" aria-label="Close Profile"><X size={24}/></button>
-                  
-                  <div className="p-8 md:p-14 text-left">
-                    <div className="flex flex-col md:flex-row gap-8 items-center md:items-start mb-12 text-center md:text-left">
-                      <div className="relative w-32 h-32 shrink-0">
-                        <Image 
-                          src={selectedProfile.img} 
-                          alt={selectedProfile.name} 
-                          fill
-                          className="rounded-[2.5rem] border-4 border-blue-600/20 object-cover shadow-2xl"
-                          sizes="128px"
-                        />
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex items-center justify-center md:justify-start gap-3 mb-3">
-                            <h2 className="text-3xl md:text-4xl font-black text-white">{selectedProfile.name}</h2>
-                            <ShieldCheck size={28} className="text-blue-500" />
-                        </div>
-                        <p className="text-blue-400 font-bold uppercase text-xs tracking-[0.2em] mb-6">{selectedProfile.country} • {selectedProfile.batch}</p>
-                        <div className="flex flex-wrap justify-center md:justify-start gap-2">
-                          {["Python", "PyTorch", "GCP", "Agentic AI", "TensorFlow"].map(tag => (
-                            <span key={tag} className="px-4 py-1.5 bg-white/5 border border-white/10 rounded-xl text-slate-400 text-[10px] font-bold uppercase tracking-widest">{tag}</span>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
-                      {[
-                        { icon: Globe, label: "Uptime", val: selectedProfile.uptime, color: "text-blue-500" },
-                        { icon: Code, label: "Nodes", val: selectedProfile.projects.split(' ')[0], color: "text-purple-500" },
-                        { icon: Hash, label: "Batch", val: selectedProfile.batchNumber.split('/').pop(), color: "text-emerald-500" },
-                        { icon: CheckCircle2, label: "Status", val: "LIVE", color: "text-blue-400" }
-                      ].map((item, idx) => (
-                        <div key={idx} className="bg-[#0f172a] p-5 rounded-3xl border border-white/5 text-center">
-                          <item.icon size={22} className={`${item.color} mx-auto mb-2`} />
-                          <p className="text-slate-500 text-[9px] font-bold uppercase mb-1">{item.label}</p>
-                          <p className="text-white font-black text-sm uppercase">{item.val}</p>
-                        </div>
-                      ))}
-                    </div>
-
-                    <div className="flex flex-col sm:flex-row gap-4">
-                      <button onClick={() => handleWhatsAppConnect(selectedProfile.name)} className="flex-1 py-5 bg-blue-600 hover:bg-blue-500 text-white rounded-2xl font-black uppercase text-xs tracking-widest transition-all flex items-center justify-center gap-3 shadow-xl">
-                        <MessageSquare size={20} /> Open Communication
-                      </button>
-                      <button onClick={() => setSelectedProfile(null)} className="px-10 py-5 bg-white/5 hover:bg-white/10 text-white rounded-2xl font-black uppercase text-xs tracking-widest border border-white/10 transition-all">
-                        Dismiss
-                      </button>
-                    </div>
-                  </div>
-                </motion.div>
-              </div>
-            )}
-          </AnimatePresence>
-
-          <AnimatePresence>
-            {isVideoOpen && (
-              <div className="fixed inset-0 z-[120] flex items-center justify-center p-2 md:p-6">
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsVideoOpen(false)} className="absolute inset-0 bg-black/98 backdrop-blur-2xl" />
-                <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className="relative w-full max-w-5xl aspect-video bg-black rounded-[2rem] overflow-hidden border border-white/10 shadow-2xl">
-                  <button onClick={() => setIsVideoOpen(false)} className="absolute top-6 right-6 z-10 p-3 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors backdrop-blur-md" aria-label="Close Video"><X size={24} /></button>
-                  <iframe 
-                    width="100%" 
-                    height="100%" 
-                    src="https://www.youtube.com/embed/IWFJ_IWr6kg?autoplay=1" 
-                    title="YouTube video player" 
-                    frameBorder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                    allowFullScreen
-                  ></iframe>
-                </motion.div>
-              </div>
-            )}
-          </AnimatePresence>
-        </>,
-        document.body
-      )}
     </section>
   );
 }

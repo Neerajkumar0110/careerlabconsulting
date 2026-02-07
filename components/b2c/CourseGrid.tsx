@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { Play, Star, ArrowRight, Download, X, Calendar } from 'lucide-react';
+import { Play, Star, ArrowRight, Download } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface Internship {
@@ -50,7 +50,6 @@ const ALL_TAB = "All Internships";
 
 export default function CourseGrid() {
   const [activeTab, setActiveTab] = useState<string>(ALL_TAB);
-  const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
   
   const tabs = useMemo(() => [ALL_TAB, ...Object.keys(allInternships)], []);
 
@@ -70,11 +69,15 @@ export default function CourseGrid() {
     });
   };
 
+  // Naye tab mein video open karne ke liye function
+  const handleVideoRedirect = (videoId: string) => {
+    window.open(`https://www.youtube.com/watch?v=${videoId}`, '_blank', 'noopener,noreferrer');
+  };
+
   return (
     <section className="py-16 md:py-28 bg-[#020617] relative overflow-hidden text-slate-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* --- Header --- */}
         <header className="text-center mb-12 md:mb-20">
           <h2 className="text-4xl md:text-6xl lg:text-7xl font-black mb-6 tracking-tighter uppercase leading-[0.9]">
             Explore All <span className="text-blue-500 italic">InternX Programs</span>
@@ -84,11 +87,8 @@ export default function CourseGrid() {
           </p>
         </header>
 
-        {/* --- Tabs --- */}
         <nav className="relative mb-12 group">
-          <div 
-            className="flex items-center overflow-x-auto no-scrollbar gap-3 pb-6 touch-pan-x cursor-grab active:cursor-grabbing snap-x snap-mandatory"
-          >
+          <div className="flex items-center overflow-x-auto no-scrollbar gap-3 pb-6 touch-pan-x cursor-grab active:cursor-grabbing snap-x snap-mandatory">
             {tabs.map((tab) => (
               <button 
                 key={tab} 
@@ -105,7 +105,6 @@ export default function CourseGrid() {
           </div>
         </nav>
 
-        {/* --- Grid --- */}
         <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10">
           <AnimatePresence mode="popLayout">
             {displayedCourses.map((course) => (
@@ -118,8 +117,11 @@ export default function CourseGrid() {
                 key={course.id} 
                 className="group bg-[#0a1229] border border-white/5 rounded-[2.5rem] overflow-hidden hover:border-blue-500/30 transition-all duration-500 flex flex-col"
               >
-                {/* Thumbnail */}
-                <div className="relative aspect-video w-full overflow-hidden cursor-pointer" onClick={() => setSelectedVideo(course.videoId)}>
+                {/* Ab yahan click karne par redirect hoga */}
+                <div 
+                  className="relative aspect-video w-full overflow-hidden cursor-pointer" 
+                  onClick={() => handleVideoRedirect(course.videoId)}
+                >
                   <img 
                     src={course.image} 
                     alt={course.title}
@@ -133,13 +135,11 @@ export default function CourseGrid() {
                   </div>
                 </div>
 
-                {/* Content */}
                 <div className="p-8 flex flex-col flex-grow">
                   <h3 className="text-xl font-black text-white mb-6 leading-tight italic uppercase min-h-[3.5rem]">
                     {course.title}
                   </h3>
 
-                  {/* Updated Duration and Rating Info */}
                   <div className="grid grid-cols-2 gap-4 mb-8">
                     <div className="flex flex-col gap-1">
                       <span className="text-[10px] text-blue-500 font-bold uppercase tracking-widest">Duration</span>
@@ -167,31 +167,6 @@ export default function CourseGrid() {
           </AnimatePresence>
         </motion.div>
       </div>
-
-      {/* --- Video Lightbox --- */}
-      <AnimatePresence>
-        {selectedVideo && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center p-4 backdrop-blur-2xl bg-black/90"
-          >
-            <div className="absolute inset-0" onClick={() => setSelectedVideo(null)} />
-            <motion.div 
-              initial={{ scale: 0.9, y: 30 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 30 }}
-              className="relative w-full max-w-5xl aspect-video bg-black rounded-3xl overflow-hidden border border-white/10 shadow-2xl"
-            >
-              <button onClick={() => setSelectedVideo(null)} className="absolute top-4 right-4 z-20 p-3 bg-black/60 hover:bg-red-500 rounded-full text-white transition-all">
-                <X className="w-6 h-6" />
-              </button>
-              <iframe className="w-full h-full" src={`https://www.youtube.com/embed/${selectedVideo}?autoplay=1`} title="Video Preview" allow="autoplay; encrypted-media" allowFullScreen />
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       <style jsx global>{`
         .no-scrollbar::-webkit-scrollbar { display: none; }
