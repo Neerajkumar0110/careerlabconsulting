@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Script from 'next/script';
 import { 
@@ -9,7 +9,7 @@ import {
   CheckCircle2
 } from 'lucide-react';
 
-export default function CheckoutPage() {
+function CheckoutContent() {
   const searchParams = useSearchParams();
   const [mounted, setMounted] = useState(false);
   
@@ -241,8 +241,8 @@ export default function CheckoutPage() {
               </div>
 
               <div className="mb-5">
-                 <label className="text-[11px] font-bold uppercase text-slate-500 ml-1 mb-1.5 block">GSTIN (Optional)</label>
-                 <input 
+                  <label className="text-[11px] font-bold uppercase text-slate-500 ml-1 mb-1.5 block">GSTIN (Optional)</label>
+                  <input 
                     type="text" placeholder="22AAAAA0000A1Z5"
                     value={userDetails.gstin}
                     onChange={(e) => setUserDetails({...userDetails, gstin: e.target.value})}
@@ -251,8 +251,8 @@ export default function CheckoutPage() {
               </div>
 
               <div className="mb-5">
-                 <label className="text-[11px] font-bold uppercase text-slate-500 ml-1 mb-1.5 block">Billing Address <span className="text-red-500">*</span></label>
-                 <div className="relative">
+                  <label className="text-[11px] font-bold uppercase text-slate-500 ml-1 mb-1.5 block">Billing Address <span className="text-red-500">*</span></label>
+                  <div className="relative">
                     <input 
                         required type="text" placeholder="123, Tech Park, Sector 62"
                         value={userDetails.address}
@@ -260,11 +260,11 @@ export default function CheckoutPage() {
                         className="w-full bg-black/40 border border-white/10 rounded-xl pl-10 pr-4 py-3 focus:outline-none focus:border-blue-500 transition-colors placeholder:text-slate-700"
                     />
                     <MapPin className="absolute left-3 top-3.5 text-slate-600" size={16} />
-                 </div>
+                  </div>
               </div>
 
               <div className="grid grid-cols-3 gap-3">
-                 <div>
+                  <div>
                     <label className="text-[10px] md:text-[11px] font-bold uppercase text-slate-500 ml-1 mb-1.5 block">City <span className="text-red-500">*</span></label>
                     <input 
                         required type="text" placeholder="Noida"
@@ -272,8 +272,8 @@ export default function CheckoutPage() {
                         onChange={(e) => setUserDetails({...userDetails, city: e.target.value})}
                         className="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-3 focus:outline-none focus:border-blue-500 transition-colors placeholder:text-slate-700"
                     />
-                 </div>
-                 <div>
+                  </div>
+                  <div>
                     <label className="text-[10px] md:text-[11px] font-bold uppercase text-slate-500 ml-1 mb-1.5 block">State <span className="text-red-500">*</span></label>
                     <input 
                         required type="text" placeholder="UP"
@@ -281,8 +281,8 @@ export default function CheckoutPage() {
                         onChange={(e) => setUserDetails({...userDetails, state: e.target.value})}
                         className="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-3 focus:outline-none focus:border-blue-500 transition-colors placeholder:text-slate-700"
                     />
-                 </div>
-                 <div>
+                  </div>
+                  <div>
                     <label className="text-[10px] md:text-[11px] font-bold uppercase text-slate-500 ml-1 mb-1.5 block">Pincode <span className="text-red-500">*</span></label>
                     <input 
                         required type="text" placeholder="201301"
@@ -290,7 +290,7 @@ export default function CheckoutPage() {
                         onChange={(e) => setUserDetails({...userDetails, pincode: e.target.value})}
                         className="w-full bg-black/40 border border-white/10 rounded-xl px-3 py-3 focus:outline-none focus:border-blue-500 transition-colors placeholder:text-slate-700"
                     />
-                 </div>
+                  </div>
               </div>
             </form>
           </div>
@@ -471,4 +471,16 @@ export default function CheckoutPage() {
       </div>
     </div>
   );
+}
+
+export default function CheckoutPage() {
+    return (
+      <Suspense fallback={
+          <div className="min-h-screen bg-[#020617] flex items-center justify-center">
+              <Loader2 className="animate-spin text-blue-500 w-10 h-10" />
+          </div>
+      }>
+          <CheckoutContent />
+      </Suspense>
+    );
 }
