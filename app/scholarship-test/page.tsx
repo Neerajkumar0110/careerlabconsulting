@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { 
@@ -35,7 +35,7 @@ const fallbackQuestions: Question[] = [
   { id: 10, question: "What is the time complexity of binary search?", options: ["O(n)", "O(log n)", "O(n^2)", "O(1)"], answer: "O(log n)", difficulty: "medium" },
 ];
 
-export default function ScholarshipTestPage() {
+function ScholarshipTestContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   
@@ -142,7 +142,6 @@ export default function ScholarshipTestPage() {
 
   const handleClaimAndProceed = () => {
       const discountPercent = calculateScholarshipPercent();
-      
       
       let baseINR = planName === 'Foundation' ? 14999900 : 24999900; 
       let baseUSD = planName === 'Foundation' ? 199900 : 349900; 
@@ -356,5 +355,17 @@ export default function ScholarshipTestPage() {
             </div>
         </div>
     </div>
+  );
+}
+
+export default function ScholarshipTestPage() {
+  return (
+    <Suspense fallback={
+        <div className="min-h-screen bg-[#020617] flex items-center justify-center">
+            <Loader2 className="animate-spin text-blue-500 w-10 h-10" />
+        </div>
+    }>
+        <ScholarshipTestContent />
+    </Suspense>
   );
 }
