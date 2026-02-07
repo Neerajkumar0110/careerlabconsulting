@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Script from 'next/script';
 import { 
@@ -9,7 +9,7 @@ import {
   GraduationCap, Briefcase, Linkedin, Github, Zap, Trophy 
 } from 'lucide-react';
 
-export default function B2CCheckoutPage() {
+function CheckoutContent() {
   const searchParams = useSearchParams();
   const [mounted, setMounted] = useState(false);
   
@@ -365,7 +365,7 @@ export default function B2CCheckoutPage() {
                   </div>
                     <div className="flex flex-col">
                       <span className="font-bold text-lg">Razorpay / Cards / EMI</span>
-                  </div>
+                    </div>
                 </div>
                 <ShieldCheck className="text-blue-400" />
               </div>
@@ -438,5 +438,17 @@ export default function B2CCheckoutPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function B2CCheckoutPage() {
+  return (
+    <Suspense fallback={
+        <div className="min-h-screen bg-[#020617] flex items-center justify-center">
+            <Loader2 className="animate-spin text-blue-500 w-10 h-10" />
+        </div>
+    }>
+        <CheckoutContent />
+    </Suspense>
   );
 }
