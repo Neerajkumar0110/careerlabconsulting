@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import React from 'react';
 import { motion } from 'framer-motion';
 import { PlayCircle, Users, ArrowRight } from 'lucide-react';
@@ -42,14 +43,16 @@ export default function MasterClassSection() {
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
-                <motion.button
-                  whileHover={{ scale: 1.05, boxShadow: "0 20px 25px -5px rgb(249 115 22 / 0.4)" }}
-                  whileTap={{ scale: 0.95 }}
-                  className="group bg-[#ff9900] text-white font-black py-5 px-10 rounded-2xl text-sm uppercase tracking-wider flex items-center gap-3 transition-all"
-                >
-                  Start For Free
-                  <ArrowRight className="group-hover:translate-x-1 transition-transform" size={18} />
-                </motion.button>
+                <Link href="/masterclass/live">
+                  <motion.button
+                    whileHover={{ scale: 1.05, boxShadow: "0 20px 25px -5px rgb(249 115 22 / 0.4)" }}
+                    whileTap={{ scale: 0.95 }}
+                    className="group bg-[#ff9900] text-white font-black py-5 px-10 rounded-2xl text-sm uppercase tracking-wider flex items-center gap-3 transition-all"
+                  >
+                    Start For Free
+                    <ArrowRight className="group-hover:translate-x-1 transition-transform" size={18} />
+                  </motion.button>
+                </Link>
 
                 <div className="flex -space-x-3 items-center ml-2">
                   {[1, 2, 3].map((i) => (

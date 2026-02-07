@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import React from 'react';
 import { 
   CheckCircle2, 
@@ -92,7 +93,6 @@ export default function PillarsSection() {
     <section className="py-16 md:py-32 bg-[#020617] relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-5 md:px-6 relative z-10">
         
-        {/* Header Section */}
         <div className="text-center mb-16 md:mb-32">
           <span className="text-blue-500 font-bold tracking-[0.2em] md:tracking-[0.3em] uppercase text-[9px] md:text-[10px] block mb-3 animate-fade-in">
             Why Choose Us
@@ -103,7 +103,6 @@ export default function PillarsSection() {
           </h2>
         </div>
 
-        {/* Pillars Loop */}
         <div className="space-y-24 md:space-y-40">
           {pillars.map((pillar, idx) => (
             <div 
@@ -111,9 +110,7 @@ export default function PillarsSection() {
               className={`flex flex-col ${idx % 2 === 0 ? 'lg:flex-row' : 'lg:flex-row-reverse'} items-center gap-10 md:gap-16 lg:gap-24`}
             >
               
-              {/* Image Side */}
               <div className="w-full lg:w-1/2 group relative">
-                {/* Glow Effect behind image */}
                 <div className={`absolute -inset-2 md:-inset-4 bg-gradient-to-tr ${pillar.accent} opacity-20 blur-2xl group-hover:opacity-40 transition-opacity duration-700`} />
                 
                 <div className="relative rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden border border-white/10 shadow-2xl aspect-[16/10] md:aspect-[4/3] transform transition-transform duration-700 hover:scale-[1.02]">
@@ -124,7 +121,6 @@ export default function PillarsSection() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                   
-                  {/* Category Tag on Image */}
                   <div className="absolute bottom-4 left-4 md:bottom-8 md:left-8">
                     <div className="px-3 py-1 md:px-5 md:py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-[10px] md:text-xs font-bold uppercase tracking-widest shadow-lg">
                       {pillar.category}
@@ -133,7 +129,6 @@ export default function PillarsSection() {
                 </div>
               </div>
 
-              {/* Text Side */}
               <div className="w-full lg:w-1/2 space-y-6 md:space-y-8 text-center lg:text-left">
                 <div className="space-y-4">
                   <h3 className="text-2xl md:text-4xl font-black text-white leading-tight tracking-tight uppercase">
@@ -144,7 +139,6 @@ export default function PillarsSection() {
                   </p>
                 </div>
 
-                {/* Stats Grid - FIXED: Removed lg:items-start to ensure centering */}
                 <div className="grid grid-cols-3 gap-3 md:gap-6 pt-2 border-t border-white/5 mt-6">
                   {pillar.stats.map((stat, sIdx) => (
                     <div key={sIdx} className="pt-4 space-y-1 md:space-y-2 flex flex-col items-center group/stat">
@@ -159,11 +153,12 @@ export default function PillarsSection() {
                   ))}
                 </div>
 
-                {/* CTA Button */}
                 <div className="pt-4">
-                  <button className={`group w-full md:w-auto flex items-center justify-center gap-3 px-8 py-4 rounded-xl md:rounded-2xl bg-gradient-to-r ${pillar.accent} text-white font-black text-[10px] md:text-xs uppercase tracking-widest hover:brightness-110 transition-all active:scale-95 shadow-lg shadow-blue-900/20`}>
-                    Know More <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                  </button>
+                  <Link href="/contact" className="w-full md:w-auto">
+                    <button className={`group w-full md:w-auto flex items-center justify-center gap-3 px-8 py-4 rounded-xl md:rounded-2xl bg-gradient-to-r ${pillar.accent} text-white font-black text-[10px] md:text-xs uppercase tracking-widest hover:brightness-110 transition-all active:scale-95 shadow-lg shadow-blue-900/20`}>
+                      Know More <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                    </button>
+                  </Link>
                 </div>
               </div>
             </div>
