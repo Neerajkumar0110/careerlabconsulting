@@ -1,11 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import Image from 'next/image';
-import Script from 'next/script'; 
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { useRouter } from 'next/navigation'; 
 import B2CHeader from '@/components/b2c/B2CHeader';
 import Footer from '@/components/b2c/Footer';
 import GlobalNetwork from '@/components/b2c/GlobalNetwork';
@@ -18,53 +16,12 @@ import {
   FileCheck, Medal, Timer, Play, ChevronDown, Plus,
   TrendingUp, Wallet, AlertTriangle, Check, X,
   Target, BarChart3, Fingerprint, Laptop, UserCheck, 
-  RefreshCw, Home, Video, Star, MapPin, ExternalLink, Github,
-  Loader2, Mail, Calendar, Clock, User, MessageSquare
+  RefreshCw, MapPin, ExternalLink, Github,
+  Mail, Calendar, Clock, User, MessageSquare,
+  Star
 } from 'lucide-react';
 
-const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY || "");
-
-interface Question {
-  id: number;
-  question: string;
-  options: string[];
-  answer: string; 
-  difficulty: 'easy' | 'medium' | 'hard';
-}
-
-interface UserDetails {
-  name: string;
-  email: string;
-  phone: string;
-}
-
-const fallbackQuestions: Question[] = [
-  { id: 1, question: "Which programming language is known as the backbone of AI?", options: ["Java", "Python", "C++", "Swift"], answer: "Python", difficulty: "easy" },
-  { id: 2, question: "What does HTML stand for?", options: ["Hyper Text Markup Language", "High Text Machine Language", "Hyper Tool Multi Language", "None"], answer: "Hyper Text Markup Language", difficulty: "easy" },
-  { id: 3, question: "Which of these is a JavaScript library for building UIs?", options: ["React", "Laravel", "Django", "Flask"], answer: "React", difficulty: "easy" },
-  { id: 4, question: "What is the full form of SQL?", options: ["Structured Query Language", "Simple Query Logic", "System Query Language", "None"], answer: "Structured Query Language", difficulty: "easy" },
-  { id: 5, question: "Which company developed ChatGPT?", options: ["OpenAI", "Google", "Microsoft", "Meta"], answer: "OpenAI", difficulty: "easy" },
-  { id: 6, question: "What is 2 + 2?", options: ["3", "4", "5", "22"], answer: "4", difficulty: "easy" },
-  { id: 7, question: "Which symbol is used for single-line comments in Python?", options: ["//", "/*", "#", "--"], answer: "#", difficulty: "easy" },
-  { id: 8, question: "What is the output of print(10 % 3)?", options: ["3", "1", "10", "0"], answer: "1", difficulty: "easy" },
-  { id: 9, question: "Which data structure follows LIFO principle?", options: ["Queue", "Stack", "Array", "Tree"], answer: "Stack", difficulty: "medium" },
-  { id: 10, question: "What is the time complexity of binary search?", options: ["O(n)", "O(log n)", "O(n^2)", "O(1)"], answer: "O(log n)", difficulty: "medium" },
-  { id: 11, question: "Which algorithm is commonly used for sorting?", options: ["Dijkstra", "Merge Sort", "Prim's", "BFS"], answer: "Merge Sort", difficulty: "medium" },
-  { id: 12, question: "What does API stand for?", options: ["Application Programming Interface", "Applied Protocol Interaction", "Application Process Integration", "None"], answer: "Application Programming Interface", difficulty: "medium" },
-  { id: 13, question: "Which of these is a NoSQL database?", options: ["MySQL", "PostgreSQL", "MongoDB", "Oracle"], answer: "MongoDB", difficulty: "medium" },
-  { id: 14, question: "What is overfitting in Machine Learning?", options: ["Model learns noise as concepts", "Model performs poorly on training data", "Model is too simple", "None"], answer: "Model learns noise as concepts", difficulty: "hard" },
-  { id: 15, question: "Which activation function is typically used for binary classification?", options: ["Sigmoid", "ReLU", "Softmax", "Tanh"], answer: "Sigmoid", difficulty: "hard" },
-  { id: 16, question: "What is the purpose of a constructor in OOP?", options: ["To initialize objects", "To delete objects", "To call methods", "None"], answer: "To initialize objects", difficulty: "easy" },
-  { id: 17, question: "Which keyword defines a function in Python?", options: ["func", "def", "function", "define"], answer: "def", difficulty: "easy" },
-  { id: 18, question: "What is a primary key in SQL?", options: ["Unique identifier for a record", "Duplicate key", "Foreign key", "None"], answer: "Unique identifier for a record", difficulty: "medium" },
-  { id: 19, question: "Which protocol secures web traffic?", options: ["HTTP", "HTTPS", "FTP", "SMTP"], answer: "HTTPS", difficulty: "easy" },
-  { id: 20, question: "Binary representation of 5 is?", options: ["101", "110", "100", "111"], answer: "101", difficulty: "medium" },
-  { id: 21, question: "Which is NOT a loop structure in Python?", options: ["for", "while", "do-while", "None"], answer: "do-while", difficulty: "medium" },
-  { id: 22, question: "The fundamental unit of a neural network is?", options: ["Neuron", "Pixel", "Voxel", "Kernel"], answer: "Neuron", difficulty: "medium" },
-  { id: 23, question: "Library used for data manipulation in Python?", options: ["Pandas", "Numpy", "Matplotlib", "Seaborn"], answer: "Pandas", difficulty: "medium" },
-  { id: 24, question: "Result of 3 ** 2 in Python?", options: ["6", "9", "5", "8"], answer: "9", difficulty: "easy" },
-  { id: 25, question: "Who proposed the Turing Test?", options: ["Alan Turing", "Charles Babbage", "Elon Musk", "Bill Gates"], answer: "Alan Turing", difficulty: "hard" }
-];
+// --- CONSTANT DATA ARRAYS ---
 
 const studentProjects = [
   {
@@ -507,226 +464,70 @@ const hiringPartners = [
   { name: "Monday.com", logo: "https://www.vectorlogo.zone/logos/monday/monday-ar21.svg" }
 ];
 
+// --- MAIN COMPONENT ---
+
 export default function InternXAIPage() {
+  const router = useRouter(); // Initialize Router
   const [activeTab, setActiveTab] = useState('foundation');
   const [activeGamification, setActiveGamification] = useState(gamificationData[0]);
   const [activeFaqIndex, setActiveFaqIndex] = useState<number | null>(0);
   const [comparisonCategory, setComparisonCategory] = useState<'features' | 'tools' | 'roles' | 'projects' | 'ctc' | 'usps' | 'fees'>('features');
   const [earningsRegion, setEarningsRegion] = useState<'india' | 'global'>('india');
 
-  const [isScholarshipModalOpen, setIsScholarshipModalOpen] = useState(false);
-  const [userDetails, setUserDetails] = useState<UserDetails>({ name: '', email: '', phone: '' });
-  const [step, setStep] = useState<'details' | 'loading' | 'quiz' | 'result'>('details');
-  const [questions, setQuestions] = useState<Question[]>([]);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [answers, setAnswers] = useState<{[key: number]: string}>({});
-  const [score, setScore] = useState(0);
-  const [generatedCode, setGeneratedCode] = useState('');
-  const [planTypeForScholarship, setPlanTypeForScholarship] = useState<'Foundation' | 'Elite'>('Foundation');
-  const [scholarshipData, setScholarshipData] = useState<{ plan: 'Foundation' | 'Elite', discount: number, code: string } | null>(null);
-
-  const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
-  const [demoStep, setDemoStep] = useState<'calendar' | 'form'>('calendar');
-  const [selectedDate, setSelectedDate] = useState<string | null>(null);
-  const [selectedTime, setSelectedTime] = useState<string | null>(null);
-  const [demoFormData, setDemoFormData] = useState({ name: '', email: '', phone: '', message: '' });
-  const [isSubmittingDemo, setIsSubmittingDemo] = useState(false);
-  
-  // Isko true rakhna zaroori hai portal render karne se pehle
+  // Localization State
+  const [countryCode, setCountryCode] = useState<string>('IN'); 
+  const [isInternational, setIsInternational] = useState<boolean>(false);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-  }, []);
-
-  // --- RAZORPAY PAYMENT LOGIC FIXED ---
-  const handlePayment = (planName: string, amount: number) => {
-    // Check if window object exists (SSR safety)
-    if (typeof window === 'undefined') return;
-
-    // Check if Razorpay script is loaded
-    if (!(window as any).Razorpay) {
-      alert("Payment gateway is loading. Please wait a moment and try again.");
-      return;
-    }
-
-    let finalAmount = amount;
-    let description = `Enrollment for ${planName}`;
-
-    if (scholarshipData && scholarshipData.plan === planName) {
-        finalAmount = Math.round(amount * (1 - scholarshipData.discount / 100));
-        description += ` | Scholarship Applied: ${scholarshipData.code} (${scholarshipData.discount}% Off)`;
-    }
-
-    try {
-        const options = {
-          key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID, 
-          amount: finalAmount * 100, // Amount is in currency subunits (paise)
-          currency: "INR",
-          name: "InternX AI",
-          description: description,
-          image: "https://careerlabconsulting.com/logo.png", // Ensure this URL is valid
-          handler: function (response: any) {
-            alert(`Payment Successful! Payment ID: ${response.razorpay_payment_id}`);
-            // Yahan par aap backend call kar sakte hain order confirm karne ke liye
-          },
-          prefill: {
-            name: userDetails.name || "",
-            email: userDetails.email || "",
-            contact: userDetails.phone || ""
-          },
-          theme: {
-            color: "#2563EB"
-          },
-          modal: {
-            ondismiss: function() {
-                console.log('Checkout form closed');
+    const checkLocation = async () => {
+        try {
+          const response = await fetch('https://ipapi.co/json/');
+          const data = await response.json();
+          if (data && data.country_code) {
+            setCountryCode(data.country_code);
+            if (data.country_code !== 'IN') {
+              setIsInternational(true);
             }
           }
-        };
+        } catch (error) {
+          console.error("Failed to detect location", error);
+        }
+      };
+      checkLocation();
+  }, []);
 
-        const rzp1 = new (window as any).Razorpay(options);
-        
-        // Error handling for launch failure
-        rzp1.on('payment.failed', function (response: any){
-            alert(`Payment Failed: ${response.error.description}`);
-        });
+  // --- REDIRECT HANDLERS (No Modals) ---
 
-        rzp1.open();
-    } catch (error) {
-        console.error("Razorpay Error:", error);
-        alert("Something went wrong initializing payment.");
-    }
-  };
+  const handleRegister = (planName: 'Foundation' | 'Elite') => {
+    let basePriceINR = planName === 'Foundation' ? 14999900 : 24999900; // in paise
+    let basePriceUSD = planName === 'Foundation' ? 199900 : 349900; // in cents
 
-  const getNextDays = () => {
-    const dates = [];
-    for (let i = 0; i < 5; i++) {
-      const d = new Date();
-      d.setDate(d.getDate() + i + 1); 
-      dates.push(d);
-    }
-    return dates;
+    const priceDisplay = isInternational 
+        ? `$${(basePriceUSD / 100).toLocaleString()}`
+        : `₹${(basePriceINR / 100).toLocaleString('en-IN')}`;
+
+    const params = new URLSearchParams({
+        planId: planName.toLowerCase(),
+        planName: planName,
+        priceDisplay: priceDisplay,
+        rawAmountINR: basePriceINR.toString(),
+        rawAmountUSD: basePriceUSD.toString(),
+        intl: isInternational ? 'true' : 'false'
+    });
+
+    router.push(`/checkout/b2c?${params.toString()}`);
   };
 
   const handleBookDemo = () => {
-    setIsDemoModalOpen(true);
+      router.push('/book-demo');
   };
+  
+  const handleScholarship = (planName: 'Foundation' | 'Elite') => {
+      router.push(`/scholarship-test?plan=${planName}`);
+  }
 
-  const handleDemoSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmittingDemo(true);
-    
-    // Simulate API call
-    console.log("Sending email info...", demoFormData);
-
-    await new Promise(resolve => setTimeout(resolve, 1500)); 
-    
-    alert(`Demo confirmed for ${selectedDate} at ${selectedTime}. We will contact you shortly.`);
-    setIsSubmittingDemo(false);
-    setIsDemoModalOpen(false);
-    setDemoStep('calendar');
-    setSelectedDate(null);
-    setSelectedTime(null);
-    setDemoFormData({ name: '', email: '', phone: '', message: '' });
-  };
-
-  const openScholarshipModal = (plan: 'Foundation' | 'Elite') => {
-    setPlanTypeForScholarship(plan);
-    setIsScholarshipModalOpen(true);
-    setStep('details');
-    setAnswers({});
-    setScore(0);
-    setCurrentQuestionIndex(0);
-  };
-
-  const generateQuiz = async () => {
-    setStep('loading');
-    try {
-        if (!process.env.NEXT_PUBLIC_GEMINI_API_KEY) {
-            // Fallback immediately if key is missing in dev
-            console.warn("API Key missing, using fallback.");
-            setQuestions(fallbackQuestions);
-            setStep('quiz');
-            return;
-        }
-
-        const model = genAI.getGenerativeModel({ 
-            model: "gemini-1.5-flash", // Updated to stable model name just in case
-            generationConfig: { responseMimeType: "application/json" }
-        });
-
-        const prompt = `Generate 25 multiple choice questions on General Aptitude, Basic Programming Logic, and AI awareness. 
-        Structure: 10 Easy, 5 Medium, 10 Hard.
-        Format: JSON Array of objects with keys: id (number), question (string), options (array of 4 strings), answer (string - exact match to one option), difficulty (string).`;
-        
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        let text = response.text();
-        
-        // Clean JSON formatting
-        text = text.replace(/```json/g, '').replace(/```/g, '').trim();
-        const firstBracket = text.indexOf('[');
-        const lastBracket = text.lastIndexOf(']');
-        if (firstBracket !== -1 && lastBracket !== -1) {
-            text = text.substring(firstBracket, lastBracket + 1);
-        }
-
-        const data: Question[] = JSON.parse(text);
-        
-        if (!Array.isArray(data) || data.length === 0) throw new Error("Invalid data format");
-
-        setQuestions(data.slice(0, 25)); 
-        setStep('quiz');
-    } catch (error) {
-        console.error("AI Generation Failed, using fallback", error);
-        setQuestions(fallbackQuestions);
-        setStep('quiz');
-    }
-  };
-
-  const submitQuiz = () => {
-     let calculatedScore = 0;
-     questions.forEach(q => {
-         if(answers[q.id] === q.answer) {
-             calculatedScore += 4; 
-         }
-     });
-     setScore(calculatedScore);
-     setStep('result');
-     
-     const randomChars = Math.random().toString(36).substring(2, 5).toUpperCase();
-     const randomDigits = Math.floor(1000 + Math.random() * 9000);
-     const formattedCode = `SCH${randomChars}/26-27/${randomDigits}`;
-     setGeneratedCode(formattedCode);
-     // Trigger email logic here
-  };
-
-  const calculateScholarshipPercent = () => {
-      const maxScholarship = planTypeForScholarship === 'Foundation' ? 30 : 40;
-      const percentage = (score / 100) * maxScholarship;
-      return Math.min(Math.round(percentage), maxScholarship);
-  };
-
-  const handleClaimScholarship = () => {
-      const discount = calculateScholarshipPercent();
-      setScholarshipData({
-          plan: planTypeForScholarship,
-          discount: discount,
-          code: generatedCode
-      });
-      setIsScholarshipModalOpen(false);
-  };
-
-  const getGrade = () => {
-      if (score >= 90) return 'A+';
-      if (score >= 75) return 'A';
-      if (score >= 60) return 'B';
-      if (score >= 40) return 'C';
-      return 'D';
-  };
-
-  // Helper for rendering competitor values
   const renderCompetitorValue = (val: string) => {
      const v = val.toLowerCase();
      if (v === 'yes' || v === 'weekly') return <Check className="w-5 h-5 text-green-500 mx-auto" strokeWidth={3} />;
@@ -746,309 +547,7 @@ export default function InternXAIPage() {
     <div className="bg-[#020617] min-h-screen flex flex-col font-sans text-slate-100 overflow-x-hidden selection:bg-blue-500/30 selection:text-blue-200">
       <B2CHeader />
       
-      {/* FIX: Strategy 'afterInteractive' ensures script is loaded sooner than 'lazyOnload'.
-         Use 'beforeInteractive' only if absolutely critical, but 'afterInteractive' is best for payments.
-      */}
-      <Script 
-        src="https://checkout.razorpay.com/v1/checkout.js" 
-        strategy="afterInteractive" 
-        onLoad={() => console.log("Razorpay loaded")}
-        onError={() => console.error("Razorpay failed to load")}
-      />
-
-      {/* --- SCHOLARSHIP MODAL PORTAL --- */}
-      {mounted && isScholarshipModalOpen && createPortal(
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto">
-             {/* Click outside to close (optional) */}
-             <div className="absolute inset-0" onClick={() => setIsScholarshipModalOpen(false)}></div>
-
-            <div 
-                className="relative bg-[#0b0f1f] border border-white/10 w-full max-w-2xl rounded-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh] z-10 animate-in fade-in zoom-in-95 duration-200"
-                onClick={(e) => e.stopPropagation()} // FIX: Prevent closing when clicking inside
-            >
-                
-                <div className="p-6 border-b border-white/10 flex justify-between items-center bg-[#020617]">
-                    <h3 className="text-xl font-bold text-white flex items-center gap-2">
-                        <GraduationCap className="text-blue-400" /> Scholarship Test
-                    </h3>
-                    <button onClick={() => setIsScholarshipModalOpen(false)} className="text-slate-400 hover:text-white p-2 rounded-full hover:bg-white/5 transition-colors"><X /></button>
-                </div>
-
-                <div className="p-8 overflow-y-auto custom-scrollbar flex-grow">
-                    
-                    {step === 'details' && (
-                        <div className="space-y-6">
-                            <div className="text-center mb-8">
-                                <h4 className="text-2xl font-bold text-white mb-2">Apply for {planTypeForScholarship} Scholarship</h4>
-                                <p className="text-slate-400 text-sm">Enter your details to start the AI-generated assessment.</p>
-                            </div>
-                            <div className="space-y-4">
-                                <input 
-                                    type="text" 
-                                    placeholder="Full Name" 
-                                    className="w-full bg-white/5 border border-white/10 rounded-lg p-3 text-white focus:outline-none focus:border-blue-500"
-                                    value={userDetails.name}
-                                    onChange={(e) => setUserDetails({...userDetails, name: e.target.value})}
-                                />
-                                <input 
-                                    type="email" 
-                                    placeholder="Email Address" 
-                                    className="w-full bg-white/5 border border-white/10 rounded-lg p-3 text-white focus:outline-none focus:border-blue-500"
-                                    value={userDetails.email}
-                                    onChange={(e) => setUserDetails({...userDetails, email: e.target.value})}
-                                />
-                                <input 
-                                    type="tel" 
-                                    placeholder="Phone Number" 
-                                    className="w-full bg-white/5 border border-white/10 rounded-lg p-3 text-white focus:outline-none focus:border-blue-500"
-                                    value={userDetails.phone}
-                                    onChange={(e) => setUserDetails({...userDetails, phone: e.target.value})}
-                                />
-                            </div>
-                            <button 
-                                onClick={generateQuiz}
-                                disabled={!userDetails.name || !userDetails.email}
-                                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition-all disabled:opacity-50 flex justify-center items-center gap-2"
-                            >
-                                Start Assessment <ChevronRight />
-                            </button>
-                        </div>
-                    )}
-
-                    {step === 'loading' && (
-                        <div className="flex flex-col items-center justify-center py-12">
-                            <Loader2 className="w-12 h-12 text-blue-500 animate-spin mb-4" />
-                            <p className="text-white font-bold text-lg">AI is generating your unique test...</p>
-                            <p className="text-slate-500 text-sm">Curating 25 questions based on difficulty levels.</p>
-                        </div>
-                    )}
-
-                    {step === 'quiz' && questions.length > 0 && (
-                        <div className="flex flex-col h-full">
-                            <div className="flex justify-between items-center mb-6 text-sm text-slate-400">
-                                <span>Question {currentQuestionIndex + 1} of {questions.length}</span>
-                                <span className={`uppercase font-bold text-xs px-2 py-1 rounded ${
-                                    questions[currentQuestionIndex].difficulty === 'easy' ? 'bg-green-500/10 text-green-400' :
-                                    questions[currentQuestionIndex].difficulty === 'medium' ? 'bg-yellow-500/10 text-yellow-400' :
-                                    'bg-red-500/10 text-red-400'
-                                }`}>
-                                    {questions[currentQuestionIndex].difficulty}
-                                </span>
-                            </div>
-
-                            <h4 className="text-xl font-bold text-white mb-6 leading-relaxed">
-                                {questions[currentQuestionIndex].question}
-                            </h4>
-
-                            <div className="space-y-3 mb-8">
-                                {questions[currentQuestionIndex].options.map((opt, idx) => (
-                                    <button 
-                                        key={idx}
-                                        onClick={() => setAnswers({...answers, [questions[currentQuestionIndex].id]: opt})}
-                                        className={`w-full text-left p-4 rounded-xl border transition-all ${
-                                            answers[questions[currentQuestionIndex].id] === opt 
-                                            ? 'bg-blue-600 border-blue-500 text-white shadow-lg' 
-                                            : 'bg-white/5 border-white/10 text-slate-300 hover:bg-white/10'
-                                        }`}
-                                    >
-                                        {opt}
-                                    </button>
-                                ))}
-                            </div>
-
-                            <div className="mt-auto flex justify-between">
-                                <button 
-                                    disabled={currentQuestionIndex === 0}
-                                    onClick={() => setCurrentQuestionIndex(prev => prev - 1)}
-                                    className="px-6 py-2 rounded-lg bg-white/5 text-slate-400 hover:text-white disabled:opacity-30"
-                                >
-                                    Previous
-                                </button>
-                                {currentQuestionIndex < questions.length - 1 ? (
-                                    <button 
-                                        onClick={() => setCurrentQuestionIndex(prev => prev + 1)}
-                                        className="px-6 py-2 rounded-lg bg-blue-600 text-white font-bold hover:bg-blue-700"
-                                    >
-                                        Next
-                                    </button>
-                                ) : (
-                                    <button 
-                                        onClick={submitQuiz}
-                                        className="px-8 py-2 rounded-lg bg-green-600 text-white font-bold hover:bg-green-700"
-                                    >
-                                        Submit Test
-                                    </button>
-                                )}
-                            </div>
-                        </div>
-                    )}
-
-                    {step === 'result' && (
-                        <div className="text-center py-4">
-                            <div className="inline-flex justify-center items-center w-20 h-20 rounded-full bg-yellow-500/20 text-yellow-400 mb-6 border border-yellow-500/50">
-                                <Trophy className="w-10 h-10" />
-                            </div>
-                            <h2 className="text-3xl font-black text-white mb-2">Congratulations, {userDetails.name}!</h2>
-                            <p className="text-slate-400 mb-8">You have successfully completed the scholarship assessment.</p>
-
-                            <div className="grid grid-cols-3 gap-4 mb-8">
-                                <div className="bg-white/5 p-4 rounded-xl border border-white/10">
-                                    <div className="text-sm text-slate-500 mb-1">Score</div>
-                                    <div className="text-2xl font-black text-white">{score}/100</div>
-                                </div>
-                                <div className="bg-white/5 p-4 rounded-xl border border-white/10">
-                                    <div className="text-sm text-slate-500 mb-1">Grade</div>
-                                    <div className="text-2xl font-black text-blue-400">{getGrade()}</div>
-                                </div>
-                                <div className="bg-white/5 p-4 rounded-xl border border-white/10 relative overflow-hidden">
-                                    <div className="absolute inset-0 bg-green-500/10 animate-pulse"></div>
-                                    <div className="relative z-10">
-                                        <div className="text-sm text-green-400 font-bold mb-1">Scholarship</div>
-                                        <div className="text-2xl font-black text-white">{calculateScholarshipPercent()}%</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="bg-[#020617] p-6 rounded-xl border border-dashed border-slate-700 mb-8">
-                                <p className="text-xs text-slate-500 uppercase tracking-widest mb-2">Your Scholarship Code</p>
-                                <div className="text-3xl font-mono font-bold text-blue-400 tracking-wider select-all">{generatedCode}</div>
-                                <p className="text-xs text-slate-500 mt-2 flex items-center justify-center gap-1">
-                                    <Mail className="w-3 h-3" /> Sent to {userDetails.email}
-                                </p>
-                            </div>
-
-                            <button 
-                                onClick={handleClaimScholarship}
-                                className="w-full bg-white text-black font-bold py-4 rounded-xl hover:bg-slate-200 transition-all"
-                            >
-                                Claim & Close
-                            </button>
-                        </div>
-                    )}
-
-                </div>
-            </div>
-        </div>
-      , document.body)}
-
-      {/* --- DEMO MODAL PORTAL --- */}
-      {mounted && isDemoModalOpen && createPortal(
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto">
-             <div className="absolute inset-0" onClick={() => setIsDemoModalOpen(false)}></div>
-             
-            <div 
-                className="relative bg-[#0b0f1f] border border-white/10 w-full max-w-lg rounded-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh] z-10 animate-in fade-in zoom-in-95 duration-200"
-                onClick={(e) => e.stopPropagation()} // FIX: Prevent closing when clicking inside
-            >
-                <div className="p-6 border-b border-white/10 flex justify-between items-center bg-[#020617]">
-                    <h3 className="text-xl font-bold text-white flex items-center gap-2">
-                        <Calendar className="text-green-400" /> Book Free Demo
-                    </h3>
-                    <button onClick={() => setIsDemoModalOpen(false)} className="text-slate-400 hover:text-white p-2 rounded-full hover:bg-white/5 transition-colors"><X /></button>
-                </div>
-                
-                <div className="p-8 overflow-y-auto custom-scrollbar">
-                {demoStep === 'calendar' ? (
-                    <div className="space-y-6">
-                    <div>
-                        <h4 className="text-sm font-bold uppercase text-slate-400 mb-3">1. Select Date</h4>
-                        <div className="grid grid-cols-5 gap-2">
-                        {getNextDays().map((date, idx) => {
-                            const dateStr = date.toDateString();
-                            const isSelected = selectedDate === dateStr;
-                            return (
-                            <button 
-                                key={idx}
-                                onClick={() => setSelectedDate(dateStr)}
-                                className={`p-2 rounded-lg border text-center transition-all ${isSelected ? 'bg-blue-600 border-blue-500 text-white' : 'bg-white/5 border-white/10 text-slate-400 hover:bg-white/10'}`}
-                            >
-                                <div className="text-[10px] uppercase font-bold">{date.toLocaleDateString('en-US', { weekday: 'short' })}</div>
-                                <div className="text-lg font-black">{date.getDate()}</div>
-                            </button>
-                            )
-                        })}
-                        </div>
-                    </div>
-
-                    <div>
-                        <h4 className="text-sm font-bold uppercase text-slate-400 mb-3">2. Select Time</h4>
-                        <div className="grid grid-cols-3 gap-2">
-                        {['10:00 AM', '12:00 PM', '02:00 PM', '04:00 PM', '06:00 PM'].map((time) => (
-                            <button
-                                key={time}
-                                onClick={() => setSelectedTime(time)}
-                                disabled={!selectedDate}
-                                className={`py-2 rounded-lg border text-xs font-bold transition-all ${selectedTime === time ? 'bg-green-600 border-green-500 text-white' : 'bg-white/5 border-white/10 text-slate-400 hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed'}`}
-                            >
-                                {time}
-                            </button>
-                        ))}
-                        </div>
-                    </div>
-
-                    <button 
-                        disabled={!selectedDate || !selectedTime}
-                        onClick={() => setDemoStep('form')}
-                        className="w-full py-4 mt-2 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold uppercase tracking-widest rounded-xl transition-all"
-                    >
-                        Continue
-                    </button>
-                    </div>
-                ) : (
-                    <form onSubmit={handleDemoSubmit} className="space-y-4">
-                    <div className="bg-blue-900/20 border border-blue-500/20 p-3 rounded-lg flex items-center gap-3 mb-6">
-                        <Clock className="w-4 h-4 text-blue-400" />
-                        <span className="text-xs text-blue-200">
-                        {selectedDate} @ {selectedTime}
-                        </span>
-                    </div>
-
-                    <div className="space-y-4">
-                        <div className="relative">
-                        <User className="absolute left-4 top-3.5 w-4 h-4 text-slate-500" />
-                        <input 
-                            type="text" required placeholder="Full Name" 
-                            value={demoFormData.name} onChange={(e) => setDemoFormData({...demoFormData, name: e.target.value})}
-                            className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors"
-                        />
-                        </div>
-                        <div className="relative">
-                        <Mail className="absolute left-4 top-3.5 w-4 h-4 text-slate-500" />
-                        <input 
-                            type="email" required placeholder="Email Address" 
-                            value={demoFormData.email} onChange={(e) => setDemoFormData({...demoFormData, email: e.target.value})}
-                            className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors"
-                        />
-                        </div>
-                        <div className="relative">
-                        <MessageSquare className="absolute left-4 top-3.5 w-4 h-4 text-slate-500" />
-                        <input 
-                            type="text" placeholder="Topics you want to discuss..." 
-                            value={demoFormData.message} onChange={(e) => setDemoFormData({...demoFormData, message: e.target.value})}
-                            className="w-full bg-white/5 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors"
-                        />
-                        </div>
-                    </div>
-
-                    <button 
-                        type="submit" 
-                        disabled={isSubmittingDemo}
-                        className="w-full mt-6 py-4 bg-white text-slate-900 hover:bg-slate-200 font-bold uppercase tracking-widest rounded-xl transition-all shadow-lg flex justify-center items-center gap-2"
-                    >
-                        {isSubmittingDemo ? <Loader2 className="animate-spin w-4 h-4" /> : 'Confirm Booking'}
-                    </button>
-                    <button type="button" onClick={() => setDemoStep('calendar')} className="w-full py-2 text-xs text-slate-500 hover:text-white transition-colors">
-                        Back to Calendar
-                    </button>
-                    </form>
-                )}
-                </div>
-            </div>
-        </div>
-      , document.body)}
-
       <main className="flex-grow">
-          {/* Main content remains exactly same as your code */}
           <section className="relative pt-32 pb-10 px-6 overflow-hidden">
              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[80vw] h-[500px] bg-blue-600/10 rounded-full blur-[120px] -z-10" />
              <article className="max-w-7xl mx-auto text-center">
@@ -1063,7 +562,7 @@ export default function InternXAIPage() {
                 <h1 className="text-4xl md:text-5xl lg:text-7xl font-black uppercase tracking-tighter mb-6 leading-tight text-white">
                   InternX-AI<br />
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
-                    Foundation
+                    Certified
                   </span>
                 </h1>
 
@@ -1076,11 +575,17 @@ export default function InternXAIPage() {
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                  <Link href="#pricing" className="w-full sm:w-auto px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-900/20 hover:scale-105 active:scale-95 duration-200">
+                  <button 
+                    onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })}
+                    className="w-full sm:w-auto px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-900/20 hover:scale-105 active:scale-95 duration-200"
+                  >
                     <Rocket className="w-5 h-5" /> Download Brochure
-                  </Link>
-                  <Link href="#eligibility" className="w-full sm:w-auto px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold rounded-xl transition-all flex items-center justify-center gap-2 hover:scale-105 active:scale-95 duration-200">
-                    <FileCheck className="w-5 h-5" /> Check Elite Eligibility
+                  </button>
+                  <Link 
+                    href={`/scholarship-test?plan=${activeTab === 'elite' ? 'Elite' : 'Foundation'}`}
+                    className="w-full sm:w-auto px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-bold rounded-xl transition-all flex items-center justify-center gap-2 hover:scale-105 active:scale-95 duration-200"
+                  >
+                    <FileCheck className="w-5 h-5" /> Check {activeTab === 'elite' ? 'Elite' : 'Foundation'} Scholarship Test
                   </Link>
                 </div>
                 
@@ -1264,38 +769,48 @@ export default function InternXAIPage() {
                     <p className="text-slate-400">Merit-based scholarships available based on test performance.</p>
                 </div>
                 
+                <div className="flex justify-center mb-12 overflow-x-auto pb-4 no-scrollbar">
+                    <div className="flex space-x-4 min-w-max px-2">
+                        <button 
+                            onClick={() => setActiveTab('foundation')}
+                            className={`px-6 py-2 rounded-full font-bold transition-all ${activeTab === 'foundation' ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/40' : 'bg-white/5 text-slate-400 border border-white/10'}`}
+                        >
+                            Foundation (Months 1-6)
+                        </button>
+                        <button 
+                            onClick={() => setActiveTab('elite')}
+                            className={`px-6 py-2 rounded-full font-bold transition-all ${activeTab === 'elite' ? 'bg-purple-600 text-white shadow-lg shadow-purple-900/40' : 'bg-white/5 text-slate-400 border border-white/10'}`}
+                        >
+                            Elite (Months 7-12)
+                        </button>
+                    </div>
+                </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
                     
-                    <div className="bg-white/5 border border-white/10 rounded-3xl p-8 hover:border-blue-500/50 transition-all group relative flex flex-col">
+                    {/* FOUNDATION CARD */}
+                    <div className={`bg-white/5 border border-white/10 rounded-3xl p-8 hover:border-blue-500/50 transition-all group relative flex flex-col ${activeTab !== 'foundation' ? 'opacity-50 blur-[1px]' : ''}`}>
                     <h3 className="text-2xl font-bold mb-2 text-white">Foundation</h3>
                     <p className="text-slate-400 text-sm mb-6">6 Months • Beginner Friendly</p>
                     
                     <div className="flex items-end gap-2 mb-2">
-                        {scholarshipData?.plan === 'Foundation' ? (
-                            <div className="flex flex-col">
-                                <span className="text-sm text-slate-500 line-through decoration-red-500">₹1,49,999</span>
-                                <div className="flex items-end gap-2">
-                                    <div className="text-4xl font-black text-green-400">₹{(149999 * (1 - scholarshipData.discount/100)).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</div>
-                                    <div className="text-xs font-bold text-green-500 mb-1 animate-pulse">({scholarshipData.discount}% OFF Applied)</div>
-                                </div>
-                            </div>
-                        ) : (
-                            <div className="text-4xl font-black text-white">₹1,49,999</div>
-                        )}
+                        <div className="text-4xl font-black text-white">{isInternational ? '$1,999' : '₹1,49,999'}</div>
                     </div>
 
                     <div className="mb-6">
                         <button 
-                            onClick={() => openScholarshipModal('Foundation')}
+                            onClick={() => handleScholarship('Foundation')}
                             className="inline-flex items-center gap-2 bg-green-500/10 border border-green-500/20 text-green-400 text-xs font-bold px-4 py-2 rounded-full hover:bg-green-500/20 transition-colors"
                         >
                             <Zap className="w-3 h-3" /> Get Scholarship (Max 30%)
                         </button>
                     </div>
 
-                    <div className="mb-6 p-3 bg-blue-500/10 rounded-lg text-xs font-bold text-blue-400 text-center">
-                        EMI starts at ₹5,208/month (India Only)
-                    </div>
+                    {!isInternational && (
+                        <div className="mb-6 p-3 bg-blue-500/10 rounded-lg text-xs font-bold text-blue-400 text-center">
+                            EMI starts at ₹5,208/month (India Only)
+                        </div>
+                    )}
 
                     <ul className="space-y-3 mb-8 flex-grow">
                         <li className="flex gap-2 text-sm text-slate-300"><CheckCircle2 className="w-4 h-4 text-green-400 shrink-0" /> Weekend Live Classes</li>
@@ -1305,7 +820,7 @@ export default function InternXAIPage() {
                     
                     <div className="space-y-3 mt-auto">
                         <button 
-                            onClick={() => handlePayment('Foundation', 149999)}
+                            onClick={() => handleRegister('Foundation')}
                             className="w-full py-4 bg-white text-black font-bold rounded-xl hover:bg-slate-200 transition-colors shadow-lg shadow-white/10"
                         >
                             Register Now
@@ -1319,28 +834,19 @@ export default function InternXAIPage() {
                     </div>
                     </div>
 
-                    <div className="bg-[#0b0f1f] border border-purple-500/30 rounded-3xl p-8 relative overflow-hidden group flex flex-col">
+                    {/* ELITE CARD */}
+                    <div className={`bg-[#0b0f1f] border border-purple-500/30 rounded-3xl p-8 relative overflow-hidden group flex flex-col ${activeTab !== 'elite' ? 'opacity-50 blur-[1px]' : ''}`}>
                     <div className="absolute top-0 right-0 bg-purple-600 text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl uppercase">Career Accelerator</div>
                     <h3 className="text-2xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">Elite</h3>
                     <p className="text-slate-400 text-sm mb-6">12 Months • Full Career Path</p>
                     
                     <div className="flex items-end gap-2 mb-2">
-                        {scholarshipData?.plan === 'Elite' ? (
-                            <div className="flex flex-col">
-                                <span className="text-sm text-slate-500 line-through decoration-red-500">₹2,49,999</span>
-                                <div className="flex items-end gap-2">
-                                    <div className="text-4xl font-black text-green-400">₹{(249999 * (1 - scholarshipData.discount/100)).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</div>
-                                    <div className="text-xs font-bold text-green-500 mb-1 animate-pulse">({scholarshipData.discount}% OFF Applied)</div>
-                                </div>
-                            </div>
-                        ) : (
-                            <div className="text-4xl font-black text-white">₹2,49,999</div>
-                        )}
+                        <div className="text-4xl font-black text-white">{isInternational ? '$3,499' : '₹2,49,999'}</div>
                     </div>
 
                     <div className="mb-6">
                         <button 
-                            onClick={() => openScholarshipModal('Elite')}
+                            onClick={() => handleScholarship('Elite')}
                             className="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-bold px-4 py-2 rounded-full animate-pulse hover:animate-none hover:bg-purple-500/20 transition-colors"
                         >
                             <Zap className="w-3 h-3" /> Get Scholarship (Max 40%)
@@ -1359,7 +865,7 @@ export default function InternXAIPage() {
                     
                     <div className="space-y-3 mt-auto">
                         <button 
-                            onClick={() => handlePayment('Elite', 249999)}
+                            onClick={() => handleRegister('Elite')}
                             className="w-full py-4 bg-purple-600 text-white font-bold rounded-xl hover:bg-purple-700 transition-colors shadow-lg shadow-purple-600/20"
                         >
                             Register Now
@@ -1374,197 +880,10 @@ export default function InternXAIPage() {
                     </div>
 
                 </div>
-                </div>
+               </div>
            </section>
 
-           <section className="py-24 px-6">
-          <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <div>
-              <div className="bg-red-500/10 border border-red-500/20 p-8 rounded-2xl mb-8">
-                <h3 className="text-red-400 font-black uppercase tracking-widest text-sm mb-4">The Problem</h3>
-                <ul className="space-y-4">
-                  <li className="flex gap-3 text-slate-300 text-sm md:text-base"><XCircle className="w-5 h-5 text-red-500 shrink-0" /> Most learners jump straight into advanced AI and fail.</li>
-                  <li className="flex gap-3 text-slate-300 text-sm md:text-base"><XCircle className="w-5 h-5 text-red-500 shrink-0" /> Certificates without proof don&apos;t help in hiring.</li>
-                  <li className="flex gap-3 text-slate-300 text-sm md:text-base"><XCircle className="w-5 h-5 text-red-500 shrink-0" /> Recruiters care about what you&apos;ve built, not what you&apos;ve watched.</li>
-                </ul>
-              </div>
-              <div>
-                <h2 className="text-2xl md:text-3xl font-bold mb-4 text-white">The Foundation Philosophy</h2>
-                <p className="text-slate-400 mb-6 text-sm md:text-base">Foundation is not the destination. It is the qualification layer for Elite. We start from zero, build fundamentals correctly, and create verifiable proof.</p>
-                <div className="p-4 bg-blue-500/10 border-l-4 border-blue-500 rounded-r-lg">
-                  <p className="text-blue-400 font-bold text-sm md:text-base">&quot;Foundation is the eligibility layer. Elite is the acceleration layer.&quot;</p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="relative border border-white/10 rounded-3xl p-6 md:p-8 bg-gradient-to-br from-slate-900 to-slate-800 shadow-2xl">
-              <h3 className="text-white font-bold mb-6 text-center border-b border-white/10 pb-4">Career Roadmap</h3>
-              <div className="space-y-0">
-                {[
-                  { title: "Learner", desc: "Start with zero coding knowledge" },
-                  { title: "Builder", desc: "Ship real industry projects" },
-                  { title: "Portfolio Pro", desc: "Publish to GitHub & ResumeNFT" },
-                  { title: "Interview Ready", desc: "Crack technical rounds" },
-                  { title: "Elite Eligible", desc: "Unlock Advanced AI Careers" },
-                ].map((item, i) => (
-                  <div key={i} className="flex gap-4 group">
-                    <div className="flex flex-col items-center">
-                        <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-xs font-bold text-white group-hover:scale-110 transition-transform shrink-0 z-10 border-4 border-slate-900">
-                            {i + 1}
-                        </div>
-                        {i !== 4 && <div className="w-0.5 h-12 bg-white/10 group-hover:bg-blue-500/50 transition-colors"></div>}
-                    </div>
-                    <div className="pb-8">
-                        <h4 className="text-white font-bold text-sm group-hover:text-blue-400 transition-colors">{item.title}</h4>
-                        <p className="text-xs text-slate-400">{item.desc}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="py-24 px-6">
-          <div className="max-w-6xl mx-auto">
-            <div className="flex justify-center mb-12 overflow-x-auto pb-4 no-scrollbar">
-              <div className="flex space-x-4 min-w-max px-2">
-                <button 
-                  onClick={() => setActiveTab('foundation')}
-                  className={`px-6 py-2 rounded-full font-bold transition-all ${activeTab === 'foundation' ? 'bg-blue-600 text-white shadow-lg shadow-blue-900/40' : 'bg-white/5 text-slate-400 border border-white/10'}`}
-                >
-                  Foundation (Months 1-6)
-                </button>
-                <button 
-                  onClick={() => setActiveTab('elite')}
-                  className={`px-6 py-2 rounded-full font-bold transition-all ${activeTab === 'elite' ? 'bg-purple-600 text-white shadow-lg shadow-purple-900/40' : 'bg-white/5 text-slate-400 border border-white/10'}`}
-                >
-                  Elite (Months 7-12)
-                </button>
-              </div>
-            </div>
-
-            {activeTab === 'foundation' ? (
-              <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                  <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4">
-                  <div>
-                    <h2 className="text-3xl md:text-6xl font-black uppercase tracking-tighter text-white">Foundation Syllabus</h2>
-                    <p className="text-blue-400 font-bold uppercase tracking-widest mt-2 text-sm">Weekend-Only • Assessed • Certified</p>
-                  </div>
-                  <div className="flex flex-col gap-2">
-                      <span className="bg-green-500/10 text-green-400 px-4 py-2 rounded-full text-xs font-bold border border-green-500/20 text-center">
-                        Beginner Friendly • No Coding Required
-                      </span>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {foundationSyllabus.map((mod, i) => (
-                    <div key={i} className="bg-slate-900/50 border border-white/10 rounded-2xl p-6 hover:border-blue-500/50 transition-all group flex flex-col h-full">
-                      <div className="flex justify-between items-start mb-4">
-                        <div className="bg-blue-900/20 p-3 rounded-lg text-blue-400 group-hover:bg-blue-600 group-hover:text-white transition-colors">{mod.icon}</div>
-                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">{mod.month}</span>
-                      </div>
-                      <h3 className="text-lg font-bold text-white mb-3">{mod.title}</h3>
-                      <ul className="space-y-2 mb-6 flex-grow">
-                        {mod.topics.map((t, idx) => (
-                          <li key={idx} className="flex gap-2 text-xs text-slate-400">
-                            <div className="w-1 h-1 bg-blue-500 rounded-full mt-1.5 shrink-0" /> {t}
-                          </li>
-                        ))}
-                      </ul>
-                      <div className="pt-4 border-t border-white/5 bg-white/5 -mx-6 -mb-6 p-4 mt-auto">
-                        <p className="text-[10px] uppercase font-bold text-slate-500 mb-1">Industry Project</p>
-                        <p className="text-xs font-bold text-blue-300">{mod.project}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ) : (
-              <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-                  <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4">
-                  <div>
-                    <h2 className="text-3xl md:text-6xl font-black uppercase tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">Elite Syllabus</h2>
-                    <p className="text-purple-400 font-bold uppercase tracking-widest mt-2 text-sm">Advanced AI Engineering • System Design</p>
-                  </div>
-                  <div>
-                      <span className="bg-purple-500/10 text-purple-400 px-4 py-2 rounded-full text-xs font-bold border border-purple-500/20">
-                        Selection Based Only • Global Readiness
-                      </span>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {eliteSyllabus.map((mod, i) => (
-                    <div key={i} className="bg-[#0b0f1f] border border-purple-500/20 rounded-2xl p-6 hover:border-purple-500/60 transition-all group flex flex-col h-full">
-                      <div className="flex justify-between items-start mb-4">
-                        <div className="bg-purple-900/20 p-3 rounded-lg text-purple-400 group-hover:bg-purple-600 group-hover:text-white transition-colors">{mod.icon}</div>
-                        <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">{mod.month}</span>
-                      </div>
-                      <h3 className="text-lg font-bold text-white mb-3">{mod.title}</h3>
-                      <ul className="space-y-2 mb-6 flex-grow">
-                        {mod.topics.map((t, idx) => (
-                          <li key={idx} className="flex gap-2 text-xs text-slate-400">
-                            <div className="w-1 h-1 bg-purple-500 rounded-full mt-1.5 shrink-0" /> {t}
-                          </li>
-                        ))}
-                      </ul>
-                      <div className="pt-4 border-t border-white/5 bg-purple-900/10 -mx-6 -mb-6 p-4 mt-auto">
-                        <p className="text-[10px] uppercase font-bold text-slate-500 mb-1">Enterprise Project</p>
-                        <p className="text-xs font-bold text-purple-300">{mod.project}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        </section>
-
-        <section id="eligibility" className="py-24 px-6 relative overflow-hidden bg-gradient-to-b from-[#020617] to-indigo-950/20">
-          <div className="max-w-5xl mx-auto border border-blue-500/30 bg-[#03081a] rounded-3xl p-8 md:p-12 relative z-10 shadow-2xl shadow-blue-900/20">
-            <div className="absolute top-0 right-0 p-4">
-               <Lock className="w-12 h-12 text-white/5" />
-            </div>
-            
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter mb-4 text-white">
-                The Qualification <span className="text-blue-500">Gate</span>
-              </h2>
-              <p className="text-slate-400 max-w-2xl mx-auto text-sm md:text-base">
-                Serious learners only. You must pass the <strong>Unified Qualification Test</strong>. 
-                This ensures outsourcing and copy-pasting shortcuts do not work.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="text-center p-6 bg-white/5 rounded-2xl border border-white/10 hover:border-blue-500/50 transition-colors">
-                <Code2 className="w-10 h-10 mx-auto text-blue-400 mb-4" />
-                <h4 className="font-bold text-white mb-2">Build from Scratch</h4>
-                <p className="text-xs text-slate-400">4-6 hour live practical build. You build a real AI app.</p>
-              </div>
-              <div className="text-center p-6 bg-white/5 rounded-2xl border border-white/10 hover:border-purple-500/50 transition-colors">
-                <Shield className="w-10 h-10 mx-auto text-purple-400 mb-4" />
-                <h4 className="font-bold text-white mb-2">Anti-Cheat Design</h4>
-                <p className="text-xs text-slate-400">Randomized datasets. Group cheating is mathematically impossible.</p>
-              </div>
-              <div className="text-center p-6 bg-white/5 rounded-2xl border border-white/10 hover:border-green-500/50 transition-colors">
-                <Users className="w-10 h-10 mx-auto text-green-400 mb-4" />
-                <h4 className="font-bold text-white mb-2">Live Viva Defense</h4>
-                <p className="text-xs text-slate-400">Explain your code logic live. Even if the code works.</p>
-              </div>
-            </div>
-
-            <div className="mt-12 text-center">
-              <div className="inline-block bg-white/10 px-6 py-3 rounded-xl border border-white/10">
-                <p className="font-bold text-white text-sm md:text-base">Outcome: <span className="text-green-400">Pass = Elite Eligible</span> | <span className="text-red-400">Fail = Foundation Cert Only</span></p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="py-24 px-6 bg-slate-900/20">
+           <section className="py-24 px-6 bg-slate-900/20">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-8">
               <h2 className="text-3xl md:text-5xl font-black uppercase tracking-tighter text-white">Earnings Projection</h2>
@@ -1737,7 +1056,7 @@ export default function InternXAIPage() {
                              <div className="p-4 md:p-6 text-sm text-slate-300 border-x border-white/5 bg-blue-900/5 font-mono">
                                 {row.item === "Scholarship (Test-based)" ? (
                                     <button 
-                                        onClick={() => openScholarshipModal('Foundation')}
+                                        onClick={() => handleScholarship('Foundation')}
                                         className="text-blue-400 underline decoration-dashed underline-offset-4 hover:text-blue-300 font-bold cursor-pointer"
                                     >
                                         {row.foundation}
@@ -1749,7 +1068,7 @@ export default function InternXAIPage() {
                              <div className="p-4 md:p-6 text-sm text-white font-bold bg-purple-900/5 font-mono">
                                 {row.item === "Scholarship (Test-based)" ? (
                                     <button 
-                                        onClick={() => openScholarshipModal('Elite')}
+                                        onClick={() => handleScholarship('Elite')}
                                         className="text-purple-400 underline decoration-dashed underline-offset-4 hover:text-purple-300 font-bold cursor-pointer"
                                     >
                                         {row.elite}
@@ -2051,13 +1370,19 @@ export default function InternXAIPage() {
           <h2 className="text-4xl md:text-6xl font-black uppercase mb-8 text-white leading-tight">Start where you belong.<br/><span className="text-blue-500">Advance</span> when you&apos;re ready.</h2>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <button 
-              onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })}
+              onClick={() => {
+                  setActiveTab('foundation');
+                  document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' });
+              }}
               className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition-all shadow-lg shadow-blue-900/50"
             >
               Start with Foundation
             </button>
             <button 
-              onClick={() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' })}
+              onClick={() => {
+                  setActiveTab('elite');
+                  document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' });
+              }}
               className="px-8 py-4 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-xl transition-all shadow-lg shadow-purple-900/50"
             >
               Start with Elite
