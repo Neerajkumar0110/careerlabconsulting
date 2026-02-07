@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Play, ArrowUpRight, X } from 'lucide-react';
 
@@ -14,7 +14,7 @@ const stories = [
     metric1: { value: "45%", label: "reduction in hiring cost" },
     metric2: { value: "98.2%", label: "client satisfaction rate" },
     image: "https://images.unsplash.com/photo-1556761175-b413da4baf72?w=800&q=80",
-    videoUrl: "https://videocdn.cdnpk.net/videos/3225a2e8-6132-5b47-857a-89863ddd26d7/horizontal/previews/clear/large.mp4?token=exp=1769270351~hmac=f90b2a82e11b6dcf620181cc2aab67324bfb29283bb8ac9412ce652c63cfdd0f" 
+    videoUrl: "https://www.youtube.com/shorts/pJnxRMXCMdk?feature=share" 
   },
   {
     id: 2,
@@ -23,7 +23,7 @@ const stories = [
     metric1: { value: "120%", label: "increase in lead volume" },
     metric2: { value: "3.5x", label: "ROI in first quarter" },
     image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80",
-    videoUrl: "https://videocdn.cdnpk.net/videos/73b2d669-e98b-5002-ac5d-b56887129776/horizontal/previews/clear/large.mp4?token=exp=1769270425~hmac=eb81514515a3269743b774996e3515454e099e2c9e1425e4fce37a3385d6266c"
+    videoUrl: "https://www.youtube.com/shorts/_NIWQjjMvfw?feature=share"
   }
 ];
 
@@ -31,13 +31,27 @@ export default function SuccessStories() {
   const [current, setCurrent] = useState(0);
   const [isVideoOpen, setIsVideoOpen] = useState(false);
 
-  const nextSlide = () => setCurrent((prev) => (prev === stories.length - 1 ? 0 : prev + 1));
-  const prevSlide = () => setCurrent((prev) => (prev === 0 ? stories.length - 1 : prev - 1));
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsVideoOpen(false);
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, []);
+
+  const nextSlide = () => {
+    setIsVideoOpen(false); 
+    setCurrent((prev) => (prev === stories.length - 1 ? 0 : prev + 1));
+  };
+
+  const prevSlide = () => {
+    setIsVideoOpen(false);
+    setCurrent((prev) => (prev === 0 ? stories.length - 1 : prev - 1));
+  };
 
   return (
     <section className="bg-[#020617] py-20 px-4 sm:px-6 overflow-hidden">
       <div className="max-w-7xl mx-auto">
-        
         <div className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-8">
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
@@ -77,9 +91,9 @@ export default function SuccessStories() {
               className="grid grid-cols-1 lg:grid-cols-2"
             >
               <div className="p-8 sm:p-12 md:p-16 flex flex-col justify-center">
-                <motion.h2 className="text-2xl sm:text-4xl font-bold text-white mb-6 leading-snug">
+                <h2 className="text-2xl sm:text-4xl font-bold text-white mb-6 leading-snug">
                   {stories[current].title}
-                </motion.h2>
+                </h2>
                 <p className="text-slate-400 text-base sm:text-lg mb-8 leading-relaxed">
                   {stories[current].description}
                 </p>
@@ -99,40 +113,36 @@ export default function SuccessStories() {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => window.open(`https://wa.me/${OWNER_PHONE}?text=I am interested in the ${stories[current].title} case study`, '_blank')}
-                  className="group relative inline-flex items-center justify-between gap-4 px-8 py-4 bg-white text-black font-bold rounded-2xl transition-all hover:bg-blue-50"
+                  className="group relative inline-flex items-center justify-between gap-4 px-8 py-4 bg-white text-black font-bold rounded-2xl transition-all hover:bg-blue-50 w-fit"
                 >
                   <span className="flex items-center gap-2">
                     Read Case Study
                     <ArrowUpRight size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                   </span>
-                  <div className="w-8 h-8 rounded-lg bg-black/5 flex items-center justify-center">
-                    <span className="text-[10px] text-black/40 italic">PDF</span>
-                  </div>
                 </motion.button>
               </div>
 
-              <div className="relative min-h-[350px] lg:h-auto group overflow-hidden">
+              <div className="relative min-h-[350px] lg:h-auto group overflow-hidden cursor-pointer" onClick={() => setIsVideoOpen(true)}>
                 <img 
                   src={stories[current].image} 
                   alt="Case Study" 
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent opacity-60 lg:bg-gradient-to-r lg:opacity-100" />
+                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors" />
                 
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <motion.button 
-                    onClick={() => setIsVideoOpen(true)}
+                  <motion.div 
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     className="relative w-20 h-20 sm:w-28 sm:h-28 flex items-center justify-center"
                   >
-                    <div className="absolute inset-0 bg-blue-600/30 blur-2xl rounded-full animate-pulse" />
-                    <div className="relative w-full h-full bg-white/10 backdrop-blur-xl border border-white/20 rounded-[2.5rem] flex items-center justify-center group/btn transition-all hover:bg-white/20">
-                       <div className="w-12 h-12 sm:w-16 sm:h-16 bg-white rounded-2xl flex items-center justify-center shadow-2xl">
-                          <Play fill="#020617" className="text-[#020617] ml-1 sm:size-8" />
-                       </div>
+                    <div className="absolute inset-0 bg-blue-600/40 blur-2xl rounded-full animate-pulse" />
+                    <div className="relative w-full h-full bg-white/10 backdrop-blur-xl border border-white/20 rounded-[2.5rem] flex items-center justify-center transition-all hover:bg-white/20">
+                        <div className="w-12 h-12 sm:w-16 sm:h-16 bg-white rounded-2xl flex items-center justify-center shadow-2xl">
+                           <Play fill="#020617" className="text-[#020617] ml-1 sm:size-8" />
+                        </div>
                     </div>
-                  </motion.button>
+                  </motion.div>
                 </div>
               </div>
             </motion.div>
@@ -144,31 +154,35 @@ export default function SuccessStories() {
         {isVideoOpen && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
             <motion.div 
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              initial={{ opacity: 0 }} 
+              animate={{ opacity: 1 }} 
+              exit={{ opacity: 0 }}
               onClick={() => setIsVideoOpen(false)}
               className="absolute inset-0 bg-black/95 backdrop-blur-md"
             />
+            
             <motion.div 
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="relative w-full max-w-4xl aspect-video bg-black rounded-3xl overflow-hidden shadow-2xl border border-white/10"
+              className="relative w-full max-w-5xl aspect-video bg-black rounded-2xl overflow-hidden shadow-2xl border border-white/10 z-10"
             >
               <button 
                 onClick={() => setIsVideoOpen(false)}
-                className="absolute top-4 right-4 z-20 p-2 bg-black/50 hover:bg-white/20 text-white rounded-full transition-colors backdrop-blur-md"
+                className="absolute top-4 right-4 z-50 p-2 bg-black/50 hover:bg-red-500 text-white rounded-full transition-colors backdrop-blur-md"
               >
                 <X size={24} />
               </button>
               
               <video 
-                key={stories[current].videoUrl}
+                key={stories[current].videoUrl} 
                 className="w-full h-full object-contain"
                 controls
                 autoPlay
                 playsInline
               >
                 <source src={stories[current].videoUrl} type="video/mp4" />
+                Your browser does not support the video tag.
               </video>
             </motion.div>
           </div>

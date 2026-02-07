@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { 
-  Layers, Box, Cpu, CheckCircle2, ArrowRight, Zap, TrendingUp, Search, Globe, Users, ShieldCheck, GraduationCap 
+  Layers, Box, Cpu, CheckCircle2, Zap, TrendingUp, Search, Globe, Users, ShieldCheck, GraduationCap 
 } from 'lucide-react';
 
 const productData = {
@@ -41,10 +41,12 @@ const B2BProductTabs = () => {
 
   const getFilteredProducts = () => {
     if (activeTab === 'all') {
-        return [...productData.single.slice(0, 4), ...productData.combo.slice(0, 2), ...productData.clcone];
+      return [...productData.single, ...productData.combo, ...productData.clcone];
     }
     return productData[activeTab as keyof typeof productData] || [];
   };
+
+  const filteredProducts = getFilteredProducts();
 
   return (
     <section className="py-24 bg-[#020617] text-white overflow-hidden" id="enterprise-matrix">
@@ -68,7 +70,6 @@ const B2BProductTabs = () => {
           </motion.p>
         </div>
 
-        {/* Tab Navigation */}
         <div className="flex flex-wrap justify-center gap-3 mb-16">
           {tabs.map((tab) => (
             <button
@@ -87,7 +88,6 @@ const B2BProductTabs = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
           
-          {/* Left: Product Grid */}
           <div className="lg:col-span-7">
             <AnimatePresence mode="wait">
               <motion.div
@@ -96,16 +96,16 @@ const B2BProductTabs = () => {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 20 }}
                 transition={{ duration: 0.4 }}
-                className="grid grid-cols-1 md:grid-cols-2 gap-4"
+                className={`grid gap-4 ${activeTab === 'all' ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-2' : 'grid-cols-1 md:grid-cols-2'}`}
               >
-                {getFilteredProducts().map((product, idx) => (
+                {filteredProducts.map((product, idx) => (
                   <motion.div 
                     key={`${activeTab}-${idx}`}
                     onMouseEnter={() => setHoveredImage(product.img)}
                     className="group relative p-6 rounded-2xl bg-gray-900/30 border border-gray-800/50 hover:bg-blue-600/5 hover:border-blue-500/50 transition-all cursor-pointer overflow-hidden"
                   >
                     <div className="flex items-start gap-4">
-                      <div className="p-3 rounded-xl bg-blue-500/10 text-blue-500 group-hover:scale-110 group-hover:bg-blue-500 group-hover:text-white transition-all duration-300">
+                      <div className="p-3 rounded-xl bg-blue-500/10 text-blue-500 group-hover:scale-110 group-hover:bg-blue-500 group-hover:text-white transition-all duration-300 shrink-0">
                         {product.icon}
                       </div>
                       <div>
@@ -123,7 +123,6 @@ const B2BProductTabs = () => {
             </AnimatePresence>
           </div>
 
-          {/* Right: Dynamic Visual Display */}
           <div className="lg:col-span-5 relative hidden lg:block">
             <div className="sticky top-32">
               <motion.div 
@@ -155,7 +154,7 @@ const B2BProductTabs = () => {
                     <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
                     <span className="text-blue-400 text-xs font-bold uppercase tracking-widest">Active Preview</span>
                   </div>
-                  <h4 className="text-white text-xl font-semibold">Intelligence in Motion</h4>
+                  <h4 className="text-white text-xl font-semibold uppercase tracking-tight">Intelligence in Motion</h4>
                   <p className="text-gray-400 text-sm mt-2 leading-snug">
                     Visualizing how our {activeTab === 'clcone' ? 'Master Product' : 'modular stacks'} unify complex business workflows.
                   </p>
