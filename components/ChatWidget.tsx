@@ -41,10 +41,10 @@ export default function ChatWidget() {
     <div
       ref={containerRef}
       style={{
-        position: "fixed",
+        position: "sticky", 
         bottom: "20px",
         right: "20px",
-        width: "80px",
+        width: "80px", 
         height: "80px",
         zIndex: 2147483647, 
         transition: "all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)",

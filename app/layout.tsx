@@ -4,6 +4,7 @@ import "./globals.css";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import Script from "next/script";
 import ChatWidget from "@/components/ChatWidget";
+import BackToTop from "@/components/BackToTop";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -105,9 +106,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main className="min-h-screen">
           {children}
         </main>
-        
-        <SpeedInsights />
         <ChatWidget />
+        <BackToTop />
+        <SpeedInsights />
       </body>
     </html>
   );
