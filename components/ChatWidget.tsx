@@ -1,21 +1,26 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 export default function ChatWidget() {
   const CHATBOT_URL = "https://manee-ai.vercel.app/embed"; 
-  
   const containerRef = useRef<HTMLDivElement>(null);
 
+  const [mounted, setMounted] = useState(false);
+
   useEffect(() => {
+    setMounted(true);
+    
     const handleMessage = (event: MessageEvent) => {
+
       if (event.data.type === "MANEE_RESIZE") {
         if (containerRef.current) {
           if (event.data.status === "open") {
             containerRef.current.style.width = "400px";
             containerRef.current.style.height = "600px";
             containerRef.current.style.borderRadius = "12px";
-            containerRef.current.style.boxShadow = "0 10px 25px rgba(0,0,0,0.2)";
+            containerRef.current.style.boxShadow = "0 10px 25px rgba(0,0,0,0.3)"; 
           } else {
             containerRef.current.style.width = "80px";
             containerRef.current.style.height = "80px";
@@ -30,20 +35,23 @@ export default function ChatWidget() {
     return () => window.removeEventListener("message", handleMessage);
   }, []);
 
-  return (
+  if (!mounted) return null;
+
+  return createPortal(
     <div
       ref={containerRef}
       style={{
-        position: "fixed",  
+        position: "fixed",
         bottom: "20px",
         right: "20px",
-        width: "80px",      
-        height: "80px",     
-        zIndex: 99999,      
-        transition: "width 0.3s ease, height 0.3s ease, border-radius 0.3s ease, box-shadow 0.3s ease",
+        width: "80px",
+        height: "80px",
+        zIndex: 2147483647, 
+        transition: "all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)",
         borderRadius: "50%",
-        overflow: "hidden",  
-        backgroundColor: "transparent"
+        overflow: "hidden",
+        backgroundColor: "transparent",
+        boxShadow: "0 4px 12px rgba(0,0,0,0.15)"
       }}
     >
       <iframe
@@ -55,6 +63,7 @@ export default function ChatWidget() {
         }}
         title="Manee AI Chatbot"
       />
-    </div>
+    </div>,
+    document.body 
   );
 }
