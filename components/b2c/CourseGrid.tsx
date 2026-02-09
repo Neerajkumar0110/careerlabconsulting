@@ -13,7 +13,7 @@ interface Internship {
 
 const allInternships: Record<string, Internship[]> = {
   "AI & Data": [
-    { title: "InternX-AI Developer", id: "ai-dev", videoId: "whqLvigQWoE", image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=800" },
+    { title: "InternX-AI", id: "ai-dev", videoId: "whqLvigQWoE", image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=800" },
     { title: "InternX-Data Engineer", id: "data-eng", videoId: "kriafQfqGZE", image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800" },
     { title: "InternX-AI Quality & Safety Engineer", id: "ai-safety", videoId: "vViMFjvVT9E", image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=800" },
   ],
