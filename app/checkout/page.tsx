@@ -94,7 +94,7 @@ function CheckoutContent() {
 
     try {
       if (paymentMethod === 'phonepe') {
-        const res = await fetch('/api/phonepe/initiate', {
+        const res = await fetch('/api/phonepe/initiate', { 
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

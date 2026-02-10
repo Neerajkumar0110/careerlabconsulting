@@ -44,7 +44,7 @@ export default function ChatWidget() {
   if (!mounted) return null;
 
   return createPortal(
-    <div style={{ position: "fixed", bottom: "20px", right: "20px", zIndex: 2147483647 }}>
+    <div style={{ position: "fixed", bottom: "30px", right: "30px", zIndex: 2147483647 }}>
       
       {showBubble && !isOpen && (
         <div 
