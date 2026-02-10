@@ -44,7 +44,7 @@ export default function ChatWidget() {
   if (!mounted) return null;
 
   return createPortal(
-    <div style={{ position: "fixed", bottom: "30px", right: "30px", zIndex: 2147483647 }}>
+    <div style={{ position: "fixed", bottom: "30px", right: "30px", zIndex: "2147483647 !important" as any }}>
       
       {showBubble && !isOpen && (
         <div 
@@ -56,7 +56,7 @@ export default function ChatWidget() {
               <div>
                 <h3 className="font-bold text-[#d1202e] text-sm mb-1">Need Help?</h3>
                 <p className="text-xs text-gray-600 leading-relaxed">
-                  Come chat with me! I am an <b>Autonomous AI Chatbot</b>. 
+                  Come chat with me! I am <b>Manee</b>. 
                   If you have any confusion about our courses or services, just ask me! 🚀
                 </p>
               </div>
