@@ -446,9 +446,12 @@ export default function Navbar() {
         <div className="max-w-[1440px] mx-auto px-6 h-full flex items-center justify-between">
           <div className="flex items-center gap-10 h-full">
             <Link href="/" className="flex-shrink-0" aria-label="Home">
-              <img src="/logo.png" alt="Career Lab Consulting Logo" className="h-7 w-auto" />
+              <img src="/logo.png" alt="Career Lab Consulting Logo" 
+                className="object-contain h-9 w-auto"
+                loading="eager"
+              />
             </Link>
-
+            
             <div className="hidden xl:flex items-center gap-6 h-full">
               {['products', 'services', 'industries'].map((menu) => (
                 <div key={menu} className="h-full flex items-center" 

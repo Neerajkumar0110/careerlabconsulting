@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Check, Zap, Crown, Building2, 
   Calendar, Rocket, ArrowRight, 
@@ -18,8 +18,10 @@ type PricingCategory = 'Single Product' | 'Combo' | 'All-in-One';
 
 interface PricingTier {
   name: string;
-  price: string;
-  rawPrice?: number;
+  priceINR: string;
+  priceUSD: string;
+  rawPriceINR?: number;
+  rawPriceUSD?: number;
   features: string[];
   icon: any;
   isEnterprise?: boolean;
@@ -28,22 +30,22 @@ interface PricingTier {
 
 const CATEGORIES: Record<PricingCategory, PricingTier[]> = {
   'Single Product': [
-    { name: 'Starter', price: '₹25,000', rawPrice: 2500000, icon: Rocket, description: 'Perfect for small teams starting their journey.', features: ['1 Core Module', 'Email Support', 'Basic Analytics', 'Single User Access'] },
-    { name: 'Growth', price: '₹50,000', rawPrice: 5000000, icon: Zap, description: 'Scaling tools for growing businesses.', features: ['3 Core Modules', 'Priority Support', 'Advanced Analytics', '5 User Access'] },
-    { name: 'Advanced', price: '₹1,00,000', rawPrice: 10000000, icon: Crown, description: 'The power of full modular control.', features: ['All Core Modules', '24/7 Support', 'Custom Reporting', 'Unlimited Users'] },
-    { name: 'Enterprise', price: 'Custom', isEnterprise: true, icon: Building2, description: 'Custom infrastructure for big players.', features: ['Dedicated Infra', 'SLA Guarantee', 'Custom Workflows', 'On-Premise Option'] },
+    { name: 'Starter', priceINR: '₹25,000', priceUSD: '$350', rawPriceINR: 2500000, rawPriceUSD: 35000, icon: Rocket, description: 'Perfect for small teams starting their journey.', features: ['1 Core Module', 'Email Support', 'Basic Analytics', 'Single User Access'] },
+    { name: 'Growth', priceINR: '₹50,000', priceUSD: '$650', rawPriceINR: 5000000, rawPriceUSD: 65000, icon: Zap, description: 'Scaling tools for growing businesses.', features: ['3 Core Modules', 'Priority Support', 'Advanced Analytics', '5 User Access'] },
+    { name: 'Advanced', priceINR: '₹1,00,000', priceUSD: '$1,250', rawPriceINR: 10000000, rawPriceUSD: 125000, icon: Crown, description: 'The power of full modular control.', features: ['All Core Modules', '24/7 Support', 'Custom Reporting', 'Unlimited Users'] },
+    { name: 'Enterprise', priceINR: 'Custom', priceUSD: 'Custom', isEnterprise: true, icon: Building2, description: 'Custom infrastructure for big players.', features: ['Dedicated Infra', 'SLA Guarantee', 'Custom Workflows', 'On-Premise Option'] },
   ],
   'Combo': [
-    { name: 'Starter', price: '₹50,000', rawPrice: 5000000, icon: Rocket, description: 'Bundled essentials for startups.', features: ['2 Product Suite', 'Shared Data Lake', 'Basic Automations', 'Standard Security'] },
-    { name: 'Growth', price: '₹1,00,000', rawPrice: 10000000, icon: Zap, description: 'Full synergy across your business.', features: ['4 Product Suite', 'Unified Dashboard', 'Advance Automations', 'Audit Logs'] },
-    { name: 'Advanced', price: '₹2,00,000', rawPrice: 20000000, icon: Crown, description: 'Intelligence-driven enterprise suite.', features: ['Complete Product Suite', 'AI Insights', 'Custom Integrations', 'White-labeling'] },
-    { name: 'Enterprise', price: 'Custom', isEnterprise: true, icon: Building2, description: 'Maximum scale, zero compromise.', features: ['Unlimited Users', 'Data Sovereignty', 'Custom Development', 'VIP Support'] },
+    { name: 'Starter', priceINR: '₹50,000', priceUSD: '$650', rawPriceINR: 5000000, rawPriceUSD: 65000, icon: Rocket, description: 'Bundled essentials for startups.', features: ['2 Product Suite', 'Shared Data Lake', 'Basic Automations', 'Standard Security'] },
+    { name: 'Growth', priceINR: '₹1,00,000', priceUSD: '$1,250', rawPriceINR: 10000000, rawPriceUSD: 125000, icon: Zap, description: 'Full synergy across your business.', features: ['4 Product Suite', 'Unified Dashboard', 'Advance Automations', 'Audit Logs'] },
+    { name: 'Advanced', priceINR: '₹2,00,000', priceUSD: '$2,500', rawPriceINR: 20000000, rawPriceUSD: 250000, icon: Crown, description: 'Intelligence-driven enterprise suite.', features: ['Complete Product Suite', 'AI Insights', 'Custom Integrations', 'White-labeling'] },
+    { name: 'Enterprise', priceINR: 'Custom', priceUSD: 'Custom', isEnterprise: true, icon: Building2, description: 'Maximum scale, zero compromise.', features: ['Unlimited Users', 'Data Sovereignty', 'Custom Development', 'VIP Support'] },
   ],
   'All-in-One': [
-    { name: 'Starter', price: '₹10,00,000', rawPrice: 100000000, icon: Rocket, description: 'Total ecosystem access for regions.', features: ['Full Ecosystem Access', 'Enterprise Security', 'Regional Hosting', 'Training Portal'] },
-    { name: 'Growth', price: '₹15,00,000', rawPrice: 150000000, icon: Zap, description: 'The ultimate scaling powerhouse.', features: ['Scaling Infrastructure', 'Global CDN', 'AI Operations Pack', '24/7 Dedicated Ops'] },
-    { name: 'Advanced', price: '₹25,00,000', rawPrice: 250000000, icon: Crown, description: 'The pinnacle of B2B SaaS tech.', features: ['Unlimited Scaling', 'Custom LLM Training', 'Full Source Audit', 'Infinite API calls'] },
-    { name: 'Enterprise', price: 'Custom', isEnterprise: true, icon: Building2, description: 'Bespoke government-grade tech.', features: ['Gov-Grade Security', 'On-Premise Option', 'Bespoke AI Solutions', 'Lifetime Updates'] },
+    { name: 'Starter', priceINR: '₹10,00,000', priceUSD: '$12,000', rawPriceINR: 100000000, rawPriceUSD: 1200000, icon: Rocket, description: 'Total ecosystem access for regions.', features: ['Full Ecosystem Access', 'Enterprise Security', 'Regional Hosting', 'Training Portal'] },
+    { name: 'Growth', priceINR: '₹15,00,000', priceUSD: '$18,000', rawPriceINR: 150000000, rawPriceUSD: 1800000, icon: Zap, description: 'The ultimate scaling powerhouse.', features: ['Scaling Infrastructure', 'Global CDN', 'AI Operations Pack', '24/7 Dedicated Ops'] },
+    { name: 'Advanced', priceINR: '₹25,00,000', priceUSD: '$30,000', rawPriceINR: 250000000, rawPriceUSD: 3000000, icon: Crown, description: 'The pinnacle of B2B SaaS tech.', features: ['Unlimited Scaling', 'Custom LLM Training', 'Full Source Audit', 'Infinite API calls'] },
+    { name: 'Enterprise', priceINR: 'Custom', priceUSD: 'Custom', isEnterprise: true, icon: Building2, description: 'Bespoke government-grade tech.', features: ['Gov-Grade Security', 'On-Premise Option', 'Bespoke AI Solutions', 'Lifetime Updates'] },
   ]
 };
 
@@ -52,6 +54,16 @@ export default function B2BPricingSection() {
   const [activeTab, setActiveTab] = useState<PricingCategory>('Single Product');
   const [isMeetingModalOpen, setIsMeetingModalOpen] = useState(false);
   const [selectedPlanForBooking, setSelectedPlanForBooking] = useState<{category: string, tier: string} | null>(null);
+  const [currency, setCurrency] = useState<'INR' | 'USD'>('INR');
+
+  useEffect(() => {
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    if (timeZone.includes('Asia/Kolkata') || timeZone.includes('Calcutta')) {
+      setCurrency('INR');
+    } else {
+      setCurrency('USD');
+    }
+  }, []);
 
   const openBooking = (tierName: string) => {
     setSelectedPlanForBooking({ category: activeTab, tier: tierName });
@@ -63,14 +75,18 @@ export default function B2BPricingSection() {
     window.open(`https://wa.me/${CONTACT_INFO.whatsapp}?text=${encodeURIComponent(message)}`, '_blank');
   };
 
-  // Redirect to Checkout Page
   const handleGetStarted = (tier: PricingTier) => {
-    if (!tier.rawPrice) return;
+    const priceValue = currency === 'INR' ? tier.priceINR : tier.priceUSD;
+    const rawValue = currency === 'INR' ? tier.rawPriceINR : tier.rawPriceUSD;
+    
+    if (!rawValue) return;
+
     const params = new URLSearchParams({
       plan: tier.name,
       category: activeTab,
-      price: tier.price,
-      amount: tier.rawPrice.toString() // amount in paise
+      price: priceValue,
+      amount: rawValue.toString(),
+      currency: currency
     });
     router.push(`/checkout?${params.toString()}`);
   };
@@ -88,9 +104,19 @@ export default function B2BPricingSection() {
             <h2 className="text-5xl md:text-7xl font-black tracking-tighter mb-4">
               Flexible <span className="text-blue-500">Pricing</span>
             </h2>
-            <p className="text-slate-400 max-w-2xl mx-auto text-lg mb-10">
+            <p className="text-slate-400 max-w-2xl mx-auto text-lg mb-6">
               Scale your business infrastructure with our modular SaaS solutions. No hidden fees.
             </p>
+            <div className="flex justify-center gap-4 mb-10">
+                <span className={`text-xs font-bold ${currency === 'INR' ? 'text-blue-400' : 'text-slate-500'}`}>INR</span>
+                <button 
+                    onClick={() => setCurrency(currency === 'INR' ? 'USD' : 'INR')}
+                    className="w-10 h-5 bg-white/10 rounded-full relative flex items-center px-1"
+                >
+                    <div className={`w-3 h-3 bg-blue-500 rounded-full transition-all duration-300 ${currency === 'USD' ? 'translate-x-5' : 'translate-x-0'}`} />
+                </button>
+                <span className={`text-xs font-bold ${currency === 'USD' ? 'text-blue-400' : 'text-slate-500'}`}>USD</span>
+            </div>
           </div>
           
           <div className="inline-flex p-1.5 bg-white/5 border border-white/10 rounded-2xl backdrop-blur-xl mb-12">
@@ -134,7 +160,9 @@ export default function B2BPricingSection() {
                 <p className="text-slate-500 text-xs mb-6 line-clamp-2 h-8">{tier.description}</p>
                 
                 <div className="mb-8">
-                  <div className="text-4xl font-bold text-white tracking-tight">{tier.price}</div>
+                  <div className="text-4xl font-bold text-white tracking-tight">
+                    {currency === 'INR' ? tier.priceINR : tier.priceUSD}
+                  </div>
                   {!tier.isEnterprise && <div className="text-slate-500 text-xs mt-1 uppercase tracking-widest">Single License</div>}
                 </div>
                 
@@ -149,34 +177,45 @@ export default function B2BPricingSection() {
                   ))}
                 </div>
 
-                {tier.isEnterprise ? (
-                    <div className="flex flex-col gap-3">
-                        <button 
-                            onClick={openWhatsApp}
-                            className="w-full py-3 rounded-2xl font-black uppercase tracking-wider text-[11px] bg-white text-black hover:bg-slate-200 transition-all flex items-center justify-center gap-2"
-                        >
-                            <MessageCircle className="w-4 h-4" /> Contact Sales
-                        </button>
-                        
-                        <button 
-                            onClick={() => openBooking(tier.name)}
-                            className="w-full py-3 rounded-2xl font-black uppercase tracking-wider text-[11px] bg-white/5 border border-white/10 hover:bg-white/10 transition-all flex items-center justify-center gap-2 text-slate-300"
-                        >
-                            <Calendar className="w-4 h-4" /> Book Calendar
-                        </button>
-                    </div>
-                ) : (
-                    <button 
-                      onClick={() => handleGetStarted(tier)}
-                      className={`w-full py-4 rounded-2xl font-black uppercase tracking-[0.15em] text-[11px] transition-all flex items-center justify-center gap-3 active:scale-[0.95] ${
-                        tier.name === 'Growth' 
-                          ? 'bg-blue-600 hover:bg-blue-500 text-white' 
-                          : 'bg-white text-black hover:bg-slate-200'
-                      }`}
-                    >
+                <div className="flex flex-col gap-3">
+                  {tier.isEnterprise ? (
+                    <>
+                      <button 
+                        onClick={openWhatsApp}
+                        className="w-full py-3 rounded-2xl font-black uppercase tracking-wider text-[11px] bg-white text-black hover:bg-slate-200 transition-all flex items-center justify-center gap-2"
+                      >
+                        <MessageCircle className="w-4 h-4" /> Contact Sales
+                      </button>
+                      
+                      <button 
+                        onClick={() => openBooking(tier.name)}
+                        className="w-full py-3 rounded-2xl font-black uppercase tracking-wider text-[11px] bg-white/5 border border-white/10 hover:bg-white/10 transition-all flex items-center justify-center gap-2 text-slate-300"
+                      >
+                        <Calendar className="w-4 h-4" /> Book Calendar
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button 
+                        onClick={() => handleGetStarted(tier)}
+                        className={`w-full py-4 rounded-2xl font-black uppercase tracking-[0.15em] text-[11px] transition-all flex items-center justify-center gap-3 active:scale-[0.95] ${
+                          tier.name === 'Growth' 
+                            ? 'bg-blue-600 hover:bg-blue-500 text-white' 
+                            : 'bg-white text-black hover:bg-slate-200'
+                        }`}
+                      >
                         <Rocket className="w-4 h-4" /> Get Started <ArrowRight className="w-3 h-3" />
-                    </button>
-                )}
+                      </button>
+
+                      <button 
+                        onClick={() => openBooking(tier.name)}
+                        className="w-full py-3 rounded-2xl font-black uppercase tracking-wider text-[10px] bg-white/5 border border-white/5 hover:border-white/20 hover:bg-white/10 transition-all flex items-center justify-center gap-2 text-slate-400 hover:text-white"
+                      >
+                        <Calendar className="w-3.5 h-3.5" /> Book Calendar
+                      </button>
+                    </>
+                  )}
+                </div>
               </div>
             ))}
         </div>

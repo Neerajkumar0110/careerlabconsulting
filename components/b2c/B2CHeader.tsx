@@ -115,7 +115,6 @@ export default function B2CHeader() {
     [activeCategoryId]
   );
 
-  // Body scroll lock for PageSpeed and UX
   useEffect(() => {
     if (isMobileMenuOpen || isSearchOpen) {
       document.body.style.overflow = 'hidden';
@@ -157,7 +156,6 @@ export default function B2CHeader() {
         <div className="max-w-[1400px] mx-auto px-4 h-20 flex items-center justify-between">
           
           <div className="flex items-center gap-10">
-            {/* SEO Optimized Logo */}
             <Link href="/" className="relative block w-[150px] h-[40px]" aria-label="Career Lab Home">
               <Image 
                 src="/logo.png" 
@@ -165,7 +163,7 @@ export default function B2CHeader() {
                 fill
                 sizes="150px"
                 priority 
-                fetchPriority="high" // Critical for 100% LCP Score
+                fetchPriority="high" 
                 className="object-contain"
               />
             </Link>
