@@ -368,7 +368,7 @@ const splitComparisons = {
         { usp: "Elite Branding", foundation: "No", elite: "Yes" }
     ],
     fees: [
-        { item: "Program Fee (India)", foundation: "₹1,49,999", elite: "₹2,49,999" },
+        { item: "Program Fee (India)", foundation: "₹1,20,000", elite: "₹2,00,000" },
         { item: "Program Fee (Global)", foundation: "~$2,000", elite: "~$3,000" },
         { item: "Scholarship (Test-based)", foundation: "Available", elite: "Available" },
         { item: "EMI (India Only)", foundation: "Available", elite: "Available" }
@@ -501,7 +501,7 @@ export default function InternXAIPage() {
   // --- REDIRECT HANDLERS (No Modals) ---
 
   const handleRegister = (planName: 'Foundation' | 'Elite') => {
-    let basePriceINR = planName === 'Foundation' ? 14999900 : 24999900; // in paise
+    let basePriceINR = planName === 'Foundation' ? 12000000 : 20000000; // in paise
     let basePriceUSD = planName === 'Foundation' ? 199900 : 349900; // in cents
 
     const priceDisplay = isInternational 
@@ -794,7 +794,7 @@ export default function InternXAIPage() {
                     <p className="text-slate-400 text-sm mb-6">6 Months • Beginner Friendly</p>
                     
                     <div className="flex items-end gap-2 mb-2">
-                        <div className="text-4xl font-black text-white">{isInternational ? '$1,999' : '₹1,49,999'}</div>
+                        <div className="text-4xl font-black text-white">{isInternational ? '$1,999' : '₹1,20,000'}</div>
                     </div>
 
                     <div className="mb-6">
@@ -802,13 +802,14 @@ export default function InternXAIPage() {
                             onClick={() => handleScholarship('Foundation')}
                             className="inline-flex items-center gap-2 bg-green-500/10 border border-green-500/20 text-green-400 text-xs font-bold px-4 py-2 rounded-full hover:bg-green-500/20 transition-colors"
                         >
-                            <Zap className="w-3 h-3" /> Get Scholarship (Max 30%)
+                            <Zap className="w-3 h-3" /> Scholarship Available (Max ₹30,000)
                         </button>
+                        <p className="text-[10px] text-slate-500 mt-2 ml-1">Avg Scholarship: ₹15k - ₹20k</p>
                     </div>
 
                     {!isInternational && (
                         <div className="mb-6 p-3 bg-blue-500/10 rounded-lg text-xs font-bold text-blue-400 text-center">
-                            EMI starts at ₹5,208/month (India Only)
+                            EMI starts at ₹3,933/month (India Only)
                         </div>
                     )}
 
@@ -816,6 +817,9 @@ export default function InternXAIPage() {
                         <li className="flex gap-2 text-sm text-slate-300"><CheckCircle2 className="w-4 h-4 text-green-400 shrink-0" /> Weekend Live Classes</li>
                         <li className="flex gap-2 text-sm text-slate-300"><CheckCircle2 className="w-4 h-4 text-green-400 shrink-0" /> Real Industry Projects</li>
                         <li className="flex gap-2 text-sm text-slate-300"><CheckCircle2 className="w-4 h-4 text-green-400 shrink-0" /> ResumeNFT Proof</li>
+                        <li className="flex gap-2 text-sm text-slate-300"><CheckCircle2 className="w-4 h-4 text-green-400 shrink-0" /> Weekday Practice Sessions</li>
+                        <li className="flex gap-2 text-sm text-slate-300"><CheckCircle2 className="w-4 h-4 text-green-400 shrink-0" /> Python & SQL Mastery</li>
+                        <li className="flex gap-2 text-sm text-slate-300"><CheckCircle2 className="w-4 h-4 text-green-400 shrink-0" /> Internship Certificate</li>
                     </ul>
                     
                     <div className="space-y-3 mt-auto">
@@ -834,14 +838,13 @@ export default function InternXAIPage() {
                     </div>
                     </div>
 
-                    {/* ELITE CARD */}
                     <div className={`bg-[#0b0f1f] border border-purple-500/30 rounded-3xl p-8 relative overflow-hidden group flex flex-col ${activeTab !== 'elite' ? 'opacity-50 blur-[1px]' : ''}`}>
                     <div className="absolute top-0 right-0 bg-purple-600 text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl uppercase">Career Accelerator</div>
                     <h3 className="text-2xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-blue-400">Elite</h3>
                     <p className="text-slate-400 text-sm mb-6">12 Months • Full Career Path</p>
                     
                     <div className="flex items-end gap-2 mb-2">
-                        <div className="text-4xl font-black text-white">{isInternational ? '$3,499' : '₹2,49,999'}</div>
+                        <div className="text-4xl font-black text-white">{isInternational ? '$3,499' : '₹2,00,000'}</div>
                     </div>
 
                     <div className="mb-6">
@@ -849,9 +852,16 @@ export default function InternXAIPage() {
                             onClick={() => handleScholarship('Elite')}
                             className="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-bold px-4 py-2 rounded-full animate-pulse hover:animate-none hover:bg-purple-500/20 transition-colors"
                         >
-                            <Zap className="w-3 h-3" /> Get Scholarship (Max 40%)
+                            <Zap className="w-3 h-3" /> Scholarship Available (Max ₹50,000)
                         </button>
+                        <p className="text-[10px] text-slate-500 mt-2 ml-1">Avg Scholarship: ₹30k - ₹40k</p>
                     </div>
+
+                    {!isInternational && (
+                        <div className="mb-6 p-3 bg-purple-500/10 rounded-lg text-xs font-bold text-purple-400 text-center">
+                            EMI starts at ₹6,555/month (India Only)
+                        </div>
+                    )}
 
                     <div className="mb-6 p-3 bg-purple-500/10 rounded-lg text-xs font-bold text-purple-400 text-center">
                         Includes Foundation + Advanced Layer
@@ -861,6 +871,7 @@ export default function InternXAIPage() {
                         <li className="flex gap-2 text-sm text-slate-300"><CheckCircle2 className="w-4 h-4 text-purple-400 shrink-0" /> <strong>Everything in Foundation</strong></li>
                         <li className="flex gap-2 text-sm text-slate-300"><CheckCircle2 className="w-4 h-4 text-purple-400 shrink-0" /> Advanced MLOps & GenAI</li>
                         <li className="flex gap-2 text-sm text-slate-300"><CheckCircle2 className="w-4 h-4 text-purple-400 shrink-0" /> Enterprise-Grade Projects</li>
+                        <li className="flex gap-2 text-sm text-slate-300"><CheckCircle2 className="w-4 h-4 text-purple-400 shrink-0" /> Unlimited Interview Calls</li>
                     </ul>
                     
                     <div className="space-y-3 mt-auto">
