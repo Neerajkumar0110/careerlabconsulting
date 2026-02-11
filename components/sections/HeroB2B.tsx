@@ -1,23 +1,14 @@
 'use client';
 
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import Image from 'next/image'; 
-import { motion, AnimatePresence } from 'framer-motion';
-import { X, User, Mail, Sparkles, ArrowRight } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Sparkles, ArrowRight, Play } from 'lucide-react';
 
-export default function HeroB2B() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [formData, setFormData] = useState({ name: '', email: '' });
+const DEMO_VIDEO_URL = "https://www.youtube.com/watch?v=IWFJ_IWr6kg";
+
+const SpaceBackground = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  
-  const OWNER_PHONE = "918700236923";
-  
-  const avatars = useMemo(() => [
-    { id: "1560250097-0b93528c311a", name: "AI Strategy Expert" }, 
-    { id: "1494790108377-be9c29b29330", name: "Automation Lead" }, 
-    { id: "1507003211169-0a1dd7228f2d", name: "Technical Consultant" }, 
-    { id: "1599566150163-29194dcaad36", name: "Growth Specialist" }
-  ], []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -26,45 +17,50 @@ export default function HeroB2B() {
     if (!ctx) return;
 
     let animationFrameId: number;
-    let stars: { x: number; y: number; z: number }[] = [];
-    const numStars = 200; 
+    let stars: { x: number; y: number; z: number; o: number }[] = [];
+    const numStars = 400;
+    const speed = 2;
 
     const setup = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-      stars = Array.from({ length: numStars }, () => ({
-        x: Math.random() * canvas.width - canvas.width / 2,
-        y: Math.random() * canvas.height - canvas.height / 2,
-        z: Math.random() * canvas.width
-      }));
+      stars = [];
+      for (let i = 0; i < numStars; i++) {
+        stars.push({
+          x: Math.random() * canvas.width - canvas.width / 2,
+          y: Math.random() * canvas.height - canvas.height / 2,
+          z: Math.random() * canvas.width,
+          o: Math.random(),
+        });
+      }
     };
 
     const draw = () => {
-      ctx.fillStyle = '#020617'; 
+      ctx.fillStyle = '#020617';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
+      const cx = canvas.width / 2;
+      const cy = canvas.height / 2;
+      ctx.fillStyle = 'white'; 
+      
+      stars.forEach((star) => {
+        star.z -= speed;
+        if (star.z <= 0) {
+          star.z = canvas.width;
+          star.x = Math.random() * canvas.width - canvas.width / 2;
+          star.y = Math.random() * canvas.height - canvas.height / 2;
+        }
+        const x = (star.x / star.z) * cx + cx;
+        const y = (star.y / star.z) * cy + cy;
+        const r = (1 - star.z / canvas.width) * 2;
 
-      const centerX = canvas.width / 2;
-      const centerY = canvas.height / 2;
-
-      for (let i = 0; i < numStars; i++) {
-        const s = stars[i];
-        s.z -= 1.2;
-        if (s.z <= 0) s.z = canvas.width;
-
-        const x = centerX + (s.x / s.z) * canvas.width;
-        const y = centerY + (s.y / s.z) * canvas.width;
-        
-        if (x < 0 || x > canvas.width || y < 0 || y > canvas.height) continue;
-
-        const radius = (1 - s.z / canvas.width) * 1.5;
-        const opacity = 1 - s.z / canvas.width;
-
-        ctx.beginPath();
-        ctx.arc(x, y, radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(147, 197, 253, ${opacity})`;
-        ctx.fill();
-      }
-
+        if (x >= 0 && x < canvas.width && y >= 0 && y < canvas.height) {
+            ctx.beginPath();
+            ctx.globalAlpha = 1 - star.z / canvas.width;
+            ctx.arc(x, y, r, 0, Math.PI * 2);
+            ctx.fill();
+        }
+      });
+      ctx.globalAlpha = 1.0; 
       animationFrameId = requestAnimationFrame(draw);
     };
 
@@ -78,113 +74,100 @@ export default function HeroB2B() {
   }, []);
 
   return (
+    <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+      <canvas ref={canvasRef} className="absolute inset-0" />
+      <div className="absolute top-1/4 -left-1/4 w-[600px] h-[600px] bg-blue-600/20 blur-[150px] rounded-full will-change-transform" />
+      <div className="absolute bottom-1/4 -right-1/4 w-[600px] h-[600px] bg-indigo-600/20 blur-[150px] rounded-full will-change-transform" />
+    </div>
+  );
+};
+
+export default function HeroB2B() {
+  const OWNER_PHONE = "918700236923";
+  
+  const avatars = useMemo(() => [
+    { id: "1560250097-0b93528c311a", name: "AI Strategy Expert" }, 
+    { id: "1494790108377-be9c29b29330", name: "Automation Lead" }, 
+    { id: "1507003211169-0a1dd7228f2d", name: "Technical Consultant" }, 
+    { id: "1599566150163-29194dcaad36", name: "Growth Specialist" }
+  ], []);
+
+  const handleDeploy = useCallback(() => {
+    window.open(`https://wa.me/${OWNER_PHONE}?text=I want to deploy AI Agents.`, '_blank');
+  }, []);
+
+  const handleWatchDemo = () => {
+    window.open(DEMO_VIDEO_URL, '_blank');
+  };
+
+  return (
     <section className="relative min-h-screen flex items-center justify-center pt-30 pb-20 px-4 overflow-hidden bg-[#020617]">
-      <canvas ref={canvasRef} className="absolute inset-0 z-0 pointer-events-none" aria-hidden="true" />
+      <SpaceBackground />
       
       <motion.div 
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="relative z-10 w-full max-w-6xl mx-auto text-center"
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
+        className="relative z-10 w-full max-w-6xl mx-auto text-center mt-10 md:mt-0"
       >
         <div className="flex flex-col items-center">
-          <div className="mb-8 inline-flex items-center gap-3 px-4 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-md">
-            <div className="flex -space-x-2">
+          <motion.div 
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-8 inline-flex items-center gap-3 px-4 py-2 rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl"
+          >
+            <div className="flex -space-x-3">
               {avatars.map((avatar, i) => (
-                <div key={i} className="relative w-8 h-8 rounded-full border-2 border-[#020617] overflow-hidden bg-slate-800">
+                <div key={i} className="relative w-8 h-8 md:w-10 md:h-10 rounded-full border-2 border-[#020617] overflow-hidden">
                   <Image 
                     src={`https://images.unsplash.com/photo-${avatar.id}?w=64&h=64&fit=crop`} 
                     alt={avatar.name}
                     fill
-                    priority={i < 4} 
-                    sizes="32px"
+                    sizes="40px"
                     className="object-cover"
                   />
                 </div>
               ))}
             </div>
-            <div className="h-4 w-px bg-white/20" />
-            <p className="text-blue-200 text-[6px] md:text-xs font-bold tracking-widest uppercase flex items-center gap-2">
-              <Sparkles size={14} className="text-blue-400" />
+            <div className="h-4 w-px bg-white/20 mx-1" />
+            <p className="text-blue-400 text-[10px] md:text-xs font-black tracking-widest uppercase flex items-center gap-2">
+              <Sparkles size={14} className="animate-pulse" />
               The Future of Work is Autonomous
             </p>
-          </div>
+          </motion.div>
 
-          <h1 className="text-4xl sm:text-6xl md:text-8xl font-black text-white mb-8 tracking-tighter leading-[0.9]">
+          <h1 className="text-5xl sm:text-7xl md:text-9xl font-black text-white mb-8 tracking-tighter leading-[0.85] uppercase">
             Command Your <br /> 
-            <span className="text-transparent bg-clip-text bg-gradient-to-b from-white via-blue-200 to-blue-500">
+            <span className="relative inline-block italic text-blue-400">
               AI Empire
+              <svg className="absolute -bottom-2 md:-bottom-4 left-0 w-full" viewBox="0 0 300 12" fill="none">
+                <path d="M1 9.5C50.5 3.5 150.5 1.5 299 9.5" stroke="#3b82f6" strokeWidth="4" strokeLinecap="round"/>
+              </svg>
             </span>
           </h1>
         </div>
 
-        <p className="max-w-2xl mx-auto text-slate-300 text-base md:text-xl mb-12 leading-relaxed px-4">
-          Deploy custom AI workforces that <strong>execute tasks</strong> autonomously. 
-          Reduce overhead by 70% and scale your business without increasing headcount.
+        <p className="max-w-2xl mx-auto text-slate-400 text-lg md:text-2xl mb-12 leading-relaxed px-4 font-medium">
+          Deploy custom AI workforces that <span className="text-white font-bold underline decoration-blue-500/50">execute tasks</span> autonomously. 
+          Reduce overhead by 70% and scale instantly.
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+        <div className="flex flex-col sm:flex-row gap-5 justify-center items-center">
           <button 
-            aria-label="Contact on WhatsApp to deploy AI workforce"
-            onClick={() => window.open(`https://wa.me/${OWNER_PHONE}?text=I want to deploy AI Agents.`, '_blank')}
-            className="group w-full sm:w-auto px-10 py-5 bg-blue-600 text-white font-bold rounded-2xl flex items-center justify-center gap-3 shadow-xl shadow-blue-500/20 hover:bg-blue-500 transition-all active:scale-95"
+            onClick={handleDeploy}
+            className="w-full sm:w-auto px-10 py-5 bg-blue-600 hover:bg-blue-500 text-white font-black uppercase text-xs tracking-[0.2em] rounded-2xl flex items-center justify-center gap-3 shadow-[0_0_40px_-10px_rgba(37,99,235,0.6)] transition-all hover:scale-105 active:scale-95"
           >
-            <span>Deploy My AI Workforce</span>
-            <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+            Deploy AI Workforce <ArrowRight size={18} />
           </button>
           
           <button 
-            aria-label="Open strategy session booking modal"
-            onClick={() => setIsModalOpen(true)}
-            className="w-full sm:w-auto px-10 py-5 bg-white/5 border border-white/10 text-white font-bold rounded-2xl hover:bg-white/10 transition-all active:scale-95"
+            onClick={handleWatchDemo}
+            className="w-full sm:w-auto px-10 py-5 bg-white/[0.03] border border-white/10 text-white font-black uppercase text-xs tracking-[0.2em] rounded-2xl hover:bg-white/10 transition-all flex items-center justify-center gap-3 backdrop-blur-md active:scale-95"
           >
-            Watch Demo
+            <Play className="w-4 h-4 fill-white" /> Watch Demo
           </button>
         </div>
       </motion.div>
-
-      <AnimatePresence mode="popLayout">
-        {isModalOpen && (
-          <motion.div 
-            key="modal-container"
-            initial={{ opacity: 0 }} 
-            animate={{ opacity: 1 }} 
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] flex items-center justify-center p-4"
-          >
-            <div className="absolute inset-0 bg-[#020617]/95 backdrop-blur-md" onClick={() => setIsModalOpen(false)} />
-            <motion.div 
-              initial={{ scale: 0.95, y: 20 }} 
-              animate={{ scale: 1, y: 0 }} 
-              exit={{ scale: 0.95, y: 20 }}
-              className="relative w-full max-w-lg bg-slate-900 border border-white/10 rounded-[2.5rem] p-8 md:p-12 shadow-2xl"
-            >
-              <button onClick={() => setIsModalOpen(false)} className="absolute top-6 right-6 text-slate-500 hover:text-white" aria-label="Close modal">
-                <X size={24} />
-              </button>
-              <h2 className="text-3xl font-bold text-white mb-2">Scale Your Vision</h2>
-              <form onSubmit={(e) => {
-                e.preventDefault();
-                const message = `*AI Strategy Call Request*%0A*Name:* ${formData.name}%0A*Email:* ${formData.email}`;
-                window.open(`https://wa.me/${OWNER_PHONE}?text=${message}`, '_blank');
-                setIsModalOpen(false);
-              }} className="space-y-4 mt-8">
-                <div className="relative">
-                  <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                  <input required aria-label="Enter your full name" type="text" placeholder="Full Name" className="w-full pl-12 pr-4 py-4 bg-white/5 border border-white/10 rounded-xl text-white outline-none focus:border-blue-500 transition-colors" onChange={(e) => setFormData({...formData, name: e.target.value})} />
-                </div>
-                <div className="relative">
-                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                  <input required aria-label="Enter your work email" type="email" placeholder="Work Email" className="w-full pl-12 pr-4 py-4 bg-white/5 border border-white/10 rounded-xl text-white outline-none focus:border-blue-500 transition-colors" onChange={(e) => setFormData({...formData, email: e.target.value})} />
-                </div>
-                <button type="submit" className="w-full py-5 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl mt-4 transition-all uppercase tracking-widest text-sm shadow-lg shadow-blue-500/25">
-                  Reserve Call
-                </button>
-              </form>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </section>
   );
 }
