@@ -366,10 +366,10 @@ const splitComparisons = {
         { usp: "Elite Branding", foundation: "No", elite: "Yes" }
     ],
     fees: [
-        { item: "Program Fee (India)", foundation: "₹1,20,000", elite: "₹2,00,000" },
-        { item: "Program Fee (Global)", foundation: "~$2,000", elite: "~$3,000" },
+        { item: "Program Fee (India)", foundation: "₹120000", elite: "₹200000" },
+        { item: "Program Fee (Global)", foundation: "~$2000", elite: "~$3000" },
         { item: "Scholarship (Test-based)", foundation: "Available", elite: "Available" },
-        { item: "EMI (India Only)", foundation: "Available", elite: "Available" }
+        { item: "EMI (India Only)", foundation: "₹3933", elite: "₹6555" }
     ]
 };
 
