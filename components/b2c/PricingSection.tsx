@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Check, Zap, Crown, Terminal, ShieldCheck, Sparkles, 
-  TrendingUp, Calendar, CreditCard, Globe 
+  TrendingUp, Calendar, CreditCard, Globe, Gift 
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
@@ -22,8 +22,9 @@ interface Tier {
   priceDisplay: string; 
   rawAmountINR: number; 
   rawAmountUSD: number; 
-  emiAmount: number; 
   emiText: string;
+  scholarshipMax: string;
+  scholarshipAvg: string;
   description: string;
   targetCTC: string;
   features: string[];
@@ -59,11 +60,12 @@ export default function PricingSection() {
       id: "plan-foundation",
       name: "Foundation",
       duration: "6 Months",
-      priceDisplay: isInternational ? "$1,999" : "₹1,49,999", 
-      rawAmountINR: 14999900, 
-      rawAmountUSD: 199900, 
-      emiAmount: 520800, 
-      emiText: isInternational ? "Flexible installments available" : "EMI starts from: 5208 INR",
+      priceDisplay: isInternational ? "$1,499" : "₹1,20,000", 
+      rawAmountINR: 12000000, 
+      rawAmountUSD: 149900, 
+      emiText: isInternational ? "Flexible installments available" : "EMI starts from: ₹3,933",
+      scholarshipMax: "Max Scholarship: ₹30,000",
+      scholarshipAvg: "Avg. Scholarship: ₹15k - ₹20k",
       description: "Build your first AI career asset with ResumeNFT visibility.",
       targetCTC: isInternational ? "Avg Salary: $40k-$60k" : "Avg CTC: ₹10-12 LPA",
       features: [
@@ -81,11 +83,12 @@ export default function PricingSection() {
       id: "plan-elite",
       name: "Elite",
       duration: "12 Months",
-      priceDisplay: isInternational ? "$3,499" : "₹2,49,999", 
-      rawAmountINR: 24999900,
-      rawAmountUSD: 349900,
-      emiAmount: 520800, 
-      emiText: isInternational ? "Flexible installments available" : "EMI starts from: 5208 INR",
+      priceDisplay: isInternational ? "$2,699" : "₹2,00,000", 
+      rawAmountINR: 20000000,
+      rawAmountUSD: 269900,
+      emiText: isInternational ? "Flexible installments available" : "EMI starts from: ₹6,555",
+      scholarshipMax: "Max Scholarship: ₹50,000",
+      scholarshipAvg: "Avg. Scholarship: ₹30k - ₹40k",
       description: "Top-tier program for international roles with legal job.",
       targetCTC: isInternational ? "Avg Salary: $80k-$120k" : "Avg CTC: ₹30-50 LPA",
       features: [
@@ -139,6 +142,12 @@ export default function PricingSection() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-5xl mx-auto mb-32">
           {tiers.map((tier) => (
             <article key={tier.id} className={`relative p-8 md:p-12 rounded-[3rem] border flex flex-col transition-all duration-500 ${tier.highlight ? 'bg-[#0a1229] border-blue-500 shadow-2xl shadow-blue-500/20 md:scale-105 z-20' : 'bg-white/[0.02] border-white/10'}`}>
+              
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-yellow-500 to-amber-600 px-4 py-1.5 rounded-full border border-yellow-400 shadow-lg z-30 flex items-center gap-2">
+                <Gift className="w-3.5 h-3.5 text-white fill-white/20" />
+                <span className="text-[10px] font-black uppercase text-white tracking-tighter">Scholarship Available</span>
+              </div>
+
               <div className="mb-8">
                 <tier.icon className={`w-14 h-14 mb-8 ${tier.highlight ? 'text-blue-400' : 'text-slate-500'}`} />
                 <h3 className="text-4xl font-black uppercase mb-2">{tier.name}</h3>
@@ -146,7 +155,13 @@ export default function PricingSection() {
                 
                 <div className="flex flex-col gap-1">
                   <span className="text-6xl font-black tracking-tighter">{tier.priceDisplay}</span>
-                  <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-3 mt-3 flex items-center gap-2">
+                  
+                  <div className="flex flex-col mt-2 mb-4">
+                    <span className="text-yellow-500 text-sm font-black uppercase tracking-tight">{tier.scholarshipMax}</span>
+                    <span className="text-slate-500 text-[10px] font-bold uppercase italic">{tier.scholarshipAvg}</span>
+                  </div>
+
+                  <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-3 mt-1 flex items-center gap-2">
                     <TrendingUp className="w-4 h-4 text-blue-400" />
                     <span className="text-blue-300 text-sm font-bold uppercase">{tier.targetCTC}</span>
                   </div>
