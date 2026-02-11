@@ -15,13 +15,11 @@ import {
   Layout, Server, BrainCircuit, Network, Trophy, 
   FileCheck, Medal, Timer, Play, ChevronDown, Plus,
   TrendingUp, Wallet, AlertTriangle, Check, X,
-  Target, BarChart3, Fingerprint, Laptop, UserCheck, 
+  Target, BarChart3, Fingerprint, Laptop, UserCheck, ArrowRight,
   RefreshCw, MapPin, ExternalLink, Github,
   Mail, Calendar, Clock, User, MessageSquare,
   Star
 } from 'lucide-react';
-
-// --- CONSTANT DATA ARRAYS ---
 
 const studentProjects = [
   {
@@ -744,8 +742,14 @@ export default function InternXAIPage() {
               </div>
               
               <div className="mt-12 text-center">
-                  <Link href="#" className="inline-flex items-center gap-2 text-blue-400 font-bold hover:text-blue-300 transition-colors border-b border-blue-400/30 pb-1">
-                    View GitHub Portfolio Gallery <ExternalLink className="w-4 h-4" />
+                  <Link 
+                    href="https://wa.me/918700236923?text=Hi%2C%20I%20want%20to%20view%20the%20GitHub%20Portfolio%20Gallery"
+                    target="_blank"
+                    className="inline-flex items-center gap-3 px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-white font-bold transition-all hover:scale-105 group hover:border-purple-500/30 shadow-lg shadow-black/20"
+                  >
+                    <Github className="w-5 h-5 text-slate-300 group-hover:text-white transition-colors" />
+                    <span>View GitHub Portfolio Gallery</span>
+                    <ArrowRight className="w-4 h-4 text-purple-400 group-hover:translate-x-1 transition-transform" />
                   </Link>
               </div>
            </div>
