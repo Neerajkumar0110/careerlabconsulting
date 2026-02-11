@@ -635,30 +635,19 @@ export default function InternXAIPage() {
               </div>
 
               <div className="relative w-full h-[300px] md:h-[500px] rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-black">
-                  <Image 
-                    src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop" 
-                    alt="World Map of InternX Students"
-                    fill
-                    className="object-cover opacity-80 hover:scale-105 transition-transform duration-[20s]"
-                    priority
+                  <video 
+                    src="https://www.pexels.com/download/video/1851190/" 
+                    autoPlay 
+                    loop 
+                    muted 
+                    playsInline 
+                    className="w-full h-full object-cover opacity-60"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#03081a] to-transparent opacity-90"></div>
-                  
-                  <div className="absolute top-1/3 left-1/4 animate-pulse">
-                    <MapPin className="text-blue-500 w-6 h-6 drop-shadow-[0_0_10px_rgba(59,130,246,0.8)]" />
-                  </div>
-                  <div className="absolute top-1/2 left-1/2 animate-pulse delay-700">
-                    <MapPin className="text-purple-500 w-6 h-6 drop-shadow-[0_0_10px_rgba(168,85,247,0.8)]" />
-                  </div>
-                  <div className="absolute bottom-1/3 right-1/4 animate-pulse delay-1000">
-                    <MapPin className="text-green-500 w-6 h-6 drop-shadow-[0_0_10px_rgba(34,197,94,0.8)]" />
-                  </div>
-                  
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#03081a] to-transparent opacity-90"></div>                
                   <div className="absolute bottom-6 left-6 md:left-10 z-10">
                     <div className="bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded-lg">
                         <div className="flex items-center gap-2">
                           <span className="relative flex h-2 w-2">
-                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                             <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
                           </span>
                           <span className="text-xs font-bold text-white">Live: 1,240 Students Coding Now</span>
