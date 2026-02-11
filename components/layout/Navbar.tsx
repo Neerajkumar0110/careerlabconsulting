@@ -293,7 +293,6 @@ export default function Navbar() {
   const performSearch = (query: string) => {
     const lowerQuery = query.toLowerCase();
     
-    // Search in products
     const productResults: any[] = [];
     productMenu.forEach(category => {
       category.items.forEach(item => {
@@ -305,7 +304,6 @@ export default function Navbar() {
       });
     });
 
-    // Search in services
     const serviceResults: any[] = [];
     servicesMenu.forEach(category => {
       category.items.forEach(item => {
@@ -316,7 +314,6 @@ export default function Navbar() {
       });
     });
 
-    // Search in industries
     const industryResults: any[] = [];
     industriesMenu.forEach(category => {
       category.items.forEach(item => {
@@ -393,6 +390,7 @@ export default function Navbar() {
                 key={cat.id} 
                 onMouseEnter={() => setActiveTab(idx)} 
                 className={`w-full flex items-center justify-between px-4 py-4 rounded-xl transition-all duration-200 ${activeTab === idx ? 'bg-blue-600/10 text-white border border-blue-500/20' : 'text-slate-400 hover:text-slate-200 border border-transparent'}`}
+                aria-label={`View ${cat.title}`}
               >
                 <div className="flex items-center gap-3">
                   <cat.icon className={`w-4 h-4 ${activeTab === idx ? 'text-blue-400' : ''}`} />
@@ -447,8 +445,8 @@ export default function Navbar() {
       <nav className="fixed top-0 left-0 right-0 z-[1000] bg-[#020617]/95 backdrop-blur-xl border-b border-white/10 h-20">
         <div className="max-w-[1440px] mx-auto px-6 h-full flex items-center justify-between">
           <div className="flex items-center gap-10 h-full">
-            <Link href="/" className="flex-shrink-0">
-              <img src="/logo.png" alt="CLC Logo" className="h-7 w-auto" />
+            <Link href="/" className="flex-shrink-0" aria-label="Home">
+              <img src="/logo.png" alt="Career Lab Consulting Logo" className="h-7 w-auto" />
             </Link>
 
             <div className="hidden xl:flex items-center gap-6 h-full">
@@ -456,7 +454,11 @@ export default function Navbar() {
                 <div key={menu} className="h-full flex items-center" 
                   onMouseEnter={() => handleMenuEnter(menu)} 
                   onMouseLeave={() => setActiveMenu(null)}>
-                  <button className={`flex items-center gap-2 text-[10px] font-bold uppercase tracking-[2px] transition-all hover:text-white ${activeMenu === menu ? 'text-blue-400' : 'text-slate'}`}>
+                  <button 
+                    className={`flex items-center gap-2 text-[10px] font-bold uppercase tracking-[2px] transition-all hover:text-white ${activeMenu === menu ? 'text-blue-400' : 'text-slate'}`}
+                    aria-expanded={activeMenu === menu}
+                    aria-label={`Toggle ${menu} menu`}
+                  >
                     {menu} <ChevronDown className={`w-3 h-3 transition-transform duration-300 ${activeMenu === menu ? 'rotate-180' : ''}`} />
                   </button>
                   {activeMenu === menu && (
@@ -483,15 +485,16 @@ export default function Navbar() {
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 sm:gap-4">
             <button 
               onClick={() => setIsSearchOpen(true)}
               className="hidden md:flex p-2 text-slate-400 hover:text-white transition-colors"
+              aria-label="Search"
             >
               <Search className="w-5 h-5" />
             </button>
             
-            <Link href="/internship" className="hidden sm:block relative group overflow-hidden bg-blue-600 text-white px-5 py-3 rounded-full font-black text-[10px] uppercase tracking-[2px] shadow-[0_10px_20px_rgba(37,99,235,0.3)] transition-all active:scale-95 whitespace-nowrap">
+            <Link href="/internship" className="relative group overflow-hidden bg-blue-600 text-white px-3 py-2 sm:px-5 sm:py-3 rounded-full font-black text-[9px] sm:text-[10px] uppercase tracking-[1px] sm:tracking-[2px] shadow-[0_10px_20px_rgba(37,99,235,0.3)] transition-all active:scale-95 whitespace-nowrap flex items-center justify-center">
               <span className="relative z-10">Get Internship</span>
               <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity" />
             </Link>
@@ -499,6 +502,7 @@ export default function Navbar() {
             <button 
               onClick={() => setIsMobileMenuOpen(true)} 
               className="xl:hidden p-2 bg-white/5 rounded-lg"
+              aria-label="Open menu"
             >
               <Menu className="w-6 h-6 text-white" />
             </button>
@@ -510,10 +514,10 @@ export default function Navbar() {
         <div className="fixed inset-0 z-[2000] bg-[#0a0a0a] overflow-y-auto">
           <div className="p-6 min-h-screen flex flex-col">
             <div className="flex justify-between items-center mb-6">
-              <Link href="/" onClick={() => setIsMobileMenuOpen(false)}>
-                <img src="/logo.png" alt="Logo" className="h-7 w-auto" />
+              <Link href="/" onClick={() => setIsMobileMenuOpen(false)} aria-label="Home">
+                <img src="/logo.png" alt="CLC Logo" className="h-7 w-auto" />
               </Link>
-              <button onClick={() => setIsMobileMenuOpen(false)}>
+              <button onClick={() => setIsMobileMenuOpen(false)} aria-label="Close menu">
                 <X className="w-6 h-6 text-white" />
               </button>
             </div>
@@ -605,6 +609,7 @@ export default function Navbar() {
               setSearchQuery('');
             }} 
             className="absolute top-8 right-8 p-2 hover:bg-white/10 rounded-full transition-colors"
+            aria-label="Close search"
           >
             <X className="w-8 h-8 text-white" />
           </button>
@@ -638,6 +643,7 @@ export default function Navbar() {
                       ? 'bg-red-500 animate-pulse cursor-not-allowed' 
                       : 'bg-blue-600 hover:bg-blue-500 hover:scale-110'
                   }`}
+                  aria-label="Voice search"
                 >
                   <Mic className="w-5 h-5 text-white" />
                 </button>
