@@ -64,8 +64,8 @@ export default function PricingSection() {
       rawAmountINR: 12000000, 
       rawAmountUSD: 149900, 
       emiText: isInternational ? "Flexible installments available" : "EMI starts from: ₹3,933",
-      scholarshipMax: "Max Scholarship: ₹30,000",
-      scholarshipAvg: "Avg. Scholarship: ₹15k - ₹20k",
+      scholarshipMax: "Max Scholarship: ₹50,000",
+      scholarshipAvg: "Avg. Scholarship: ₹20k - ₹30k",
       description: "Build your first AI career asset with ResumeNFT visibility.",
       targetCTC: isInternational ? "Avg Salary: $40k-$60k" : "Avg CTC: ₹10-12 LPA",
       features: [
@@ -87,8 +87,8 @@ export default function PricingSection() {
       rawAmountINR: 20000000,
       rawAmountUSD: 269900,
       emiText: isInternational ? "Flexible installments available" : "EMI starts from: ₹6,555",
-      scholarshipMax: "Max Scholarship: ₹50,000",
-      scholarshipAvg: "Avg. Scholarship: ₹30k - ₹40k",
+      scholarshipMax: "Max Scholarship: ₹1,00,000",
+      scholarshipAvg: "Avg. Scholarship: ₹40k - ₹70k",
       description: "Top-tier program for international roles with legal job.",
       targetCTC: isInternational ? "Avg Salary: $80k-$120k" : "Avg CTC: ₹30-50 LPA",
       features: [
