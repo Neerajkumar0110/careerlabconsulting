@@ -3,46 +3,54 @@
 import React, { useState, useMemo } from 'react';
 import { Play, Star, ArrowRight, Download } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useRouter } from 'next/navigation'; 
 
 interface Internship {
   title: string;
   id: string;
   videoId: string;
   image: string;
+  brochureUrl?: string; 
 }
 
 const allInternships: Record<string, Internship[]> = {
   "AI & Data": [
-    { title: "InternX-AI", id: "ai-dev", videoId: "whqLvigQWoE", image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=800" },
-    { title: "InternX-Data Engineer", id: "data-eng", videoId: "kriafQfqGZE", image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800" },
-    { title: "InternX-AI Quality & Safety Engineer", id: "ai-safety", videoId: "vViMFjvVT9E", image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=800" },
+    { 
+      title: "InternX-AI", 
+      id: "ai-dev", 
+      videoId: "whqLvigQWoE", 
+      image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=800",
+      brochureUrl: "https://drive.google.com/file/d/1NliWMlZnlgO_taABHlEKYQ93__sXtuvs/view?usp=sharing" // Specific Link
+    },
+    { title: "InternX-Data Engineer", id: "data-eng", videoId: "kriafQfqGZE", image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800", brochureUrl: "#" },
+    { title: "InternX-AI Quality & Safety Engineer", id: "ai-safety", videoId: "vViMFjvVT9E", image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=800", brochureUrl: "#" },
   ],
   "Cloud & Infra": [
-    { title: "InternX-Cloud & AI Engineer", id: "cloud-ai", videoId: "kriafQfqGZE", image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=800" },
+    { title: "InternX-Cloud & AI Engineer", id: "cloud-ai", videoId: "kriafQfqGZE", image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=800", brochureUrl: "#" },
   ],
   "Cybersecurity": [
-    { title: "InternX-Cyber Security Expert", id: "cyber-exp", videoId: "vViMFjvVT9E", image: "https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&q=80&w=800" },
+    { title: "InternX-Cyber Security Expert", id: "cyber-exp", videoId: "vViMFjvVT9E", image: "https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&q=80&w=800", brochureUrl: "#" },
   ],
   "Web3 & Blockchain": [
-    { title: "InternX-Blockchain Developer", id: "eth-dev", videoId: "qOVAbKKSH10", image: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&q=80&w=800" },
+    { title: "InternX-Blockchain Developer", id: "eth-dev", videoId: "qOVAbKKSH10", image: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&q=80&w=800", brochureUrl: "#" },
   ],
   "Product & Growth": [
-    { title: "InternX-AI Product Manager", id: "ai-pm", videoId: "4XO3g7Rfamk", image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&q=80&w=800" },
-    { title: "InternX-AI Marketing Specialist", id: "ai-mkt", videoId: "whqLvigQWoE", image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800" },
+    { title: "InternX-AI Product Manager", id: "ai-pm", videoId: "4XO3g7Rfamk", image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&q=80&w=800", brochureUrl: "#" },
+    { title: "InternX-AI Marketing Specialist", id: "ai-mkt", videoId: "whqLvigQWoE", image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800", brochureUrl: "#" },
   ],
   "Industry-Specific AI": [
-    { title: "InternX-FinTech AI Specialist", id: "fintech-ai", videoId: "qOVAbKKSH10", image: "https://media.istockphoto.com/id/2185214215/photo/businessman-using-ai-technology-with-business-operations-automation-systems-to-help-make.webp?a=1&b=1&s=612x612&w=0&k=20&c=1pAq5ww9tjjKySiiuPSZk71N8fDsN_GvwkKmZ3ssAA8=" },
-    { title: "InternX-HealthTech AI Specialist", id: "health-ai", videoId: "vViMFjvVT9E", image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=800" },
+    { title: "InternX-FinTech AI Specialist", id: "fintech-ai", videoId: "qOVAbKKSH10", image: "https://media.istockphoto.com/id/2185214215/photo/businessman-using-ai-technology-with-business-operations-automation-systems-to-help-make.webp?a=1&b=1&s=612x612&w=0&k=20&c=1pAq5ww9tjjKySiiuPSZk71N8fDsN_GvwkKmZ3ssAA8=", brochureUrl: "#" },
+    { title: "InternX-HealthTech AI Specialist", id: "health-ai", videoId: "vViMFjvVT9E", image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=800", brochureUrl: "#" },
   ],
   "Robotics & IoT": [
-    { title: "InternX-Robotics Engineer", id: "robot-eng", videoId: "kriafQfqGZE", image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=800" },
-    { title: "InternX-AI & IoT Engineer", id: "iot-eng", videoId: "whqLvigQWoE", image: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=800" },
-    { title: "InternX-Drone & Automation Engineer", id: "drone-eng", videoId: "4XO3g7Rfamk", image: "https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&q=80&w=800" },
+    { title: "InternX-Robotics Engineer", id: "robot-eng", videoId: "kriafQfqGZE", image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=800", brochureUrl: "#" },
+    { title: "InternX-AI & IoT Engineer", id: "iot-eng", videoId: "whqLvigQWoE", image: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=800", brochureUrl: "#" },
+    { title: "InternX-Drone & Automation Engineer", id: "drone-eng", videoId: "4XO3g7Rfamk", image: "https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&q=80&w=800", brochureUrl: "#" },
   ],
   "Future Tech": [
-    { title: "InternX-Humanoid Robotics Engineer", id: "humanoid", videoId: "vViMFjvVT9E", image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&q=80&w=800" },
-    { title: "InternX-Smart Mobility Engineer", id: "mobility", videoId: "kriafQfqGZE", image: "https://media.istockphoto.com/id/1637506537/photo/multiracial-tachnicial-engineer-training-with-robot-arm.webp?a=1&b=1&s=612x612&w=0&k=20&c=XXV_xLuijifwyHFnxTBfWORRKNBCMLtcdtBmATZsRww=" },
-    { title: "InternX-XR & AI Developer", id: "xr-ai", videoId: "4XO3g7Rfamk", image: "https://images.unsplash.com/photo-1592478411213-6153e4ebc07d?auto=format&fit=crop&q=80&w=800" },
+    { title: "InternX-Humanoid Robotics Engineer", id: "humanoid", videoId: "vViMFjvVT9E", image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&q=80&w=800", brochureUrl: "#" },
+    { title: "InternX-Smart Mobility Engineer", id: "mobility", videoId: "kriafQfqGZE", image: "https://media.istockphoto.com/id/1637506537/photo/multiracial-tachnicial-engineer-training-with-robot-arm.webp?a=1&b=1&s=612x612&w=0&k=20&c=XXV_xLuijifwyHFnxTBfWORRKNBCMLtcdtBmATZsRww=", brochureUrl: "#" },
+    { title: "InternX-XR & AI Developer", id: "xr-ai", videoId: "4XO3g7Rfamk", image: "https://images.unsplash.com/photo-1592478411213-6153e4ebc07d?auto=format&fit=crop&q=80&w=800", brochureUrl: "#" },
   ]
 };
 
@@ -50,6 +58,7 @@ const ALL_TAB = "All Internships";
 
 export default function CourseGrid() {
   const [activeTab, setActiveTab] = useState<string>(ALL_TAB);
+  const router = useRouter(); // Initialize router
   
   const tabs = useMemo(() => [ALL_TAB, ...Object.keys(allInternships)], []);
 
@@ -69,9 +78,20 @@ export default function CourseGrid() {
     });
   };
 
-  // Naye tab mein video open karne ke liye function
   const handleVideoRedirect = (videoId: string) => {
     window.open(`https://www.youtube.com/watch?v=${videoId}`, '_blank', 'noopener,noreferrer');
+  };
+
+  const handleEnrollRedirect = (courseId: string) => {
+    router.push(`/checkout/b2c/enroll?programId=${courseId}`);
+  };
+
+  const handleBrochureDownload = (url: string | undefined) => {
+    if (url && url !== '#') {
+      window.open(url, '_blank', 'noopener,noreferrer');
+    } else {
+      alert("Brochure for this program will be available soon!");
+    }
   };
 
   return (
@@ -117,7 +137,6 @@ export default function CourseGrid() {
                 key={course.id} 
                 className="group bg-[#0a1229] border border-white/5 rounded-[2.5rem] overflow-hidden hover:border-blue-500/30 transition-all duration-500 flex flex-col"
               >
-                {/* Ab yahan click karne par redirect hoga */}
                 <div 
                   className="relative aspect-video w-full overflow-hidden cursor-pointer" 
                   onClick={() => handleVideoRedirect(course.videoId)}
@@ -154,10 +173,16 @@ export default function CourseGrid() {
                   </div>
 
                   <div className="mt-auto flex gap-3">
-                    <button className="flex-1 py-4 border border-white/10 rounded-2xl text-[10px] font-black uppercase text-slate-300 hover:bg-white/5 transition-all flex items-center justify-center gap-2">
+                    <button 
+                      onClick={() => handleBrochureDownload(course.brochureUrl)}
+                      className="flex-1 py-4 border border-white/10 rounded-2xl text-[10px] font-black uppercase text-slate-300 hover:bg-white/5 transition-all flex items-center justify-center gap-2"
+                    >
                       <Download className="w-4 h-4" /> Brochure
                     </button>
-                    <button className="flex-1 py-4 bg-blue-600 hover:bg-blue-500 rounded-2xl text-[10px] font-black uppercase text-white transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-900/20">
+                    <button 
+                      onClick={() => handleEnrollRedirect(course.id)}
+                      className="flex-1 py-4 bg-blue-600 hover:bg-blue-500 rounded-2xl text-[10px] font-black uppercase text-white transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-900/20"
+                    >
                       Enroll <ArrowRight className="w-4 h-4" />
                     </button>
                   </div>
