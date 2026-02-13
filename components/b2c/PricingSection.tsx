@@ -67,7 +67,7 @@ export default function PricingSection() {
       scholarshipMax: "Max Scholarship: ₹50,000",
       scholarshipAvg: "Avg. Scholarship: ₹20k - ₹30k",
       description: "Build your first AI career asset with ResumeNFT visibility.",
-      targetCTC: isInternational ? "Avg Salary: $40k-$60k" : "Avg CTC: ₹10-12 LPA",
+      targetCTC: isInternational ? "Avg Salary: $40k-$60k" : "Avg CTC: ₹6-12 LPA",
       features: [
         "Real Startup Agentic AI Projects",
         "ResumeNFT + GitHub Portfolio",
@@ -90,7 +90,7 @@ export default function PricingSection() {
       scholarshipMax: "Max Scholarship: ₹1,00,000",
       scholarshipAvg: "Avg. Scholarship: ₹40k - ₹70k",
       description: "Top-tier program for international roles with legal job.",
-      targetCTC: isInternational ? "Avg Salary: $80k-$120k" : "Avg CTC: ₹30-50 LPA",
+      targetCTC: isInternational ? "Avg Salary: $80k-$120k" : "Avg CTC: ₹10-26 LPA",
       features: [
         "100% Legal (Signed Contract)",
         "Weekly 1-on-1 Expert Mentoring",
