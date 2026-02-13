@@ -2,9 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  Layout, Cpu, Globe, Shield, Zap, CheckCircle, 
-  Activity, Terminal, Code2, Lock, Eye, Send, Sparkles, Bot, Loader2,
-  Check, Crown, CreditCard, TrendingUp
+  Cpu, Globe, Shield, Zap, Terminal, Code2, Send, Sparkles, Bot, Loader2, Crown, Timer 
 } from 'lucide-react';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { useRouter } from 'next/navigation';
@@ -23,11 +21,27 @@ export default function LMSPreview() {
   const [activeView, setActiveView] = useState('ai');
   const [userInput, setUserInput] = useState('');
   const [hasShowedPricing, setHasShowedPricing] = useState(false);
+  const [timeLeft, setTimeLeft] = useState('23:59:59');
   const [messages, setMessages] = useState([
     { role: 'assistant', content: 'Neural connection established. I am Manee 2.5 Flash. How can I assist your deployment today?' }
   ]);
   const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const now = new Date();
+      const endOfDay = new Date();
+      endOfDay.setHours(23, 59, 59, 999);
+      const diff = endOfDay.getTime() - now.getTime();
+      
+      const hours = Math.floor(diff / (1000 * 60 * 60)).toString().padStart(2, '0');
+      const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
+      const secs = Math.floor((diff % (1000 * 60)) / 1000).toString().padStart(2, '0');
+      setTimeLeft(`${hours}:${mins}:${secs}`);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -36,11 +50,17 @@ export default function LMSPreview() {
   }, [messages, hasShowedPricing]);
 
   const handleRegister = (plan: any) => {
+    const originalAmount = plan.rawAmount;
+    const discount = originalAmount * 0.10;
+    const finalAmount = originalAmount - discount;
+
     const params = new URLSearchParams({
         planId: plan.id,
         planName: plan.name,
         priceDisplay: plan.price,
-        rawAmountINR: plan.rawAmount.toString(),
+        rawAmountINR: finalAmount.toString(), 
+        originalAmountINR: originalAmount.toString(),
+        isEarlyBird: 'true',
         intl: 'false'
     });
     router.push(`/checkout/b2c?${params.toString()}`);
@@ -147,6 +167,15 @@ export default function LMSPreview() {
                 <div className="flex-1 flex flex-col space-y-4 pr-1 overflow-hidden">
                   {activeView === 'ai' && (
                     <div className="flex flex-col h-full animate-in fade-in duration-500">
+                      
+                      <div className="bg-blue-500/10 border border-blue-500/20 p-2 mb-2 rounded-lg flex items-center justify-between">
+                         <div className="flex items-center gap-2">
+                            <Timer className="w-3 h-3 text-blue-400 animate-pulse" />
+                            <span className="text-[9px] font-bold text-blue-400 uppercase tracking-tighter">Early Bird Offer: 10% OFF</span>
+                         </div>
+                         <span className="text-[9px] font-mono text-white bg-blue-600 px-2 py-0.5 rounded-md">{timeLeft}</span>
+                      </div>
+
                       <div ref={scrollRef} className="flex-1 overflow-y-auto space-y-4 mb-4 scrollbar-hide p-2">
                         {messages.map((msg, i) => (
                           <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
@@ -176,6 +205,7 @@ export default function LMSPreview() {
                                       <div className="text-[10px] font-black text-white uppercase">{plan.name}</div>
                                       <div className="text-lg font-black text-white">{plan.price}</div>
                                       <div className="text-[8px] text-emerald-400 font-bold uppercase tracking-widest">Target: {plan.ctc}</div>
+                                      <div className="text-[7px] text-blue-400 font-bold uppercase mt-1">10% Off Applied</div>
                                     </div>
                                   </div>
                                   <button 
