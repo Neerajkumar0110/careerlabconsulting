@@ -89,11 +89,13 @@ export default function CourseGrid() {
 
   const handleEnrollRedirect = (courseId: string, e: React.MouseEvent) => {
     e.stopPropagation();
+    e.preventDefault();
     router.push(`/checkout/b2c/enroll?programId=${courseId}`);
   };
 
   const handleBrochureDownload = (url: string | undefined, e: React.MouseEvent) => {
     e.stopPropagation();
+    e.preventDefault();
     if (url && url !== '#') {
       window.open(url, '_blank', 'noopener,noreferrer');
     } else {
@@ -144,7 +146,7 @@ export default function CourseGrid() {
                 key={course.id} 
                 className="group bg-[#0a1229] border border-white/5 rounded-[2.5rem] overflow-hidden hover:border-blue-500/30 transition-all duration-500 flex flex-col relative"
               >
-                <Link href={course.href} className="flex flex-col h-full">
+                <Link href={course.href} className="flex flex-col h-full cursor-pointer">
                   <div className="relative aspect-video w-full overflow-hidden">
                     <img 
                       src={course.image} 
@@ -156,7 +158,7 @@ export default function CourseGrid() {
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div 
                         onClick={(e) => handleVideoRedirect(course.videoId, e)}
-                        className="w-16 h-16 bg-blue-600/90 rounded-full flex items-center justify-center text-white backdrop-blur-md hover:scale-110 transition-all shadow-xl z-10"
+                        className="w-16 h-16 bg-blue-600/90 rounded-full flex items-center justify-center text-white backdrop-blur-md hover:scale-110 transition-all shadow-xl z-30"
                       >
                         <Play className="w-6 h-6 fill-current translate-x-0.5" />
                       </div>
@@ -188,16 +190,16 @@ export default function CourseGrid() {
                       View Program Details <ArrowRight className="w-3 h-3" />
                     </div>
 
-                    <div className="mt-auto flex gap-3">
+                    <div className="mt-auto flex gap-3 relative z-30">
                       <button 
                         onClick={(e) => handleBrochureDownload(course.brochureUrl, e)}
-                        className="flex-1 py-4 border border-white/10 rounded-2xl text-[10px] font-black uppercase text-slate-300 hover:bg-white/5 transition-all flex items-center justify-center gap-2 relative z-20"
+                        className="flex-1 py-4 border border-white/10 rounded-2xl text-[10px] font-black uppercase text-slate-300 hover:bg-white/5 transition-all flex items-center justify-center gap-2"
                       >
                         <Download className="w-4 h-4" /> Brochure
                       </button>
                       <button 
                         onClick={(e) => handleEnrollRedirect(course.id, e)}
-                        className="flex-1 py-4 bg-blue-600 hover:bg-blue-500 rounded-2xl text-[10px] font-black uppercase text-white transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-900/20 relative z-20"
+                        className="flex-1 py-4 bg-blue-600 hover:bg-blue-500 rounded-2xl text-[10px] font-black uppercase text-white transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-900/20"
                       >
                         Enroll <ArrowRight className="w-4 h-4" />
                       </button>
