@@ -197,7 +197,7 @@ export default function LMSPreview() {
               <div className="p-3 md:p-4 bg-white/[0.03] border border-white/5 rounded-2xl flex items-center justify-between mt-4">
                 <div className="flex items-center gap-3">
                   <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
-                  <span className="text-[8px] md:text-[9px] text-slate-400 font-mono">MANEE_FLASH_2.5: ACTIVE</span>
+                  <span className="text-[8px] md:text-[9px] text-slate-400 font-mono">MANEE FLASH 2.5 PRO: ACTIVE</span>
                 </div>
                 <div className="flex items-center gap-4">
                    <div className="text-[8px] font-mono text-slate-500 uppercase">Latency: 12ms</div>
