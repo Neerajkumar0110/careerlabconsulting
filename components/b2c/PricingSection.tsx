@@ -74,7 +74,7 @@ export default function PricingSection() {
         "Python & Prompt Engineering Basics",
         "1 Verified Internship Certificate",
         "GPT & LangChain Starter Projects",
-        "HireX Job Network Access"
+        "HireX Network Access"
       ],
       highlight: false,
       icon: Terminal
@@ -92,7 +92,7 @@ export default function PricingSection() {
       description: "Top-tier program for international roles with legal job.",
       targetCTC: isInternational ? "Avg Salary: $80k-$120k" : "Avg CTC: ₹30-50 LPA",
       features: [
-        "100% Legal Job (Signed Contract)",
+        "100% Legal (Signed Contract)",
         "Weekly 1-on-1 Expert Mentoring",
         "3+ Global Showcase Projects",
         "3 Premium Bonus Internships",
