@@ -81,15 +81,19 @@ export default function CourseGrid() {
     });
   };
 
-  const handleVideoRedirect = (videoId: string) => {
+  const handleVideoRedirect = (videoId: string, e: React.MouseEvent) => {
+    e.stopPropagation(); 
+    e.preventDefault();
     window.open(`https://www.youtube.com/watch?v=${videoId}`, '_blank', 'noopener,noreferrer');
   };
 
-  const handleEnrollRedirect = (courseId: string) => {
+  const handleEnrollRedirect = (courseId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
     router.push(`/checkout/b2c/enroll?programId=${courseId}`);
   };
 
-  const handleBrochureDownload = (url: string | undefined) => {
+  const handleBrochureDownload = (url: string | undefined, e: React.MouseEvent) => {
+    e.stopPropagation();
     if (url && url !== '#') {
       window.open(url, '_blank', 'noopener,noreferrer');
     } else {
@@ -138,70 +142,68 @@ export default function CourseGrid() {
                 exit={{ opacity: 0, scale: 0.9 }}
                 transition={{ duration: 0.3 }}
                 key={course.id} 
-                className="group bg-[#0a1229] border border-white/5 rounded-[2.5rem] overflow-hidden hover:border-blue-500/30 transition-all duration-500 flex flex-col"
+                className="group bg-[#0a1229] border border-white/5 rounded-[2.5rem] overflow-hidden hover:border-blue-500/30 transition-all duration-500 flex flex-col relative"
               >
-                <div 
-                  className="relative aspect-video w-full overflow-hidden cursor-pointer" 
-                  onClick={() => handleVideoRedirect(course.videoId)}
-                >
-                  <img 
-                    src={course.image} 
-                    alt={course.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-70 group-hover:opacity-100"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0a1229] via-transparent to-transparent opacity-60" />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-16 h-16 bg-blue-600/90 rounded-full flex items-center justify-center text-white backdrop-blur-md group-hover:scale-110 transition-all shadow-xl">
-                      <Play className="w-6 h-6 fill-current translate-x-0.5" />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="p-8 flex flex-col flex-grow">
-                  <div className="flex justify-between items-start mb-4">
-                    <h3 className="text-xl font-black text-white leading-tight italic uppercase min-h-[3.5rem] flex-1">
-                      {course.title}
-                    </h3>
-                    <Link href={course.href} className="p-2 text-slate-500 hover:text-blue-500 transition-colors">
-                        <ExternalLink className="w-5 h-5" />
-                    </Link>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4 mb-8">
-                    <div className="flex flex-col gap-1">
-                      <span className="text-[10px] text-blue-500 font-bold uppercase tracking-widest">Duration</span>
-                      <span className="text-xs font-black text-slate-200">6 - 12 Months</span>
-                    </div>
-                    <div className="flex flex-col gap-1 items-end">
-                      <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Rating</span>
-                      <span className="flex items-center gap-1 text-xs font-black text-yellow-500">
-                        <Star className="w-3 h-3 fill-current" /> 4.9/5
-                      </span>
+                <Link href={course.href} className="flex flex-col h-full">
+                  <div className="relative aspect-video w-full overflow-hidden">
+                    <img 
+                      src={course.image} 
+                      alt={course.title}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 opacity-70 group-hover:opacity-100"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0a1229] via-transparent to-transparent opacity-60" />
+                    
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div 
+                        onClick={(e) => handleVideoRedirect(course.videoId, e)}
+                        className="w-16 h-16 bg-blue-600/90 rounded-full flex items-center justify-center text-white backdrop-blur-md hover:scale-110 transition-all shadow-xl z-10"
+                      >
+                        <Play className="w-6 h-6 fill-current translate-x-0.5" />
+                      </div>
                     </div>
                   </div>
 
-                  <Link 
-                    href={course.href}
-                    className="mb-6 text-[10px] font-black uppercase text-blue-400 hover:text-white flex items-center gap-2 tracking-[0.2em] transition-colors"
-                  >
-                    View Program Details <ArrowRight className="w-3 h-3" />
-                  </Link>
+                  <div className="p-8 flex flex-col flex-grow">
+                    <div className="flex justify-between items-start mb-4">
+                      <h3 className="text-xl font-black text-white leading-tight italic uppercase min-h-[3.5rem] flex-1">
+                        {course.title}
+                      </h3>
+                      <ExternalLink className="w-5 h-5 text-slate-500 group-hover:text-blue-500 transition-colors mt-1" />
+                    </div>
 
-                  <div className="mt-auto flex gap-3">
-                    <button 
-                      onClick={() => handleBrochureDownload(course.brochureUrl)}
-                      className="flex-1 py-4 border border-white/10 rounded-2xl text-[10px] font-black uppercase text-slate-300 hover:bg-white/5 transition-all flex items-center justify-center gap-2"
-                    >
-                      <Download className="w-4 h-4" /> Brochure
-                    </button>
-                    <button 
-                      onClick={() => handleEnrollRedirect(course.id)}
-                      className="flex-1 py-4 bg-blue-600 hover:bg-blue-500 rounded-2xl text-[10px] font-black uppercase text-white transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-900/20"
-                    >
-                      Enroll <ArrowRight className="w-4 h-4" />
-                    </button>
+                    <div className="grid grid-cols-2 gap-4 mb-8">
+                      <div className="flex flex-col gap-1">
+                        <span className="text-[10px] text-blue-500 font-bold uppercase tracking-widest">Duration</span>
+                        <span className="text-xs font-black text-slate-200">6 - 12 Months</span>
+                      </div>
+                      <div className="flex flex-col gap-1 items-end">
+                        <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Rating</span>
+                        <span className="flex items-center gap-1 text-xs font-black text-yellow-500">
+                          <Star className="w-3 h-3 fill-current" /> 4.9/5
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="mb-6 text-[10px] font-black uppercase text-blue-400 group-hover:text-white flex items-center gap-2 tracking-[0.2em] transition-colors">
+                      View Program Details <ArrowRight className="w-3 h-3" />
+                    </div>
+
+                    <div className="mt-auto flex gap-3">
+                      <button 
+                        onClick={(e) => handleBrochureDownload(course.brochureUrl, e)}
+                        className="flex-1 py-4 border border-white/10 rounded-2xl text-[10px] font-black uppercase text-slate-300 hover:bg-white/5 transition-all flex items-center justify-center gap-2 relative z-20"
+                      >
+                        <Download className="w-4 h-4" /> Brochure
+                      </button>
+                      <button 
+                        onClick={(e) => handleEnrollRedirect(course.id, e)}
+                        className="flex-1 py-4 bg-blue-600 hover:bg-blue-500 rounded-2xl text-[10px] font-black uppercase text-white transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-900/20 relative z-20"
+                      >
+                        Enroll <ArrowRight className="w-4 h-4" />
+                      </button>
+                    </div>
                   </div>
-                </div>
+                </Link>
               </motion.article>
             ))}
           </AnimatePresence>
