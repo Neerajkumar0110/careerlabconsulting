@@ -40,7 +40,7 @@ const fallbackQuestions: Question[] = [
 function ScholarshipTestContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  
+   
   const planName = searchParams.get('plan') as 'Foundation' | 'Elite' || 'Foundation';
 
   const [step, setStep] = useState<'details' | 'loading' | 'quiz' | 'result'>('details');
@@ -98,9 +98,13 @@ function ScholarshipTestContent() {
             generationConfig: { responseMimeType: "application/json" }
         });
 
-        const prompt = `Generate 10 multiple choice questions on General Aptitude, Basic Programming Logic, and AI awareness. 
-        Structure: 4 Easy, 3 Medium, 3 Hard.
-        Format: JSON Array of objects with keys: id (number), question (string), options (array of 4 strings), answer (string - exact match to one option), difficulty (string).`;
+        const prompt = `Generate 25 multiple choice questions on General Aptitude, Basic Programming Logic, and AI awareness. 
+        Structure: 
+        - 10 Very Easy (Basic logic/definitions)
+        - 5 Medium (Conceptual application)
+        - 10 Hard (Complex logic/Code snippets)
+        
+        Format: JSON Array of objects with keys: id (number), question (string), options (array of 4 strings), answer (string - exact match to one option), difficulty (string: 'easy', 'medium', 'hard').`;
         
         const result = await model.generateContent(prompt);
         const response = await result.response;
@@ -127,9 +131,11 @@ function ScholarshipTestContent() {
 
   const submitQuiz = () => {
      let calculatedScore = 0;
+     const marksPerQuestion = 2; 
+
      questions.forEach(q => {
          if(answers[q.id] === q.answer) {
-             calculatedScore += 10; 
+             calculatedScore += marksPerQuestion; 
          }
      });
      setScore(calculatedScore);
@@ -143,15 +149,20 @@ function ScholarshipTestContent() {
 
   const calculateScholarshipPercent = () => {
       const maxScholarship = planName === 'Foundation' ? 30 : 40;
-      const percentage = (score / 100) * maxScholarship;
+      
+      const totalPossibleScore = questions.length * 2; 
+      
+      const percentage = (score / totalPossibleScore) * maxScholarship;
       return Math.min(Math.round(percentage), maxScholarship);
   };
 
   const getGrade = () => {
-      if (score >= 90) return 'A+';
-      if (score >= 75) return 'A';
-      if (score >= 60) return 'B';
-      if (score >= 40) return 'C';
+      const percentage = (score / (questions.length * 2)) * 100;
+      
+      if (percentage >= 90) return 'A+';
+      if (percentage >= 75) return 'A';
+      if (percentage >= 60) return 'B';
+      if (percentage >= 40) return 'C';
       return 'D';
   };
 
@@ -249,7 +260,7 @@ function ScholarshipTestContent() {
                     <div className="flex flex-col items-center justify-center h-full my-auto py-12">
                         <Loader2 className="w-16 h-16 text-blue-500 animate-spin mb-6" />
                         <h2 className="text-2xl font-bold text-white mb-2">Generating Questions...</h2>
-                        <p className="text-slate-500 text-sm">Our AI is curating a unique set of questions for you.</p>
+                        <p className="text-slate-500 text-sm">Curating 25 questions based on your profile.</p>
                     </div>
                 )}
 
@@ -264,7 +275,7 @@ function ScholarshipTestContent() {
                                 questions[currentQuestionIndex].difficulty === 'medium' ? 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20' :
                                 'bg-red-500/10 text-red-400 border-red-500/20'
                             }`}>
-                                {questions[currentQuestionIndex].difficulty}
+                                {questions[currentQuestionIndex].difficulty === 'easy' ? 'Easy' : questions[currentQuestionIndex].difficulty}
                             </span>
                         </div>
 
@@ -331,7 +342,7 @@ function ScholarshipTestContent() {
                         <div className="grid grid-cols-3 gap-4 mb-8">
                             <div className="bg-white/5 p-4 rounded-2xl border border-white/10">
                                 <div className="text-xs text-slate-500 uppercase font-bold mb-1">Score</div>
-                                <div className="text-2xl font-black text-white">{score}/100</div>
+                                <div className="text-2xl font-black text-white">{score}/{questions.length * 2}</div>
                             </div>
                             <div className="bg-white/5 p-4 rounded-2xl border border-white/10">
                                 <div className="text-xs text-slate-500 uppercase font-bold mb-1">Grade</div>
