@@ -215,7 +215,9 @@ function ScholarshipTestContent() {
                         <div className="text-center">
                             <h4 className="text-3xl font-black text-white mb-2">Apply for <span className="text-blue-500">{planName}</span> Scholarship</h4>
                             <p className="text-slate-400 text-sm max-w-md mx-auto">
-                                Take this AI-powered assessment to unlock up to {planName === 'Foundation' ? '30%' : '40%'} off your program fees.
+                                <span className="block mt-2 text-slate-500 text-xs font-medium">
+                                    Scholarship Upto 50,000/- INR For Indian Students Only.
+                                </span>
                             </p>
                         </div>
 
