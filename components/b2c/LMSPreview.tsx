@@ -20,7 +20,7 @@ export default function LMSPreview() {
   const [activeView, setActiveView] = useState('ai');
   const [userInput, setUserInput] = useState('');
   const [messages, setMessages] = useState([
-    { role: 'assistant', content: 'Neural connection established. I am Gemini 2.5 Flash. How can I assist your deployment today?' }
+    { role: 'assistant', content: 'Neural connection established. I am Manee 2.5 Flash. How can I assist your deployment today?' }
   ]);
   const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -65,14 +65,14 @@ export default function LMSPreview() {
             </div>
             
             <h2 className="text-3xl md:text-6xl font-black text-white mb-6 tracking-tighter leading-tight uppercase">
-              Gemini-Powered <br className="hidden md:block"/> 
+              Manee Powered <br className="hidden md:block"/> 
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500">
                 Learning Ecosystem
               </span>
             </h2>
             
             <p className="text-slate-400 text-sm md:text-lg mb-8 leading-relaxed max-w-xl mx-auto lg:mx-0">
-              Interactive LMS with <span className="text-white font-bold">Gemini 2.5 Flash</span> integration. 
+              Interactive LMS with <span className="text-white font-bold">Manee 2.5 Flash</span> integration. 
               Real-time code analysis, autonomous debugging, and neural learning protocols.
             </p>
             
@@ -103,7 +103,7 @@ export default function LMSPreview() {
                   <div className="w-2 md:w-2.5 h-2 md:h-2.5 rounded-full bg-emerald-500/40" />
                 </div>
                 <div className="mx-auto bg-white/5 px-4 py-1 rounded-lg text-[9px] text-slate-500 font-mono truncate max-w-[150px] md:max-w-none">
-                  autonomous.gemini.ai/session_v2.5_flash
+                  autonomous.manee.ai/session_v2.5_flash
                 </div>
               </div>
 
@@ -157,7 +157,7 @@ export default function LMSPreview() {
                         <input 
                           value={userInput}
                           onChange={(e) => setUserInput(e.target.value)}
-                          placeholder="Ask Gemini to debug code..."
+                          placeholder="Ask Manee to debug code..."
                           className="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-[11px] text-white focus:outline-none focus:border-blue-500/50 transition-colors"
                         />
                         <button type="submit" className="absolute right-2 top-2 p-1.5 bg-blue-600 rounded-lg hover:bg-blue-500 transition-colors">
@@ -172,7 +172,7 @@ export default function LMSPreview() {
                       <div className="flex items-center gap-2 opacity-50 mb-4 border-b border-white/5 pb-2">
                         <Terminal className="w-3 h-3" /> System Shell v2.5
                       </div>
-                      <div>$ gemini --analyze current-project</div>
+                      <div>$ manee --analyze current-project</div>
                       <div className="text-slate-400 italic">{`> Scanning neural nodes...`}</div>
                       <div className="text-white font-bold">● STATUS: AUTONOMOUS_READY</div>
                       <div className="text-blue-400">√ Llama-V3 Weights Sync Complete</div>
@@ -182,11 +182,11 @@ export default function LMSPreview() {
                   {activeView === 'code' && (
                     <div className="h-full bg-[#050505] border border-white/10 rounded-2xl p-4 font-mono text-[10px] animate-in slide-in-from-bottom-4">
                       <div className="flex justify-between mb-4 border-b border-white/5 pb-2 text-slate-500">
-                        <span>gemini_agent.py</span>
+                        <span>manee_agent.py</span>
                         <Sparkles className="w-3 h-3 text-cyan-400" />
                       </div>
                       <div className="text-blue-400">def <span className="text-white">autonomous_fix</span>():</div>
-                      <div className="pl-4 text-slate-500"># Gemini 2.5 Logic here</div>
+                      <div className="pl-4 text-slate-500"># Manee 2.5 Logic here</div>
                       <div className="pl-4 text-emerald-400">return model.generate(prompt)</div>
                     </div>
                   )}
@@ -197,7 +197,7 @@ export default function LMSPreview() {
               <div className="p-3 md:p-4 bg-white/[0.03] border border-white/5 rounded-2xl flex items-center justify-between mt-4">
                 <div className="flex items-center gap-3">
                   <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
-                  <span className="text-[8px] md:text-[9px] text-slate-400 font-mono">GEMINI_FLASH_2.5: ACTIVE</span>
+                  <span className="text-[8px] md:text-[9px] text-slate-400 font-mono">MANEE_FLASH_2.5: ACTIVE</span>
                 </div>
                 <div className="flex items-center gap-4">
                    <div className="text-[8px] font-mono text-slate-500 uppercase">Latency: 12ms</div>
