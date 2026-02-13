@@ -1,13 +1,15 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { Play, Star, ArrowRight, Download } from 'lucide-react';
+import { Play, Star, ArrowRight, Download, ExternalLink } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation'; 
+import Link from 'next/link'; 
 
 interface Internship {
   title: string;
   id: string;
+  href: string; 
   videoId: string;
   image: string;
   brochureUrl?: string; 
@@ -18,39 +20,40 @@ const allInternships: Record<string, Internship[]> = {
     { 
       title: "InternX-AI", 
       id: "ai-dev", 
+      href: "/internship/internx-ai",
       videoId: "whqLvigQWoE", 
       image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=800",
-      brochureUrl: "https://drive.google.com/file/d/1NliWMlZnlgO_taABHlEKYQ93__sXtuvs/view?usp=sharing" // Specific Link
+      brochureUrl: "https://drive.google.com/file/d/1NliWMlZnlgO_taABHlEKYQ93__sXtuvs/view?usp=sharing" 
     },
-    { title: "InternX-Data Engineer", id: "data-eng", videoId: "kriafQfqGZE", image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800", brochureUrl: "#" },
-    { title: "InternX-AI Quality & Safety Engineer", id: "ai-safety", videoId: "vViMFjvVT9E", image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=800", brochureUrl: "#" },
+    { title: "InternX-Data Engineer", id: "data-eng", href: "/internship/internx-data-engineer", videoId: "kriafQfqGZE", image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800", brochureUrl: "#" },
+    { title: "InternX-AI Quality & Safety Engineer", id: "ai-safety", href: "/internship/internx-ai-quality-safety-engineer", videoId: "vViMFjvVT9E", image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80&w=800", brochureUrl: "#" },
   ],
   "Cloud & Infra": [
-    { title: "InternX-Cloud & AI Engineer", id: "cloud-ai", videoId: "kriafQfqGZE", image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=800", brochureUrl: "#" },
+    { title: "InternX-Cloud & AI Engineer", id: "cloud-ai", href: "/internship/internx-cloud-ai-engineer", videoId: "kriafQfqGZE", image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=800", brochureUrl: "#" },
   ],
   "Cybersecurity": [
-    { title: "InternX-Cyber Security Expert", id: "cyber-exp", videoId: "vViMFjvVT9E", image: "https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&q=80&w=800", brochureUrl: "#" },
+    { title: "InternX-Cyber Security Expert", id: "cyber-exp", href: "/internship/internx-cyber-security-expert", videoId: "vViMFjvVT9E", image: "https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&q=80&w=800", brochureUrl: "#" },
   ],
   "Web3 & Blockchain": [
-    { title: "InternX-Blockchain Developer", id: "eth-dev", videoId: "qOVAbKKSH10", image: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&q=80&w=800", brochureUrl: "#" },
+    { title: "InternX-Blockchain Developer", id: "eth-dev", href: "/internship/internx-blockchain-developer", videoId: "qOVAbKKSH10", image: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&q=80&w=800", brochureUrl: "#" },
   ],
   "Product & Growth": [
-    { title: "InternX-AI Product Manager", id: "ai-pm", videoId: "4XO3g7Rfamk", image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&q=80&w=800", brochureUrl: "#" },
-    { title: "InternX-AI Marketing Specialist", id: "ai-mkt", videoId: "whqLvigQWoE", image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800", brochureUrl: "#" },
+    { title: "InternX-AI Product Manager", id: "ai-pm", href: "/internship/internx-ai-product-manager", videoId: "4XO3g7Rfamk", image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&q=80&w=800", brochureUrl: "#" },
+    { title: "InternX-AI Marketing Specialist", id: "ai-mkt", href: "/internship/internx-ai-marketing-specialist", videoId: "whqLvigQWoE", image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800", brochureUrl: "#" },
   ],
   "Industry-Specific AI": [
-    { title: "InternX-FinTech AI Specialist", id: "fintech-ai", videoId: "qOVAbKKSH10", image: "https://media.istockphoto.com/id/2185214215/photo/businessman-using-ai-technology-with-business-operations-automation-systems-to-help-make.webp?a=1&b=1&s=612x612&w=0&k=20&c=1pAq5ww9tjjKySiiuPSZk71N8fDsN_GvwkKmZ3ssAA8=", brochureUrl: "#" },
-    { title: "InternX-HealthTech AI Specialist", id: "health-ai", videoId: "vViMFjvVT9E", image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=800", brochureUrl: "#" },
+    { title: "InternX-FinTech AI Specialist", id: "fintech-ai", href: "/internship/internx-fintech-ai-specialist", videoId: "qOVAbKKSH10", image: "https://media.istockphoto.com/id/2185214215/photo/businessman-using-ai-technology-with-business-operations-automation-systems-to-help-make.webp?a=1&b=1&s=612x612&w=0&k=20&c=1pAq5ww9tjjKySiiuPSZk71N8fDsN_GvwkKmZ3ssAA8=", brochureUrl: "#" },
+    { title: "InternX-HealthTech AI Specialist", id: "health-ai", href: "/internship/internx-healthtech-ai-specialist", videoId: "vViMFjvVT9E", image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=800", brochureUrl: "#" },
   ],
   "Robotics & IoT": [
-    { title: "InternX-Robotics Engineer", id: "robot-eng", videoId: "kriafQfqGZE", image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=800", brochureUrl: "#" },
-    { title: "InternX-AI & IoT Engineer", id: "iot-eng", videoId: "whqLvigQWoE", image: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=800", brochureUrl: "#" },
-    { title: "InternX-Drone & Automation Engineer", id: "drone-eng", videoId: "4XO3g7Rfamk", image: "https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&q=80&w=800", brochureUrl: "#" },
+    { title: "InternX-Robotics Engineer", id: "robot-eng", href: "/internship/internx-robotics-engineer", videoId: "kriafQfqGZE", image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=800", brochureUrl: "#" },
+    { title: "InternX-AI & IoT Engineer", id: "iot-eng", href: "/internship/internx-ai-iot-engineer", videoId: "whqLvigQWoE", image: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=800", brochureUrl: "#" },
+    { title: "InternX-Drone & Automation Engineer", id: "drone-eng", href: "/internship/internx-drone-automation-engineer", videoId: "4XO3g7Rfamk", image: "https://images.unsplash.com/photo-1508614589041-895b88991e3e?auto=format&fit=crop&q=80&w=800", brochureUrl: "#" },
   ],
   "Future Tech": [
-    { title: "InternX-Humanoid Robotics Engineer", id: "humanoid", videoId: "vViMFjvVT9E", image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&q=80&w=800", brochureUrl: "#" },
-    { title: "InternX-Smart Mobility Engineer", id: "mobility", videoId: "kriafQfqGZE", image: "https://media.istockphoto.com/id/1637506537/photo/multiracial-tachnicial-engineer-training-with-robot-arm.webp?a=1&b=1&s=612x612&w=0&k=20&c=XXV_xLuijifwyHFnxTBfWORRKNBCMLtcdtBmATZsRww=", brochureUrl: "#" },
-    { title: "InternX-XR & AI Developer", id: "xr-ai", videoId: "4XO3g7Rfamk", image: "https://images.unsplash.com/photo-1592478411213-6153e4ebc07d?auto=format&fit=crop&q=80&w=800", brochureUrl: "#" },
+    { title: "InternX-Humanoid Robotics Engineer", id: "humanoid", href: "/internship/internx-humanoid-robotics-engineer", videoId: "vViMFjvVT9E", image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&q=80&w=800", brochureUrl: "#" },
+    { title: "InternX-Smart Mobility Engineer", id: "mobility", href: "/internship/internx-smart-mobility-engineer", videoId: "kriafQfqGZE", image: "https://media.istockphoto.com/id/1637506537/photo/multiracial-tachnicial-engineer-training-with-robot-arm.webp?a=1&b=1&s=612x612&w=0&k=20&c=XXV_xLuijifwyHFnxTBfWORRKNBCMLtcdtBmATZsRww=", brochureUrl: "#" },
+    { title: "InternX-XR & AI Developer", id: "xr-ai", href: "/internship/internx-xr-ai-developer", videoId: "4XO3g7Rfamk", image: "https://images.unsplash.com/photo-1592478411213-6153e4ebc07d?auto=format&fit=crop&q=80&w=800", brochureUrl: "#" },
   ]
 };
 
@@ -58,7 +61,7 @@ const ALL_TAB = "All Internships";
 
 export default function CourseGrid() {
   const [activeTab, setActiveTab] = useState<string>(ALL_TAB);
-  const router = useRouter(); // Initialize router
+  const router = useRouter(); 
   
   const tabs = useMemo(() => [ALL_TAB, ...Object.keys(allInternships)], []);
 
@@ -155,9 +158,14 @@ export default function CourseGrid() {
                 </div>
 
                 <div className="p-8 flex flex-col flex-grow">
-                  <h3 className="text-xl font-black text-white mb-6 leading-tight italic uppercase min-h-[3.5rem]">
-                    {course.title}
-                  </h3>
+                  <div className="flex justify-between items-start mb-4">
+                    <h3 className="text-xl font-black text-white leading-tight italic uppercase min-h-[3.5rem] flex-1">
+                      {course.title}
+                    </h3>
+                    <Link href={course.href} className="p-2 text-slate-500 hover:text-blue-500 transition-colors">
+                        <ExternalLink className="w-5 h-5" />
+                    </Link>
+                  </div>
 
                   <div className="grid grid-cols-2 gap-4 mb-8">
                     <div className="flex flex-col gap-1">
@@ -171,6 +179,13 @@ export default function CourseGrid() {
                       </span>
                     </div>
                   </div>
+
+                  <Link 
+                    href={course.href}
+                    className="mb-6 text-[10px] font-black uppercase text-blue-400 hover:text-white flex items-center gap-2 tracking-[0.2em] transition-colors"
+                  >
+                    View Program Details <ArrowRight className="w-3 h-3" />
+                  </Link>
 
                   <div className="mt-auto flex gap-3">
                     <button 
