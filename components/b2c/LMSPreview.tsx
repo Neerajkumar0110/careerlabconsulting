@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { 
-  Cpu, Globe, Shield, Zap, Terminal, Code2, Send, Sparkles, Bot, Loader2, Crown, Timer 
+  Cpu, Globe, Shield, Zap, Terminal, Send, Sparkles, Loader2, Crown, Timer, Wifi 
 } from 'lucide-react';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { useRouter } from 'next/navigation';
@@ -18,10 +18,10 @@ const stats = [
 
 export default function LMSPreview() {
   const router = useRouter();
-  const [activeView, setActiveView] = useState('ai');
   const [userInput, setUserInput] = useState('');
   const [hasShowedPricing, setHasShowedPricing] = useState(false);
   const [timeLeft, setTimeLeft] = useState('23:59:59');
+  
   const [messages, setMessages] = useState([
     { role: 'assistant', content: 'Neural connection established. I am Manee 2.5 Flash. How can I assist your deployment today?' }
   ]);
@@ -47,7 +47,7 @@ export default function LMSPreview() {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
-  }, [messages, hasShowedPricing]);
+  }, [messages, hasShowedPricing, isTyping]);
 
   const handleRegister = (plan: any) => {
     const originalAmount = plan.rawAmount;
@@ -133,124 +133,106 @@ export default function LMSPreview() {
           <div className="relative group order-1 lg:order-2">
             <div className="relative bg-[#0a0f1d] border border-white/10 rounded-2xl md:rounded-[2.5rem] p-2 md:p-4 shadow-2xl backdrop-blur-md overflow-hidden h-[600px] flex flex-col">
               
-              <div className="flex items-center gap-2 mb-3 px-4 py-2 border-b border-white/5">
+              <div className="flex items-center justify-between mb-3 px-4 py-2 border-b border-white/5">
                 <div className="flex gap-1.5">
-                  <div className="w-2 md:w-2.5 h-2 md:h-2.5 rounded-full bg-red-500/40" />
-                  <div className="w-2 md:w-2.5 h-2 md:h-2.5 rounded-full bg-amber-500/40" />
-                  <div className="w-2 md:w-2.5 h-2 md:h-2.5 rounded-full bg-emerald-500/40" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-red-500/40" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-amber-500/40" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/40" />
                 </div>
-                <div className="mx-auto bg-white/5 px-4 py-1 rounded-lg text-[9px] text-slate-500 font-mono">
-                  autonomous.manee.ai/session_v2.5
+                
+                <div className="flex items-center gap-2 bg-white/5 px-3 py-1 rounded-full border border-white/5">
+                   <Wifi className="w-3 h-3 text-emerald-500" />
+                   <span className="text-[10px] text-slate-400 font-mono">autonomous.manee.ai</span>
                 </div>
               </div>
 
-              <div className="flex gap-2 md:gap-4 flex-1 overflow-hidden">
-                <div className="w-12 md:w-16 bg-white/[0.03] rounded-xl md:rounded-3xl flex flex-col items-center py-6 gap-6 border border-white/5">
-                  {[
-                    { id: 'ai', icon: Bot },
-                    { id: 'terminal', icon: Terminal },
-                    { id: 'code', icon: Code2 },
-                    { id: 'security', icon: Shield }
-                  ].map((item) => (
-                    <button 
-                      key={item.id}
-                      onClick={() => setActiveView(item.id)}
-                      className={`w-8 h-8 md:w-10 md:h-10 rounded-xl flex items-center justify-center transition-all ${
-                        activeView === item.id ? 'bg-blue-600 text-white scale-110' : 'text-slate-500'
-                      }`}
-                    >
-                      <item.icon className="w-4 h-4" />
-                    </button>
-                  ))}
-                </div>
-
-                <div className="flex-1 flex flex-col space-y-4 pr-1 overflow-hidden">
-                  {activeView === 'ai' && (
-                    <div className="flex flex-col h-full animate-in fade-in duration-500">
-                      
-                      <div className="bg-blue-500/10 border border-blue-500/20 p-2 mb-2 rounded-lg flex items-center justify-between">
-                         <div className="flex items-center gap-2">
-                            <Timer className="w-3 h-3 text-blue-400 animate-pulse" />
-                            <span className="text-[9px] font-bold text-blue-400 uppercase tracking-tighter">Early Bird Offer: 10% OFF</span>
-                         </div>
-                         <span className="text-[9px] font-mono text-white bg-blue-600 px-2 py-0.5 rounded-md">{timeLeft}</span>
-                      </div>
-
-                      <div ref={scrollRef} className="flex-1 overflow-y-auto space-y-4 mb-4 scrollbar-hide p-2">
-                        {messages.map((msg, i) => (
-                          <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                            <div className={`max-w-[85%] p-3 rounded-2xl text-[11px] font-mono ${
-                              msg.role === 'user' ? 'bg-blue-600 text-white' : 'bg-white/5 border border-white/10 text-slate-300'
-                            }`}>
-                              {msg.content}
-                            </div>
-                          </div>
-                        ))}
-
-                        {hasShowedPricing && (
-                          <div className="animate-in slide-in-from-bottom-8 duration-700 space-y-4 pt-4">
-                            <div className="flex items-center gap-2 px-2">
-                                <Sparkles className="w-4 h-4 text-yellow-500" />
-                                <span className="text-[10px] font-black text-yellow-500 uppercase tracking-tighter">Recommended Plans for Your Evolution</span>
-                            </div>
-                            <div className="grid grid-cols-1 gap-3">
-                              {[
-                                { id: 'plan-foundation', name: 'Foundation', price: '₹1,20,000', rawAmount: 12000000, icon: Terminal, ctc: '6-12 LPA' },
-                                { id: 'plan-elite', name: 'Elite', price: '₹2,00,000', rawAmount: 20000000, icon: Crown, ctc: '10-26 LPA' }
-                              ].map((plan) => (
-                                <div key={plan.id} className="bg-white/5 border border-white/10 p-4 rounded-2xl flex items-center justify-between group hover:border-blue-500/50 transition-all">
-                                  <div className="flex items-center gap-3">
-                                    <plan.icon className="w-8 h-8 text-blue-400" />
-                                    <div>
-                                      <div className="text-[10px] font-black text-white uppercase">{plan.name}</div>
-                                      <div className="text-lg font-black text-white">{plan.price}</div>
-                                      <div className="text-[8px] text-emerald-400 font-bold uppercase tracking-widest">Target: {plan.ctc}</div>
-                                      <div className="text-[7px] text-blue-400 font-bold uppercase mt-1">10% Off Applied</div>
-                                    </div>
-                                  </div>
-                                  <button 
-                                    onClick={() => handleRegister(plan)}
-                                    className="px-4 py-2 bg-blue-600 rounded-xl text-[10px] font-black uppercase tracking-tighter hover:bg-blue-500 transition-all shadow-lg shadow-blue-600/20"
-                                  >
-                                    Enroll Now
-                                  </button>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-
-                        {isTyping && (
-                          <div className="flex justify-start">
-                            <div className="bg-white/5 border border-white/10 p-3 rounded-2xl">
-                              <Loader2 className="w-4 h-4 text-blue-400 animate-spin" />
-                            </div>
-                          </div>
-                        )}
-                      </div>
-
-                      <form onSubmit={handleSendMessage} className="relative mb-2">
-                        <input 
-                          value={userInput}
-                          onChange={(e) => setUserInput(e.target.value)}
-                          placeholder="Ask Manee to debug code..."
-                          className="w-full bg-white/5 border border-white/10 rounded-xl py-3 px-4 text-[11px] text-white focus:outline-none focus:border-blue-500/50"
-                        />
-                        <button type="submit" className="absolute right-2 top-2 p-1.5 bg-blue-600 rounded-lg">
-                          <Send className="w-3.5 h-3.5 text-white" />
-                        </button>
-                      </form>
+              <div className="flex-1 flex flex-col space-y-4 overflow-hidden px-2">
+                  <div className="flex flex-col h-full animate-in fade-in duration-500">
+                    
+                    <div className="bg-blue-500/10 border border-blue-500/20 p-2.5 mb-2 rounded-xl flex items-center justify-between shadow-lg shadow-blue-900/10">
+                        <div className="flex items-center gap-2">
+                          <Timer className="w-3.5 h-3.5 text-blue-400 animate-pulse" />
+                          <span className="text-[10px] font-bold text-blue-400 uppercase tracking-wide">Early Bird: 10% OFF Active</span>
+                        </div>
+                        <span className="text-[10px] font-mono text-white bg-blue-600/80 border border-blue-500 px-2 py-0.5 rounded-md shadow-sm">{timeLeft}</span>
                     </div>
-                  )}
-                </div>
+
+                    <div ref={scrollRef} className="flex-1 overflow-y-auto space-y-4 mb-4 scrollbar-hide p-2">
+                      {messages.map((msg, i) => (
+                        <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                          <div className={`max-w-[85%] p-3.5 rounded-2xl text-xs font-medium leading-relaxed shadow-sm ${
+                            msg.role === 'user' 
+                              ? 'bg-blue-600 text-white rounded-br-none' 
+                              : 'bg-white/5 border border-white/10 text-slate-300 rounded-bl-none'
+                          }`}>
+                            {msg.content}
+                          </div>
+                        </div>
+                      ))}
+
+                      {hasShowedPricing && (
+                        <div className="animate-in slide-in-from-bottom-4 duration-700 space-y-3 pt-2">
+                          <div className="flex items-center gap-2 px-1">
+                              <Sparkles className="w-3.5 h-3.5 text-yellow-500" />
+                              <span className="text-[10px] font-bold text-yellow-500 uppercase tracking-wide">AI Recommended Plans</span>
+                          </div>
+                          <div className="grid grid-cols-1 gap-2.5">
+                            {[
+                              { id: 'plan-foundation', name: 'Foundation', price: '₹1,20,000', rawAmount: 12000000, icon: Terminal, ctc: '6-12 LPA' },
+                              { id: 'plan-elite', name: 'Elite', price: '₹2,00,000', rawAmount: 20000000, icon: Crown, ctc: '10-26 LPA' }
+                            ].map((plan) => (
+                              <div key={plan.id} className="bg-white/5 border border-white/10 p-3.5 rounded-xl flex items-center justify-between group hover:border-blue-500/40 hover:bg-white/[0.07] transition-all cursor-pointer">
+                                <div className="flex items-center gap-3">
+                                  <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-400">
+                                     <plan.icon className="w-5 h-5" />
+                                  </div>
+                                  <div>
+                                    <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{plan.name}</div>
+                                    <div className="text-lg font-bold text-white leading-tight">{plan.price}</div>
+                                    <div className="text-[9px] text-emerald-400 font-bold uppercase mt-0.5">Avg Package: {plan.ctc}</div>
+                                  </div>
+                                </div>
+                                <button 
+                                  onClick={() => handleRegister(plan)}
+                                  className="px-4 py-2 bg-blue-600 rounded-lg text-[10px] font-bold uppercase tracking-wide text-white hover:bg-blue-500 transition-all shadow-lg shadow-blue-600/20"
+                                >
+                                  Select
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {isTyping && (
+                        <div className="flex justify-start">
+                          <div className="bg-white/5 border border-white/10 p-3 rounded-2xl rounded-bl-none">
+                            <Loader2 className="w-4 h-4 text-blue-400 animate-spin" />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    <form onSubmit={handleSendMessage} className="relative mb-1">
+                      <input 
+                        value={userInput}
+                        onChange={(e) => setUserInput(e.target.value)}
+                        placeholder="Ask Manee to analyze your career path..."
+                        className="w-full bg-white/5 border border-white/10 rounded-xl py-3.5 pl-4 pr-12 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-blue-500/50 focus:bg-white/[0.07] transition-all"
+                      />
+                      <button type="submit" className="absolute right-2 top-2 p-1.5 bg-blue-600 rounded-lg hover:bg-blue-500 transition-colors">
+                        <Send className="w-3.5 h-3.5 text-white" />
+                      </button>
+                    </form>
+                  </div>
               </div>
 
-              <div className="p-3 bg-white/[0.03] border border-white/5 rounded-2xl flex items-center justify-between mt-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  <span className="text-[8px] text-slate-400 font-mono uppercase tracking-widest">MANEE PRO: ACTIVE</span>
+              <div className="px-4 py-2 mt-2 flex items-center justify-between border-t border-white/5">
+                <div className="flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="text-[9px] text-slate-400 font-mono uppercase tracking-widest">SYSTEM: ONLINE</span>
                 </div>
-                <div className="text-[8px] font-mono text-slate-500 uppercase italic">Secured by SSL InternX</div>
+                <div className="text-[9px] font-mono text-slate-600 uppercase">Encrypted v2.5</div>
               </div>
             </div>
           </div>
