@@ -8,7 +8,7 @@ import ReactMarkdown from "react-markdown";
 
 const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY || "");
 const model = genAI.getGenerativeModel({ 
-  model: "gemini-1.5-flash", 
+  model: "gemini-2.5-flash", 
   systemInstruction: `You are Manee, a friendly Indian female career counselor at Career Lab Consulting. 
   Your tone is warm, professional, and empathetic. 
   If you know the user's name, greet them personally. 
