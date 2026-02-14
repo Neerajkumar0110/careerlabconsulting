@@ -24,10 +24,11 @@ function CheckoutContent() {
   const scholarshipCode = searchParams.get('scholarshipCode');
   const discountPercent = parseInt(searchParams.get('discount') || '0');
 
-  const SEAT_PRICE_INR = 1000000; 
-  const SEAT_PRICE_USD = 15000;   
+  const SEAT_PRICE_INR = 1000000; // 10,000 INR
+  const SEAT_PRICE_USD = 15000;   // 150 USD
 
-  const [paymentType, setPaymentType] = useState<'full' | 'seat'>(isEarlyBird || scholarshipCode ? 'full' : 'seat');
+  // Default to Seat Reservation (10,000)
+  const [paymentType, setPaymentType] = useState<'full' | 'seat'>('seat');
   const [paymentMethod, setPaymentMethod] = useState<'phonepe' | 'razorpay'>('phonepe');
   const [loading, setLoading] = useState(false);
   
@@ -41,9 +42,12 @@ function CheckoutContent() {
     github: ''
   });
 
-  const currentAmount = paymentType === 'full' 
-    ? (isIntl ? rawAmountUSD : rawAmountINR) 
-    : (isIntl ? SEAT_PRICE_USD : SEAT_PRICE_INR);
+  // Calculate Specific Amounts for Logic
+  const fullPaymentValue = isIntl ? rawAmountUSD : rawAmountINR; // Discounted Total
+  const seatReservationValue = isIntl ? SEAT_PRICE_USD : SEAT_PRICE_INR; // 10k Fixed
+
+  // Current Active Amount (For Payment & Summary)
+  const currentAmount = paymentType === 'full' ? fullPaymentValue : seatReservationValue;
     
   const currentCurrency = isIntl ? 'USD' : 'INR';
   
@@ -55,7 +59,9 @@ function CheckoutContent() {
     }).format(amount / 100);
   };
 
-  const formattedAmount = formatCurrency(currentAmount);
+  const formattedCurrentAmount = formatCurrency(currentAmount);
+  const formattedFullAmount = formatCurrency(fullPaymentValue);
+  const formattedSeatAmount = formatCurrency(seatReservationValue);
   const formattedOriginalAmount = formatCurrency(originalAmountINR);
 
   useEffect(() => {
@@ -82,7 +88,7 @@ function CheckoutContent() {
             mobileNumber: userDetails.phone,
             userDetails: userDetails,
             isEarlyBird: isEarlyBird,
-            planDetails: { name: planName, type: paymentType === 'full' ? 'Full Enrollment' : 'Seat Reservation' }
+            planDetails: { name: planName, type: paymentType === 'full' ? 'Full Enrollment' : 'Registration Fee (EMI Setup)' }
           })
         });
 
@@ -107,7 +113,7 @@ function CheckoutContent() {
           amount: currentAmount,
           currency: currentCurrency,
           name: "InternX AI",
-          description: `${paymentType === 'full' ? 'Enrollment' : 'Seat Booking'} - ${planName}`,
+          description: `${paymentType === 'full' ? 'Enrollment' : 'Registration'} - ${planName}`,
           prefill: {
             name: userDetails.name,
             email: userDetails.email,
@@ -119,9 +125,9 @@ function CheckoutContent() {
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                 planName: planName,
-                amount: formattedAmount,
+                amount: formattedCurrentAmount,
                 paymentId: response.razorpay_payment_id,
-                type: paymentType === 'full' ? 'Full Payment' : 'Seat Registration',
+                type: paymentType === 'full' ? 'Full Payment' : 'Registration Fee (Seat)',
                 user: userDetails,
                 isEarlyBird: isEarlyBird, 
                 scholarship: scholarshipCode ? { code: scholarshipCode, discount: discountPercent } : null
@@ -166,6 +172,7 @@ function CheckoutContent() {
             <p className="text-slate-400">Complete your profile to unlock LMS access.</p>
           </div>
 
+          {/* Early Bird Banner */}
           {isEarlyBird && (
              <div className="bg-gradient-to-r from-blue-900/40 to-indigo-900/40 border border-blue-500/30 p-4 rounded-2xl flex items-center gap-4 animate-in fade-in slide-in-from-top-4 duration-700">
                 <div className="p-3 bg-blue-500/20 rounded-full text-blue-400 shrink-0 animate-pulse">
@@ -174,7 +181,7 @@ function CheckoutContent() {
                 <div>
                    <h3 className="text-lg font-bold text-white mb-0.5">⚡ Early Bird Offer Active!</h3>
                    <p className="text-xs text-slate-300 leading-relaxed">
-                      You have unlocked a <span className="text-blue-400 font-bold">10% Discount</span>. 
+                      You have unlocked a <span className="text-blue-400 font-bold">10% Discount</span> on full payment. 
                       Offer expires in 24 hours.
                    </p>
                 </div>
@@ -276,7 +283,7 @@ function CheckoutContent() {
 
                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                    <div>
-                      <label className="text-[11px] font-bold uppercase text-slate-500 ml-1 mb-1.5 block">LinkedIn URL</label>
+                      <label className="text-[11px] font-bold uppercase text-slate-500 ml-1 mb-1.5 block">LinkedIn URL (Optional)</label>
                       <div className="relative">
                         <Linkedin className="absolute left-4 top-3.5 w-4 h-4 text-slate-500" />
                         <input 
@@ -288,7 +295,7 @@ function CheckoutContent() {
                       </div>
                    </div>
                    <div>
-                      <label className="text-[11px] font-bold uppercase text-slate-500 ml-1 mb-1.5 block">GitHub URL</label>
+                      <label className="text-[11px] font-bold uppercase text-slate-500 ml-1 mb-1.5 block">GitHub URL (Optional)</label>
                       <div className="relative">
                         <Github className="absolute left-4 top-3.5 w-4 h-4 text-slate-500" />
                         <input 
@@ -306,38 +313,57 @@ function CheckoutContent() {
           <div className="bg-white/5 border border-white/10 p-6 md:p-8 rounded-3xl">
              <h2 className="text-xl font-bold flex items-center gap-2 mb-6 text-white">
                <Ticket className="w-5 h-5 text-blue-500" />
-               Payment Preference
+               Select Payment Option
              </h2>
 
              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                
+                {/* OPTION 1: Registration Fee (Default) */}
                 <div 
                    onClick={() => setPaymentType('seat')}
-                   className={`cursor-pointer p-4 rounded-2xl border-2 transition-all ${paymentType === 'seat' ? 'bg-green-600/10 border-green-500' : 'bg-black/20 border-white/5 hover:border-white/10'}`}
+                   className={`cursor-pointer p-5 rounded-2xl border-2 transition-all relative overflow-hidden ${paymentType === 'seat' ? 'bg-green-600/10 border-green-500 shadow-xl shadow-green-900/20' : 'bg-black/20 border-white/5 hover:border-white/10'}`}
                 >
-                    <div className="flex justify-between items-start mb-2">
-                        <span className={`text-xs font-black uppercase tracking-widest ${paymentType === 'seat' ? 'text-green-400' : 'text-slate-400'}`}>Reserve Seat</span>
+                    <div className="flex justify-between items-start mb-3 relative z-10">
+                        <span className={`text-xs font-black uppercase tracking-widest ${paymentType === 'seat' ? 'text-green-400' : 'text-slate-400'}`}>
+                           Registration Fee
+                        </span>
                         {paymentType === 'seat' && <CheckCircle2 className="w-5 h-5 text-green-500" />}
                     </div>
-                    <div className="text-2xl font-black text-white">
-                        {formatCurrency(isIntl ? SEAT_PRICE_USD : SEAT_PRICE_INR)}
+                    
+                    <div className="text-3xl font-black text-white relative z-10">
+                        {formattedSeatAmount}
                     </div>
-                    <p className="text-[10px] text-slate-400 mt-2">Block your spot now, pay the rest later. <br/> (Discount applicable on pending fees)</p>
+                    
+                    <div className="mt-3 flex items-center gap-2">
+                       <span className="bg-green-500/20 text-green-400 text-[10px] px-2 py-0.5 rounded uppercase font-bold tracking-wider">
+                         Step 1: Reserve Seat
+                       </span>
+                    </div>
+
+                    <p className="text-[10px] text-slate-400 mt-3 leading-relaxed relative z-10">
+                       Pay registration amount to block your spot. Remaining fees converted to <strong>No-Cost EMI</strong>.
+                    </p>
+                    
+                    {paymentType === 'seat' && (
+                       <div className="absolute top-0 right-0 w-32 h-32 bg-green-500/10 blur-3xl rounded-full pointer-events-none" />
+                    )}
                 </div>
 
+                {/* OPTION 2: Full Payment (Shows Full Amount) */}
                 <div 
                    onClick={() => setPaymentType('full')}
-                   className={`cursor-pointer p-4 rounded-2xl border-2 transition-all ${paymentType === 'full' ? 'bg-blue-600/10 border-blue-500 shadow-blue-500/20 shadow-lg' : 'bg-black/20 border-white/5 hover:border-white/10'}`}
+                   className={`cursor-pointer p-5 rounded-2xl border-2 transition-all relative overflow-hidden ${paymentType === 'full' ? 'bg-blue-600/10 border-blue-500 shadow-xl shadow-blue-500/20' : 'bg-black/20 border-white/5 hover:border-white/10'}`}
                 >
-                    <div className="flex justify-between items-start mb-2">
+                    <div className="flex justify-between items-start mb-3 relative z-10">
                         <span className={`text-xs font-black uppercase tracking-widest ${paymentType === 'full' ? 'text-blue-400' : 'text-slate-400'}`}>
-                           {isEarlyBird ? 'Early Bird Enrollment' : (scholarshipCode ? 'Scholarship Enrollment' : 'Full Enrollment')}
+                           {isEarlyBird ? 'Early Bird Enrollment' : 'One-Time Payment'}
                         </span>
                         {paymentType === 'full' && <CheckCircle2 className="w-5 h-5 text-blue-500" />}
                     </div>
                     
-                    <div className="flex items-baseline gap-2">
-                       <div className="text-2xl font-black text-white">
-                          {isEarlyBird ? formattedAmount : priceDisplay}
+                    <div className="flex items-baseline gap-2 relative z-10">
+                       <div className="text-3xl font-black text-white">
+                          {isEarlyBird ? formattedFullAmount : priceDisplay}
                        </div>
                        {isEarlyBird && originalAmountINR > 0 && (
                           <div className="text-sm text-slate-500 line-through font-medium">
@@ -346,17 +372,21 @@ function CheckoutContent() {
                        )}
                     </div>
 
-                    {isEarlyBird && (
-                        <p className="text-[10px] text-blue-400 mt-1 font-bold">
-                           ⚡ 10% Early Bird Discount
-                        </p>
-                    )}
-                    {scholarshipCode && (
-                        <p className="text-[10px] text-green-400 mt-1 font-bold">
-                           🎓 {discountPercent}% Scholarship Applied
-                        </p>
-                    )}
-                    <p className="text-[10px] text-slate-400 mt-2">Instant access to LMS & Dashboard.</p>
+                    <div className="mt-3">
+                        {isEarlyBird ? (
+                           <span className="bg-blue-500/20 text-blue-400 text-[10px] px-2 py-0.5 rounded uppercase font-bold tracking-wider">
+                              ⚡ 10% OFF APPLIED
+                           </span>
+                        ) : (
+                           <span className="bg-white/10 text-slate-400 text-[10px] px-2 py-0.5 rounded uppercase font-bold tracking-wider">
+                              Full Access
+                           </span>
+                        )}
+                    </div>
+
+                    <p className="text-[10px] text-slate-400 mt-3 leading-relaxed relative z-10">
+                       Pay full amount upfront. Instant access to LMS dashboard & study material.
+                    </p>
                 </div>
              </div>
           </div>
@@ -422,10 +452,12 @@ function CheckoutContent() {
                     <div className="flex items-start justify-between mb-6 pb-6 border-b border-white/10 relative z-10">
                         <div>
                             <div className="text-xl font-bold text-white mb-1">{planName}</div>
-                            <div className="text-sm text-blue-400 font-medium px-2 py-0.5 bg-blue-500/10 rounded-md inline-block">{paymentType === 'full' ? 'Full Access' : 'Seat Booking'}</div>
+                            <div className="text-sm text-blue-400 font-medium px-2 py-0.5 bg-blue-500/10 rounded-md inline-block">
+                                {paymentType === 'full' ? 'Full Access' : 'Registration (EMI)'}
+                            </div>
                         </div>
                         <div className="text-right">
-                          <div className="font-mono text-2xl font-bold tracking-tight">{formattedAmount}</div>
+                          <div className="font-mono text-2xl font-bold tracking-tight">{formattedCurrentAmount}</div>
                           {isEarlyBird && paymentType === 'full' && (
                              <div className="text-xs text-slate-500 line-through">{formattedOriginalAmount}</div>
                           )}
@@ -435,7 +467,7 @@ function CheckoutContent() {
                     <div className="space-y-4 mb-8 relative z-10">
                         <div className="flex justify-between text-sm text-slate-400">
                             <span>Subtotal</span>
-                            <span>{formattedAmount}</span>
+                            <span>{formattedCurrentAmount}</span>
                         </div>
                         
                         {isEarlyBird && paymentType === 'full' && (
@@ -459,9 +491,10 @@ function CheckoutContent() {
                         
                         <div className="flex justify-between text-xl font-bold text-white pt-6 border-t border-white/10">
                             <span>Total Due</span>
-                            <span className="text-blue-400">{formattedAmount}</span>
+                            <span className="text-blue-400">{formattedCurrentAmount}</span>
                         </div>
 
+                        {/* Onboarding Warning */}
                         {isEarlyBird && (
                            <div className="mt-4 p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl flex items-start gap-2">
                               <AlertCircle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
@@ -485,7 +518,7 @@ function CheckoutContent() {
                             <Loader2 className="animate-spin w-5 h-5" />
                         ) : (
                             <>
-                                Pay {formattedAmount} <ArrowRight className="w-4 h-4" />
+                                Pay {formattedCurrentAmount} <ArrowRight className="w-4 h-4" />
                             </>
                         )}
                     </button>

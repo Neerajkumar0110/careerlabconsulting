@@ -235,7 +235,7 @@ function CheckoutContent() {
 
                 <button
                   onClick={() => handlePayment('razorpay')}
-                  disabled={isLoading || !isRazorpayLoaded} // Disable if script not loaded
+                  disabled={isLoading || !isRazorpayLoaded} 
                   className="group flex flex-col items-center justify-center gap-3 p-8 border border-white/5 rounded-3xl bg-white/5 hover:border-blue-500/50 hover:bg-blue-500/5 transition-all duration-300 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isLoading ? <Loader2 className="w-8 h-8 animate-spin text-blue-500" /> : <CreditCard className="w-8 h-8 text-blue-500" />}
