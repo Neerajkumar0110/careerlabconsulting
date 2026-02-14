@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { Send, X, MessageSquare, Flame, Minus, Info, UserCheck, Volume2, VolumeX } from "lucide-react";
+import { Send, X, MessageSquare, Flame, Minus, Info, UserCheck, Volume2, VolumeX, Mic, MicOff } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 
 const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY || "");
@@ -13,7 +13,12 @@ const model = genAI.getGenerativeModel({
   Your tone is warm, professional, and empathetic. 
   If you know the user's name, greet them personally. 
   Strictly follow Career Lab Consulting context: Neural LMS, Mentorship, and Industry Skills.
-  Do not invent pricing. Confirm 10% discount is applied.`
+  Do not invent pricing. Confirm 10% discount is applied.`,
+  generationConfig: {
+    temperature: 0.8,
+    topP: 0.95,
+    maxOutputTokens: 1000,
+  }
 });
 
 export default function ChatWidget() {
@@ -21,11 +26,43 @@ export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [showOffer, setShowOffer] = useState(false);
   const [isVoiceEnabled, setIsVoiceEnabled] = useState(true);
+  const [isListening, setIsListening] = useState(false); 
   const [userName, setUserName] = useState("Scholar"); 
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<{ role: "user" | "bot"; text: string }[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const recognitionRef = useRef<any>(null); 
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      if (SpeechRecognition) {
+        recognitionRef.current = new SpeechRecognition();
+        recognitionRef.current.continuous = false;
+        recognitionRef.current.interimResults = false;
+        recognitionRef.current.lang = 'en-IN'; 
+
+        recognitionRef.current.onresult = (event: any) => {
+          const transcript = event.results[0][0].transcript;
+          setInput(transcript);
+          setIsListening(false);
+        };
+
+        recognitionRef.current.onerror = () => setIsListening(false);
+        recognitionRef.current.onend = () => setIsListening(false);
+      }
+    }
+  }, []);
+
+  const toggleListening = () => {
+    if (isListening) {
+      recognitionRef.current?.stop();
+    } else {
+      setIsListening(true);
+      recognitionRef.current?.start();
+    }
+  };
 
   const speak = (text: string) => {
     if (!isVoiceEnabled || typeof window === "undefined") return;
@@ -65,6 +102,12 @@ export default function ChatWidget() {
   }, []);
 
   useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [messages, isLoading]);
+
+  useEffect(() => {
     const lastMessage = messages[messages.length - 1];
     if (isOpen && lastMessage?.role === "bot") {
       speak(lastMessage.text);
@@ -74,22 +117,28 @@ export default function ChatWidget() {
   const handleSendMessage = async () => {
     if (!input.trim() || isLoading) return;
     const userMsg = input;
+    
     setMessages(prev => [...prev, { role: "user", text: userMsg }]);
     setInput("");
     setIsLoading(true);
 
     try {
-      const chat = model.startChat({
-        history: messages.map(m => ({
+      const chatHistory = messages
+        .filter((msg, index) => !(index === 0 && msg.role === "bot"))
+        .map(m => ({
           role: m.role === "user" ? "user" : "model",
           parts: [{ text: m.text }],
-        })),
+        }));
+
+      const chat = model.startChat({
+        history: chatHistory,
       });
 
       const result = await chat.sendMessage(userMsg);
       const botText = result.response.text();
       setMessages(prev => [...prev, { role: "bot", text: botText }]);
     } catch (error) {
+      console.error("Chat Error:", error);
       setMessages(prev => [...prev, { role: "bot", text: "I'm having a small technical glitch. Please try again!" }]);
     } finally {
       setIsLoading(false);
@@ -112,11 +161,11 @@ export default function ChatWidget() {
         <div className="w-[370px] md:w-[420px] h-[600px] md:h-[700px] bg-white rounded-[2.5rem] shadow-[0_40px_80px_-20px_rgba(0,0,0,0.35)] flex flex-col overflow-hidden border border-slate-200 pointer-events-auto">
           <div className="bg-[#b31f24] p-6 text-white relative">
             <div className="absolute top-4 right-4 flex gap-3">
-              <button onClick={() => setIsVoiceEnabled(!isVoiceEnabled)} className="p-1 hover:bg-white/10 rounded-full">
+              <button onClick={() => setIsVoiceEnabled(!isVoiceEnabled)} className="p-1 hover:bg-white/10 rounded-full transition-colors">
                 {isVoiceEnabled ? <Volume2 size={20} /> : <VolumeX size={20} />}
               </button>
-              <button onClick={() => setIsOpen(false)}><Minus size={22} /></button>
-              <button onClick={() => setIsOpen(false)}><X size={22} /></button>
+              <button onClick={() => setIsOpen(false)} className="hover:opacity-70"><Minus size={22} /></button>
+              <button onClick={() => setIsOpen(false)} className="hover:opacity-70"><X size={22} /></button>
             </div>
             
             <div className="flex flex-col gap-4">
@@ -124,7 +173,7 @@ export default function ChatWidget() {
                 <div className="relative">
                   <div className="w-16 h-16 rounded-2xl overflow-hidden border-2 border-white/20 shadow-xl bg-slate-200">
                     <img 
-                      src="https://img.freepik.com/free-photo/smiling-indian-businesswoman-working-laptop-office_231208-2735.jpg" 
+                      src="https://img.freepik.com/free-photo/indian-woman-posing-cute-stylish-outfit-camera-smiling_482257-122351.jpg" 
                       alt="Manee AI Counselor"
                       className="w-full h-full object-cover"
                     />
@@ -154,22 +203,35 @@ export default function ChatWidget() {
                 </div>
               </div>
             ))}
-            {isLoading && <div className="p-2 animate-pulse text-[#b31f24] font-bold text-xs">Manee is thinking...</div>}
+            {isLoading && (
+              <div className="flex justify-start">
+                <div className="p-3 bg-white border border-slate-100 rounded-2xl rounded-tl-none animate-pulse text-[#b31f24] font-bold text-xs">
+                  Manee is thinking...
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="p-6 bg-white border-t border-slate-100">
              <div className="flex items-center gap-3 bg-slate-50 border-2 border-slate-100 rounded-2xl px-4 py-1.5 focus-within:border-[#b31f24]/20 transition-all">
+                <button 
+                  onClick={toggleListening}
+                  className={`p-2 rounded-xl transition-all ${isListening ? "bg-red-100 text-[#b31f24] animate-pulse" : "text-slate-400 hover:bg-slate-200"}`}
+                  title={isListening ? "Listening..." : "Click to speak"}
+                >
+                  {isListening ? <MicOff size={20} /> : <Mic size={20} />}
+                </button>
                 <input 
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
-                  placeholder="Ask me anything..."
+                  placeholder={isListening ? "I'm listening..." : "Ask me anything..."}
                   className="flex-1 bg-transparent py-3 text-sm outline-none text-slate-800 font-medium"
                 />
                 <button 
                   onClick={handleSendMessage}
                   disabled={isLoading}
-                  className="bg-[#b31f24] text-white p-2.5 rounded-xl hover:scale-105 active:scale-95 transition-all"
+                  className="bg-[#b31f24] text-white p-2.5 rounded-xl hover:scale-105 active:scale-95 disabled:opacity-50 transition-all"
                 >
                   <Send size={18} />
                 </button>
@@ -179,14 +241,9 @@ export default function ChatWidget() {
       ) : (
         <button 
           onClick={() => setIsOpen(true)}
-          className="w-20 h-20 bg-[#b31f24] rounded-full p-1 shadow-2xl hover:scale-110 transition-all pointer-events-auto relative group overflow-hidden"
+          className="w-20 h-20 bg-white rounded-full p-1 shadow-2xl hover:scale-110 transition-all pointer-events-auto relative group overflow-hidden border-2 border-[#b31f24]/10"
         >
-          <img 
-            src="https://img.freepik.com/free-photo/smiling-indian-businesswoman-working-laptop-office_231208-2735.jpg" 
-            className="w-full h-full object-cover rounded-full grayscale-[20%] group-hover:grayscale-0"
-            alt="Chat"
-          />
-          <div className="absolute top-2 right-2 bg-green-500 w-4 h-4 rounded-full border-2 border-[#b31f24]"></div>
+          <img src="/favicon.ico" className="w-full h-full object-contain" alt="Chat" />
         </button>
       )}
 
