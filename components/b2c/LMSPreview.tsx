@@ -7,6 +7,7 @@ import {
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { useRouter } from 'next/navigation';
 
+// --- Configuration ---
 const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY || "");
 const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" }); 
 
@@ -28,6 +29,7 @@ export default function LMSPreview() {
   const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  // Timer Logic
   useEffect(() => {
     const timer = setInterval(() => {
       const now = new Date();
@@ -43,6 +45,7 @@ export default function LMSPreview() {
     return () => clearInterval(timer);
   }, []);
 
+  // Auto Scroll
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -91,15 +94,23 @@ export default function LMSPreview() {
   };
 
   return (
-    <section className="py-12 md:py-32 bg-[#000000] border-t border-white/5 relative overflow-hidden min-h-[900px] flex items-center">
+    <section className="py-12 md:py-32 bg-[#000000] border-t border-white/5 relative overflow-hidden min-h-[900px] flex items-center group">
       
+      {/* --- LIVING SPACE ENVIRONMENT --- */}
+      
+      {/* 1. Deep Void Base */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#02010a] via-[#050508] to-[#02010a] z-0" />
 
-      <div className="absolute inset-0 opacity-30 z-0 mix-blend-screen pointer-events-none overflow-hidden">
-         <div className="absolute -top-[50%] -left-[50%] w-[200%] h-[200%] bg-[conic-gradient(from_0deg_at_50%_50%,_#000000_0deg,_#1e1b4b_60deg,_#4c1d95_120deg,_#000000_180deg,_#1e1b4b_240deg,_#5b21b6_300deg,_#000000_360deg)] blur-[100px] animate-spin-slow opacity-40"></div>
+      {/* 2. Rotating Galaxy / Nebula Band */}
+      {/* This creates the slow rotating purple gas effect */}
+      <div className="absolute top-[-50%] left-[-50%] w-[200%] h-[200%] opacity-30 z-0 mix-blend-screen pointer-events-none animate-[spin_120s_linear_infinite]">
+         <div className="w-full h-full bg-[conic-gradient(from_0deg_at_50%_50%,_#000000_0deg,_#1e1b4b_60deg,_#4c1d95_120deg,_#000000_180deg,_#1e1b4b_240deg,_#5b21b6_300deg,_#000000_360deg)] blur-[100px] opacity-40"></div>
       </div>
 
-      <div className="absolute inset-0 z-0">
+      {/* 3. Moving Star Fields (Parallax Effect) */}
+      
+      {/* Distant Stars - Slowest Move */}
+      <div className="absolute inset-0 z-0 animate-[pan_60s_linear_infinite]">
          <div className="absolute inset-0 opacity-60" 
               style={{ 
                   backgroundImage: 'radial-gradient(white 0.5px, transparent 0.5px), radial-gradient(rgba(255,255,255,0.5) 0.5px, transparent 0.5px)', 
@@ -107,42 +118,61 @@ export default function LMSPreview() {
                   backgroundPosition: '0 0, 15px 15px'
               }} 
          />
-         
-         <div className="absolute inset-0 opacity-80 mix-blend-screen" 
+      </div>
+      
+      {/* Mid-Range Stars - Medium Speed */}
+      <div className="absolute inset-0 z-0 animate-[pan_40s_linear_infinite] mix-blend-screen">
+         <div className="absolute inset-0 opacity-80" 
               style={{ 
                   backgroundImage: 'radial-gradient(white 1px, transparent 1px)', 
                   backgroundSize: '150px 150px',
                   backgroundPosition: '40px 60px'
               }} 
          />
-
-         <div className="absolute top-1/4 right-1/4 w-1 h-1 bg-white shadow-[0_0_10px_white] rounded-full animate-pulse" />
-         <div className="absolute bottom-1/3 left-1/5 w-1.5 h-1.5 bg-blue-100 shadow-[0_0_15px_rgba(200,220,255,0.8)] rounded-full animate-pulse" style={{ animationDuration: '4s' }} />
-         <div className="absolute top-20 right-20 w-0.5 h-0.5 bg-white rounded-full animate-ping" />
       </div>
 
+      {/* 4. THE LIVING SUN (Radioactive & Rotating) */}
       <div className="absolute -top-[150px] left-1/2 -translate-x-1/2 z-0 pointer-events-none scale-110">
-         <div className="w-[280px] h-[280px] bg-white rounded-full blur-[40px] absolute top-10 left-1/2 -translate-x-1/2 z-20" />
          
-         <div className="w-[500px] h-[500px] bg-amber-500 rounded-full blur-[80px] absolute -top-[80px] left-1/2 -translate-x-1/2 opacity-80 z-10 mix-blend-screen" />
+         {/* Core: Intense Pulse */}
+         <div className="w-[280px] h-[280px] bg-white rounded-full blur-[40px] absolute top-10 left-1/2 -translate-x-1/2 z-20 animate-pulse" />
          
-         <div className="w-[900px] h-[600px] bg-orange-700 rounded-full blur-[120px] absolute -top-[200px] left-1/2 -translate-x-1/2 opacity-50 z-0 mix-blend-screen" />
+         {/* Inner Corona: Rotating Plasma */}
+         <div className="w-[500px] h-[500px] bg-gradient-to-r from-amber-500 to-yellow-500 rounded-full blur-[80px] absolute -top-[80px] left-1/2 -translate-x-1/2 opacity-80 z-10 mix-blend-screen animate-[spin_20s_linear_infinite]" />
          
-         <div className="w-[150vw] h-[1px] bg-blue-300 blur-[2px] absolute top-[140px] left-1/2 -translate-x-1/2 opacity-30 mix-blend-color-dodge" />
+         {/* Outer Flare: Slow Breathing Haze */}
+         <div className="w-[900px] h-[600px] bg-orange-700 rounded-full blur-[120px] absolute -top-[200px] left-1/2 -translate-x-1/2 opacity-50 z-0 mix-blend-screen animate-pulse" style={{ animationDuration: '4s' }} />
+         
+         {/* Cinematic Lens Flare */}
+         <div className="w-[150vw] h-[2px] bg-blue-300 blur-[3px] absolute top-[140px] left-1/2 -translate-x-1/2 opacity-20 mix-blend-color-dodge animate-pulse" style={{ animationDuration: '8s' }} />
       </div>
+
+      {/* 5. Floating Cosmic Dust/Gas (Foreground) */}
+      <div className="absolute bottom-0 w-full h-[500px] bg-gradient-to-t from-blue-900/10 via-transparent to-transparent z-0 animate-pulse" style={{ animationDuration: '10s' }} />
+
+      {/* ---------------------------------- */}
+
+      {/* Custom Keyframe for Moving Backgrounds */}
+      <style jsx global>{`
+        @keyframes pan {
+          0% { transform: translateY(0); }
+          100% { transform: translateY(-50px); } /* Simulates spaceship moving forward */
+        }
+      `}</style>
 
       <div className="max-w-[1400px] mx-auto px-4 md:px-6 relative z-10 w-full">
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-24 items-center">
           
+          {/* Left Content */}
           <div className="order-2 lg:order-1 text-center lg:text-left">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 mb-8 backdrop-blur-md shadow-[0_0_15px_rgba(255,165,0,0.3)] hover:shadow-[0_0_25px_rgba(255,165,0,0.5)] transition-shadow">
-              <Rocket className="w-3 h-3 text-orange-400 fill-orange-400" />
+              <Rocket className="w-3 h-3 text-orange-400 fill-orange-400 animate-bounce" />
               <span className="text-orange-100 text-[10px] font-black uppercase tracking-[0.2em]">Mission Control Ready</span>
             </div>
             
             <h2 className="text-4xl md:text-7xl font-black text-white mb-6 tracking-tighter leading-[0.9] uppercase drop-shadow-2xl">
               Manee <span className="text-transparent bg-clip-text bg-gradient-to-b from-white to-slate-400">AI</span><br/>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-300 via-amber-200 to-orange-300">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-300 via-amber-200 to-orange-300 animate-pulse" style={{ animationDuration: '3s' }}>
                 Ecosystem
               </span>
             </h2>
@@ -167,16 +197,20 @@ export default function LMSPreview() {
             </div>
           </div>
 
+          {/* Right Chat Interface */}
           <div className="relative group order-1 lg:order-2 perspective-1000">
-            <div className="absolute -inset-1 bg-gradient-to-r from-orange-500 to-purple-600 rounded-[2.6rem] blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
+            {/* Holographic Glow behind container - Animated */}
+            <div className="absolute -inset-1 bg-gradient-to-r from-orange-500 to-purple-600 rounded-[2.6rem] blur opacity-20 group-hover:opacity-40 transition duration-1000 animate-pulse"></div>
             
+            {/* Glass Container */}
             <div className="relative bg-[#050505]/80 border border-white/10 rounded-2xl md:rounded-[2.5rem] p-2 md:p-4 shadow-2xl backdrop-blur-2xl overflow-hidden h-[600px] flex flex-col ring-1 ring-white/5">
               
+              {/* Header */}
               <div className="flex items-center justify-between mb-3 px-4 py-3 border-b border-white/5">
                 <div className="flex gap-2">
-                  <div className="w-2.5 h-2.5 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.6)]" />
-                  <div className="w-2.5 h-2.5 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.6)]" />
-                  <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.6)] animate-pulse" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.6)] animate-pulse delay-75" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)] animate-pulse delay-150" />
                 </div>
                 
                 <div className="flex items-center gap-2 bg-white/5 px-3 py-1 rounded-full border border-white/5 shadow-inner">
@@ -185,11 +219,14 @@ export default function LMSPreview() {
                 </div>
               </div>
 
+              {/* Chat Body */}
               <div className="flex-1 flex flex-col space-y-4 overflow-hidden px-2 relative">
+                  {/* Subtle Grid overlay inside chat */}
                   <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
 
                   <div className="flex flex-col h-full animate-in fade-in duration-500 relative z-10">
                     
+                    {/* Early Bird Banner */}
                     <div className="bg-gradient-to-r from-blue-900/40 to-blue-800/40 border border-blue-500/30 p-3 mb-2 rounded-xl flex items-center justify-between shadow-lg backdrop-blur-md">
                         <div className="flex items-center gap-2">
                           <div className="relative">
@@ -201,6 +238,7 @@ export default function LMSPreview() {
                         <span className="text-[11px] font-mono text-white bg-black/50 border border-blue-500/50 px-2 py-0.5 rounded shadow-inner">{timeLeft}</span>
                     </div>
 
+                    {/* Chat Messages */}
                     <div ref={scrollRef} className="flex-1 overflow-y-auto space-y-4 mb-4 scrollbar-hide p-2">
                       {messages.map((msg, i) => (
                         <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
@@ -214,10 +252,11 @@ export default function LMSPreview() {
                         </div>
                       ))}
 
+                      {/* Pricing Cards */}
                       {hasShowedPricing && (
                         <div className="animate-in slide-in-from-bottom-4 duration-700 space-y-3 pt-2">
                           <div className="flex items-center gap-2 px-1">
-                              <Sparkles className="w-3.5 h-3.5 text-yellow-400" />
+                              <Sparkles className="w-3.5 h-3.5 text-yellow-400 animate-spin-slow" />
                               <span className="text-[10px] font-bold text-yellow-400 uppercase tracking-wide">Trajectory Options</span>
                           </div>
                           <div className="grid grid-cols-1 gap-2.5">
@@ -257,6 +296,7 @@ export default function LMSPreview() {
                       )}
                     </div>
 
+                    {/* Input Area */}
                     <form onSubmit={handleSendMessage} className="relative mb-1">
                       <input 
                         value={userInput}
@@ -271,6 +311,7 @@ export default function LMSPreview() {
                   </div>
               </div>
 
+              {/* Footer */}
               <div className="px-4 py-2 mt-2 flex items-center justify-between border-t border-white/5 bg-black/20">
                 <div className="flex items-center gap-2">
                   <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
