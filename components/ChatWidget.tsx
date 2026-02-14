@@ -3,13 +3,20 @@
 import { useEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { Send, X, MessageSquare, Flame, Minus, Info } from "lucide-react";
+import { Send, X, MessageSquare, Flame, Minus, Info, UserCheck } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 
 const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY || "");
 const model = genAI.getGenerativeModel({ 
   model: "gemini-2.5-flash", 
-  systemInstruction: "You are Manee AI, a professional career counselor from Career Lab Consulting. Your tone should be encouraging and professional like UpGrad counselors. Always keep answers structured. Mention the 10% auto-applied discount if pricing is asked."
+  systemInstruction: `You are Manee AI, the Senior Career Counselor at Career Lab Consulting (https://www.careerlabconsulting.com/). 
+  Your expertise is in Industry-ready skills, AI-powered Neural LMS, and global career outcomes. 
+  
+  CORE RULES:
+  1. AUTONOMOUS GUIDANCE: Proactively guide users through career transitions, skill gap analysis, and the benefits of the Neural LMS.
+  2. NO DUMMY DATA: Never invent specific course fees. If asked about pricing, confirm the 10% Early Bird Discount is active and suggest a counselor call for a formal quote.
+  3. PROFESSIONALISM: Maintain a tone like a top-tier UpGrad counselor—encouraging, data-driven, and structured.
+  4. FORMATTING: Use bold text, bullet points, and clear headers to make responses easy to read.`
 });
 
 export default function ChatWidget() {
@@ -18,7 +25,10 @@ export default function ChatWidget() {
   const [showOffer, setShowOffer] = useState(false);
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<{ role: "user" | "bot"; text: string }[]>([
-    { role: "bot", text: "Hey! Welcome to **Career Lab Consulting**! \n\nI am Manee, your personal career counselor. How can I help you upskill today?" }
+    { 
+      role: "bot", 
+      text: "### Welcome to Career Lab Consulting. \n\nI am **Manee**, your Career Advisor. I have automatically applied a **10% Early Bird Discount** to your profile. \n\nHow can I autonomously assist you in reaching your career goals today?" 
+    }
   ]);
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -31,6 +41,7 @@ export default function ChatWidget() {
 
       const lastVisit = localStorage.getItem("manee_last_visit");
       const now = new Date().getTime();
+      
       if (lastVisit && (now - parseInt(lastVisit) < 86400000)) {
         setIsOpen(true);
       } else {
@@ -45,11 +56,11 @@ export default function ChatWidget() {
     if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
   }, [messages, isOpen]);
 
-  const handleSendMessage = async (customMsg?: string) => {
-    const msgToSend = customMsg || input;
-    if (!msgToSend.trim() || isLoading) return;
+  const handleSendMessage = async () => {
+    if (!input.trim() || isLoading) return;
 
-    setMessages(prev => [...prev, { role: "user", text: msgToSend }]);
+    const userMessage = input;
+    setMessages(prev => [...prev, { role: "user", text: userMessage }]);
     setInput("");
     setIsLoading(true);
 
@@ -61,137 +72,124 @@ export default function ChatWidget() {
         })),
       });
 
-      const result = await chat.sendMessage(msgToSend);
-      const response = await result.response;
-      let botText = response.text();
-
-      if (msgToSend.toLowerCase().includes("pricing") || msgToSend.toLowerCase().includes("program")) {
-        botText += "\n\n**Special Early Bird Pricing (10% Off Applied):**\n* Standard: ₹13,499\n* Pro: ₹22,499";
-      }
-
+      const result = await chat.sendMessage(userMessage);
+      const botText = result.response.text();
       setMessages(prev => [...prev, { role: "bot", text: botText }]);
     } catch (error) {
-      setMessages(prev => [...prev, { role: "bot", text: "Sorry, our counselors are currently busy. Please try again." }]);
+      setMessages(prev => [...prev, { role: "bot", text: "I'm experiencing a high volume of inquiries. Please hold on or reach us at info@careerlabconsulting.com." }]);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const quickOptions = [
-    "I am looking for career growth",
-    "Learn about programs",
-    "I am just exploring"
-  ];
-
   if (!mounted) return null;
 
   return createPortal(
     <div className="fixed bottom-24 right-6 md:bottom-6 md:right-6 z-[999999] flex flex-col items-end pointer-events-none font-sans">
+      
       {showOffer && !isOpen && (
-        <div className="bg-[#e01e26] text-white p-4 rounded-xl shadow-2xl w-72 mb-4 animate-bounce-gentle pointer-events-auto relative">
-          <button onClick={() => setShowOffer(false)} className="absolute top-2 right-2 opacity-70 hover:opacity-100"><X size={14} /></button>
-          <div className="flex items-center gap-2 mb-1">
-             <Flame size={16} fill="white" />
-             <span className="font-bold text-sm italic underline">DISCOUNT ACTIVE</span>
+        <div className="bg-[#b31f24] text-white p-5 rounded-2xl shadow-2xl w-80 mb-4 animate-bounce-gentle pointer-events-auto relative border border-white/20">
+          <button onClick={() => setShowOffer(false)} className="absolute top-2 right-2 p-1 hover:bg-white/10 rounded-full transition-colors"><X size={14} /></button>
+          <div className="flex items-center gap-2 mb-2">
+             <Flame size={18} className="text-yellow-400" fill="currentColor" />
+             <span className="font-black text-[10px] uppercase tracking-[0.2em]">Priority Counselor</span>
           </div>
-          <p className="text-xs font-medium">10% Early Bird Discount has been applied to your profile! 🚀</p>
+          <p className="text-[13px] font-bold leading-tight">Your 10% Early Bird Discount is active. Let's discuss your career growth. ✨</p>
         </div>
       )}
 
       {isOpen ? (
-        <div className="w-[360px] md:w-[400px] h-[580px] md:h-[650px] bg-[#f4f7f9] rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.2)] flex flex-col overflow-hidden border border-slate-200 pointer-events-auto">
-          <div className="bg-[#b31f24] p-4 text-white">
-            <div className="flex justify-between items-start mb-4">
-              <div className="flex flex-col">
-                <span className="text-[10px] font-bold uppercase tracking-widest opacity-80">Career Lab</span>
-                <h3 className="text-lg font-bold leading-none">Manee AI</h3>
-              </div>
-              <div className="flex gap-3">
-                <button onClick={() => setIsOpen(false)} className="opacity-70 hover:opacity-100"><Minus size={20} /></button>
-                <button onClick={() => setIsOpen(false)} className="opacity-70 hover:opacity-100"><X size={20} /></button>
-              </div>
+        <div className="w-[370px] md:w-[420px] h-[600px] md:h-[700px] bg-white rounded-[2.5rem] shadow-[0_40px_80px_-20px_rgba(0,0,0,0.35)] flex flex-col overflow-hidden border border-slate-200 pointer-events-auto">
+          
+          <div className="bg-[#b31f24] p-6 text-white relative">
+            <div className="absolute top-4 right-4 flex gap-4">
+              <button onClick={() => setIsOpen(false)} className="hover:scale-110 transition-transform"><Minus size={22} /></button>
+              <button onClick={() => setIsOpen(false)} className="hover:scale-110 transition-transform"><X size={22} /></button>
             </div>
-            <div className="bg-white/10 rounded-lg p-3 flex items-center gap-3">
-              <div className="relative">
-                <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center text-[#b31f24] font-black text-xl shadow-inner">CL</div>
-                <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 border-2 border-[#b31f24] rounded-full"></div>
+            
+            <div className="space-y-5">
+              <div>
+                <h3 className="text-2xl font-black tracking-tighter">Manee AI</h3>
+                <p className="text-[10px] uppercase font-bold tracking-[0.3em] opacity-60">Career Lab Consulting</p>
               </div>
-              <div className="flex flex-col">
-                <span className="text-xs font-bold">We are online!</span>
-                <span className="text-[10px] opacity-80">Our career experts are here to help.</span>
+              
+              <div className="bg-black/20 border border-white/10 rounded-2xl p-4 flex items-center gap-4 backdrop-blur-sm">
+                <div className="relative">
+                  <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-[#b31f24] font-black shadow-lg">CL</div>
+                  <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-4 border-[#b31f24] rounded-full"></div>
+                </div>
+                <div>
+                  <p className="text-xs font-bold flex items-center gap-1.5"><UserCheck size={14} className="text-green-400" /> Counselor Online</p>
+                  <p className="text-[10px] opacity-70 leading-tight italic">Analyzing Career Trajectories...</p>
+                </div>
               </div>
             </div>
           </div>
 
-          <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-4">
+          <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 space-y-6 bg-[#fcfdfe] scroll-smooth">
             {messages.map((msg, i) => (
               <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-                <div className={`max-w-[85%] p-3 rounded-xl shadow-sm ${
+                <div className={`max-w-[88%] p-4 rounded-2xl text-[14px] leading-relaxed shadow-sm ${
                   msg.role === "user" 
-                    ? "bg-[#2d2d2d] text-white rounded-tr-none" 
-                    : "bg-white text-slate-800 rounded-tl-none border border-slate-100 prose prose-sm"
+                    ? "bg-[#1e1e1e] text-white rounded-tr-none shadow-md" 
+                    : "bg-white text-slate-800 rounded-tl-none border border-slate-100 prose prose-sm font-medium"
                 }`}>
                   <ReactMarkdown>{msg.text}</ReactMarkdown>
                 </div>
               </div>
             ))}
             
-            {!isLoading && messages.length < 3 && (
-              <div className="flex flex-col gap-2 pt-2">
-                {quickOptions.map((opt, i) => (
-                  <button 
-                    key={i}
-                    onClick={() => handleSendMessage(opt)}
-                    className="bg-white border border-slate-300 hover:border-[#b31f24] hover:text-[#b31f24] text-slate-700 text-xs font-bold py-2 px-4 rounded-lg transition-all text-left shadow-sm"
-                  >
-                    {opt}
-                  </button>
-                ))}
+            {isLoading && (
+              <div className="flex items-center gap-2 px-2">
+                <div className="flex gap-1.5">
+                  <div className="w-1.5 h-1.5 bg-[#b31f24] rounded-full animate-bounce"></div>
+                  <div className="w-1.5 h-1.5 bg-[#b31f24] rounded-full animate-bounce [animation-delay:0.2s]"></div>
+                  <div className="w-1.5 h-1.5 bg-[#b31f24] rounded-full animate-bounce [animation-delay:0.4s]"></div>
+                </div>
               </div>
             )}
-
-            {isLoading && <div className="text-[10px] font-bold text-slate-400 animate-pulse uppercase tracking-widest">Counselor is typing...</div>}
           </div>
 
-          <div className="p-3 bg-white border-t border-slate-200">
-             <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-lg px-3 py-1 focus-within:border-blue-400 transition-colors">
+          <div className="p-6 bg-white border-t border-slate-100">
+             <div className="flex items-center gap-3 bg-slate-50 border-2 border-slate-100 rounded-2xl px-4 py-1.5 focus-within:border-[#b31f24]/20 transition-all shadow-inner">
                 <input 
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
-                  placeholder="Type your query here..."
-                  className="flex-1 bg-transparent py-2 text-sm outline-none text-slate-800"
+                  placeholder="Ask a question or share your goal..."
+                  className="flex-1 bg-transparent py-3 text-sm outline-none text-slate-800 font-medium placeholder:text-slate-400"
                 />
                 <button 
-                  onClick={() => handleSendMessage()}
+                  onClick={handleSendMessage}
                   disabled={isLoading}
-                  className="text-[#b31f24] disabled:opacity-30 hover:scale-110 transition-transform"
+                  className="bg-[#b31f24] text-white p-2.5 rounded-xl disabled:opacity-30 hover:shadow-xl hover:shadow-[#b31f24]/20 transition-all active:scale-90 shadow-md"
                 >
-                  <Send size={20} />
+                  <Send size={18} />
                 </button>
              </div>
-             <p className="text-[9px] text-center text-slate-400 mt-2 flex items-center justify-center gap-1">
-               <Info size={10} /> Powered by Manee Intelligence
-             </p>
+             <div className="flex items-center justify-center gap-2 mt-5 opacity-40">
+                <Info size={12} />
+                <span className="text-[9px] font-bold uppercase tracking-[0.2em]">Manee Autonomous Advisor v2.2</span>
+             </div>
           </div>
         </div>
       ) : (
         <button 
           onClick={() => setIsOpen(true)}
-          className="w-16 h-16 bg-[#b31f24] rounded-full flex items-center justify-center shadow-2xl hover:scale-105 active:scale-95 transition-all pointer-events-auto relative group"
+          className="w-20 h-20 bg-[#b31f24] rounded-full flex items-center justify-center shadow-[0_25px_50px_-12px_rgba(179,31,36,0.6)] hover:scale-110 active:scale-95 transition-all pointer-events-auto relative group"
         >
-          <div className="absolute inset-0 rounded-full bg-[#b31f24] animate-ping opacity-20" />
-          <MessageSquare className="text-white" size={28} />
-          <div className="absolute -top-1 -right-1 bg-green-500 w-5 h-5 rounded-full border-4 border-white"></div>
+          <div className="absolute inset-0 rounded-full bg-[#b31f24] animate-ping opacity-20 group-hover:hidden" />
+          <MessageSquare className="text-white" size={32} />
+          <div className="absolute top-2 right-2 bg-green-500 w-5 h-5 rounded-full border-4 border-[#b31f24]"></div>
         </button>
       )}
 
       <style jsx>{`
         @keyframes bounce-gentle {
           0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-8px); }
+          50% { transform: translateY(-15px); }
         }
-        .animate-bounce-gentle { animation: bounce-gentle 3s ease-in-out infinite; }
+        .animate-bounce-gentle { animation: bounce-gentle 4s ease-in-out infinite; }
       `}</style>
     </div>,
     document.body
