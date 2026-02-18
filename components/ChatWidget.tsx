@@ -87,15 +87,26 @@ export default function ChatWidget() {
     else { setIsListening(true); recognitionRef.current?.start(); }
   };
 
-  // --- Voice Synthesis (TTS) ---
+  // --- Voice Synthesis (TTS) - Fixed logic ---
   const speak = (text: string) => {
-    if (!isVoiceEnabled || typeof window === "undefined") return;
+    if (!isVoiceEnabled || typeof window === "undefined") {
+      window.speechSynthesis.cancel();
+      return;
+    }
     window.speechSynthesis.cancel(); 
     const utterance = new SpeechSynthesisUtterance(text.replace(/[#*]/g, ''));
     utterance.lang = 'en-IN'; 
     utterance.rate = 1.0;
     utterance.pitch = 1.1; 
     window.speechSynthesis.speak(utterance);
+  };
+
+  const toggleVoice = () => {
+    const newState = !isVoiceEnabled;
+    setIsVoiceEnabled(newState);
+    if (!newState && typeof window !== "undefined") {
+      window.speechSynthesis.cancel();
+    }
   };
 
   // --- Path-Based Welcome Logic ---
@@ -128,7 +139,7 @@ export default function ChatWidget() {
   useEffect(() => {
     const lastMessage = messages[messages.length - 1];
     if (isOpen && lastMessage?.role === "bot") speak(lastMessage.text);
-  }, [messages, isOpen]);
+  }, [messages, isOpen, isVoiceEnabled]);
 
   // --- Messaging Execution ---
   const handleSendMessage = async () => {
@@ -160,51 +171,50 @@ export default function ChatWidget() {
   if (!mounted) return null;
 
   return createPortal(
-    <div className="fixed bottom-6 right-6 z-[999999] flex flex-col items-end pointer-events-none font-sans">
+    <div className="fixed bottom-4 right-4 z-[999999] flex flex-col items-end pointer-events-none font-sans">
       
       {showOffer && !isOpen && (
-        <div className="bg-[#b31f24] text-white p-4 rounded-xl shadow-xl w-64 mb-4 animate-bounce-gentle pointer-events-auto relative border border-white/10">
-          <button onClick={() => setShowOffer(false)} className="absolute top-2 right-2 p-1 hover:bg-white/10 rounded-full"><X size={12} /></button>
-          <p className="text-[12px] font-bold text-center">Namaste! Your 10% Early Bird Discount is active. Let's talk! 🌸</p>
+        <div className="bg-[#b31f24] text-white p-2.5 rounded-lg shadow-lg w-48 mb-3 animate-bounce-gentle pointer-events-auto relative border border-white/10">
+          <button onClick={() => setShowOffer(false)} className="absolute top-1 right-1 p-0.5 hover:bg-white/10 rounded-full"><X size={8} /></button>
+          <p className="text-[10px] font-bold text-center">Namaste! 10% Discount active. 🌸</p>
         </div>
       )}
 
       {isOpen ? (
-        /* Size Updated: Width reduced from 370/420px to 340/360px. Height reduced from 600/700px to 550/600px */
-        <div className="w-[340px] md:w-[360px] h-[550px] md:h-[600px] bg-white rounded-[2rem] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.3)] flex flex-col overflow-hidden border border-slate-200 pointer-events-auto">
+        /* Size Updated: Ultra Compact for Client feedback */
+        <div className="w-[290px] md:w-[320px] h-[460px] md:h-[530px] bg-white rounded-[1.8rem] shadow-[0_20px_50px_rgba(0,0,0,0.25)] flex flex-col overflow-hidden border border-slate-200 pointer-events-auto">
           {/* Header */}
-          <div className="bg-[#b31f24] p-5 text-white relative">
-            <div className="absolute top-4 right-4 flex gap-2">
-              <button onClick={() => setIsVoiceEnabled(!isVoiceEnabled)} className="p-1 hover:bg-white/10 rounded-full transition-colors">
-                {isVoiceEnabled ? <Volume2 size={18} /> : <VolumeX size={18} />}
+          <div className="bg-[#b31f24] p-3 text-white relative">
+            <div className="absolute top-3 right-3 flex gap-1.5">
+              <button onClick={toggleVoice} className="p-1 hover:bg-white/10 rounded-full transition-colors">
+                {isVoiceEnabled ? <Volume2 size={14} /> : <VolumeX size={14} />}
               </button>
-              <button onClick={() => setIsOpen(false)} className="hover:opacity-70"><Minus size={20} /></button>
-              <button onClick={() => setIsOpen(false)} className="hover:opacity-70"><X size={20} /></button>
+              <button onClick={() => setIsOpen(false)} className="p-0.5 hover:opacity-70"><Minus size={18} /></button>
+              <button onClick={() => setIsOpen(false)} className="p-0.5 hover:opacity-70"><X size={18} /></button>
             </div>
             
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2.5">
               <div className="relative">
-                {/* Image Replaced with favicon.ico as requested */}
-                <div className="w-12 h-12 rounded-xl overflow-hidden border-2 border-white/20 shadow-lg bg-white p-1">
+                <div className="w-9 h-9 rounded-lg overflow-hidden border-2 border-white/20 shadow-lg bg-white p-0.5">
                   <img src="/favicon.ico" alt="Manee AI" className="w-full h-full object-contain" />
                 </div>
-                <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-green-500 border-4 border-[#b31f24] rounded-full"></div>
+                <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 border-2 border-[#b31f24] rounded-full"></div>
               </div>
               <div>
-                <h3 className="text-lg font-black">Manee AI</h3>
-                <p className="text-[9px] uppercase font-bold tracking-widest opacity-70">Expert AI Career Counselor</p>
-                <p className="text-[9px] text-green-300 font-bold mt-1 flex items-center gap-1">
-                  <UserCheck size={9} /> Personalized for {userName}
+                <h3 className="text-sm font-black leading-tight">Manee AI</h3>
+                <p className="text-[7px] uppercase font-bold tracking-widest opacity-70">Expert AI Consultant</p>
+                <p className="text-[7px] text-green-300 font-bold flex items-center gap-1">
+                  <UserCheck size={7} /> Personalized
                 </p>
               </div>
             </div>
           </div>
 
           {/* Messages Area */}
-          <div ref={scrollRef} className="flex-1 overflow-y-auto p-5 space-y-5 bg-[#fcfdfe] scroll-smooth">
+          <div ref={scrollRef} className="flex-1 overflow-y-auto p-3.5 space-y-3.5 bg-[#fcfdfe] scroll-smooth">
             {messages.map((msg, i) => (
               <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-                <div className={`max-w-[88%] p-3.5 rounded-2xl text-[13px] leading-relaxed shadow-sm ${
+                <div className={`max-w-[90%] p-2.5 rounded-xl text-[11px] leading-relaxed shadow-sm ${
                   msg.role === "user" 
                     ? "bg-[#1e1e1e] text-white rounded-tr-none" 
                     : "bg-white text-slate-800 rounded-tl-none border border-slate-100 prose prose-sm font-medium"
@@ -215,7 +225,7 @@ export default function ChatWidget() {
             ))}
             {isLoading && (
               <div className="flex justify-start">
-                <div className="p-2.5 bg-white border border-slate-100 rounded-2xl rounded-tl-none animate-pulse text-[#b31f24] font-bold text-[11px]">
+                <div className="p-1.5 bg-white border border-slate-100 rounded-lg rounded-tl-none animate-pulse text-[#b31f24] font-bold text-[9px]">
                   Manee is thinking...
                 </div>
               </div>
@@ -223,27 +233,27 @@ export default function ChatWidget() {
           </div>
 
           {/* Input Controls */}
-          <div className="p-5 bg-white border-t border-slate-100">
-             <div className="flex items-center gap-2 bg-slate-50 border-2 border-slate-100 rounded-xl px-3 py-1 focus-within:border-[#b31f24]/20 transition-all">
+          <div className="p-3 bg-white border-t border-slate-100">
+             <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-xl px-2 py-0.5 focus-within:border-[#b31f24]/20 transition-all">
                 <button 
                   onClick={toggleListening}
-                  className={`p-2 rounded-lg transition-all ${isListening ? "bg-red-100 text-[#b31f24] animate-pulse" : "text-slate-400 hover:bg-slate-200"}`}
+                  className={`p-1.5 rounded-lg transition-all ${isListening ? "bg-red-100 text-[#b31f24] animate-pulse" : "text-slate-400 hover:bg-slate-200"}`}
                 >
-                  {isListening ? <MicOff size={18} /> : <Mic size={18} />}
+                  {isListening ? <MicOff size={14} /> : <Mic size={14} />}
                 </button>
                 <input 
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
-                  placeholder={isListening ? "Listening..." : "Ask me anything..."}
-                  className="flex-1 bg-transparent py-2.5 text-xs outline-none text-slate-800 font-medium"
+                  placeholder={isListening ? "Listening..." : "Type here..."}
+                  className="flex-1 bg-transparent py-2 text-[10px] outline-none text-slate-800 font-medium"
                 />
                 <button 
                   onClick={handleSendMessage}
                   disabled={isLoading}
-                  className="bg-[#b31f24] text-white p-2 rounded-lg hover:scale-105 active:scale-95 disabled:opacity-50 transition-all"
+                  className="bg-[#b31f24] text-white p-1.5 rounded-lg hover:scale-105 transition-all"
                 >
-                  <Send size={16} />
+                  <Send size={12} />
                 </button>
              </div>
           </div>
@@ -251,14 +261,14 @@ export default function ChatWidget() {
       ) : (
         <button 
           onClick={() => setIsOpen(true)}
-          className="w-16 h-16 bg-white rounded-full p-2 shadow-2xl hover:scale-110 transition-all pointer-events-auto border-2 border-[#b31f24]/10"
+          className="w-12 h-12 bg-white rounded-full p-2 shadow-2xl hover:scale-110 transition-all pointer-events-auto border-2 border-[#b31f24]/10"
         >
           <img src="/favicon.ico" className="w-full h-full object-contain" alt="Manee AI" />
         </button>
       )}
 
       <style jsx>{`
-        @keyframes bounce-gentle { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+        @keyframes bounce-gentle { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
         .animate-bounce-gentle { animation: bounce-gentle 4s ease-in-out infinite; }
       `}</style>
     </div>,
