@@ -169,7 +169,7 @@ export default function B2CHero() {
   };
 
   return (
-    <section className="relative min-h-screen pt-24 pb-12 md:pt-10 md:pb-20 overflow-hidden bg-[#020617] flex items-center">
+    <section className="relative min-h-screen pt-24 pb-12 md:pt-5 md:pb-20 overflow-hidden bg-[#020617] flex items-center">
       <SpaceBackground />
 
       <div className="max-w-[1400px] mx-auto px-5 md:px-6 relative z-10 w-full">
@@ -187,8 +187,8 @@ export default function B2CHero() {
             </motion.div>
 
             <h1 className="text-[2.5rem] leading-[1] sm:text-6xl md:text-6xl font-black text-white mb-6 md:mb-8 tracking-tighter uppercase">
-              BEYOND <br/> 
-              <span className="relative inline-block italic text-blue-400">
+              BEYOND  
+              <span className="relative inline-block italic text-blue-400 px-3">
                 LEARNING.
                 <svg className="absolute -bottom-1 md:-bottom-2 left-0 w-full" viewBox="0 0 300 12" fill="none">
                     <path d="M1 9.5C50.5 3.5 150.5 1.5 299 9.5" stroke="#3b82f6" strokeWidth="3" strokeLinecap="round"/>
@@ -265,7 +265,7 @@ export default function B2CHero() {
                 <div className="mb-8 p-4 md:p-5 bg-white/[0.03] border border-white/5 rounded-2xl md:rounded-3xl flex items-center gap-4">
                   <div className="p-3 bg-blue-600/20 rounded-2xl"><Cpu className="text-blue-400 w-5 h-5 md:w-6 md:h-6" /></div>
                   <div className="text-left">
-                    <p className="text-[9px] text-blue-400 font-black uppercase tracking-[0.2em] mb-0.5">Specialized Module</p>
+                    <p className="text-[8px] text-blue-400 font-black uppercase tracking-[0.2em] mb-0.5">Specialized Module</p>
                     <p className="text-white font-bold text-base md:text-lg">{activeStudent.skill}</p>
                   </div>
                 </div>
@@ -278,8 +278,8 @@ export default function B2CHero() {
                   ].map((stat, i) => (
                     <div key={i} className="bg-white/[0.02] border border-white/5 rounded-2xl md:rounded-[2rem] p-2 text-left">
                       <stat.icon className={`w-5 h-5 ${stat.color} mb-3`} />
-                      <p className="text-slate-500 text-[10px] font-bold uppercase mb-1">{stat.label}</p>
-                      <p className="text-white font-black text-xl md:text-2xl">{stat.val}</p>
+                      <p className="text-slate-500 text-[8px] font-bold uppercase mb-1">{stat.label}</p>
+                      <p className="text-white font-black text-[8px] md:text-2xl">{stat.val}</p>
                     </div>
                   ))}
                 </div>
@@ -288,16 +288,16 @@ export default function B2CHero() {
                     <div className="flex gap-8 w-full sm:w-auto justify-between sm:justify-start">
                       <div className="text-left">
                         <div className="text-blue-500 font-black text-2xl tracking-tighter">#{index + 15}</div>
-                        <div className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Orbital Rank</div>
+                        <div className="text-[8px] text-slate-500 font-bold uppercase tracking-widest">Orbital Rank</div>
                       </div>
                       <div className="text-left border-l border-white/10 pl-8">
                         <div className="text-white font-black text-sx tracking-tighter">CLC/24-25/{activeStudent.batchNumber.split('/').pop()}</div>
-                        <div className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Batch Number</div>
+                        <div className="text-[8px] text-slate-500 font-bold uppercase tracking-widest">Batch Number</div>
                       </div>
                     </div>
                     <button 
                       onClick={() => handleProfileRedirect(activeStudent.id)}
-                      className="w-full sm:w-auto px-3 py-4 bg-white text-black text-[10px] font-black uppercase rounded-2xl hover:bg-blue-600 hover:text-white transition-all shadow-xl active:scale-95"
+                      className="w-full sm:w-auto px-3 py-4 bg-white text-black text-[8px] font-black uppercase rounded-2xl hover:bg-blue-600 hover:text-white transition-all shadow-xl active:scale-95"
                     >
                       Profile Details
                     </button>
