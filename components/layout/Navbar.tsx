@@ -378,10 +378,10 @@ export default function Navbar() {
 
   const MegaMenuContent = ({ items, menuType }: { items: any[], menuType: string }) => (
     <div 
-      className="fixed left-0 right-0 top-20 flex justify-center px-6 pt-2 animate-in fade-in slide-in-from-top-2 duration-300 z-[999]"
-      onMouseEnter={() => setActiveMenu(menuType)}
+      className="fixed inset-x-0 top-20 flex justify-center px-6 pt-2 z-[999] h-fit" 
       onMouseLeave={() => setActiveMenu(null)}
     >
+      <div className="absolute inset-0 -z-10 h-screen w-screen" onMouseEnter={() => setActiveMenu(null)} />
       <div className="w-full max-w-[1200px] bg-[#0b0f1a] border border-white/10 rounded-2xl shadow-[0_40px_80px_-20px_rgba(0,0,0,0.8)] overflow-hidden flex min-h-[550px]">
         <div className="w-[300px] bg-[#0a0d16] p-4 border-r border-white/10 flex-shrink-0">
           <div className="space-y-1">
