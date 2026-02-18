@@ -87,9 +87,9 @@ export default function HeroB2B() {
   
   const avatars = useMemo(() => [
     { src: "https://img.freepik.com/free-photo/writing-dairy-note-coffee-shop-concept-as-memory-life-woman-coffee-shop-smiling-woman-making-notes-notepad_1153-8262.jpg", name: "Indian Expert 1" }, 
-    { src: "https://img.freepik.com/free-photo/expressive-young-woman-posing-studio_176474-66741.jpg", name: "Indian Expert 2" }, 
+    { src: "https://img.freepik.com/free-photo/cheerful-indian-businessman-smiling-closeup-portrait-jobs-career-campaign_53876-129417.jpg", name: "Indian Expert 2" }, 
     { src: "https://img.freepik.com/free-photo/woman-trendy-summer-sundress_158538-16608.jpg", name: "Indian Expert 3" }, 
-    { src: "https://img.freepik.com/free-photo/portrait-woman-working-dried-flowers-shop_23-2151362120.jpg", name: "Indian Expert 4" }
+    { src: "https://img.freepik.com/free-photo/cheerful-indian-man_1098-18167.jpg", name: "Indian Expert 4" }
   ], []);
 
   const handleDeploy = useCallback(() => {

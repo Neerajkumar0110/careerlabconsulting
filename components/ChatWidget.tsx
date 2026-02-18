@@ -23,7 +23,6 @@ export default function ChatWidget() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const recognitionRef = useRef<any>(null); 
 
-  // --- Dynamic Autonomous Knowledge Base (B2B + B2C) ---
   const getDynamicInstruction = () => {
     const isInternshipPage = pathname?.includes("/internship");
     
@@ -61,7 +60,6 @@ export default function ChatWidget() {
     }
   });
 
-  // --- Speech Recognition (STT) ---
   useEffect(() => {
     if (typeof window !== "undefined") {
       const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
@@ -87,7 +85,6 @@ export default function ChatWidget() {
     else { setIsListening(true); recognitionRef.current?.start(); }
   };
 
-  // --- Voice Synthesis (TTS) - Fixed logic ---
   const speak = (text: string) => {
     if (!isVoiceEnabled || typeof window === "undefined") {
       window.speechSynthesis.cancel();
@@ -109,7 +106,6 @@ export default function ChatWidget() {
     }
   };
 
-  // --- Path-Based Welcome Logic ---
   useEffect(() => {
     setMounted(true);
     const storedName = localStorage.getItem("user_display_name");
@@ -141,7 +137,6 @@ export default function ChatWidget() {
     if (isOpen && lastMessage?.role === "bot") speak(lastMessage.text);
   }, [messages, isOpen, isVoiceEnabled]);
 
-  // --- Messaging Execution ---
   const handleSendMessage = async () => {
     if (!input.trim() || isLoading) return;
     const userMsg = input;
@@ -181,9 +176,7 @@ export default function ChatWidget() {
       )}
 
       {isOpen ? (
-        /* Size Updated: Ultra Compact for Client feedback */
         <div className="w-[290px] md:w-[320px] h-[460px] md:h-[530px] bg-white rounded-[1.8rem] shadow-[0_20px_50px_rgba(0,0,0,0.25)] flex flex-col overflow-hidden border border-slate-200 pointer-events-auto">
-          {/* Header */}
           <div className="bg-[#b31f24] p-3 text-white relative">
             <div className="absolute top-3 right-3 flex gap-1.5">
               <button onClick={toggleVoice} className="p-1 hover:bg-white/10 rounded-full transition-colors">
@@ -196,7 +189,7 @@ export default function ChatWidget() {
             <div className="flex items-center gap-2.5">
               <div className="relative">
                 <div className="w-9 h-9 rounded-lg overflow-hidden border-2 border-white/20 shadow-lg bg-white p-0.5">
-                  <img src="/favicon.ico" alt="Manee AI" className="w-full h-full object-contain" />
+                  <img src="https://cdn-icons-png.flaticon.com/512/18355/18355220.png" alt="Manee AI" className="w-full h-full object-contain" />
                 </div>
                 <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 border-2 border-[#b31f24] rounded-full"></div>
               </div>
@@ -210,7 +203,6 @@ export default function ChatWidget() {
             </div>
           </div>
 
-          {/* Messages Area */}
           <div ref={scrollRef} className="flex-1 overflow-y-auto p-3.5 space-y-3.5 bg-[#fcfdfe] scroll-smooth">
             {messages.map((msg, i) => (
               <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
@@ -232,7 +224,6 @@ export default function ChatWidget() {
             )}
           </div>
 
-          {/* Input Controls */}
           <div className="p-3 bg-white border-t border-slate-100">
              <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-xl px-2 py-0.5 focus-within:border-[#b31f24]/20 transition-all">
                 <button 
@@ -263,7 +254,7 @@ export default function ChatWidget() {
           onClick={() => setIsOpen(true)}
           className="w-12 h-12 bg-white rounded-full p-2 shadow-2xl hover:scale-110 transition-all pointer-events-auto border-2 border-[#b31f24]/10"
         >
-          <img src="/favicon.ico" className="w-full h-full object-contain" alt="Manee AI" />
+          <img src="https://cdn-icons-png.flaticon.com/512/18355/18355220.png" className="w-full h-full object-contain" alt="Manee AI" />
         </button>
       )}
 
