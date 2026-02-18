@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation'; // Navigation ke liye
+import { useRouter } from 'next/navigation';
 import { 
   ArrowRight, Play, Target, Award, Zap, 
   Sparkles, MapPin, Cpu, TrendingUp
@@ -160,12 +160,10 @@ export default function B2CHero() {
     window.open(`https://wa.me/${OWNER_PHONE}?text=${message}`, '_blank');
   }, []);
 
-  // 1. Launch Demo - Direct YouTube Link
   const handleLaunchDemo = () => {
     window.open(DEMO_VIDEO_URL, '_blank');
   };
 
-  // 2. Profile Details - Redirect to Page
   const handleProfileRedirect = (id: string) => {
     router.push(`/profile/${id}`);
   };
@@ -188,7 +186,7 @@ export default function B2CHero() {
               <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse ml-1" />
             </motion.div>
 
-            <h1 className="text-[2.5rem] leading-[1] sm:text-6xl md:text-8xl font-black text-white mb-6 md:mb-8 tracking-tighter uppercase">
+            <h1 className="text-[2.5rem] leading-[1] sm:text-6xl md:text-6xl font-black text-white mb-6 md:mb-8 tracking-tighter uppercase">
               BEYOND <br/> 
               <span className="relative inline-block italic text-blue-400">
                 LEARNING.
@@ -199,7 +197,7 @@ export default function B2CHero() {
               DEPLOYMENT.
             </h1>
 
-            <p className="text-slate-400 text-base md:text-xl mb-8 md:mb-10 max-w-md font-medium leading-relaxed">
+            <p className="text-slate-400 text-base md:text-[14px] mb-8 md:mb-10 max-w-md font-medium leading-relaxed">
               Experience the future of engineering. Join a global network of <span className="text-white font-bold underline decoration-blue-500/50">Elite Minds</span> across 27 countries.
             </p>
 
@@ -239,7 +237,7 @@ export default function B2CHero() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-5 md:gap-7 mb-10">
+                <div className="flex items-center gap-5 md:gap-7 mb-5">
                   <div className="relative shrink-0 w-20 h-20 md:w-24 md:h-24">
                     <div className="relative w-full h-full rounded-3xl md:rounded-[2rem] overflow-hidden border-2 border-white/20 shadow-2xl">
                       <Image 
@@ -256,7 +254,7 @@ export default function B2CHero() {
                     </div>
                   </div>
                   <div className="flex-1 text-left">
-                    <h3 className="text-white font-black text-3xl md:text-4xl tracking-tighter mb-1">{activeStudent.name}</h3>
+                    <h3 className="text-white font-black text-3xl md:text-2xl tracking-tighter mb-1">{activeStudent.name}</h3>
                     <div className="flex items-center gap-2">
                       <MapPin size={14} className="text-blue-500" />
                       <p className="text-slate-400 text-xs font-bold uppercase tracking-wider">{activeStudent.country}</p>
@@ -272,13 +270,13 @@ export default function B2CHero() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-3 gap-3 md:gap-4 mb-10">
+                <div className="grid grid-cols-3 gap-3 md:gap-4 mb-5">
                   {[
                     { label: "Stability", val: activeStudent.progress, icon: Target, color: "text-blue-400" },
                     { label: "Thrust", val: activeStudent.performanceScore, icon: TrendingUp, color: "text-purple-400" },
                     { label: "Class", val: activeStudent.score, icon: Award, color: "text-emerald-400" }
                   ].map((stat, i) => (
-                    <div key={i} className="bg-white/[0.02] border border-white/5 rounded-2xl md:rounded-[2rem] p-4 text-left">
+                    <div key={i} className="bg-white/[0.02] border border-white/5 rounded-2xl md:rounded-[2rem] p-2 text-left">
                       <stat.icon className={`w-5 h-5 ${stat.color} mb-3`} />
                       <p className="text-slate-500 text-[10px] font-bold uppercase mb-1">{stat.label}</p>
                       <p className="text-white font-black text-xl md:text-2xl">{stat.val}</p>
@@ -299,7 +297,7 @@ export default function B2CHero() {
                     </div>
                     <button 
                       onClick={() => handleProfileRedirect(activeStudent.id)}
-                      className="w-full sm:w-auto px-8 py-4 bg-white text-black text-[11px] font-black uppercase rounded-2xl hover:bg-blue-600 hover:text-white transition-all shadow-xl active:scale-95"
+                      className="w-full sm:w-auto px-3 py-4 bg-white text-black text-[10px] font-black uppercase rounded-2xl hover:bg-blue-600 hover:text-white transition-all shadow-xl active:scale-95"
                     >
                       Profile Details
                     </button>
