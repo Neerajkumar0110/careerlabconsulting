@@ -163,7 +163,8 @@ function ScholarshipTestContent() {
             score: calculatedScore,
             totalQuestions: questions.length,
             scholarshipCode: formattedCode,
-            discount: discountPercent
+            discount: discountPercent,
+            planName: planName 
         })
      }).catch(err => console.error("Failed to send scholarship email", err));
 
