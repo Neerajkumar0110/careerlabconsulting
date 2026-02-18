@@ -190,12 +190,14 @@ export default function B2CHeader() {
                     id="mega-menu-dropdown"
                     className="fixed left-0 right-0 top-20 z-[95] animate-in fade-in slide-in-from-top-2 duration-300"
                   >
-                    <div className="absolute inset-0 bg-black/60 h-[calc(100vh-80px)] backdrop-blur-sm" aria-hidden="true" onClick={() => setIsProgramsOpen(false)} />
+                    <div className="absolute inset-0 bg-black/60 h-[calc(100vh-80px)] backdrop-blur-sm" aria-hidden="true" />
                     
-                    <div className="relative mx-auto w-full max-w-[1200px] bg-[#0b0f1a] border border-white/10 rounded-b-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden">
+                    <div 
+                      onMouseLeave={() => setIsProgramsOpen(false)}
+                      className="relative mx-auto w-full max-w-[1200px] bg-[#0b0f1a] border border-white/10 rounded-b-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden"
+                    >
                       <div className="grid grid-cols-[280px_1fr] min-h-[480px]">
                         
-                        {/* Sidebar */}
                         <aside className="bg-[#0a0d16] p-5 border-r border-white/5" role="tablist" aria-label="Internship Domains" aria-orientation="vertical">
                           <p className="px-4 mb-4 text-[10px] font-black text-blue-500 uppercase tracking-widest">Domains</p>
                           {megaMenuCategories.map((cat) => {
