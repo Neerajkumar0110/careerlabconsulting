@@ -1,3 +1,5 @@
+// app/scholarship-test/page.tsx
+
 'use client';
 
 export const dynamic = 'force-dynamic';
@@ -129,7 +131,7 @@ function ScholarshipTestContent() {
     }
   };
 
-  const submitQuiz = () => {
+  const submitQuiz = async () => {
      let calculatedScore = 0;
      const marksPerQuestion = 2; 
 
@@ -138,13 +140,34 @@ function ScholarshipTestContent() {
              calculatedScore += marksPerQuestion; 
          }
      });
+     
      setScore(calculatedScore);
-     setStep('result');
      
      const randomChars = Math.random().toString(36).substring(2, 5).toUpperCase();
      const randomDigits = Math.floor(1000 + Math.random() * 9000);
      const formattedCode = `SCH${randomChars}/${randomDigits}`;
      setGeneratedCode(formattedCode);
+
+     const maxScholarship = planName === 'Foundation' ? 30 : 40;
+     const totalPossibleScore = questions.length * 2; 
+     const rawPercentage = (calculatedScore / totalPossibleScore) * maxScholarship;
+     const discountPercent = Math.min(Math.round(rawPercentage), maxScholarship);
+
+     fetch('/api/scholarship-submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            name: userDetails.name,
+            email: userDetails.email,
+            phone: userDetails.phone,
+            score: calculatedScore,
+            totalQuestions: questions.length,
+            scholarshipCode: formattedCode,
+            discount: discountPercent
+        })
+     }).catch(err => console.error("Failed to send scholarship email", err));
+
+     setStep('result');
   };
 
   const calculateScholarshipPercent = () => {
