@@ -631,28 +631,7 @@ export default function InternXAIPage() {
                   </div>
                 </div>
               </div>
-
-              <div className="relative w-full h-[300px] md:h-[500px] rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-black">
-                  <video 
-                    src="https://www.pexels.com/download/video/1851190/" 
-                    autoPlay 
-                    loop 
-                    muted 
-                    playsInline 
-                    className="w-full h-full object-cover opacity-60"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#03081a] to-transparent opacity-90"></div>                
-                  <div className="absolute bottom-6 left-6 md:left-10 z-10">
-                    <div className="bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded-lg">
-                        <div className="flex items-center gap-2">
-                          <span className="relative flex h-2 w-2">
-                            <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                          </span>
-                          <span className="text-xs font-bold text-white">Live: 1,240 Students Coding Now</span>
-                        </div>
-                    </div>
-                  </div>
-              </div>
+              <GlobalNetwork />
             </div>
         </section>
 
@@ -1395,8 +1374,6 @@ export default function InternXAIPage() {
           <p className="mt-6 text-slate-500 text-sm">Elite is earned, not enrolled.</p>
         </section>
       </main>
-
-      <GlobalNetwork />
 
       <Footer />
     </div>

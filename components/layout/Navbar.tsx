@@ -476,7 +476,7 @@ export default function Navbar() {
               <Link href="/freelance" className="px-1 text-[10px] font-bold uppercase tracking-[2px] text-slate hover:text-white transition-all">
                 Freelance
               </Link>
-              <Link href="/job-portal" className="px-1 text-[10px] font-bold uppercase tracking-[2px] text-slate hover:text-white transition-all">
+              <Link href="https://hirex-chi.vercel.app/" className="px-1 text-[10px] font-bold uppercase tracking-[2px] text-slate hover:text-white transition-all">
                 Job Portal
               </Link>
               <Link href="/case-studies" className="px-1 text-[10px] font-bold uppercase tracking-[2px] text-slate hover:text-white transition-all">

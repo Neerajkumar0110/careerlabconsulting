@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { usePathname } from "next/navigation"; // URL context detect karne ke liye
+import { usePathname } from "next/navigation"; 
 import { createPortal } from "react-dom";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { Send, X, MessageSquare, Flame, Minus, Info, UserCheck, Volume2, VolumeX, Mic, MicOff } from "lucide-react";
