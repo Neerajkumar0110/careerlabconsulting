@@ -86,10 +86,10 @@ export default function HeroB2B() {
   const OWNER_PHONE = "918700236923";
   
   const avatars = useMemo(() => [
-    { id: "1560250097-0b93528c311a", name: "AI Strategy Expert" }, 
-    { id: "1494790108377-be9c29b29330", name: "Automation Lead" }, 
-    { id: "1507003211169-0a1dd7228f2d", name: "Technical Consultant" }, 
-    { id: "1599566150163-29194dcaad36", name: "Growth Specialist" }
+    { src: "https://img.freepik.com/free-photo/writing-dairy-note-coffee-shop-concept-as-memory-life-woman-coffee-shop-smiling-woman-making-notes-notepad_1153-8262.jpg", name: "Indian Expert 1" }, 
+    { src: "https://img.freepik.com/free-photo/expressive-young-woman-posing-studio_176474-66741.jpg", name: "Indian Expert 2" }, 
+    { src: "https://img.freepik.com/free-photo/woman-trendy-summer-sundress_158538-16608.jpg", name: "Indian Expert 3" }, 
+    { src: "https://img.freepik.com/free-photo/portrait-woman-working-dried-flowers-shop_23-2151362120.jpg", name: "Indian Expert 4" }
   ], []);
 
   const handleDeploy = useCallback(() => {
@@ -114,29 +114,31 @@ export default function HeroB2B() {
           <motion.div 
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-8 inline-flex items-center gap-3 px-4 py-2 rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl"
+            className="mb-8 inline-flex items-center gap-4 px-5 py-2.5 rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl"
           >
-            <div className="flex -space-x-3">
+            <div className="flex -space-x-4">
               {avatars.map((avatar, i) => (
-                <div key={i} className="relative w-8 h-8 md:w-10 md:h-10 rounded-full border-2 border-[#020617] overflow-hidden">
+                <div key={i} className="relative w-10 h-10 md:w-12 md:h-12 rounded-full border-2 border-[#020617] overflow-hidden bg-slate-800">
                   <Image 
-                    src={`https://images.unsplash.com/photo-${avatar.id}?w=64&h=64&fit=crop`} 
+                    src={avatar.src} 
                     alt={avatar.name}
                     fill
-                    sizes="40px"
+                    sizes="48px"
                     className="object-cover"
+                    priority={i < 2}
                   />
                 </div>
               ))}
             </div>
-            <div className="h-4 w-px bg-white/20 mx-1" />
-            <p className="text-blue-400 text-[10px] md:text-xs font-black tracking-widest uppercase flex items-center gap-2">
+
+            <div className="h-6 w-px bg-white/20 mx-1" />
+            <p className="text-blue-400 text-[10px] md:text-[9px] font-black tracking-[0.15em] uppercase flex items-center gap-2">
               <Sparkles size={14} className="animate-pulse" />
               The Future of Work is Autonomous
             </p>
           </motion.div>
 
-          <h1 className="text-5xl sm:text-7xl md:text-9xl font-black text-white mb-8 tracking-tighter leading-[0.85] uppercase">
+          <h1 className="text-5xl sm:text-5xl md:text-7xl font-black text-white mb-8 tracking-tighter leading-[0.85] uppercase">
             Command Your <br /> 
             <span className="relative inline-block italic text-blue-400">
               AI Empire
@@ -147,7 +149,7 @@ export default function HeroB2B() {
           </h1>
         </div>
 
-        <p className="max-w-2xl mx-auto text-slate-400 text-lg md:text-2xl mb-12 leading-relaxed px-4 font-medium">
+        <p className="max-w-2xl mx-auto text-slate-400 text-lg md:text-1xl mb-12 leading-relaxed px-4 font-medium">
           Deploy custom AI workforces that <span className="text-white font-bold underline decoration-blue-500/50">execute tasks</span> autonomously. 
           Reduce overhead by 70% and scale instantly.
         </p>
