@@ -130,7 +130,7 @@ export default function Hero() {
           <span className="tracking-widest uppercase md:text-[11px] text-[8px] font-black">AI-Autonomous Job Matching Engine</span>
         </div>
 
-        <h1 className="text-4xl md:text-5xl font-black text-white tracking-tighter mb-4 md:leading-[1.2] leading-[1.1] uppercase italic">
+        <h1 className="text-4xl md:text-4xl font-black text-white tracking-tighter mb-4 md:leading-[1.2] leading-[1.1] uppercase italic">
           Your Career, <span className="text-blue-500 italic">Quantified.</span> <br />
           Hiring, <span className="text-indigo-400">Automated.</span>
         </h1>
@@ -148,7 +148,7 @@ export default function Hero() {
           </button>
         </div>
         
-        <div className="relative mb-10">
+        <div className="relative mb-5">
           <div className="absolute inset-0 flex items-center" aria-hidden="true">
             <div className="w-full border-t border-white/10 opacity-30"></div>
           </div>
