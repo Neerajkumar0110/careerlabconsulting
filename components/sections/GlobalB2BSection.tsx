@@ -5,7 +5,6 @@ import dynamic from 'next/dynamic';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, MapPin, Building2, ArrowRight, Lock, Unlock, Hand } from 'lucide-react';
 
-// --- Types ---
 interface Client {
   id: number;
   companyName: string;
@@ -18,7 +17,6 @@ interface Client {
   stats: string;
 }
 
-// --- Dynamic Globe Import ---
 const Globe = dynamic(() => import('react-globe.gl'), { 
   ssr: false,
   loading: () => (
@@ -31,40 +29,32 @@ const Globe = dynamic(() => import('react-globe.gl'), {
   )
 });
 
-// --- HELPER: INTELLIGENT LAND DISTRIBUTION ---
 const generateRealClients = (): Client[] => {
   
   const regions = [
-    // --- INDIA ---
     { 
       city: "Bangalore", country: "India", lat: 12.9716, lng: 77.5946, 
-      // Bangalore is inland, safe to spread all around but slight bias to North
       spreadLat: 0.8, spreadLng: 0.8, latBias: 0.1, lngBias: 0,
       domains: ["infosys.com", "wipro.com", "flipkart.com", "swiggy.com", "ola.cabs", "zerodha.com"] 
     },
     { 
       city: "Mumbai", country: "India", lat: 19.0760, lng: 72.8777, 
-      // MUMBAI FIX: Push East (positive Lng) and North to avoid Arabian Sea
       spreadLat: 0.8, spreadLng: 0.6, latBias: 0.3, lngBias: 0.8, 
       domains: ["tcs.com", "ril.com", "hdfcbank.com", "sbi.co.in", "tatamotors.com", "mahindra.com"] 
     },
     { 
       city: "Delhi/NCR", country: "India", lat: 28.6139, lng: 77.2090, 
-      // Delhi is safe inland
       spreadLat: 0.6, spreadLng: 0.6, latBias: 0, lngBias: 0,
       domains: ["paytm.com", "zomato.com", "airtel.in", "lenskart.com"] 
     },
     
-    // --- USA ---
     { 
       city: "San Francisco", country: "USA", lat: 37.7749, lng: -122.4194, 
-      // SF FIX: Push East (positive) to avoid Pacific Ocean
       spreadLat: 1.0, spreadLng: 1.2, latBias: -0.2, lngBias: 0.8,
       domains: ["google.com", "apple.com", "meta.com", "netflix.com", "uber.com", "airbnb.com"] 
     },
     { 
       city: "New York", country: "USA", lat: 40.7128, lng: -74.0060, 
-      // NY FIX: Push West (negative) to avoid Atlantic Ocean
       spreadLat: 0.8, spreadLng: 1.0, latBias: 0.1, lngBias: -1.5,
       domains: ["jpmorganchase.com", "goldmansachs.com", "bloomberg.com", "pfizer.com"] 
     },
@@ -74,7 +64,6 @@ const generateRealClients = (): Client[] => {
       domains: ["dell.com", "tesla.com", "oracle.com"] 
     },
 
-    // --- EUROPE ---
     { 
       city: "London", country: "UK", lat: 51.5074, lng: -0.1278, 
       spreadLat: 0.4, spreadLng: 0.6, latBias: 0.1, lngBias: -0.2,
@@ -91,30 +80,24 @@ const generateRealClients = (): Client[] => {
       domains: ["loreal.com", "lvmh.com", "axa.com", "airbus.com"] 
     },
 
-    // --- ASIA ---
     { 
       city: "Tokyo", country: "Japan", lat: 35.6762, lng: 139.6503, 
-      // Japan is thin. Spread North/South mainly.
       spreadLat: 1.5, spreadLng: 0.3, latBias: 0.2, lngBias: -0.2,
       domains: ["sony.com", "toyota.com", "softbank.jp", "nintendo.com"] 
     },
     { 
       city: "Singapore", country: "Singapore", lat: 1.3521, lng: 103.8198, 
-      // Very small island, keep tight
       spreadLat: 0.1, spreadLng: 0.1, latBias: 0.1, lngBias: 0,
       domains: ["shopee.com", "grab.com", "singtel.com"] 
     },
     { 
       city: "Sydney", country: "Australia", lat: -33.8688, lng: 151.2093, 
-      // Sydney is East coast. Push West (Inland)
       spreadLat: 0.5, spreadLng: 0.8, latBias: 0, lngBias: -1.0,
       domains: ["atlassian.com", "canva.com", "bhp.com"] 
     },
     
-    // --- OTHERS ---
     { 
       city: "Dubai", country: "UAE", lat: 25.2048, lng: 55.2708, 
-      // Coast is North/West. Push South/East.
       spreadLat: 0.3, spreadLng: 0.3, latBias: -0.5, lngBias: 0.5,
       domains: ["emirates.com", "emaar.com"] 
     },
@@ -130,22 +113,15 @@ const generateRealClients = (): Client[] => {
 
   regions.forEach(region => {
     region.domains.forEach((domain, index) => {
-      // --- LOGIC FIX: DETERMINISTIC SCATTERING ---
-      // Instead of a spiral, we use a calculated grid-like offset based on the index.
-      // This ensures they never overlap and respect the coastline bias.
       
-      const offsetMultiplier = (index + 1) * 0.4; // Distance between nodes
+      const offsetMultiplier = (index + 1) * 0.4; 
       
-      // Calculate alternating offsets so they don't form a straight line
       const dirLat = index % 2 === 0 ? 1 : -1; 
       const dirLng = index % 3 === 0 ? 1 : -1;
 
-      // Apply the "Land Bias" (Pushing away from water)
-      // We calculate a spread that adds the Bias to the Random direction
       let latOffset = (dirLat * region.spreadLat * offsetMultiplier * 0.5) + (region.latBias * offsetMultiplier);
       let lngOffset = (dirLng * region.spreadLng * offsetMultiplier * 0.5) + (region.lngBias * offsetMultiplier);
 
-      // Random jitter to break perfect lines (makes it look organic)
       latOffset += (Math.random() - 0.5) * 0.1;
       lngOffset += (Math.random() - 0.5) * 0.1;
 
@@ -179,18 +155,16 @@ export default function GlobalB2BSection() {
     setMounted(true);
   }, []);
 
-  // --- 1. HUGE EARTH VIEW ---
   useEffect(() => {
     if (mounted && globeRef.current) {
       globeRef.current.pointOfView({
         lat: 25, 
         lng: 20, 
-        altitude: 1.5 // Keeps the whole earth visible
+        altitude: 1.5 
       }, 0);
     }
   }, [mounted]);
 
-  // --- GLOBE CONTROLS ---
   useEffect(() => {
     if (mounted && globeRef.current) {
       const controls = globeRef.current.controls();
@@ -205,7 +179,7 @@ export default function GlobalB2BSection() {
             controls.enableRotate = true;
         } else {
             controls.autoRotate = true;
-            controls.autoRotateSpeed = 0.5; // Slower rotation for better viewing
+            controls.autoRotateSpeed = 0.5; 
             controls.enableZoom = false; 
             controls.enableRotate = false;
         }
@@ -220,7 +194,7 @@ export default function GlobalB2BSection() {
       globeRef.current.pointOfView({ 
         lat: client.lat, 
         lng: client.lng, 
-        altitude: 0.4 // Zoom closer when clicked
+        altitude: 0.4 
       }, 1500);
     }
   };
@@ -242,7 +216,6 @@ export default function GlobalB2BSection() {
         onMouseLeave={() => setIsInteracting(false)}
     >
       
-      {/* Hero Text */}
       <div className="absolute top-12 left-0 right-0 z-20 text-center pointer-events-none px-4">
         <motion.div
            animate={{ 
@@ -252,17 +225,9 @@ export default function GlobalB2BSection() {
            }}
            transition={{ duration: 0.6, ease: "circOut" }}
         >
-          <div className="inline-flex items-center gap-2 mb-4 px-5 py-1.5 rounded-full bg-blue-600/10 border border-blue-500/30 backdrop-blur-xl">
-            <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-            <span className="text-blue-400 text-[11px] font-black uppercase tracking-[0.3em]">Global Ecosystem</span>
-          </div>
-          <h2 className="text-4xl md:text-7xl font-black text-white uppercase tracking-tighter leading-none drop-shadow-[0_10px_40px_rgba(37,99,235,0.5)]">
-            Trusted <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">Globally</span>
-          </h2>
         </motion.div>
       </div>
 
-      {/* --- SCROLL SHIELD LAYER --- */}
       {!isInteracting && (
         <div 
             className="absolute inset-0 z-10 flex items-center justify-center cursor-pointer"
