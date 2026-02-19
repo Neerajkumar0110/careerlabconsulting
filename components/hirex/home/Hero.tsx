@@ -7,7 +7,7 @@ import { ArrowRight, ShieldCheck, Zap } from 'lucide-react';
 
 const SpaceBackground = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const featureWords = ["SQL", "Next.js", "AI Reports", "GitHub Sync", "360° Profile", "Node.js", "Autonomous"];
+  const featureWords = ["Job posting", "Resume upload", "Resume builder", "Candidate dashboard", "Employer dashboard", "Advanced search", "Job alerts", "Email notifications", "Application tracking", "Applicant tracking system", "Profile management", "Skills assessment", "Video interviews", "Interview scheduling", "Messaging system", "Company profiles", "Salary insights", "Job recommendations", "AI matching", "Social media integration", "Mobile app", "Multi-language support", "Location-based search", "Remote job filter", "Saved jobs", "Bookmarking", "Analytics dashboard", "Subscription plans", "Payment gateway integration", "Featured listings", "Admin panel", "User authentication", "Two-factor authentication", "GDPR compliance", "Resume parsing", "Cover letter builder", "Referral system", "Blog section", "Career advice", "Interview tips", "Skill endorsements", "Company reviews", "Rating system", "Job sharing", "API integration", "Chatbot support", "Bulk job upload", "Candidate shortlisting", "Background verification", "Onboarding tools", "Calendar integration", "Job expiration alerts", "Custom branding", "Talent pool management", "Notifications center", "Reporting tools"];
 
   useEffect(() => {
     const canvas = canvasRef.current;
