@@ -106,7 +106,7 @@ const NeuralBackground = () => {
 
 export default function EmployerGrades() {
   return (
-    <section id="employers" className="relative py-32 bg-[#020617] overflow-hidden border-t border-white/5">
+    <section id="employers" className="relative py-32 bg-[#020617] overflow-hidden border-t border-white/5 font-sans">
       <NeuralBackground />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -114,136 +114,134 @@ export default function EmployerGrades() {
         <div className="flex flex-col lg:flex-row items-center justify-between gap-12 mb-24">
           <div className="max-w-2xl text-center lg:text-left">
             <motion.div 
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-black uppercase tracking-[0.3em] mb-6"
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[11px] font-bold uppercase tracking-[0.2em] mb-8"
             >
-              <Search size={12} />
+              <Search size={14} className="animate-pulse" />
               Reputation Monitoring Active
             </motion.div>
-            <h2 className="text-4xl md:text-7xl font-black text-white tracking-tighter leading-[0.9] uppercase italic">
+            <h2 className="text-5xl md:text-8xl font-extrabold text-white tracking-tight leading-[0.85] uppercase">
               Verified <br />
-              <span className="text-blue-500">Oppor-Tunities.</span>
+              <span className="text-blue-500">Opportunities.</span>
             </h2>
           </div>
           
-          <div className="p-6 bg-white/[0.02] border border-white/10 rounded-[2rem] backdrop-blur-xl max-w-sm">
+          <div className="p-8 bg-white/[0.03] border border-white/10 rounded-[2.5rem] backdrop-blur-2xl max-w-sm">
             <div className="flex items-center gap-3 mb-4">
-              <Zap size={20} className="text-yellow-400 fill-yellow-400" />
-              <span className="text-sm font-black text-white uppercase italic tracking-widest">AI Trust Protocol</span>
+              <div className="p-2 bg-yellow-400/10 rounded-lg">
+                <Zap size={22} className="text-yellow-400 fill-yellow-400" />
+              </div>
+              <span className="text-sm font-bold text-white uppercase tracking-wider">AI Trust Protocol</span>
             </div>
-            <p className="text-slate-400 text-sm font-medium leading-relaxed">
+            <p className="text-slate-400 text-sm leading-relaxed font-medium">
               Our agent autonomously scrapes Glassdoor, LinkedIn, and social footprints to verify employer grade categories in real-time.
             </p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-24">
           {GRADES.map((grade, idx) => (
             <motion.div 
               key={grade.rank} 
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.15 }}
-              className={`group relative bg-white/[0.02] border border-white/5 rounded-[3rem] p-10 hover:bg-white/[0.05] transition-all duration-500 shadow-2xl ${grade.glow}`}
+              transition={{ delay: idx * 0.1 }}
+              className={`group relative bg-white/[0.02] border border-white/10 rounded-[3rem] p-10 hover:border-blue-500/30 transition-all duration-500 ${grade.glow}`}
             >
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-400/20 to-transparent -translate-y-full group-hover:animate-[scan_4s_linear_infinite]" />
-              
-              <div className="flex justify-between items-start mb-6">
-                <div className={`text-7xl font-black bg-gradient-to-br ${grade.color} bg-clip-text text-transparent italic tracking-tighter`}>
+              <div className="flex justify-between items-start mb-8">
+                <div className={`text-8xl font-black bg-gradient-to-br ${grade.color} bg-clip-text text-transparent italic tracking-tighter pr-4 leading-none`}>
                   {grade.rank}
                 </div>
                 
-                <div className="flex flex-wrap gap-2 justify-end max-w-[130px]">
+                <div className="flex flex-wrap gap-2 justify-end max-w-[120px]">
                   {grade.logos.map((logo, lIdx) => (
                     <div 
                       key={lIdx} 
-                      className="w-10 h-10 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center p-2 shadow-inner shadow-white/5 backdrop-blur-md"
+                      className="w-11 h-11 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center p-2.5 backdrop-blur-md group-hover:bg-white/10 transition-colors"
                     >
-                      <img 
-                        src={logo.url} 
-                        alt={logo.name} 
-                        className="w-full h-full object-contain" 
-                      />
+                      <img src={logo.url} alt={logo.name} className="w-full h-full object-contain" />
                     </div>
                   ))}
                 </div>
               </div>
               
-              <h3 className="text-2xl font-black text-white mb-2 uppercase tracking-tight">{grade.title}</h3>
-              <p className="text-slate-500 text-xs font-bold mb-8 uppercase tracking-widest leading-relaxed">
+              <h3 className="text-2xl font-bold text-white mb-3 uppercase tracking-tight">{grade.title}</h3>
+              <p className="text-slate-400 text-[13px] leading-relaxed mb-10 font-medium">
                 {grade.description}
               </p>
               
-              <div className="space-y-4 pt-6 border-t border-white/5">
+              <div className="space-y-5 pt-8 border-t border-white/10">
                 {Object.entries(grade.metrics).map(([key, val]) => (
-                  <div key={key} className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
-                    <span className="text-slate-500">{key}</span>
-                    <span className="text-white">{val}</span>
+                  <div key={key} className="flex justify-between items-center">
+                    <span className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">{key}</span>
+                    <span className="text-sm font-bold text-white tabular-nums">{val}</span>
                   </div>
                 ))}
               </div>
 
-              <div className="mt-10 flex items-center justify-between">
-                <div className="flex gap-1">
+              <div className="mt-12 flex items-center justify-between">
+                <div className="flex gap-1.5">
                   {[1, 2, 3, 4, 5].map((s) => (
-                    <Star key={s} className={`w-3 h-3 ${idx === 0 ? 'text-blue-400 fill-blue-400' : 'text-slate-700'}`} />
+                    <Star key={s} className={`w-3.5 h-3.5 ${idx === 0 ? 'text-blue-400 fill-blue-400' : 'text-slate-800'}`} />
                   ))}
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/5">
                    <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                   <span className="text-[9px] font-black text-slate-400 uppercase">Live Auth</span>
+                   <span className="text-[10px] font-bold text-slate-300 uppercase tracking-tight">Live Auth</span>
                 </div>
               </div>
             </motion.div>
           ))}
         </div>
 
-        <div className="relative group">
-          <div className="absolute -inset-1 bg-gradient-to-r from-blue-600/20 to-cyan-500/20 rounded-[3rem] blur-xl opacity-50 group-hover:opacity-100 transition duration-1000"></div>
+        <div className="relative group max-w-5xl mx-auto">
+          <div className="absolute -inset-1 bg-gradient-to-r from-blue-600/30 via-cyan-500/30 to-blue-600/30 rounded-[2.5rem] blur-2xl opacity-20 group-hover:opacity-40 transition duration-1000"></div>
           
-          <div className="relative grid grid-cols-2 md:grid-cols-4 gap-4 p-8 bg-[#0a0f1d]/80 border border-white/10 rounded-[2.5rem] backdrop-blur-3xl shadow-2xl overflow-hidden">
+          <div className="relative grid grid-cols-2 md:grid-cols-4 gap-0 py-10 bg-[#0a0f1d]/60 border border-white/10 rounded-[2.5rem] backdrop-blur-3xl shadow-2xl overflow-hidden">
             
-            <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-blue-500/10 to-transparent -translate-x-full animate-[shimmer_3s_infinite]" />
+            <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-blue-500/5 to-transparent -translate-x-full group-hover:animate-[shimmer_3s_infinite]" />
 
             {[
-              { label: "JD Accuracy", val: "98.4%", icon: <ShieldCheck size={18}/> },
-              { label: "Avg. Response", val: "< 12h", icon: <Activity size={18}/> },
-              { label: "Candidate Sat.", val: "4.8/5", icon: <Star size={18}/> },
-              { label: "Digital Footprint", val: "AI-V", icon: <Globe size={18}/> }
+              { label: "JD Accuracy", val: "98.4%", icon: <ShieldCheck size={20}/> },
+              { label: "Avg. Response", val: "< 12h", icon: <Activity size={20}/> },
+              { label: "Candidate Sat.", val: "4.8/5", icon: <Star size={20}/> },
+              { label: "Digital Footprint", val: "AI-V", icon: <Globe size={20}/> }
             ].map((stat, i) => (
-              <motion.div 
+              <div 
                 key={i} 
-                whileHover={{ y: -5 }}
-                className={`relative px-0 py-0 text-center transition-all duration-300 ${i !== 3 ? 'md:border-r border-white/10' : ''}`}
+                className={`relative px-6 flex flex-col items-center justify-center group/item transition-all duration-300 ${i !== 3 ? 'md:border-r border-white/5' : ''}`}
               >
-                <div className="flex flex-col items-center justify-center">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="text-blue-400 drop-shadow-[0_0_8px_rgba(59,130,246,0.5)]">
+                <motion.div whileHover={{ scale: 1.05 }} className="flex flex-col items-center">
+                  <div className="flex items-center gap-3 mb-2">
+                    <span className="text-blue-400 p-1.5 bg-blue-400/10 rounded-lg">
                       {stat.icon}
                     </span>
-                    <span className="text-[14px] md:text-[20px] font-black text-white tracking-tighter tabular-nums">
+                    <span className="text-2xl md:text-3xl font-bold text-white tracking-tight tabular-nums">
                       {stat.val}
                     </span>
                   </div>
-                  <div className="text-[6px] md:text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] opacity-80 group-hover:text-blue-300 transition-colors">
+                  <div className="text-[11px] font-bold text-slate-500 uppercase tracking-[0.15em] group-hover/item:text-blue-300 transition-colors">
                     {stat.label}
                   </div>
-                </div>
-                
-                <div className="absolute top-0 right-4 w-1 h-1 rounded-full bg-blue-500/40 animate-pulse" />
-              </motion.div>
+                </motion.div>
+              </div>
             ))}
           </div>
         </div>
       </div>
       
       <style jsx global>{`
-        @keyframes scan {
-          0% { transform: translateY(-100%); opacity: 0; }
-          50% { opacity: 1; }
-          100% { transform: translateY(400px); opacity: 0; }
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&family=Inter:wght@400;600;800&display=swap');
+        
+        :root {
+          --font-outfit: 'Outfit', sans-serif;
+          --font-inter: 'Inter', sans-serif;
         }
+
+        h2, h3, .font-rank { font-family: var(--font-outfit); }
+        p, span, div { font-family: var(--font-inter); }
+
         @keyframes shimmer {
           0% { transform: translateX(-100%); }
           100% { transform: translateX(100%); }

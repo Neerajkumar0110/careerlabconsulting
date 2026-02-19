@@ -6,164 +6,167 @@ import {
   Database, 
   Terminal, 
   Timer, 
-  ShieldCheck, 
   ChevronRight,
   BrainCircuit,
   Bot,
   Activity,
   Globe,
-  Zap
+  Zap,
+  FileCode,
+  Layout,
+  Cpu,
+  Hash
 } from 'lucide-react';
 
-const LIVE_ACTIVITY = [
-  { user: "User_882", skill: "SQL Mastery", score: "92%", time: "2m ago" },
-  { user: "Dev_Alpha", skill: "Next.js", score: "100%", time: "5m ago" },
-  { user: "AI_Prompt", skill: "Prompt Eng", score: "88%", time: "7m ago" },
-];
-
 const SKILL_TESTS = [
-  { name: "SQL Mastery", questions: 10, time: "15m", icon: <Database size={18} />, color: "text-blue-400", load: 65 },
-  { name: "Next.js Architecture", questions: 10, time: "20m", icon: <Terminal size={18} />, color: "text-indigo-400", load: 89 },
-  { name: "AI Prompt Engineering", questions: 10, time: "12m", icon: <Bot size={18} />, color: "text-cyan-400", load: 42 },
+  { name: "SQL Mastery", questions: 10, time: "15m", icon: <Database size={16} />, color: "text-blue-400", type: 'database' },
+  { name: "Next.js Architecture", questions: 10, time: "20m", icon: <Terminal size={16} />, color: "text-indigo-400", type: 'framework' },
+  { name: "AI Prompt Engineering", questions: 10, time: "12m", icon: <Bot size={16} />, color: "text-cyan-400", type: 'ai' },
 ];
 
 export default function AssessmentHub() {
   const [activeUsers, setActiveUsers] = useState(1248);
+  const [activeTab, setActiveTab] = useState(0);
+  const [logs, setLogs] = useState([
+    "System initialized...",
+    "Neural weights loaded: 100%",
+    "Waiting for user input..."
+  ]);
 
   useEffect(() => {
     const interval = setInterval(() => {
+      const users = ["User_72", "Dev_X", "Alpha_Gen", "Coder_99"];
+      const actions = ["started SQL test", "passed Next.js", "failed Logic-1", "synced profile"];
+      const newLog = `[${new Date().toLocaleTimeString()}] ${users[Math.floor(Math.random() * users.length)]} ${actions[Math.floor(Math.random() * actions.length)]}`;
+      
+      setLogs(prev => [newLog, ...prev].slice(0, 5));
       setActiveUsers(prev => prev + Math.floor(Math.random() * 5) - 2);
-    }, 3000);
+    }, 4000);
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <section id="test" className="relative py-32 bg-[#020617] overflow-hidden border-t border-white/5">
+    <section id="test" className="relative py-20 bg-[#020617] overflow-hidden border-t border-white/5">
       <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none" 
-           style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, #3b82f6 1px, transparent 0)', backgroundSize: '40px 40px' }} />
+           style={{ backgroundImage: 'linear-gradient(#3b82f6 1px, transparent 1px), linear-gradient(90deg, #3b82f6 1px, transparent 1px)', backgroundSize: '50px 50px' }} />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-20 items-center">
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
           
           <div className="text-center lg:text-left">
             <motion.div 
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-black uppercase tracking-[0.3em] mb-8"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-mono mb-8"
             >
-              <Activity size={14} className="animate-pulse" />
-              Live System Status: Optimal
+              <Activity size={12} className="animate-pulse" />
+              STATUS: STABLE // NODES: {activeUsers}
             </motion.div>
 
-            <h2 className="text-5xl md:text-8xl font-black text-white tracking-tighter leading-[0.85] uppercase italic mb-8">
+            <h2 className="text-4xl md:text-8xl font-black text-white tracking-tighter leading-[0.85] uppercase italic mb-8">
               Validate <br /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-600">Neural DNA.</span>
             </h2>
 
-            <div className="flex flex-wrap gap-4 mb-10 justify-center lg:justify-start">
-               <div className="px-4 py-2 bg-white/5 rounded-xl border border-white/10 flex items-center gap-3">
-                  <div className="w-2 h-2 rounded-full bg-green-500 animate-ping" />
-                  <span className="text-[10px] font-bold text-slate-300 uppercase">{activeUsers} Nodes Online</span>
-               </div>
-               <div className="px-4 py-2 bg-white/5 rounded-xl border border-white/10 flex items-center gap-3">
-                  <Globe size={14} className="text-blue-400" />
-                  <span className="text-[10px] font-bold text-slate-300 uppercase">Global Sync Active</span>
-               </div>
-            </div>
-
-            <p className="text-slate-400 text-lg md:text-xl font-medium leading-relaxed mb-12 max-w-xl">
-              Our AI-orchestrated challenges analyze logic patterns in real-time. Cheat-proof, autonomous, and instantly synced to your global profile.
+            <p className="text-slate-400 text-[14px] font-mono mb-10 max-w-xl">
+              {">"} Executing logic-pattern analysis... <br />
+              {">"} Bypassing traditional assessment vectors. <br />
+              {">"} Syncing results to global decentralized ledger.
             </p>
-            
-            <div className="hidden md:block space-y-3 opacity-60 hover:opacity-100 transition-opacity">
-               <p className="text-[10px] font-black text-blue-500 uppercase tracking-widest mb-4">Recent Verifications</p>
-               {LIVE_ACTIVITY.map((item, i) => (
-                 <div key={i} className="flex items-center gap-4 text-[11px] text-slate-500 font-mono">
-                    <span className="text-blue-400">[{item.time}]</span>
-                    <span className="text-white">{item.user}</span>
-                    <span className="w-12 h-[1px] bg-white/10" />
-                    <span>{item.skill}</span>
-                    <span className="text-green-500 font-bold">{item.score}</span>
-                 </div>
-               ))}
+
+            <div className="flex gap-4">
+               <div className="flex items-center gap-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                  <Globe size={14} className="text-blue-500" /> Global Sync
+               </div>
+               <div className="flex items-center gap-2 text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                  <Cpu size={14} className="text-indigo-500" /> AI Orchestrated
+               </div>
             </div>
           </div>
 
           <motion.div 
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            className="bg-[#0f172a]/80 backdrop-blur-3xl border border-white/10 rounded-[2.5rem] p-6 md:p-10 shadow-2xl relative"
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            className="bg-[#0b0f1a] border border-white/10 rounded-xl overflow-hidden shadow-2xl flex flex-col h-[500px]"
           >
-            <div className="flex justify-between items-center mb-10">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-blue-500/20 rounded-lg">
-                  <BrainCircuit className="text-blue-400" size={20} />
+            <div className="bg-[#161b22] px-4 py-3 border-b border-white/5 flex items-center justify-between">
+              <div className="flex gap-1.5">
+                <div className="w-3 h-3 rounded-full bg-red-500/20 border border-red-500/40" />
+                <div className="w-3 h-3 rounded-full bg-yellow-500/20 border border-yellow-500/40" />
+                <div className="w-3 h-3 rounded-full bg-green-500/20 border border-green-500/40" />
+              </div>
+              <div className="text-[10px] font-mono text-slate-500 tracking-widest uppercase">
+                hirex_assessment_v2.5.exe
+              </div>
+              <div />
+            </div>
+
+            <div className="flex flex-1 overflow-hidden">
+              <div className="w-12 md:w-16 bg-[#0d1117] border-r border-white/5 flex flex-col items-center py-4 gap-6">
+                 <Layout size={20} className="text-slate-600 hover:text-blue-400 cursor-pointer" />
+                 <FileCode size={20} className="text-blue-400 cursor-pointer" />
+                 <BrainCircuit size={20} className="text-slate-600 hover:text-blue-400 cursor-pointer" />
+              </div>
+
+              <div className="flex-1 flex flex-col">
+                <div className="flex bg-[#0d1117] text-[10px] font-mono text-slate-500">
+                  {SKILL_TESTS.map((test, i) => (
+                    <div 
+                      key={i}
+                      onClick={() => setActiveTab(i)}
+                      className={`px-4 py-2 border-r border-white/5 cursor-pointer flex items-center gap-2 ${activeTab === i ? 'bg-[#0b0f1a] text-blue-400 border-t-2 border-t-blue-500' : ''}`}
+                    >
+                      <Hash size={10} /> {test.name.replace(" ", "_").toLowerCase()}.sh
+                    </div>
+                  ))}
                 </div>
-                <div>
-                  <h4 className="text-white font-black uppercase tracking-tighter text-xl italic">Test Terminal</h4>
-                  <div className="flex items-center gap-2">
-                    <span className="flex h-1.5 w-1.5 rounded-full bg-green-500"></span>
-                    <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Protocol v2.5.0 - Encrypted</p>
+
+                <div className="flex-1 p-6 font-mono relative overflow-y-auto">
+                  <div className="text-xs space-y-4">
+                    <p className="text-blue-500">{"//"} INITIALIZING ASSESSMENT MODULE</p>
+                    <div className="space-y-2">
+                       <p className="text-slate-300 flex items-center gap-2">
+                         <span className="text-indigo-400">const</span> assessment = <span className="text-yellow-200">"{SKILL_TESTS[activeTab].name}"</span>;
+                       </p>
+                       <p className="text-slate-300 flex items-center gap-2">
+                         <span className="text-indigo-400">const</span> config = {"{"} 
+                         <span className="text-cyan-400 pl-4">questions: {SKILL_TESTS[activeTab].questions},</span>
+                         <span className="text-cyan-400 pl-4">duration: "{SKILL_TESTS[activeTab].time}"</span>
+                         {"}"};
+                       </p>
+                    </div>
+
+                    <button className="mt-6 px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded font-bold transition-all flex items-center gap-3 group">
+                      RUN_TEST.sh <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                    </button>
+                  </div>
+
+                  <div className="absolute bottom-0 left-0 right-0 bg-black/60 backdrop-blur-md p-4 border-t border-white/10 h-32 overflow-hidden">
+                    <p className="text-[10px] text-green-500 mb-2 font-bold uppercase tracking-tighter flex items-center gap-2">
+                       <Terminal size={10} /> Live Output Console
+                    </p>
+                    <div className="space-y-1">
+                      {logs.map((log, i) => (
+                        <p key={i} className="text-[10px] text-slate-400 font-mono opacity-80">
+                          {">"} {log}
+                        </p>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="space-y-4">
-              {SKILL_TESTS.map((test, idx) => (
-                <div 
-                  key={idx} 
-                  className="group relative overflow-hidden p-5 bg-black/40 rounded-2xl border border-white/5 hover:border-blue-500/30 transition-all cursor-pointer"
-                >
-                  <div 
-                    className="absolute bottom-0 left-0 h-[2px] bg-blue-500/30 transition-all duration-1000" 
-                    style={{ width: `${test.load}%` }}
-                  />
-
-                  <div className="flex items-center justify-between relative z-10">
-                    <div className="flex items-center gap-4">
-                      <div className={`w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center ${test.color} group-hover:scale-110 transition-transform duration-500`}>
-                        {test.icon}
-                      </div>
-                      <div>
-                        <h5 className="text-sm font-black text-white uppercase tracking-tight flex items-center gap-2">
-                          {test.name}
-                          {idx === 1 && <span className="text-[8px] bg-blue-500 text-white px-1.5 py-0.5 rounded">HOT</span>}
-                        </h5>
-                        <div className="flex gap-4 mt-1">
-                          <span className="flex items-center gap-1 text-[8px] font-bold text-slate-500 uppercase">
-                            <Zap size={8} /> {test.questions} Questions
-                          </span>
-                          <span className="flex items-center gap-1 text-[8px] font-bold text-slate-500 uppercase">
-                            <Timer size={8} /> {test.time}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    <ChevronRight size={18} className="text-slate-700 group-hover:text-blue-500 group-hover:translate-x-1 transition-all" />
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <button className="w-full mt-10 group relative py-5 bg-blue-600 overflow-hidden text-white font-black uppercase text-xs tracking-[0.3em] rounded-2xl transition-all hover:bg-blue-500">
-               <span className="text-[9px] md:text-[16px] relative z-10">Initialize Assessment Hub</span>
-               <motion.div 
-                 animate={{ x: ['-100%', '100%'] }}
-                 transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
-                 className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent w-full h-full"
-               />
-            </button>
-
-            <div className="mt-8 pt-6 border-t border-white/5 flex justify-between items-center">
-              <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest">
-                Engine: Manee Pro 2.5
-              </span>
-              <div className="flex gap-1">
-                {[1,2,3,4].map(i => <div key={i} className="w-1 h-3 bg-blue-500/20 rounded-full" />)}
+            <div className="bg-blue-600 px-3 py-1 flex justify-between items-center text-[9px] font-bold text-white uppercase tracking-widest">
+              <div className="flex items-center gap-3">
+                <span>UTF-8</span>
+                <span>Manee Pro 2.5</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <span className="flex items-center gap-1"><Zap size={8} /> Sync Active</span>
+                <span className="bg-white/20 px-2 rounded">Ln 12, Col 42</span>
               </div>
             </div>
           </motion.div>
-
         </div>
       </div>
     </section>

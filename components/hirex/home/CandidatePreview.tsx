@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react'; 
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Github, 
   Linkedin, 
@@ -11,7 +11,8 @@ import {
   ShieldCheck, 
   Terminal,
   Layers,
-  Code2
+  Code2,
+  Globe
 } from 'lucide-react'; 
 
 const PROJECTS = [
@@ -21,7 +22,8 @@ const PROJECTS = [
     status: "Production",
     commits: 124,
     lastUpdate: "2m ago",
-    link: "#"
+    link: "#",
+    image: "https://images.unsplash.com/photo-1667372393119-3d4c48d07fc9?q=80&w=500&auto=format&fit=crop"
   },
   { 
     name: "Career Lab Consulting Dashboard", 
@@ -29,7 +31,8 @@ const PROJECTS = [
     status: "Beta",
     commits: 89,
     lastUpdate: "5h ago",
-    link: "#"
+    link: "#",
+    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=500&auto=format&fit=crop"
   },
   { 
     name: "Global Network Viz", 
@@ -37,7 +40,8 @@ const PROJECTS = [
     status: "Live",
     commits: 45,
     lastUpdate: "1d ago",
-    link: "#"
+    link: "#",
+    image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=500&auto=format&fit=crop"
   }
 ];
 
@@ -49,8 +53,8 @@ const SKILLS = [
 
 export default function StudentDashboard() {
   const [time, setTime] = useState<string | null>(null);
-  
   const [mounted, setMounted] = useState(false);
+  const [activePackets, setActivePackets] = useState(0);
 
   useEffect(() => {
     setMounted(true);
@@ -58,6 +62,7 @@ export default function StudentDashboard() {
     
     const timer = setInterval(() => {
       setTime(new Date().toLocaleTimeString());
+      setActivePackets(Math.floor(Math.random() * 50) + 10);
     }, 1000);
     
     return () => clearInterval(timer);
@@ -66,24 +71,31 @@ export default function StudentDashboard() {
   if (!mounted) return null; 
 
   return (
-    <section id="student-report" className="relative py-24 bg-[#020617] text-white overflow-hidden">
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full opacity-10 pointer-events-none">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-500/20 via-transparent to-transparent" />
+    <section id="student-report" className="relative py-24 bg-[#020617] text-white overflow-hidden font-sans">
+      <div className="absolute inset-0 opacity-20 pointer-events-none">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
       </div>
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
           <div>
-            <div className="flex items-center gap-2 mb-4">
-              <span className="relative flex h-3 w-3">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-              </span>
-              <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-blue-400">
-                System Live: {time || "INITIALIZING..."}
-              </span>
+            <div className="flex items-center gap-4 mb-4">
+              <div className="flex items-center gap-2">
+                <span className="relative flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                </span>
+                <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-blue-400">
+                  Uplink: {time || "INITIALIZING..."}
+                </span>
+              </div>
+              <div className="h-4 w-px bg-white/10" />
+              <div className="flex items-center gap-2 text-[10px] font-bold text-slate-500">
+                <Activity size={12} className="text-blue-500 animate-pulse" />
+                {activePackets} DATA_PACKETS/S
+              </div>
             </div>
-            <h2 className="text-2xl md:text-5xl font-black tracking-tighter uppercase italic">
+            <h2 className="text-3xl md:text-6xl font-black tracking-tighter uppercase italic leading-none">
               Student <span className="text-blue-500">Performance</span> Dossier
             </h2>
           </div>
@@ -105,9 +117,13 @@ export default function StudentDashboard() {
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              className="bg-gradient-to-b from-white/[0.05] to-transparent p-8 rounded-[2.5rem] border border-white/10"
+              className="bg-gradient-to-b from-white/[0.05] to-transparent p-8 rounded-[2.5rem] border border-white/10 relative overflow-hidden"
             >
-              <div className="flex items-center gap-6 mb-8">
+              <div className="absolute top-0 right-0 p-4 opacity-10">
+                <Globe size={120} />
+              </div>
+
+              <div className="flex items-center gap-6 mb-8 relative z-10">
                 <div className="relative group">
                   <div className="absolute inset-0 bg-blue-500 blur-2xl opacity-20 group-hover:opacity-40 transition-opacity" />
                   <div className="relative w-24 h-24 rounded-3xl overflow-hidden border-2 border-blue-500/50">
@@ -115,18 +131,24 @@ export default function StudentDashboard() {
                   </div>
                 </div>
                 <div>
-                  <h3 className="text-[17px] font-black italic uppercase">Deepanshu Joshi</h3>
+                  <h3 className="text-[19px] font-black italic uppercase leading-tight">Deepanshu Joshi</h3>
                   <p className="text-blue-400 text-[10px] font-bold tracking-widest uppercase mt-1">Full-Stack Developer</p>
+                  
+                  <div className="flex items-center gap-2 mt-2 text-slate-400">
+                    <img src="https://flagcdn.com/w40/in.png" alt="India" className="w-4 h-3 object-cover rounded-sm grayscale group-hover:grayscale-0 transition-all" />
+                    <span className="text-[10px] font-bold uppercase tracking-tighter">India (IST)</span>
+                  </div>
+
                   <div className="mt-3 flex items-center gap-2 px-2 py-1 bg-green-500/10 border border-green-500/20 rounded-md w-fit">
                     <ShieldCheck size={12} className="text-green-500" />
-                    <span className="text-[9px] font-black text-green-500">IDENTITY VERIFIED</span>
+                    <span className="text-[9px] font-black text-green-500 tracking-tighter">IDENTITY VERIFIED</span>
                   </div>
                 </div>
               </div>
 
               <div className="space-y-4">
                 {SKILLS.map((skill) => (
-                  <div key={skill.name} className="p-4 bg-black/40 rounded-2xl border border-white/5">
+                  <div key={skill.name} className="p-4 bg-black/40 rounded-2xl border border-white/5 group hover:border-blue-500/20 transition-all">
                     <div className="flex justify-between items-center mb-2">
                       <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">{skill.name}</span>
                       <span className="text-[10px] font-black text-blue-400">{skill.level}</span>
@@ -135,20 +157,24 @@ export default function StudentDashboard() {
                       <motion.div 
                         initial={{ width: 0 }} 
                         whileInView={{ width: `${skill.score}%` }}
-                        className="h-full bg-blue-500" 
-                      />
+                        transition={{ duration: 1, ease: "easeOut" }}
+                        className="h-full bg-blue-500 relative" 
+                      >
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-[shimmer_2s_infinite]" />
+                      </motion.div>
                     </div>
                   </div>
                 ))}
               </div>
             </motion.div>
 
-            <div className="bg-blue-600 rounded-[2.5rem] p-8 flex items-center justify-between">
-              <div>
+            <div className="bg-blue-600 rounded-[2.5rem] p-8 flex items-center justify-between relative overflow-hidden group">
+              <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10" />
+              <div className="relative z-10">
                 <p className="text-[10px] font-black text-blue-200 uppercase tracking-widest mb-1">Overall Grade</p>
-                <h4 className="text-5xl font-black italic tracking-tighter">A+ </h4>
+                <h4 className="text-6xl font-black italic tracking-tighter">A+ </h4>
               </div>
-              <Award size={48} className="text-white/20" />
+              <Award size={64} className="text-white/20 group-hover:scale-110 group-hover:rotate-12 transition-transform duration-500" />
             </div>
           </div>
 
@@ -165,51 +191,72 @@ export default function StudentDashboard() {
                   </div>
                   <h4 className="font-black uppercase tracking-tight italic text-xl">Verified Project Repository</h4>
                 </div>
-                <span className="text-[10px] font-bold text-slate-500 uppercase">3 Total Projects</span>
+                <div className="flex flex-col items-end">
+                   <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Live Sync Active</span>
+                   <span className="text-[12px] font-black text-blue-500">3 TOTAL_UNITS</span>
+                </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {PROJECTS.map((project, idx) => (
                   <motion.div 
                     key={project.name}
-                    whileHover={{ y: -5 }}
-                    className="p-6 bg-white/[0.03] border border-white/10 rounded-3xl hover:border-blue-500/50 transition-all group"
+                    whileHover={{ y: -8 }}
+                    className="group relative bg-black/40 border border-white/10 rounded-[2rem] overflow-hidden hover:border-blue-500/50 transition-all duration-500"
                   >
-                    <div className="flex justify-between items-start mb-6">
-                      <div className="p-3 bg-black/50 rounded-2xl border border-white/5 group-hover:border-blue-500/30">
-                        <Terminal size={20} className="text-blue-500" />
+                    <div className="h-32 w-full relative overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent z-10" />
+                      <img 
+                        src={project.image} 
+                        alt={project.name} 
+                        className="w-full h-full object-cover opacity-50 group-hover:opacity-80 group-hover:scale-110 transition-all duration-700"
+                      />
+                      <div className="absolute top-4 left-4 z-20">
+                        <div className="p-2 bg-black/60 backdrop-blur-md rounded-xl border border-white/10 group-hover:border-blue-500/50 transition-all">
+                          <Terminal size={16} className="text-blue-500" />
+                        </div>
                       </div>
-                      <div className="text-right">
-                        <span className="block text-[9px] font-black text-slate-500 uppercase">Last Commit</span>
-                        <span className="text-[10px] font-bold text-blue-400">{project.lastUpdate}</span>
+                      <div className="absolute top-4 right-4 z-20 text-right">
+                        <span className="block text-[8px] font-black text-slate-400 uppercase">Latency</span>
+                        <span className="text-[10px] font-bold text-green-400">Active</span>
                       </div>
-                    </div>
-                    
-                    <h5 className="text-lg font-black uppercase mb-2">{project.name}</h5>
-                    
-                    <div className="flex flex-wrap gap-2 mb-6">
-                      {project.tech.map(t => (
-                        <span key={t} className="text-[9px] font-bold px-2 py-1 bg-white/5 rounded-md text-slate-400">
-                          {t}
-                        </span>
-                      ))}
                     </div>
 
-                    <div className="pt-4 border-t border-white/5 flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <Activity size={14} className="text-green-500" />
-                        <span className="text-[10px] font-black uppercase text-slate-400">{project.commits} Commits</span>
+                    <div className="p-6 relative z-10">
+                      <div className="flex justify-between items-start mb-2">
+                        <h5 className="text-lg font-black uppercase leading-tight group-hover:text-blue-400 transition-colors">{project.name}</h5>
                       </div>
-                      <ExternalLink size={14} className="text-slate-500 group-hover:text-white transition-colors" />
+                      
+                      <div className="flex flex-wrap gap-2 mb-6">
+                        {project.tech.map(t => (
+                          <span key={t} className="text-[8px] font-black px-2 py-1 bg-blue-500/10 border border-blue-500/20 rounded-md text-blue-300 uppercase">
+                            {t}
+                          </span>
+                        ))}
+                      </div>
+
+                      <div className="pt-4 border-t border-white/5 flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                          <div className="flex items-center gap-1.5">
+                            <Activity size={12} className="text-green-500 animate-pulse" />
+                            <span className="text-[10px] font-black uppercase text-slate-400">{project.commits} Commits</span>
+                          </div>
+                          <div className="text-[10px] font-bold text-slate-500 italic">{project.lastUpdate}</div>
+                        </div>
+                        <div className="p-2 rounded-full hover:bg-white/10 transition-all">
+                          <ExternalLink size={14} className="text-slate-500 group-hover:text-white transition-colors" />
+                        </div>
+                      </div>
                     </div>
                   </motion.div>
                 ))}
 
-                <div className="p-6 border-2 border-dashed border-white/10 rounded-3xl flex flex-col items-center justify-center text-center opacity-50 hover:opacity-100 transition-opacity cursor-pointer">
-                   <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mb-4">
-                      <Code2 size={24} />
+                <div className="p-6 border-2 border-dashed border-white/10 rounded-[2rem] flex flex-col items-center justify-center text-center group hover:bg-white/[0.02] hover:border-blue-500/30 transition-all cursor-pointer min-h-[280px]">
+                   <div className="w-14 h-14 rounded-full bg-white/5 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-blue-500/20 transition-all duration-500">
+                      <Code2 size={28} className="text-slate-500 group-hover:text-blue-400" />
                    </div>
-                   <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Connect New Repository</p>
+                   <p className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-500 group-hover:text-white transition-colors">Connect New Unit</p>
+                   <p className="text-[9px] font-bold text-slate-600 mt-2">SECURE_TUNNEL_ID: 882-AX</p>
                 </div>
               </div>
             </motion.div>
@@ -217,6 +264,13 @@ export default function StudentDashboard() {
 
         </div>
       </div>
+      
+      <style jsx global>{`
+        @keyframes shimmer {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(100%); }
+        }
+      `}</style>
     </section>
   );
 }

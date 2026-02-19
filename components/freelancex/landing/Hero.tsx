@@ -130,16 +130,16 @@ export default function Hero() {
           <span className="tracking-widest uppercase md:text-[11px] text-[8px] font-black">AI-Autonomous Job Matching Engine</span>
         </div>
 
-        <h1 className="text-4xl md:text-7xl font-black text-white tracking-tighter mb-5 md:leading-[1.2] leading-[1.1] uppercase italic">
+        <h1 className="text-4xl md:text-5xl font-black text-white tracking-tighter mb-5 md:leading-[1.2] leading-[1.1] uppercase italic">
           Scale <span className="text-blue-500 italic">your,</span> <br />
           Digital <span className="text-indigo-400">Ambition.</span>
         </h1>
 
-        <p className="text-[16px] md:text-2xl text-slate-400 max-w-3xl mx-auto mb-10 leading-relaxed font-medium">
+        <p className="text-[14px] md:text-[17px] text-slate-400 max-w-3xl mx-auto mb-10 leading-relaxed font-medium">
           Connecting businesses in need to freelancers who deliver <span className="text-white font-bold underline decoration-blue-500/50">GitHub</span>, <span className="text-white font-bold underline decoration-indigo-500/50">LinkedIn</span>, and AI assessments.
         </p>
 
-        <div className="flex flex-col sm:flex-row justify-center gap-5 mb-40">
+        <div className="flex flex-col sm:flex-row justify-center gap-5 mb-15">
           <button className="flex items-center justify-center gap-3 bg-blue-600 text-white px-10 py-5 rounded-[1.5rem] text-sm font-black uppercase tracking-widest hover:bg-blue-500 transition-all shadow-xl shadow-blue-600/30 active:scale-95">
             Find Work<ArrowRight size={18} />
           </button>

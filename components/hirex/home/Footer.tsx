@@ -3,37 +3,78 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ShieldCheck, Home, Search, User, Briefcase, Activity, Zap, Terminal } from 'lucide-react';
+import { 
+  ShieldCheck, Home, Search, User, Briefcase, 
+  Activity, Zap, Globe, Cpu, Layers, LayoutGrid, 
+  Users, CreditCard, Network 
+} from 'lucide-react';
 import { motion } from 'framer-motion';
 import Logo from '@/components/hirex/logo';
 
+const ECOSYSTEM_NODES = [
+  { name: 'AI Talent Node', icon: Cpu, desc: 'Verification Engine' },
+  { name: 'Global Network', icon: Globe, desc: 'Cross-border Sync' },
+  { name: 'Neural Ledger', icon: Layers, desc: 'Immutable Records' },
+  { name: 'Quantum Match', icon: Zap, desc: 'Instant Fit Analysis' },
+  { name: 'Secure Vault', icon: ShieldCheck, desc: 'Data Protection' },
+  { name: 'Skill Matrix', icon: Activity, desc: 'Dynamic Profiling' },
+];
+
 const FOOTER_LINKS = {
-  Platform: [
+  Infrastructure: [
     { name: 'AI Skill Tests', href: '#test' },
     { name: '360° Reports', href: '#reports' },
     { name: 'Employer Grades', href: '#employers' },
     { name: 'Job Inventory', href: '#' },
   ],
-  Company: [
+  Organization: [
     { name: 'About CLC', href: '#' },
     { name: 'Partner Program', href: '#' },
     { name: 'Privacy Policy', href: '#' },
     { name: 'Terms of Service', href: '#' },
   ],
-  Resources: [
+  Intelligence: [
     { name: 'Documentation', href: '#' },
     { name: 'Career Prep', href: '#' },
     { name: 'Hiring Insights', href: '#' },
     { name: 'Support', href: '#' },
   ],
+  Ecosystem: [
+    { name: 'Neural Ledger', href: '#' },
+    { name: 'Talent Nodes', href: '#' },
+    { name: 'Global Sync', href: '#' },
+    { name: 'Verification API', href: '#' },
+  ],
+  Solutions: [
+    { name: 'Enterprise', href: '#' },
+    { name: 'Startups', href: '#' },
+    { name: 'Academic', href: '#' },
+    { name: 'Government', href: '#' },
+  ],
+  Legal: [
+    { name: 'Data Security', href: '#' },
+    { name: 'GDPR Compliance', href: '#' },
+    { name: 'Audit Logs', href: '#' },
+    { name: 'Ethics Policy', href: '#' },
+  ],
 };
 
+const HIREX_PAGES = [
+  { name: 'Global', icon: CreditCard, href: '#' },
+  { name: 'Candidate', icon: User, href: '#' },
+  { name: 'Employer', icon: Briefcase, href: '#' },
+  { name: 'Alumni Network', icon: Network, href: '#' },
+  { name: 'Talent Pool', icon: Users, href: '#' },
+  { name: 'System Status', icon: Activity, href: '#' },
+  { name: 'Verification', icon: ShieldCheck, href: '#' },
+  { name: 'Search Engine', icon: Search, href: '#' },
+];
+
 const SOCIAL_ICONS = [
-  { name: 'Facebook', src: 'https://cdn-icons-png.flaticon.com/512/5968/5968764.png', color: 'bg-[#1877F2]/10' },
-  { name: 'X', src: 'https://cdn-icons-png.flaticon.com/512/5969/5969020.png', color: 'bg-white/10' },
-  { name: 'Instagram', src: 'https://cdn-icons-png.flaticon.com/512/3955/3955024.png', color: 'bg-[#E4405F]/10' },
-  { name: 'YouTube', src: 'https://cdn-icons-png.flaticon.com/512/1384/1384060.png', color: 'bg-[#FF0000]/10' },
-  { name: 'LinkedIn', src: 'https://cdn-icons-png.flaticon.com/512/145/145807.png', color: 'bg-[#0A66C2]/10' },
+  { name: 'Facebook', src: 'https://cdn-icons-png.flaticon.com/512/5968/5968764.png', color: 'hover:border-[#1877F2]/50' },
+  { name: 'X', src: 'https://cdn-icons-png.flaticon.com/512/5969/5969020.png', color: 'hover:border-white/50' },
+  { name: 'Instagram', src: 'https://cdn-icons-png.flaticon.com/512/3955/3955024.png', color: 'hover:border-[#E4405F]/50' },
+  { name: 'LinkedIn', src: 'https://cdn-icons-png.flaticon.com/512/145/145807.png', color: 'hover:border-[#0A66C2]/50' },
 ];
 
 export default function Footer() {
@@ -41,43 +82,54 @@ export default function Footer() {
 
   return (
     <>
-      <footer className="relative bg-[#020617] border-t border-white/5 pt-15 pb-15 md:pb-12 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-12 gap-12 mb-20">
-            
-            <div className="col-span-2 lg:col-span-4">
-              <div className="mb-8">
+      <footer className="relative bg-[#020617] border-t border-white/5 pt-20 pb-24 md:pb-12 overflow-hidden">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
+        <div className="absolute -top-24 -left-24 w-96 h-96 bg-blue-600/5 blur-[120px] rounded-full" />
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-0 relative z-10">
+          
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-16 items-start">
+            <div className="lg:col-span-4 space-y-8">
+              <div className="space-y-4">
                 <Logo />
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/5 border border-blue-500/20">
+                  <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+                  <span className="text-[10px] font-bold text-blue-400 uppercase tracking-widest">HireX System Active</span>
+                </div>
+                <p className="text-slate-400 text-[10px] font-medium leading-relaxed max-w-xs uppercase tracking-tighter">
+                  The world&apos;s first autonomous verification ecosystem. <br />
+                  <span className="text-white font-black italic">MANEE PRO 2.5 NATIVE SYNC</span>
+                </p>
               </div>
-              <p className="text-slate-400 text-sm font-medium leading-relaxed mb-10 max-w-xs uppercase tracking-tight">
-                Autonomous Verification Node v.2.5 <br />
-                <span className="text-blue-500 font-black italic underline decoration-blue-500/30">Manee Pro 2.5 Native Sync</span>
-              </p>
-              
-              <div className="flex flex-wrap gap-4">
+
+              <div className="flex gap-3">
                 {SOCIAL_ICONS.map((social) => (
-                  <Link key={social.name} href="#" className={`w-12 h-12 ${social.color} rounded-2xl border border-white/5 flex items-center justify-center transition-transform hover:scale-110 active:scale-95`}>
-                    <div className="relative w-8 h-8">
-                      <Image 
-                        src={social.src} 
-                        alt={social.name} 
-                        fill 
-                        sizes="24px"
-                        className="object-contain" 
-                      />
-                    </div>
+                  <Link key={social.name} href="#" className={`w-10 h-10 rounded-xl border border-white/5 bg-white/[0.02] flex items-center justify-center transition-all ${social.color} hover:-translate-y-1`}>
+                    <Image src={social.src} alt={social.name} width={20} height={20} className="opacity-60 hover:opacity-100 transition-opacity" />
                   </Link>
                 ))}
               </div>
             </div>
 
+            <div className="lg:col-span-8 grid grid-cols-2 md:grid-cols-3 gap-4">
+              {ECOSYSTEM_NODES.map((node) => (
+                <div key={node.name} className="group p-4 rounded-2xl border border-white/5 bg-white/[0.01] hover:bg-white/[0.03] transition-all cursor-crosshair">
+                  <node.icon className="w-5 h-5 text-blue-500 mb-3 group-hover:scale-110 transition-transform" />
+                  <h5 className="text-[10px] font-black text-white uppercase tracking-wider">{node.name}</h5>
+                  <p className="text-[8px] text-slate-500 uppercase mt-1 tracking-widest">{node.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-12 gap-8 py-12 border-t border-white/5">
             {Object.entries(FOOTER_LINKS).map(([title, links]) => (
-              <div key={title} className="col-span-1 lg:col-span-2">
-                <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 mb-8">{title}</h4>
-                <ul className="space-y-4">
+              <div key={title} className="lg:col-span-2">
+                <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-500/70 mb-6">{title}</h4>
+                <ul className="space-y-3">
                   {links.map((link) => (
                     <li key={link.name}>
-                      <Link href={link.href} className="text-xs font-black text-slate-400 hover:text-blue-400 uppercase tracking-widest transition-colors">
+                      <Link href={link.href} className="text-[11px] font-bold text-slate-400 hover:text-white uppercase tracking-widest transition-all hover:pl-1">
                         {link.name}
                       </Link>
                     </li>
@@ -85,62 +137,19 @@ export default function Footer() {
                 </ul>
               </div>
             ))}
-
-            <div className="col-span-2 lg:col-span-2">
-              <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 mb-8">System HUD</h4>
-              <div className="bg-black/40 rounded-[1.5rem] p-4 border border-blue-500/20 shadow-[0_0_30px_rgba(59,130,246,0.1)] relative overflow-hidden group">
-                <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_4px,3px_100%] pointer-events-none" />
-                
-                <div className="flex items-center justify-between mb-6">
-                   <div className="flex items-center gap-3">
-                      <div className="relative flex h-2 w-2">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                      </div>
-                      <span className="text-[10px] font-black text-white uppercase tracking-widest italic">Core Active</span>
-                   </div>
-                   <Activity size={12} className="text-blue-500 animate-pulse" />
-                </div>
-
-                <div className="space-y-4">
-                  <div className="p-2 bg-white/5 rounded-xl border border-white/5">
-                    <div className="flex justify-between items-center mb-1">
-                      <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest">Neural Load</span>
-                      <span className="text-[10px] font-black text-blue-400 italic tracking-tighter">88%</span>
-                    </div>
-                    <div className="w-full bg-white/5 h-1 rounded-full overflow-hidden">
-                      <motion.div 
-                        initial={{ width: 0 }}
-                        whileInView={{ width: '88%' }}
-                        className="bg-blue-600 h-full shadow-[0_0_10px_#3b82f6]" 
-                      />
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2 px-2">
-                    <Terminal size={10} className="text-green-500" />
-                    <span className="text-[6px] font-mono text-slate-400 animate-pulse uppercase tracking-widest">LATENCY_SYNC: 14MS</span>
-                  </div>
-                  
-                  <div className="pt-2 flex items-center justify-center gap-2 border-t border-white/5">
-                    <Zap size={10} className="text-yellow-400 fill-yellow-400" />
-                    <span className="text-[9px] font-black text-white uppercase tracking-widest italic">Empire Node 04</span>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
 
-          <div className="pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8 text-[9px] font-black uppercase tracking-[0.2em] text-slate-500">
-            <div className="flex items-center gap-6">
-              <span className="italic">© 2015 - {currentYear} CLC HireX</span>
-              <div className="flex items-center gap-2 text-blue-500">
+          <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="flex items-center gap-8 text-[9px] font-black uppercase tracking-widest text-slate-500">
+              <span>© 2015 - {currentYear} CLC HIREX</span>
+              <div className="flex items-center gap-2 text-blue-500/80">
                 <ShieldCheck size={12} />
-                <span>Protocol: X-Secure</span>
+                <span>Security Protocol: AES-X</span>
               </div>
             </div>
-            <div>
-              AI Dev by <span className="text-white underline underline-offset-4 decoration-blue-500">Career Lab Consulting</span>
+            
+            <div className="text-[9px] font-black uppercase tracking-widest text-slate-500 mb-4 md:mb-0">
+              AI Dev by <span className="text-white hover:text-blue-400 cursor-pointer transition-colors underline underline-offset-4 decoration-blue-500">Career Lab Consulting</span>
             </div>
           </div>
         </div>
