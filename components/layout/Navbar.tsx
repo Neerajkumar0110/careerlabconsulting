@@ -473,7 +473,7 @@ export default function Navbar() {
                 </div>
               ))}
               
-              <Link href="/freelance" className="px-1 text-[10px] font-bold uppercase tracking-[2px] text-slate hover:text-white transition-all">
+              <Link href="/freelancex" className="px-1 text-[10px] font-bold uppercase tracking-[2px] text-slate hover:text-white transition-all">
                 FreelanceX
               </Link>
               <Link href="/hirex" className="px-1 text-[10px] font-bold uppercase tracking-[2px] text-slate hover:text-white transition-all">
