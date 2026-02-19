@@ -1,3 +1,5 @@
+// components/b2c/PricingSection.tsx
+
 'use client';
 
 import React, { useState, useEffect } from 'react';

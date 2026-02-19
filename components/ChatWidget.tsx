@@ -1,16 +1,19 @@
+// components/ChatWidget.tsx
+
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { usePathname } from "next/navigation"; 
+import { usePathname, useRouter } from "next/navigation"; 
 import { createPortal } from "react-dom";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { Send, X, MessageSquare, Flame, Minus, Info, UserCheck, Volume2, VolumeX, Mic, MicOff } from "lucide-react";
+import { Send, X, MessageSquare, Flame, Minus, Info, UserCheck, Volume2, VolumeX, Mic, MicOff, CreditCard } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 
 const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY || "");
 
 export default function ChatWidget() {
   const pathname = usePathname();
+  const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [showOffer, setShowOffer] = useState(false);
@@ -28,7 +31,7 @@ export default function ChatWidget() {
     const isHireXPage = pathname?.includes("/hirex");
     
     let modeContext = "B2B / Services Mode - Focus on enterprises and digital transformation.";
-    if (isInternshipPage) modeContext = "B2C / Internship Mode - Focus on students and upskilling.";
+    if (isInternshipPage) modeContext = "B2C / Internship Mode - Focus on students, career growth, and upskilling.";
     if (isHireXPage) modeContext = "HireX Mode - Focus on AI-driven Recruitment and Autonomous Hiring.";
 
     return `You are Manee, a friendly Indian female career counselor and Enterprise AI Consultant at Career Lab Consulting. 
@@ -36,29 +39,34 @@ export default function ChatWidget() {
 
     CURRENT CONTEXT: ${modeContext}
 
-    ${isHireXPage ? `
-    KNOWLEDGE BASE (HireX):
-    1. SOLUTIONS: AI Video Interviews, Automated Resume Screening, Predictive Hiring.
-    2. FEATURES: HireX Autonomous Agent for end-to-end scheduling.
-    ` : `
-    KNOWLEDGE BASE (Services):
-    1. SERVICES: AI & Digital Transformation, Agentic Frameworks, Web/Mobile Apps, Blockchain.
-    2. PRODUCTS: CLC One (All-in-One AI SaaS).
-    `}
+    ${isInternshipPage ? `
+    PRICING PLANS (B2C - InternX-AI):
+    1. FOUNDATION PLAN (6 Months):
+       - Price: ₹1,20,000 (India) / $1,499 (Intl)
+       - Target: Avg CTC ₹6-12 LPA
+       - Scholarship: Max ₹50,000 available.
+       - Key Features: Real Startup Agentic AI Projects, ResumeNFT, 1 Verified Internship.
+    2. ELITE PLAN (12 Months):
+       - Price: ₹2,00,000 (India) / $2,699 (Intl)
+       - Target: Avg CTC ₹10-26 LPA
+       - Scholarship: Max ₹1,00,000 available.
+       - Key Features: 100% Legal Contract, 1-on-1 Mentoring, Germany/Remote Role Specialization.
+    
+    STRICT RULE: Proactively recommend these plans if the user is interested in internships or career growth. Mention the 10% Early Bird discount.
+    ` : ""}
 
-    KNOWLEDGE BASE (B2C - Education):
-    1. PROGRAMS: InternX-AI, Data Engineer, Cyber Security, Robotics.
-    2. INFRASTRUCTURE: Neural LMS platform.
+    KNOWLEDGE BASE (Services): AI & Digital Transformation, Agentic Frameworks, Web/Mobile Apps, Blockchain, CLC One SaaS.
+    KNOWLEDGE BASE (HireX): AI Video Interviews, Automated Resume Screening, Autonomous Hiring Agents.
 
     GLOBAL PRESENCE: HQ: Gurugram. Branches: Bengaluru, SF, London, Dubai, Singapore.
 
     STRICT RULES:
-    - ${isInternshipPage ? "MANDATORY: Proactively mention the 10% Early Bird discount available today for internships." : "DO NOT mention any discounts or offers for this page."}
+    - ${isInternshipPage ? "MANDATORY: Guide users to choose a plan and mention that they can register directly through the pricing section." : "DO NOT mention B2C plans or discounts unless on the internship page."}
     - Maintain "Enterprise Systems Nominal" uptime confidence.`;
   };
 
   const model = genAI.getGenerativeModel({ 
-    model: "gemini-2.5-flash", 
+    model: "gemini-1.5-flash", 
     systemInstruction: getDynamicInstruction(),
     generationConfig: {
       temperature: 0.8,
@@ -121,12 +129,12 @@ export default function ChatWidget() {
     const isB2C = pathname?.includes("/internship");
     const isHireX = pathname?.includes("/hirex");
 
-    let welcomeText = `### Namaste! \n\nI am **Manee**, your AI Consultant. How can I help you with **Digital Transformation** or **Custom AI Engineering** today?`;
+    let welcomeText = `### Namaste! \n\nI am **Manee**, your AI Consultant. How can I help you today?`;
 
     if (isB2C) {
-      welcomeText = `### Namaste ${storedName || 'Scholar'}! \n\nLooking for an **internship**? I can guide you through our **InternX-AI** programs. **Good news: A 10% Early Bird discount is active for you today!**`;
+      welcomeText = `### Namaste ${storedName || 'Scholar'}! \n\nLooking for an **internship**? I can guide you through our **Foundation** and **Elite** plans. \n\n**Special Offer:** A 10% Early Bird discount + up to ₹1 Lakh Scholarship is active for you! Would you like to see our program details?`;
     } else if (isHireX) {
-      welcomeText = `### Namaste! \n\nWelcome to **HireX**. I am your **Autonomous Recruitment Bot**. How can I help you automate your hiring and talent pipeline today?`;
+      welcomeText = `### Namaste! \n\nWelcome to **HireX**. I am your **Autonomous Recruitment Bot**. How can I help you automate your hiring today?`;
     }
     
     setMessages([{ role: "bot", text: welcomeText }]);
@@ -188,7 +196,7 @@ export default function ChatWidget() {
       {showOffer && !isOpen && pathname?.includes("/internship") && (
         <div className="bg-[#b31f24] text-white p-2.5 rounded-lg shadow-lg w-48 mb-3 animate-bounce-gentle pointer-events-auto relative border border-white/10">
           <button onClick={() => setShowOffer(false)} className="absolute top-1 right-1 p-0.5 hover:bg-white/10 rounded-full"><X size={8} /></button>
-          <p className="text-[10px] font-bold text-center">Namaste! 10% Discount active. 🌸</p>
+          <p className="text-[10px] font-bold text-center">Scholarship + 10% Off! 🌸</p>
         </div>
       )}
 
@@ -241,6 +249,23 @@ export default function ChatWidget() {
             )}
           </div>
 
+          {pathname?.includes("/internship") && (
+              <div className="px-3 py-2 bg-slate-50 border-t border-slate-100 flex gap-2 overflow-x-auto no-scrollbar">
+                <button 
+                    onClick={() => { setInput("Tell me about the Foundation Plan"); }}
+                    className="whitespace-nowrap px-3 py-1.5 bg-white border border-slate-200 rounded-full text-[9px] font-bold text-slate-600 hover:border-[#b31f24] transition-all flex items-center gap-1"
+                >
+                    <Info size={10} /> Foundation Details
+                </button>
+                <button 
+                    onClick={() => { setInput("Tell me about the Elite Plan"); }}
+                    className="whitespace-nowrap px-3 py-1.5 bg-white border border-slate-200 rounded-full text-[9px] font-bold text-slate-600 hover:border-[#b31f24] transition-all flex items-center gap-1"
+                >
+                    <Flame size={10} /> Elite Details
+                </button>
+              </div>
+          )}
+
           <div className="p-3 bg-white border-t border-slate-100">
              <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-xl px-2 py-0.5 focus-within:border-[#b31f24]/20 transition-all">
                 <button 
@@ -278,6 +303,8 @@ export default function ChatWidget() {
       <style jsx>{`
         @keyframes bounce-gentle { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
         .animate-bounce-gentle { animation: bounce-gentle 4s ease-in-out infinite; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
       `}</style>
     </div>,
     document.body
