@@ -21,7 +21,7 @@ const GoogleIcon = () => (
 );
 
 const StarIcon = () => (
-  <svg className="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
+  <svg className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
   </svg>
 );
@@ -77,50 +77,50 @@ const TrustAndArticles = () => {
   };
 
   return (
-    <section className="bg-[#020617] py-16 md:py-24 px-4 sm:px-10 text-white overflow-hidden font-sans">
+    <section className="bg-[#020617] py-12 md:py-24 px-4 sm:px-6 lg:px-10 text-white overflow-hidden font-sans">
       <div className="max-w-7xl mx-auto">
         
-        <div className="text-center mb-20">
-          <h2 className="text-4xl md:text-6xl font-black mb-6 tracking-tight uppercase">Trusted Excellence</h2>
-          <div className="h-1.5 w-24 bg-red-600 mx-auto rounded-full" aria-hidden="true"></div>
+        <div className="text-center mb-12 md:mb-20">
+          <h2 className="text-3xl md:text-6xl font-black mb-4 tracking-tight uppercase">Trusted Excellence</h2>
+          <div className="h-1 w-16 md:h-1.5 md:w-24 bg-red-600 mx-auto rounded-full" aria-hidden="true"></div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-32">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mb-20 md:mb-32">
           {awards.map((award, i) => (
             <div 
               key={i} 
-              className="flex flex-col items-center p-8 bg-white rounded-[2.5rem] transition-transform hover:-translate-y-2 duration-300 shadow-2xl min-h-[300px] justify-between"
+              className="flex flex-col items-center p-6 md:p-8 bg-white rounded-[2rem] md:rounded-[2.5rem] transition-all hover:-translate-y-2 duration-300 shadow-2xl min-h-[280px] md:min-h-[300px] justify-between"
             >
-              <div className="h-24 w-full flex items-center justify-center mb-4">
+              <div className="h-20 md:h-24 w-full flex items-center justify-center mb-4">
                 <img 
                   src={award.img} 
                   alt={award.badgeText} 
-                  className="max-h-30 max-w-[80%] object-contain" 
+                  className="max-h-full max-w-[70%] object-contain" 
                   loading="lazy"
                 />
               </div>
 
-              <div className="bg-[#FFEB3B] text-black w-full text-center py-3 px-4 rounded-full shadow-sm">
-                 <p className="font-extrabold text-[11px] sm:text-xs tracking-widest uppercase truncate">
+              <div className="bg-[#FFEB3B] text-black w-full text-center py-2.5 px-3 rounded-full mb-6">
+                 <p className="font-extrabold text-[10px] sm:text-xs tracking-wider uppercase line-clamp-1">
                     {award.badgeText}
                  </p>
               </div>
 
-              <div className="flex flex-col items-center safjk">
-                <div className="flex items-center gap-3 bg-white border border-gray-100 shadow-lg rounded-full px-5 py-2 mb-3">
-                   <div className="w-6 h-6">
+              <div className="flex flex-col items-center">
+                <div className="flex items-center gap-2 md:gap-3 bg-white border border-gray-100 shadow-md rounded-full px-4 py-1.5 mb-3">
+                   <div className="w-5 h-5 md:w-6 md:h-6">
                       <GoogleIcon />
                    </div>
-                   <span className="text-black font-bold text-xl">{award.score}</span>
+                   <span className="text-black font-bold text-lg md:text-xl">{award.score}</span>
                 </div>
 
-                <div className="flex gap-1 mb-2">
+                <div className="flex gap-0.5 md:gap-1 mb-2">
                    {[...Array(5)].map((_, idx) => (
                       <StarIcon key={idx} />
                    ))}
                 </div>
 
-                <span className="text-gray-500 font-medium text-xs">
+                <span className="text-gray-400 font-medium text-[10px] md:text-xs">
                   {award.reviewCount}
                 </span>
               </div>
@@ -128,44 +128,44 @@ const TrustAndArticles = () => {
           ))}
         </div>
 
-        <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 gap-6">
           <div className="max-w-2xl">
-            <span className="text-red-600 font-bold tracking-[0.3em] text-xs uppercase">Knowledge Base</span>
-            <h2 className="text-4xl md:text-5xl font-black mt-3 tracking-tight">Latest Insights.</h2>
+            <span className="text-red-600 font-bold tracking-[0.2em] text-[10px] md:text-xs uppercase">Knowledge Base</span>
+            <h2 className="text-3xl md:text-5xl font-black mt-2 tracking-tight">Latest Insights.</h2>
           </div>
-          <button className="text-xs font-bold py-4 px-8 border border-gray-700 rounded-full hover:bg-white hover:text-black transition-all uppercase tracking-widest">
+          <button className="w-full md:w-auto text-[10px] md:text-xs font-bold py-3.5 px-8 border border-gray-700 rounded-full hover:bg-white hover:text-black transition-all uppercase tracking-widest">
             Explore All
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {articles.map((art, i) => (
             <article 
               key={i} 
               onClick={() => handleArticleClick(art.title)}
-              className="group cursor-pointer bg-slate-900/20 border border-gray-800 rounded-[2rem] overflow-hidden hover:border-red-600/50 transition-all duration-500 hover:shadow-[0_0_40px_rgba(220,38,38,0.15)]"
+              className="group cursor-pointer bg-slate-900/40 border border-gray-800 rounded-[1.5rem] md:rounded-[2rem] overflow-hidden hover:border-red-600/50 transition-all duration-500 hover:shadow-[0_0_40px_rgba(220,38,38,0.1)]"
             >
-              <div className="h-64 relative overflow-hidden">
+              <div className="aspect-[16/10] relative overflow-hidden">
                 <img 
                   src={art.img} 
                   alt={art.title} 
-                  className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" 
+                  className="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700" 
                   loading="lazy"
                 />
-                <div className="absolute top-5 left-5 bg-black/70 backdrop-blur-md px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest border border-white/10">
+                <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest border border-white/10">
                   {art.category}
                 </div>
               </div>
               
-              <div className="p-8">
-                <div className="flex justify-between text-gray-500 text-[10px] font-bold uppercase tracking-widest mb-4">
+              <div className="p-6 md:p-8">
+                <div className="flex justify-between text-gray-500 text-[9px] font-bold uppercase tracking-widest mb-3 md:mb-4">
                   <span>Career Lab</span>
-                  <span>{art.readTime} Read</span>
+                  <span>{art.readTime}</span>
                 </div>
-                <h3 className="text-xl font-bold leading-snug group-hover:text-red-500 transition-colors mb-6">
+                <h3 className="text-lg md:text-xl font-bold leading-tight group-hover:text-red-500 transition-colors mb-4 md:mb-6 line-clamp-2">
                   {art.title}
                 </h3>
-                <div className="flex items-center text-red-600 text-[10px] font-black uppercase tracking-widest opacity-0 -translate-x-2 group-hover:translate-x-0 group-hover:opacity-100 transition-all duration-300">
+                <div className="flex items-center text-red-600 text-[10px] font-black uppercase tracking-widest md:opacity-0 md:-translate-x-2 md:group-hover:translate-x-0 md:group-hover:opacity-100 transition-all duration-300">
                   Read Article →
                 </div>
               </div>
