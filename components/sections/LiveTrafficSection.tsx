@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Users, Globe, Zap, FolderKanban, LucideIcon } from 'lucide-react';
 
@@ -7,64 +7,59 @@ interface CounterProps {
   initialValue: number;
   min: number;
   max: number;
-  intervalMs?: number;
+  intervalMs?: number; 
   suffix?: string;
 }
 
-const DynamicCounter: React.FC<CounterProps> = ({ initialValue, min, max, intervalMs = 3000, suffix = "" }) => {
+const DynamicCounter: React.FC<CounterProps> = ({ initialValue, min, max, intervalMs = 1000, suffix = "" }) => {
   const [count, setCount] = useState<number>(initialValue);
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    const updateNumber = () => {
       setCount((prev) => {
-        // Logic for "Real" feel:
-        // Kam, Medium aur Zyada fluctuation ka mixture
-        const volatility = Math.random();
+        const chance = Math.random();
         let change = 0;
 
-        if (volatility > 0.9) {
-          // 10% Chance: Bada Spike (High Fluctuation: 20-35)
-          change = Math.floor(Math.random() * 16) + 20; 
-        } else if (volatility > 0.6) {
-          // 30% Chance: Medium Fluctuation (6-19)
-          change = Math.floor(Math.random() * 14) + 6;
+        if (chance > 0.92) {
+          change = Math.floor(Math.random() * (max * 0.08)) + 15; 
+        } else if (chance > 0.6) {
+          change = Math.floor(Math.random() * (max * 0.03)) + 5;
         } else {
-          // 60% Chance: Chhota Change (Low Fluctuation: 1-5)
-          change = Math.floor(Math.random() * 5) + 1;
+          change = Math.floor(Math.random() * 4) + 1;
         }
 
-        // 50% chance ki value badhegi ya ghategi
-        const direction = Math.random() > 0.5 ? 1 : -1;
-        
-        const nextValue = prev + (change * direction);
+        const direction = Math.random() > 0.45 ? 1 : -1; 
+        let nextValue = prev + (change * direction);
 
-        // Bounds check (Taaki min/max se bahar na jaye)
-        if (nextValue < min) return min + Math.floor(Math.random() * 10);
-        if (nextValue > max) return max - Math.floor(Math.random() * 10);
+        if (nextValue < min) nextValue = min + Math.floor(Math.random() * 20);
+        if (nextValue > max) nextValue = max - Math.floor(Math.random() * 20);
         
         return nextValue;
       });
-    }, intervalMs);
-    return () => clearInterval(interval);
+
+      const nextTick = intervalMs + (Math.random() * 400 - 200);
+      timeoutId = setTimeout(updateNumber, nextTick);
+    };
+
+    let timeoutId = setTimeout(updateNumber, intervalMs);
+    return () => clearTimeout(timeoutId);
   }, [min, max, intervalMs]);
 
   return (
-    <AnimatePresence mode="wait">
+    <AnimatePresence mode="popLayout">
       <motion.span
         key={count}
-        initial={{ y: 10, opacity: 0, filter: "blur(5px)" }} // Thoda blur effect add kiya smooth feel ke liye
-        animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
-        exit={{ y: -10, opacity: 0, filter: "blur(5px)" }}
-        transition={{ duration: 0.3, ease: "easeOut" }} // Duration thoda tez kiya taaki lag na lage
-        className="tabular-nums inline-block"
+        initial={{ y: 5, opacity: 0 }} 
+        animate={{ y: 0, opacity: 1 }}
+        exit={{ y: -5, opacity: 0 }}
+        transition={{ duration: 0.15, ease: "easeInOut" }} 
+        className="tabular-nums inline-block min-w-[1ch]"
       >
         {count.toLocaleString()}{suffix}
       </motion.span>
     </AnimatePresence>
   );
 };
-
-// --- Baaki Components Same Rahenge ---
 
 interface StatCardProps {
   title: string;
@@ -100,7 +95,7 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, subtitle, icon: Icon,
 
     <div className="relative z-10">
       <p className="text-slate-400 text-xs font-semibold uppercase tracking-[0.15em] mb-1">{title}</p>
-      <h3 className="text-4xl font-bold text-white tracking-tight">
+      <h3 className="text-4xl font-bold text-white tracking-tight tabular-nums">
         {value}
       </h3>
       <p className="mt-2 text-slate-500 text-sm font-medium leading-relaxed">{subtitle}</p>
@@ -141,10 +136,9 @@ const LiveTrafficSection: React.FC = () => {
         </div>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {/* Note: Interval change karke randomness feel badha di */}
           <StatCard 
             title="Global Visitors"
-            value={<DynamicCounter initialValue={8420} min={8000} max={9500} suffix="+" intervalMs={3500} />}
+            value={<DynamicCounter initialValue={8291} min={7500} max={9800} suffix="+" intervalMs={800} />}
             subtitle="Active users exploring from across the globe."
             icon={Globe}
             colorClass="bg-blue-600"
@@ -153,7 +147,7 @@ const LiveTrafficSection: React.FC = () => {
 
           <StatCard 
             title="Indian Visitors"
-            value={<DynamicCounter initialValue={3150} min={3000} max={4000} intervalMs={2800} />}
+            value={<DynamicCounter initialValue={3050} min={2800} max={4500} intervalMs={1200} />}
             subtitle="Real-time traffic originating from India."
             icon={Users}
             colorClass="bg-orange-500"
@@ -162,7 +156,7 @@ const LiveTrafficSection: React.FC = () => {
 
           <StatCard 
             title="API Requests"
-            value={<DynamicCounter initialValue={142} min={120} max={180} suffix="/s" intervalMs={2000} />}
+            value={<DynamicCounter initialValue={159} min={80} max={250} suffix="/s" intervalMs={600} />}
             subtitle="Current requests being processed by our edge."
             icon={Zap}
             colorClass="bg-purple-600"
@@ -171,7 +165,7 @@ const LiveTrafficSection: React.FC = () => {
 
           <StatCard 
             title="Active Projects"
-            value={<DynamicCounter initialValue={512} min={510} max={525} intervalMs={4500} />}
+            value={<DynamicCounter initialValue={518} min={510} max={540} intervalMs={3000} />}
             subtitle="Ongoing enterprise projects powered by AI."
             icon={FolderKanban}
             colorClass="bg-emerald-600"
