@@ -2,7 +2,6 @@ import HomeNavbar from "@/components/freelancex/layout/HomeNavbar";
 import Hero from "@/components/freelancex/landing/Hero";
 import Services from "@/components/freelancex/landing/Services";
 import HowItWorks from "@/components/freelancex/landing/HowItWorks";
-import FeaturedFreelancers from "@/components/freelancex/landing/FeaturedFreelancers";
 import WhyChooseUs from "@/components/freelancex/landing/WhyChooseUs";
 import Pricing from "@/components/freelancex/landing/Pricing";
 import Review from "@/components/freelancex/landing/Reviews";
@@ -15,7 +14,6 @@ export default function HomePage() {
       <Hero />
       <Services />
       <HowItWorks />
-      <FeaturedFreelancers />
       <WhyChooseUs />
       <Pricing />
       <Review />

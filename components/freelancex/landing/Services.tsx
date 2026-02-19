@@ -15,7 +15,11 @@ import {
 } from "lucide-react";
 import { MouseEvent } from "react";
 
-/* ================= TYPES & DATA ================= */
+const trustAvatars = [
+  "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=150",
+  "https://images.pexels.com/photos/1181690/pexels-photo-1181690.jpeg?auto=compress&cs=tinysrgb&w=150", 
+  "https://images.pexels.com/photos/712513/pexels-photo-712513.jpeg?auto=compress&cs=tinysrgb&w=150",  
+];
 
 const services = [
   {
@@ -62,8 +66,6 @@ const services = [
   },
 ];
 
-/* ================= COMPONENT: SERVICE CARD ================= */
-
 function ServiceCard({ service, index }: { service: any; index: number }) {
   let mouseX = useMotionValue(0);
   let mouseY = useMotionValue(0);
@@ -83,7 +85,6 @@ function ServiceCard({ service, index }: { service: any; index: number }) {
       onMouseMove={handleMouseMove}
       className="group relative h-full rounded-[32px] border border-white/10 bg-[#020617] p-8 overflow-hidden"
     >
-      {/* 1. SPOTLIGHT EFFECT */}
       <motion.div
         className="pointer-events-none absolute -inset-px rounded-[32px] opacity-0 transition duration-300 group-hover:opacity-100"
         style={{
@@ -98,12 +99,10 @@ function ServiceCard({ service, index }: { service: any; index: number }) {
       />
 
       <div className="relative z-10 flex flex-col h-full">
-        {/* 2. ICON BLOCK */}
         <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${service.color} to-transparent border border-white/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500`}>
           <service.icon size={28} className="text-white" />
         </div>
 
-        {/* 3. CONTENT */}
         <h3 className="text-xl font-bold text-white mb-3 tracking-tight">
           {service.title}
         </h3>
@@ -111,7 +110,6 @@ function ServiceCard({ service, index }: { service: any; index: number }) {
           {service.desc}
         </p>
 
-        {/* 4. INTERACTIVE FOOTER */}
         <Link
           href={service.href}
           className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.2em] text-indigo-400 group-hover:text-white transition-colors"
@@ -120,23 +118,18 @@ function ServiceCard({ service, index }: { service: any; index: number }) {
         </Link>
       </div>
 
-      {/* Decorative background element */}
       <div className="absolute top-0 right-0 -mr-16 -mt-16 w-32 h-32 bg-indigo-500/5 blur-3xl rounded-full" />
     </motion.div>
   );
 }
 
-/* ================= MAIN SECTION ================= */
-
 export default function Services() {
   return (
     <section className="relative bg-[#020617] py-24 lg:py-32 overflow-hidden">
-      {/* Background radial glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-indigo-500/5 blur-[120px] rounded-full pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
 
-        {/* ===== HEADER ===== */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16 lg:mb-24">
           <div className="max-w-2xl">
             <motion.div
@@ -175,38 +168,47 @@ export default function Services() {
           </motion.div>
         </div>
 
-        {/* ===== BENTO GRID ===== */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {services.map((service, i) => (
             <ServiceCard key={service.title} service={service} index={i} />
           ))}
         </div>
 
-        {/* ===== BOTTOM TRUST BAR ===== */}
         <motion.div
-           initial={{ opacity: 0, y: 40 }}
-           whileInView={{ opacity: 1, y: 0 }}
-           viewport={{ once: true }}
-           className="mt-20 p-8 rounded-[40px] bg-gradient-to-r from-indigo-500/10 via-transparent to-transparent border border-white/5 flex flex-col lg:flex-row items-center justify-between gap-8"
-        >
-            <div className="flex flex-col md:flex-row items-center gap-6">
-                <div className="flex -space-x-3">
-                    {[1,2,3].map(i => (
-                        <div key={i} className="w-12 h-12 rounded-full border-4 border-[#020617] bg-gray-800" />
-                    ))}
+    initial={{ opacity: 0, y: 40 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    className="mt-20 p-8 rounded-[40px] bg-gradient-to-r from-indigo-500/10 via-transparent to-transparent border border-white/5 flex flex-col lg:flex-row items-center justify-between gap-8"
+>
+    <div className="flex flex-col md:flex-row items-center gap-6">
+        <div className="flex -space-x-4"> 
+            {trustAvatars.map((url, i) => (
+                <div 
+                    key={i} 
+                    className="relative w-14 h-14 rounded-full border-4 border-[#020617] overflow-hidden bg-gray-800 hover:z-20 hover:scale-110 transition-all duration-300"
+                >
+                    <img 
+                        src={url} 
+                        alt={`vetted expert ${i}`} 
+                        className="w-full h-full object-cover"
+                    />
                 </div>
-                <div className="text-center md:text-left">
-                    <p className="text-white font-bold">Trusted by 2,500+ scale-ups</p>
-                    <p className="text-gray-500 text-xs uppercase tracking-widest font-medium">Global payment & compliance handled</p>
-                </div>
-            </div>
+            ))}
+        </div>
+        <div className="text-center md:text-left">
+            <p className="text-white font-bold text-lg">Trusted by 2,500+ scale-ups</p>
+            <p className="text-gray-500 text-xs uppercase tracking-widest font-semibold">
+                Global payment & compliance handled
+            </p>
+        </div>
+    </div>
 
-            <div className="flex flex-wrap justify-center gap-8 opacity-40 grayscale group-hover:grayscale-0 transition-all">
-                <span className="text-xl font-black text-white italic tracking-tighter">STRIPE</span>
-                <span className="text-xl font-black text-white italic tracking-tighter">AIRBNB</span>
-                <span className="text-xl font-black text-white italic tracking-tighter">LINEAR</span>
-            </div>
-        </motion.div>
+    <div className="flex flex-wrap justify-center gap-10 opacity-30 hover:opacity-100 transition-opacity duration-500">
+        <span className="text-2xl font-black text-white italic tracking-tighter">STRIPE</span>
+        <span className="text-2xl font-black text-white italic tracking-tighter">AIRBNB</span>
+        <span className="text-2xl font-black text-white italic tracking-tighter">LINEAR</span>
+    </div>
+</motion.div>
       </div>
     </section>
   );

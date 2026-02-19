@@ -8,8 +8,6 @@ import {
 } from "lucide-react";
 import { useState, useEffect, MouseEvent } from "react";
 
-/* ================= STATIC DATA ================= */
-
 const REASONS = [
   {
     icon: ShieldCheck,
