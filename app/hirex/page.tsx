@@ -1,4 +1,4 @@
-import Navbar from '@/components/layout/Navbar';
+import Navbar from '@/components/hirex/layout/Navbar';
 import Hero from '@/components/hirex/home/Hero';
 import Features from '@/components/hirex/home/Features';
 import EmployerGrades from '@/components/hirex/home/EmployerGrades';
