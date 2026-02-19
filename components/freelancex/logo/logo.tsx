@@ -1,3 +1,5 @@
+// components/freelancex/logo/logo.tsx
+
 'use client';
 
 import React from 'react';
@@ -8,7 +10,6 @@ import { motion } from 'framer-motion';
 export default function Logo({ isSticky = false }: { isSticky?: boolean }) {
   return (
     <Link href="/" className="group flex items-center gap-4 w-fit">
-
       <div className="relative">
         <div
           className={`absolute -inset-1 rounded-xl blur opacity-25 group-hover:opacity-75 transition duration-500
@@ -41,15 +42,15 @@ export default function Logo({ isSticky = false }: { isSticky?: boolean }) {
       </div>
 
       <div className="flex flex-col justify-center h-12">
-       <span className={`text-4xl font-black tracking-tighter italic leading-none transition-colors duration-300 drop-shadow-sm group-hover:drop-shadow-[0_0_8px_rgba(59,130,246,0.25)] ${isSticky ? 'text-slate-900' : 'text-white'}`}>
+        <span className={`text-4xl font-black tracking-tighter italic leading-[1.1] pr-2 transition-colors duration-300 drop-shadow-sm group-hover:drop-shadow-[0_0_8px_rgba(59,130,246,0.25)] ${isSticky ? 'text-slate-900' : 'text-white'}`}>
           Free
-          <span className={`relative inline-block text-transparent bg-clip-text bg-gradient-to-r ${isSticky ? 'from-blue-600 to-cyan-500' : 'from-blue-400 to-cyan-300'}`}>
+          <span className={`relative inline-block px-1 text-transparent bg-clip-text bg-gradient-to-r ${isSticky ? 'from-blue-600 to-cyan-500' : 'from-blue-400 to-cyan-300'}`}>
             lanceX
             <span className="absolute inset-0 blur-md bg-blue-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           </span>
         </span>
 
-        <div className="flex items-center gap-1.5 mt-1.5">
+        <div className="flex items-center gap-1.5 mt-1">
             <span className="relative hidden sm:flex h-1.5 w-1.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-500 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-indigo-500"></span>
