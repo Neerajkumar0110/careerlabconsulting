@@ -25,16 +25,28 @@ export default function ChatWidget() {
 
   const getDynamicInstruction = () => {
     const isInternshipPage = pathname?.includes("/internship");
+    const isHireXPage = pathname?.includes("/hirex");
     
+    let modeContext = "B2B / Services Mode - Focus on enterprises and digital transformation.";
+    if (isInternshipPage) modeContext = "B2C / Internship Mode - Focus on students and upskilling.";
+    if (isHireXPage) modeContext = "HireX Mode - Focus on AI-driven Recruitment, Talent Acquisition, and Autonomous Hiring Solutions.";
+
     return `You are Manee, a friendly Indian female career counselor and Enterprise AI Consultant at Career Lab Consulting. 
     Your tone is warm, professional, and empathetic. Greet personally if you know the name.
 
-    CURRENT CONTEXT: ${isInternshipPage ? "B2C / Internship Mode - Focus on students and upskilling." : "B2B / Services Mode - Focus on enterprises and digital transformation."}
+    CURRENT CONTEXT: ${modeContext}
 
+    ${isHireXPage ? `
+    KNOWLEDGE BASE (HireX - AI Recruitment):
+    1. SOLUTIONS: AI Video Interviews, Automated Resume Screening, Predictive Hiring Analytics, and Bias-free Recruitment.
+    2. FEATURES: HireX Autonomous Agent (handles end-to-end scheduling & screening), Talent Matching Algorithms.
+    3. GOAL: Helping companies reduce Time-to-Hire by 70% using AI.
+    ` : `
     KNOWLEDGE BASE (B2B - Services & Industries):
     1. SERVICES: AI & Digital Transformation Consulting (LLM Strategy, Digital Roadmap), AI Engineering (Agentic Frameworks, RAG Systems), Intelligent Platform Dev (Web/Mobile Apps), Blockchain (Smart Contracts, Web3 Services), Quality & Security (Functional, Performance, & Penetration Testing), and Managed Operations (AI/LLM Ops).
     2. INDUSTRIES: Tech & SaaS, Healthcare & Pharma, Finance & Banking, Retail & E-commerce, Manufacturing (Industry 4.0), Automotive (Autonomous AI), Legal & Compliance, and EdTech.
     3. PRODUCTS: Single Suites (Sales, Marketing, Finance, People), Combo Suites (Business, Growth, Operations), and CLC One (All-in-One AI SaaS).
+    `}
 
     KNOWLEDGE BASE (B2C - Education):
     1. PROGRAMS: InternX-AI, InternX-Data Engineer, InternX-Cyber Security, InternX-Blockchain, InternX-Robotics, and Smart Mobility Engineer.
@@ -112,9 +124,15 @@ export default function ChatWidget() {
     if (storedName) setUserName(storedName);
 
     const isB2C = pathname?.includes("/internship");
-    const welcomeText = isB2C 
-      ? `### Namaste ${storedName || 'Scholar'}! \n\nLooking for an **internship**? I can guide you through our **InternX-AI** and **Neural LMS** programs. You have a **10% discount** active!`
-      : `### Namaste! \n\nI am **Manee**, your AI Consultant. How can I help you with **Digital Transformation**, **Custom AI Engineering**, or our **CLC One** master product today?`;
+    const isHireX = pathname?.includes("/hirex");
+
+    let welcomeText = `### Namaste! \n\nI am **Manee**, your AI Consultant. How can I help you with **Digital Transformation**, **Custom AI Engineering**, or our **CLC One** master product today?`;
+
+    if (isB2C) {
+      welcomeText = `### Namaste ${storedName || 'Scholar'}! \n\nLooking for an **internship**? I can guide you through our **InternX-AI** and **Neural LMS** programs. You have a **10% discount** active!`;
+    } else if (isHireX) {
+      welcomeText = `### Namaste! \n\nWelcome to **HireX**. I am your **Autonomous Recruitment Bot**. How can I assist you with **AI Video Interviews**, **Automated Hiring**, or streamlining your **Talent Pipeline** today?`;
+    }
     
     setMessages([{ role: "bot", text: welcomeText }]);
 
