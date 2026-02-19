@@ -757,7 +757,6 @@ export default function InternXAIPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
                     
-                    {/* FOUNDATION CARD */}
                     <div className={`bg-white/5 border border-white/10 rounded-3xl p-8 hover:border-blue-500/50 transition-all group relative flex flex-col ${activeTab !== 'foundation' ? 'opacity-50 blur-[1px]' : ''}`}>
                     <h3 className="text-2xl font-bold mb-2 text-white">Foundation</h3>
                     <p className="text-slate-400 text-sm mb-6">6 Months • Beginner Friendly</p>
@@ -771,7 +770,7 @@ export default function InternXAIPage() {
                             onClick={() => handleScholarship('Foundation')}
                             className="inline-flex items-center gap-2 bg-green-500/10 border border-green-500/20 text-green-400 text-xs font-bold px-4 py-2 rounded-full hover:bg-green-500/20 transition-colors"
                         >
-                            <Zap className="w-3 h-3" /> Scholarship Available (Max ₹30,000)
+                            <Zap className="w-3 h-3" /> Scholarship Available (Max ₹50,000)
                         </button>
                         <p className="text-[10px] text-slate-500 mt-2 ml-1">Avg Scholarship: ₹15k - ₹20k</p>
                     </div>
@@ -821,7 +820,7 @@ export default function InternXAIPage() {
                             onClick={() => handleScholarship('Elite')}
                             className="inline-flex items-center gap-2 bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-bold px-4 py-2 rounded-full animate-pulse hover:animate-none hover:bg-purple-500/20 transition-colors"
                         >
-                            <Zap className="w-3 h-3" /> Scholarship Available (Max ₹50,000)
+                            <Zap className="w-3 h-3" /> Scholarship Available (Max ₹1,00,000)
                         </button>
                         <p className="text-[10px] text-slate-500 mt-2 ml-1">Avg Scholarship: ₹30k - ₹40k</p>
                     </div>
