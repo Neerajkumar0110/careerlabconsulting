@@ -29,41 +29,36 @@ export default function ChatWidget() {
     
     let modeContext = "B2B / Services Mode - Focus on enterprises and digital transformation.";
     if (isInternshipPage) modeContext = "B2C / Internship Mode - Focus on students and upskilling.";
-    if (isHireXPage) modeContext = "HireX Mode - Focus on AI-driven Recruitment, Talent Acquisition, and Autonomous Hiring Solutions.";
+    if (isHireXPage) modeContext = "HireX Mode - Focus on AI-driven Recruitment and Autonomous Hiring.";
 
     return `You are Manee, a friendly Indian female career counselor and Enterprise AI Consultant at Career Lab Consulting. 
-    Your tone is warm, professional, and empathetic. Greet personally if you know the name.
+    Your tone is warm, professional, and empathetic.
 
     CURRENT CONTEXT: ${modeContext}
 
     ${isHireXPage ? `
-    KNOWLEDGE BASE (HireX - AI Recruitment):
-    1. SOLUTIONS: AI Video Interviews, Automated Resume Screening, Predictive Hiring Analytics, and Bias-free Recruitment.
-    2. FEATURES: HireX Autonomous Agent (handles end-to-end scheduling & screening), Talent Matching Algorithms.
-    3. GOAL: Helping companies reduce Time-to-Hire by 70% using AI.
+    KNOWLEDGE BASE (HireX):
+    1. SOLUTIONS: AI Video Interviews, Automated Resume Screening, Predictive Hiring.
+    2. FEATURES: HireX Autonomous Agent for end-to-end scheduling.
     ` : `
-    KNOWLEDGE BASE (B2B - Services & Industries):
-    1. SERVICES: AI & Digital Transformation Consulting (LLM Strategy, Digital Roadmap), AI Engineering (Agentic Frameworks, RAG Systems), Intelligent Platform Dev (Web/Mobile Apps), Blockchain (Smart Contracts, Web3 Services), Quality & Security (Functional, Performance, & Penetration Testing), and Managed Operations (AI/LLM Ops).
-    2. INDUSTRIES: Tech & SaaS, Healthcare & Pharma, Finance & Banking, Retail & E-commerce, Manufacturing (Industry 4.0), Automotive (Autonomous AI), Legal & Compliance, and EdTech.
-    3. PRODUCTS: Single Suites (Sales, Marketing, Finance, People), Combo Suites (Business, Growth, Operations), and CLC One (All-in-One AI SaaS).
+    KNOWLEDGE BASE (Services):
+    1. SERVICES: AI & Digital Transformation, Agentic Frameworks, Web/Mobile Apps, Blockchain.
+    2. PRODUCTS: CLC One (All-in-One AI SaaS).
     `}
 
     KNOWLEDGE BASE (B2C - Education):
-    1. PROGRAMS: InternX-AI, InternX-Data Engineer, InternX-Cyber Security, InternX-Blockchain, InternX-Robotics, and Smart Mobility Engineer.
-    2. INFRASTRUCTURE: Neural LMS (Our smart learning platform), Mentorship Protocols, and Research Masterclasses.
+    1. PROGRAMS: InternX-AI, Data Engineer, Cyber Security, Robotics.
+    2. INFRASTRUCTURE: Neural LMS platform.
 
-    GLOBAL PRESENCE:
-    - HQ: Gurugram, DLF Cyber City.
-    - Branches: Bengaluru, San Francisco, London, Dubai, Singapore, Cape Town, and Berlin.
+    GLOBAL PRESENCE: HQ: Gurugram. Branches: Bengaluru, SF, London, Dubai, Singapore.
 
     STRICT RULES:
-    - Proactively guide users to relevant links based on their query.
-    - Confirm 10% Early Bird discount is applied today. 
+    - ${isInternshipPage ? "MANDATORY: Proactively mention the 10% Early Bird discount available today for internships." : "DO NOT mention any discounts or offers for this page."}
     - Maintain "Enterprise Systems Nominal" uptime confidence.`;
   };
 
   const model = genAI.getGenerativeModel({ 
-    model: "gemini-1.5-flash", 
+    model: "gemini-2.5-flash", 
     systemInstruction: getDynamicInstruction(),
     generationConfig: {
       temperature: 0.8,
@@ -126,24 +121,28 @@ export default function ChatWidget() {
     const isB2C = pathname?.includes("/internship");
     const isHireX = pathname?.includes("/hirex");
 
-    let welcomeText = `### Namaste! \n\nI am **Manee**, your AI Consultant. How can I help you with **Digital Transformation**, **Custom AI Engineering**, or our **CLC One** master product today?`;
+    let welcomeText = `### Namaste! \n\nI am **Manee**, your AI Consultant. How can I help you with **Digital Transformation** or **Custom AI Engineering** today?`;
 
     if (isB2C) {
-      welcomeText = `### Namaste ${storedName || 'Scholar'}! \n\nLooking for an **internship**? I can guide you through our **InternX-AI** and **Neural LMS** programs. You have a **10% discount** active!`;
+      welcomeText = `### Namaste ${storedName || 'Scholar'}! \n\nLooking for an **internship**? I can guide you through our **InternX-AI** programs. **Good news: A 10% Early Bird discount is active for you today!**`;
     } else if (isHireX) {
-      welcomeText = `### Namaste! \n\nWelcome to **HireX**. I am your **Autonomous Recruitment Bot**. How can I assist you with **AI Video Interviews**, **Automated Hiring**, or streamlining your **Talent Pipeline** today?`;
+      welcomeText = `### Namaste! \n\nWelcome to **HireX**. I am your **Autonomous Recruitment Bot**. How can I help you automate your hiring and talent pipeline today?`;
     }
     
     setMessages([{ role: "bot", text: welcomeText }]);
 
-    const lastVisit = localStorage.getItem("manee_last_visit");
-    const now = new Date().getTime();
-    if (lastVisit && (now - parseInt(lastVisit) < 86400000)) {
-      setIsOpen(true);
+    if (isB2C) {
+        const lastVisit = localStorage.getItem("manee_last_visit");
+        const now = new Date().getTime();
+        if (lastVisit && (now - parseInt(lastVisit) < 86400000)) {
+          setIsOpen(true);
+        } else {
+          setTimeout(() => setShowOffer(true), 3000);
+        }
+        localStorage.setItem("manee_last_visit", now.toString());
     } else {
-      setTimeout(() => setShowOffer(true), 3000);
+        setShowOffer(false); 
     }
-    localStorage.setItem("manee_last_visit", now.toString());
   }, [pathname]);
 
   useEffect(() => {
@@ -186,7 +185,7 @@ export default function ChatWidget() {
   return createPortal(
     <div className="fixed bottom-4 right-4 z-[999999] flex flex-col items-end pointer-events-none font-sans">
       
-      {showOffer && !isOpen && (
+      {showOffer && !isOpen && pathname?.includes("/internship") && (
         <div className="bg-[#b31f24] text-white p-2.5 rounded-lg shadow-lg w-48 mb-3 animate-bounce-gentle pointer-events-auto relative border border-white/10">
           <button onClick={() => setShowOffer(false)} className="absolute top-1 right-1 p-0.5 hover:bg-white/10 rounded-full"><X size={8} /></button>
           <p className="text-[10px] font-bold text-center">Namaste! 10% Discount active. 🌸</p>
