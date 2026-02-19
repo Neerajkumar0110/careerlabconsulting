@@ -464,17 +464,14 @@ const hiringPartners = [
   { name: "Monday.com", logo: "https://www.vectorlogo.zone/logos/monday/monday-ar21.svg" }
 ];
 
-// --- MAIN COMPONENT ---
-
 export default function InternXAIPage() {
-  const router = useRouter(); // Initialize Router
+  const router = useRouter(); 
   const [activeTab, setActiveTab] = useState('foundation');
   const [activeGamification, setActiveGamification] = useState(gamificationData[0]);
   const [activeFaqIndex, setActiveFaqIndex] = useState<number | null>(0);
   const [comparisonCategory, setComparisonCategory] = useState<'features' | 'tools' | 'roles' | 'projects' | 'ctc' | 'usps' | 'fees'>('features');
   const [earningsRegion, setEarningsRegion] = useState<'india' | 'global'>('india');
 
-  // Localization State
   const [countryCode, setCountryCode] = useState<string>('IN'); 
   const [isInternational, setIsInternational] = useState<boolean>(false);
   const [mounted, setMounted] = useState(false);
@@ -498,11 +495,9 @@ export default function InternXAIPage() {
       checkLocation();
   }, []);
 
-  // --- REDIRECT HANDLERS (No Modals) ---
-
   const handleRegister = (planName: 'Foundation' | 'Elite') => {
-    let basePriceINR = planName === 'Foundation' ? 12000000 : 20000000; // in paise
-    let basePriceUSD = planName === 'Foundation' ? 199900 : 349900; // in cents
+    let basePriceINR = planName === 'Foundation' ? 12000000 : 20000000; 
+    let basePriceUSD = planName === 'Foundation' ? 199900 : 349900; 
 
     const priceDisplay = isInternational 
         ? `$${(basePriceUSD / 100).toLocaleString()}`
