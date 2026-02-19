@@ -10,7 +10,8 @@ import {
   Briefcase, 
   Globe2, 
   Lightbulb, 
-  Trophy 
+  Trophy, 
+  Building2
 } from 'lucide-react';
 
 const pillars = [
@@ -20,9 +21,9 @@ const pillars = [
     desc: "Embark on a journey into the future at Career Lab Consulting. We nurture minds with cutting-edge professional training in Data Science, AI, and Cybersecurity.",
     image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=800",
     stats: [
-      { label: "Students", value: "15000k+", icon: CheckCircle2 },
-      { label: "Trainers", value: "1.5k+", icon: Star },
-      { label: "Partners", value: "350+", icon: Users2 },
+      { label: "Students", value: "15000k+" },
+      { label: "Trainers", value: "1.5k+" },
+      { label: "Partners", value: "350+" },
     ],
     accent: "from-blue-600 to-cyan-500"
   },
@@ -32,9 +33,9 @@ const pillars = [
     desc: "We don't just cultivate leaders; we tailor expertise to meet the demands of a dynamic business landscape with real-world insights and adaptive learning modules.",
     image: "https://images.unsplash.com/photo-1501504905252-473c47e087f8?auto=format&fit=crop&q=80&w=800",
     stats: [
-      { label: "Users", value: "50k+", icon: CheckCircle2 },
-      { label: "Courses", value: "120+", icon: Star },
-      { label: "Uptime", value: "99.9%", icon: Users2 },
+      { label: "Users", value: "50k+"},
+      { label: "Courses", value: "120+" },
+      { label: "Uptime", value: "99.9%" },
     ],
     accent: "from-purple-600 to-blue-500"
   },
@@ -44,9 +45,9 @@ const pillars = [
     desc: "Empowering organizations through high-impact corporate training. We bridge the gap between potential and performance for Fortune 500 companies.",
     image: "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=800",
     stats: [
-      { label: "Companies", value: "200+", icon: Briefcase },
-      { label: "Executives", value: "5k+", icon: Users2 },
-      { label: "Growth", value: "10X", icon: Trophy },
+      { label: "Companies", value: "200+" },
+      { label: "Executives", value: "5k+" },
+      { label: "Growth", value: "10X" },
     ],
     accent: "from-emerald-600 to-teal-500"
   },
@@ -56,9 +57,9 @@ const pillars = [
     desc: "A dedicated space for experimenting with emerging technologies. From Blockchain to Quantum Computing, we stay ahead of the curve.",
     image: "https://media.istockphoto.com/id/2148178472/photo/hispanic-programmers-collaborating-on-software-development-in-a-modern-office-setting.webp?a=1&b=1&s=612x612&w=0&k=20&c=cOn7tCfq87FzKSSp1Vn2j0b0c8Puw0eKD-GY6JKexJU=",
     stats: [
-      { label: "Projects", value: "85+", icon: Lightbulb },
-      { label: "Patents", value: "12", icon: CheckCircle2 },
-      { label: "Experts", value: "45+", icon: Star },
+      { label: "Projects", value: "85+" },
+      { label: "Patents", value: "12" },
+      { label: "Experts", value: "45+" },
     ],
     accent: "from-amber-600 to-orange-500"
   },
@@ -68,9 +69,9 @@ const pillars = [
     desc: "Connecting top-tier talent with industry giants. Our recruitment drives ensure that our graduates land their dream roles instantly.",
     image: "https://media.istockphoto.com/id/2197955227/photo/humans-are-using-laptops-and-computers-to-interact-with-ai-helping-them-create-code-train-ai.webp?a=1&b=1&s=612x612&w=0&k=20&c=p8GsIZS4sS58ubkyslWk6ChVyDe5S4HDwxxznIsm-v4=",
     stats: [
-      { label: "Placed", value: "12k+", icon: Briefcase },
-      { label: "Avg Hike", value: "60%", icon: ArrowUpRight },
-      { label: "Clients", value: "400+", icon: Users2 },
+      { label: "Placed", value: "12k+" },
+      { label: "Avg Hike", value: "60%" },
+      { label: "Clients", value: "400+" },
     ],
     accent: "from-pink-600 to-rose-500"
   },
@@ -80,9 +81,9 @@ const pillars = [
     desc: "Validating skills on a global scale. Our certifications are recognized across borders, opening doors to international career opportunities.",
     image: "https://plus.unsplash.com/premium_photo-1664474503673-5febe9ca12b9?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8SW50ZXJuYXRpb25hbCUyMFBhcnRuZXJzaGlwc3xlbnwwfHwwfHx8MA%3D%3D",
     stats: [
-      { label: "Countries", value: "27+", icon: Globe2 },
-      { label: "Alumni", value: "100k", icon: Users2 },
-      { label: "Badges", value: "50+", icon: Star },
+      { label: "Countries", value: "27+" },
+      { label: "Alumni", value: "100k" },
+      { label: "Badges", value: "50+" },
     ],
     accent: "from-indigo-600 to-violet-500"
   }
@@ -143,7 +144,6 @@ export default function PillarsSection() {
                   {pillar.stats.map((stat, sIdx) => (
                     <div key={sIdx} className="pt-4 space-y-1 md:space-y-2 flex flex-col items-center group/stat">
                       <div className="flex items-center gap-1.5 md:gap-2 text-white">
-                        <stat.icon className={`w-4 h-4 md:w-5 md:h-5 text-transparent bg-clip-text bg-gradient-to-r ${pillar.accent}`} />
                         <span className="text-lg md:text-2xl font-black">{stat.value}</span>
                       </div>
                       <p className="text-[9px] md:text-[10px] text-center text-slate-500 font-bold uppercase tracking-widest leading-none group-hover/stat:text-slate-300 transition-colors">
