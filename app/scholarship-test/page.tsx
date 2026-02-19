@@ -9,7 +9,8 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { 
   Loader2, ChevronRight, Trophy, Mail, GraduationCap, X, 
-  CheckCircle2, AlertTriangle, ArrowRight, Timer
+  CheckCircle2, ArrowRight, Globe, ShieldCheck, ChevronDown,
+  Timer, AlertTriangle, Ban
 } from 'lucide-react';
 
 interface Question {
@@ -24,7 +25,23 @@ interface UserDetails {
   name: string;
   email: string;
   phone: string;
+  countryCode: string;
 }
+
+const countryList = [
+  { code: "+91", flag: "🇮🇳", name: "India" },
+  { code: "+1", flag: "🇺🇸", name: "USA" },
+  { code: "+44", flag: "🇬🇧", name: "UK" },
+  { code: "+971", flag: "🇦🇪", name: "UAE" },
+  { code: "+1", flag: "🇨🇦", name: "Canada" },
+  { code: "+61", flag: "🇦🇺", name: "Australia" },
+  { code: "+49", flag: "🇩🇪", name: "Germany" },
+  { code: "+33", flag: "🇫🇷", name: "France" },
+  { code: "+81", flag: "🇯🇵", name: "Japan" },
+  { code: "+86", flag: "🇨🇳", name: "China" },
+  { code: "+7", flag: "🇷🇺", name: "Russia" },
+  { code: "+55", flag: "🇧🇷", name: "Brazil" },
+];
 
 const fallbackQuestions: Question[] = [
   { id: 1, question: "Which programming language is known as the backbone of AI?", options: ["Java", "Python", "C++", "Swift"], answer: "Python", difficulty: "easy" },
@@ -45,14 +62,25 @@ function ScholarshipTestContent() {
    
   const planName = searchParams.get('plan') as 'Foundation' | 'Elite' || 'Foundation';
 
-  const [step, setStep] = useState<'details' | 'loading' | 'quiz' | 'result'>('details');
-  const [userDetails, setUserDetails] = useState<UserDetails>({ name: '', email: '', phone: '' });
+  const [step, setStep] = useState<'details' | 'loading' | 'quiz' | 'result' | 'disqualified'>('details');
+  const [userDetails, setUserDetails] = useState<UserDetails>({ name: '', email: '', phone: '', countryCode: '+91' });
+  
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpVerified, setOtpVerified] = useState(false);
+  const [serverOtp, setServerOtp] = useState('');
+  const [userOtpInput, setUserOtpInput] = useState('');
+  const [otpLoading, setOtpLoading] = useState(false);
+
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<{[key: number]: string}>({});
   const [score, setScore] = useState(0);
   const [generatedCode, setGeneratedCode] = useState('');
   const [isInternational, setIsInternational] = useState(false);
+
+  const [timeLeft, setTimeLeft] = useState(900); 
+  const [warnings, setWarnings] = useState(0);
+  const [showWarningModal, setShowWarningModal] = useState(false);
 
   const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY || "");
 
@@ -68,21 +96,129 @@ function ScholarshipTestContent() {
         
         clearTimeout(timeoutId);
 
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
+        if (!response.ok) throw new Error('Network response was not ok');
         
         const data = await response.json();
         if (data && data.country_code !== 'IN') {
           setIsInternational(true);
+          const found = countryList.find(c => c.code === data.country_calling_code);
+          if(found) setUserDetails(prev => ({...prev, countryCode: found.code}));
         }
       } catch (error) {
-        console.warn("Location detection blocked (likely by AdBlocker). Defaulting to India (INR).", error);
+        console.warn("Location detection blocked. Defaulting to India.", error);
         setIsInternational(false);
       }
     };
     checkLocation();
   }, []);
+
+  useEffect(() => {
+    if (step === 'quiz' && timeLeft > 0) {
+      const timerId = setInterval(() => {
+        setTimeLeft((prev) => prev - 1);
+      }, 1000);
+      return () => clearInterval(timerId);
+    } else if (step === 'quiz' && timeLeft === 0) {
+      submitQuiz(); 
+    }
+  }, [step, timeLeft]);
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+  };
+
+  useEffect(() => {
+    if (step !== 'quiz') return;
+
+    const handleVisibilityChange = () => {
+        if (document.hidden) {
+            handleCheatAttempt();
+        }
+    };
+
+    const handleBlur = () => {
+        handleCheatAttempt();
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("blur", handleBlur);
+
+    return () => {
+        document.removeEventListener("visibilitychange", handleVisibilityChange);
+        window.removeEventListener("blur", handleBlur);
+    };
+  }, [step, warnings]);
+
+  const handleCheatAttempt = () => {
+      if (step !== 'quiz') return;
+
+      if (warnings === 0) {
+          setWarnings(1);
+          setShowWarningModal(true);
+      } else if (warnings === 1) {
+          handleDisqualification();
+      }
+  };
+
+  const handleDisqualification = () => {
+      setStep('disqualified');
+      
+      const fullPhoneNumber = `${userDetails.countryCode} ${userDetails.phone}`;
+      
+      fetch('/api/scholarship-submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            status: 'disqualified', 
+            name: userDetails.name,
+            email: userDetails.email,
+            phone: fullPhoneNumber,
+            planName: planName
+        })
+     }).catch(err => console.error("Failed to send DQ email", err));
+  };
+
+  const handleSendOtp = async () => {
+    if(!userDetails.email || !userDetails.name) {
+        alert("Please enter your Full Name and Email Address first.");
+        return;
+    }
+    
+    setOtpLoading(true);
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    setServerOtp(code);
+
+    try {
+      const res = await fetch('/api/send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: userDetails.email, otp: code, name: userDetails.name })
+      });
+      
+      if(res.ok) {
+        setOtpSent(true);
+        alert(`OTP Verification Code sent to ${userDetails.email}`);
+      } else {
+        alert("Failed to send OTP. Please check your email address.");
+      }
+    } catch (e) {
+      console.error(e);
+      alert("Error sending OTP. Please try again.");
+    } finally {
+      setOtpLoading(false);
+    }
+  };
+
+  const handleVerifyOtp = () => {
+    if(userOtpInput === serverOtp) {
+      setOtpVerified(true);
+      setOtpSent(false); 
+    } else {
+      alert("Invalid OTP. Please try again.");
+    }
+  };
 
   const generateQuiz = async () => {
     setStep('loading');
@@ -102,11 +238,10 @@ function ScholarshipTestContent() {
 
         const prompt = `Generate 25 multiple choice questions on General Aptitude, Basic Programming Logic, and AI awareness. 
         Structure: 
-        - 10 Very Easy (Basic logic/definitions)
-        - 5 Medium (Conceptual application)
-        - 10 Hard (Complex logic/Code snippets)
-        
-        Format: JSON Array of objects with keys: id (number), question (string), options (array of 4 strings), answer (string - exact match to one option), difficulty (string: 'easy', 'medium', 'hard').`;
+        - 10 Very Easy
+        - 5 Medium
+        - 10 Hard
+        Format: JSON Array of objects with keys: id (number), question (string), options (array of 4 strings), answer (string), difficulty (string).`;
         
         const result = await model.generateContent(prompt);
         const response = await result.response;
@@ -153,13 +288,16 @@ function ScholarshipTestContent() {
      const rawPercentage = (calculatedScore / totalPossibleScore) * maxScholarship;
      const discountPercent = Math.min(Math.round(rawPercentage), maxScholarship);
 
+     const fullPhoneNumber = `${userDetails.countryCode} ${userDetails.phone}`;
+
      fetch('/api/scholarship-submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+            status: 'passed', 
             name: userDetails.name,
             email: userDetails.email,
-            phone: userDetails.phone,
+            phone: fullPhoneNumber,
             score: calculatedScore,
             totalQuestions: questions.length,
             scholarshipCode: formattedCode,
@@ -172,64 +310,91 @@ function ScholarshipTestContent() {
   };
 
   const calculateScholarshipPercent = () => {
-      const maxScholarship = planName === 'Foundation' ? 30 : 40;
-      
-      const totalPossibleScore = questions.length * 2; 
-      
-      const percentage = (score / totalPossibleScore) * maxScholarship;
-      return Math.min(Math.round(percentage), maxScholarship);
+     const maxScholarship = planName === 'Foundation' ? 30 : 40;
+     const totalPossibleScore = questions.length * 2; 
+     const percentage = (score / totalPossibleScore) * maxScholarship;
+     return Math.min(Math.round(percentage), maxScholarship);
   };
 
   const getGrade = () => {
-      const percentage = (score / (questions.length * 2)) * 100;
-      
-      if (percentage >= 90) return 'A+';
-      if (percentage >= 75) return 'A';
-      if (percentage >= 60) return 'B';
-      if (percentage >= 40) return 'C';
-      return 'D';
+     const percentage = (score / (questions.length * 2)) * 100;
+     if (percentage >= 90) return 'A+';
+     if (percentage >= 75) return 'A';
+     if (percentage >= 60) return 'B';
+     if (percentage >= 40) return 'C';
+     return 'D';
   };
 
   const handleClaimAndProceed = () => {
-      const discountPercent = calculateScholarshipPercent();
-      
-      let baseINR = planName === 'Foundation' ? 14999900 : 24999900; 
-      let baseUSD = planName === 'Foundation' ? 199900 : 349900; 
+     const discountPercent = calculateScholarshipPercent();
+     
+     let baseINR = planName === 'Foundation' ? 14999900 : 24999900; 
+     let baseUSD = planName === 'Foundation' ? 199900 : 349900; 
 
-      const multiplier = (100 - discountPercent) / 100;
-      const finalINR = Math.round(baseINR * multiplier);
-      const finalUSD = Math.round(baseUSD * multiplier);
+     const multiplier = (100 - discountPercent) / 100;
+     const finalINR = Math.round(baseINR * multiplier);
+     const finalUSD = Math.round(baseUSD * multiplier);
 
-      const priceDisplay = isInternational 
-        ? `$${(finalUSD / 100).toLocaleString()}`
-        : `₹${(finalINR / 100).toLocaleString('en-IN')}`;
+     const priceDisplay = isInternational 
+       ? `$${(finalUSD / 100).toLocaleString()}`
+       : `₹${(finalINR / 100).toLocaleString('en-IN')}`;
 
-      const params = new URLSearchParams({
-        planId: planName.toLowerCase(),
-        planName: planName,
-        priceDisplay: priceDisplay,
-        rawAmountINR: finalINR.toString(),
-        rawAmountUSD: finalUSD.toString(),
-        intl: isInternational ? 'true' : 'false',
-        scholarshipCode: generatedCode,
-        discount: discountPercent.toString()
-      });
+     const params = new URLSearchParams({
+       planId: planName.toLowerCase(),
+       planName: planName,
+       priceDisplay: priceDisplay,
+       rawAmountINR: finalINR.toString(),
+       rawAmountUSD: finalUSD.toString(),
+       intl: isInternational ? 'true' : 'false',
+       scholarshipCode: generatedCode,
+       discount: discountPercent.toString()
+     });
 
-      router.push(`/checkout/b2c?${params.toString()}`);
+     router.push(`/checkout/b2c?${params.toString()}`);
   };
 
   return (
     <div className="min-h-screen bg-[#020617] text-white flex items-center justify-center p-4 md:p-8 font-sans">
         
+        {showWarningModal && (
+            <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in duration-300">
+                <div className="bg-[#1e1e2f] border-2 border-yellow-500 rounded-2xl p-8 max-w-md text-center shadow-2xl shadow-yellow-500/20 transform scale-100 transition-transform">
+                    <div className="bg-yellow-500/10 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <AlertTriangle className="w-10 h-10 text-yellow-500 animate-pulse" />
+                    </div>
+                    <h2 className="text-2xl font-bold text-white mb-2">Warning: Tab Switch Detected</h2>
+                    <p className="text-slate-300 mb-6 text-sm leading-relaxed">
+                        We detected that you navigated away from the test window. This is your <span className="text-yellow-400 font-bold underline">first and last warning</span>.
+                        <br/><br/>
+                        If you switch tabs or minimize the window again, you will be <strong>disqualified</strong> immediately.
+                    </p>
+                    <button 
+                        onClick={() => setShowWarningModal(false)}
+                        className="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-3.5 rounded-xl transition-colors shadow-lg shadow-yellow-500/20"
+                    >
+                        I Understand, Resume Test
+                    </button>
+                </div>
+            </div>
+        )}
+
         <div className="relative bg-[#0b0f1f] border border-white/10 w-full max-w-2xl rounded-3xl overflow-hidden shadow-2xl flex flex-col min-h-[600px]">
             
-            <div className="p-6 border-b border-white/10 flex justify-between items-center bg-[#020617]/50 backdrop-blur-md">
+            <div className="p-6 border-b border-white/10 flex justify-between items-center bg-[#020617]/50 backdrop-blur-md sticky top-0 z-20">
                 <h3 className="text-xl font-bold text-white flex items-center gap-2">
                     <GraduationCap className="text-blue-400" /> Scholarship Test
                 </h3>
-                <button onClick={() => router.back()} className="text-slate-400 hover:text-white p-2 rounded-full hover:bg-white/5 transition-colors">
-                    <X />
-                </button>
+                
+                {step === 'quiz' ? (
+                    <div className={`flex items-center gap-2 font-mono text-lg font-bold px-4 py-1.5 rounded-full border transition-colors duration-500 ${timeLeft < 60 ? 'bg-red-500/10 text-red-500 border-red-500/30 animate-pulse' : 'bg-blue-500/10 text-blue-400 border-blue-500/30'}`}>
+                        <Timer className="w-4 h-4" />
+                        {formatTime(timeLeft)}
+                    </div>
+                ) : (
+                    <button onClick={() => router.back()} className="text-slate-400 hover:text-white p-2 rounded-full hover:bg-white/5 transition-colors">
+                        <X />
+                    </button>
+                )}
             </div>
 
             <div className="p-8 overflow-y-auto custom-scrollbar flex-grow flex flex-col">
@@ -245,7 +410,7 @@ function ScholarshipTestContent() {
                             </p>
                         </div>
 
-                        <div className="space-y-4">
+                        <div className="space-y-5">
                             <div className="space-y-2">
                                 <label className="text-xs font-bold text-slate-500 uppercase ml-1">Full Name</label>
                                 <input 
@@ -254,30 +419,90 @@ function ScholarshipTestContent() {
                                     value={userDetails.name} onChange={(e) => setUserDetails({...userDetails, name: e.target.value})}
                                 />
                             </div>
+
                             <div className="space-y-2">
                                 <label className="text-xs font-bold text-slate-500 uppercase ml-1">Email Address</label>
-                                <input 
-                                    type="email" placeholder="john@example.com" 
-                                    className="w-full bg-black/20 border border-white/10 rounded-xl p-4 text-white focus:outline-none focus:border-blue-500 transition-colors"
-                                    value={userDetails.email} onChange={(e) => setUserDetails({...userDetails, email: e.target.value})}
-                                />
+                                <div className="relative">
+                                    <input 
+                                        type="email" placeholder="john@example.com" 
+                                        disabled={otpVerified || otpSent}
+                                        className={`w-full bg-black/20 border rounded-xl p-4 pr-28 text-white focus:outline-none transition-colors ${otpVerified ? 'border-green-500/50 text-green-400' : 'border-white/10 focus:border-blue-500'}`}
+                                        value={userDetails.email} onChange={(e) => setUserDetails({...userDetails, email: e.target.value})}
+                                    />
+                                    <div className="absolute right-2 top-1.5 bottom-1.5">
+                                        {otpVerified ? (
+                                            <div className="h-full px-4 flex items-center gap-2 bg-green-500/10 text-green-400 rounded-lg text-xs font-bold border border-green-500/20">
+                                                <CheckCircle2 className="w-4 h-4" /> Verified
+                                            </div>
+                                        ) : (
+                                            !otpSent && (
+                                                <button 
+                                                    onClick={handleSendOtp}
+                                                    disabled={!userDetails.email || !userDetails.name || otpLoading}
+                                                    className="h-full px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[80px]"
+                                                >
+                                                    {otpLoading ? <Loader2 className="w-4 h-4 animate-spin"/> : "Verify OTP"}
+                                                </button>
+                                            )
+                                        )}
+                                    </div>
+                                </div>
+                                
+                                {otpSent && !otpVerified && (
+                                    <div className="mt-3 flex gap-2 animate-in slide-in-from-top-2">
+                                        <input 
+                                            type="text" placeholder="Enter 6-digit OTP" maxLength={6}
+                                            className="flex-grow bg-black/40 border border-white/20 rounded-xl p-3 text-white text-center tracking-widest font-mono text-lg focus:border-blue-500 outline-none"
+                                            value={userOtpInput} onChange={(e) => setUserOtpInput(e.target.value)}
+                                        />
+                                        <button 
+                                            onClick={handleVerifyOtp}
+                                            className="px-6 bg-green-600 hover:bg-green-500 text-white rounded-xl font-bold transition-colors"
+                                        >
+                                            Submit
+                                        </button>
+                                    </div>
+                                )}
                             </div>
+
                             <div className="space-y-2">
                                 <label className="text-xs font-bold text-slate-500 uppercase ml-1">Phone Number</label>
-                                <input 
-                                    type="tel" placeholder="+91 98765 43210" 
-                                    className="w-full bg-black/20 border border-white/10 rounded-xl p-4 text-white focus:outline-none focus:border-blue-500 transition-colors"
-                                    value={userDetails.phone} onChange={(e) => setUserDetails({...userDetails, phone: e.target.value})}
-                                />
+                                <div className="flex gap-2 h-14">
+                                    <div className="relative w-36 shrink-0 h-full">
+                                        <select 
+                                            value={userDetails.countryCode}
+                                            onChange={(e) => setUserDetails({...userDetails, countryCode: e.target.value})}
+                                            className="w-full h-full appearance-none bg-black/20 border border-white/10 rounded-xl pl-3 pr-8 text-white focus:outline-none focus:border-blue-500 cursor-pointer text-sm"
+                                        >
+                                            {countryList.map((country) => (
+                                                <option key={country.name} value={country.code} className="bg-[#0b0f1f]">
+                                                    {country.flag} {country.code}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500">
+                                            <ChevronDown className="w-4 h-4" />
+                                        </div>
+                                    </div>
+                                    <input 
+                                        type="tel" placeholder="98765 43210" 
+                                        className="flex-grow h-full bg-black/20 border border-white/10 rounded-xl px-4 text-white focus:outline-none focus:border-blue-500 transition-colors"
+                                        value={userDetails.phone} onChange={(e) => setUserDetails({...userDetails, phone: e.target.value})}
+                                    />
+                                </div>
                             </div>
                         </div>
 
                         <button 
                             onClick={generateQuiz}
-                            disabled={!userDetails.name || !userDetails.email || !userDetails.phone}
+                            disabled={!userDetails.name || !otpVerified || !userDetails.phone}
                             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2 shadow-lg shadow-blue-900/20"
                         >
-                            Start Assessment <ChevronRight className="w-5 h-5" />
+                            {!otpVerified ? (
+                                <span className="flex items-center gap-2"><ShieldCheck className="w-4 h-4" /> Verify Email to Start</span>
+                            ) : (
+                                <>Start Assessment <ChevronRight className="w-5 h-5" /></>
+                            )}
                         </button>
                     </div>
                 )}
@@ -401,6 +626,29 @@ function ScholarshipTestContent() {
                         <p className="text-xs text-slate-500 mt-4">
                             Discount will be automatically applied at checkout.
                         </p>
+                    </div>
+                )}
+
+                {step === 'disqualified' && (
+                    <div className="text-center py-6 h-full flex flex-col justify-center animate-in fade-in zoom-in-95">
+                        <div className="inline-flex justify-center items-center w-24 h-24 rounded-full bg-red-500/10 text-red-500 mb-6 border-4 border-red-500/20 mx-auto animate-pulse">
+                            <Ban className="w-12 h-12" />
+                        </div>
+                        <h2 className="text-3xl font-black text-white mb-4">Test Disqualified</h2>
+                        <div className="bg-red-500/10 border border-red-500/20 p-6 rounded-xl mb-8">
+                            <p className="text-red-300 font-bold mb-2 uppercase tracking-wide">Reason: Anti-Cheating Violation</p>
+                            <p className="text-slate-400 text-sm">
+                                You switched tabs or minimized the window multiple times despite warnings. 
+                                <br/>Our system has automatically flagged and terminated this session.
+                            </p>
+                        </div>
+                        <p className="text-slate-500 text-xs mb-8">
+                            A report has been sent to our administration team.<br/>
+                            You are not eligible for the scholarship at this time.
+                        </p>
+                        <button onClick={() => router.push('/')} className="w-full bg-white/5 border border-white/10 text-white font-bold py-4 rounded-xl hover:bg-white/10 transition-all">
+                            Return to Home
+                        </button>
                     </div>
                 )}
 
