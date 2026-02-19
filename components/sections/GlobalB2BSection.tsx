@@ -29,7 +29,6 @@ const Globe = dynamic(() => import('react-globe.gl'), {
   ),
 });
 
-// ─── 500 companies across the globe ──────────────────────────────────────────
 const RAW_COMPANIES = [
   // INDIA (80)
   { companyName:"Infosys", domain:"infosys.com", lat:12.97, lng:77.59, country:"India", city:"Bangalore", color:"#3b82f6" },
@@ -489,7 +488,6 @@ const RAW_COMPANIES = [
   { companyName:"Temenos", domain:"temenos.com", lat:46.20, lng:6.14, country:"Switzerland", city:"Geneva", color:"#fb923c" },
 ];
 
-// Assign IDs and stagger delays
 const REGION_ORDER = [
   'India', 'USA', 'UK', 'Germany', 'France', 'Japan', 'China',
   'Singapore', 'Indonesia', 'Vietnam', 'Thailand', 'Malaysia',
@@ -520,18 +518,16 @@ const ALL_CLIENTS: Client[] = (() => {
   return result;
 })();
 
-// ─────────────────────────────────────────────────────────────────────────────
-
 export default function GlobalB2BSection() {
   const globeRef            = useRef<any>(null);
   const [selectedClient,   setSelectedClient]   = useState<Client | null>(null);
   const [mounted,          setMounted]           = useState(false);
   const [isInteracting,    setIsInteracting]     = useState(false);
   const [visibleIds,       setVisibleIds]        = useState<Set<number>>(new Set());
+  const [isGlobeReady,     setIsGlobeReady]      = useState(false);
 
   useEffect(() => { setMounted(true); }, []);
 
-  // Stagger timers — each dot appears at its scheduled time
   useEffect(() => {
     if (!mounted) return;
     const timers: ReturnType<typeof setTimeout>[] = [];
@@ -544,25 +540,23 @@ export default function GlobalB2BSection() {
     return () => timers.forEach(clearTimeout);
   }, [mounted]);
 
-  // Initial camera — show full globe centred on Europe/Africa
   useEffect(() => {
-    if (!mounted || !globeRef.current) return;
-    globeRef.current.pointOfView({ lat: 20, lng: 15, altitude: 1.8 }, 0);
-  }, [mounted]);
+    if (!mounted || !globeRef.current || !isGlobeReady) return;
+    globeRef.current.pointOfView({ lat: 23.0, lng: 82.0, altitude: 1.8 }, 0);
+  }, [mounted, isGlobeReady]);
 
-  // Globe controls — AUTO-ROTATE ON by default, disabled when user interacts
   useEffect(() => {
-    if (!mounted || !globeRef.current) return;
+    if (!mounted || !globeRef.current || !isGlobeReady) return;
     const ctrl = globeRef.current.controls();
     if (!ctrl) return;
     ctrl.minDistance     = 101;
     ctrl.maxDistance     = 1400;
     ctrl.dampingFactor   = 0.08;
-    ctrl.autoRotate      = !isInteracting;   // ← rotates by default
-    ctrl.autoRotateSpeed = 0.6;              // ← slow, cinematic speed
+    ctrl.autoRotate      = !isInteracting;   
+    ctrl.autoRotateSpeed = 1;             
     ctrl.enableZoom      = isInteracting;
     ctrl.enableRotate    = isInteracting;
-  }, [isInteracting, mounted]);
+  }, [isInteracting, mounted, isGlobeReady]);
 
   const handlePointClick = (point: any) => {
     const client = point as Client;
@@ -605,6 +599,7 @@ export default function GlobalB2BSection() {
       <div className="w-full h-full">
         <Globe
           ref={globeRef}
+          onGlobeReady={() => setIsGlobeReady(true)}
           globeImageUrl="//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
           bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
           backgroundImageUrl="//unpkg.com/three-globe/example/img/night-sky.png"
