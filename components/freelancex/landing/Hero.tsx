@@ -7,7 +7,7 @@ import { ArrowRight, ShieldCheck, Zap } from 'lucide-react';
 
 const SpaceBackground = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const featureWords = ["SQL", "Next.js", "AI Reports", "GitHub Sync", "360° Profile", "Node.js", "Autonomous"];
+  const featureWords = ["Project posting", "Gig listings", "Freelancer profiles", "Client dashboard", "Freelancer dashboard", "Proposal submission", "Bid management", "Milestone tracking", "Escrow system", "Secure payments", "Hourly contracts", "Fixed-price contracts", "Time tracking", "Work diary", "File sharing", "Real-time messaging", "Video conferencing", "Contract management", "Invoice generation", "Payment history", "Withdrawal options", "Dispute resolution", "Ratings and reviews", "Skill verification", "Portfolio showcase", "Earnings analytics", "Job recommendations", "Talent search", "Advanced filters", "Saved projects", "Notifications center", "Email alerts", "Push notifications", "Profile verification", "Identity verification", "Two-factor authentication", "Subscription plans", "Commission management", "Featured freelancers", "Featured projects", "API integration", "Mobile app", "Multi-language support", "Currency conversion", "Tax management", "Referral program", "Admin panel", "Report system", "Chatbot support", "Background checks", "Availability status", "Calendar integration", "Service packages", "Custom offers", "NDA agreements", "Project milestones", "Collaboration tools", "Activity logs"];
 
   useEffect(() => {
     const canvas = canvasRef.current;
