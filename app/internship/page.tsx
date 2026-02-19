@@ -75,7 +75,7 @@ export default function B2CPage() {
                       </div>
                       <GlobalNetwork />
                     </div>
-                </section>
+        </section>
         <LiveTrafficSection />
         <Footer />
       </div>
