@@ -72,9 +72,9 @@ export default function ChatWidget() {
       const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
       if (SpeechRecognition) {
         recognitionRef.current = new SpeechRecognition();
-        recognitionRef.current.continuous = false; // Stop listening automatically when the user pauses
-        recognitionRef.current.interimResults = true; // Show words as they speak
-        recognitionRef.current.lang = 'hi-IN'; // Best for Hinglish/Indian English
+        recognitionRef.current.continuous = false; 
+        recognitionRef.current.interimResults = true; 
+        recognitionRef.current.lang = 'hi-IN'; 
 
         recognitionRef.current.onresult = (event: any) => {
           let interimTranscript = '';
@@ -88,37 +88,42 @@ export default function ChatWidget() {
             }
           }
 
-          // Update the UI immediately
           const currentText = finalTranscript || interimTranscript;
           setInput(currentText);
-          currentInputRef.current = currentText; // Keep a ref for the auto-send
+          currentInputRef.current = currentText; 
         };
 
+        // 🚨 FIXED ERROR HANDLER 🚨
         recognitionRef.current.onerror = (event: any) => {
-          console.error("Mic error:", event.error);
           setIsListening(false);
+          
+          // If the user denied permission or browser blocked it
+          if (event.error === 'not-allowed') {
+            alert("Microphone access is blocked! Please click the lock icon 🔒 next to the URL bar and allow microphone permissions.");
+          } else {
+            // Use console.warn instead of console.error to prevent Next.js overlay crashes
+            console.warn("Speech Recognition Info/Error:", event.error);
+          }
         };
 
-        // Auto-send when the user stops speaking
         recognitionRef.current.onend = () => {
           setIsListening(false);
           if (currentInputRef.current.trim().length > 0) {
             triggerSend(currentInputRef.current);
-            currentInputRef.current = ""; // Reset
+            currentInputRef.current = ""; 
           }
         };
       } else {
         console.warn("Speech Recognition API not supported in this browser.");
       }
     }
-  }, [messages, isLoading]); // Re-bind if state changes so triggerSend has latest context
+  }, [messages, isLoading]);
 
   const toggleListening = () => {
     if (isListening) {
       recognitionRef.current?.stop();
       setIsListening(false);
     } else {
-      // Stop any current bot speech before listening
       window.speechSynthesis.cancel();
       setInput("");
       currentInputRef.current = "";
@@ -126,12 +131,13 @@ export default function ChatWidget() {
       try {
         recognitionRef.current?.start();
       } catch (e) {
-        console.error("Mic start error:", e);
+        console.warn("Mic start error handled gracefully:", e);
+        setIsListening(false);
       }
     }
   };
 
-  // 🗣️ OPTIMIZED TEXT-TO-SPEECH (FORCING BEST VOICES)
+  // 🗣️ OPTIMIZED TEXT-TO-SPEECH
   const speak = (text: string) => {
     if (!isVoiceEnabled || typeof window === "undefined") {
       window.speechSynthesis.cancel();
@@ -139,19 +145,17 @@ export default function ChatWidget() {
     }
     window.speechSynthesis.cancel(); 
     
-    // Clean text completely for smooth speech
     const cleanText = text.replace(/[*#_`]/g, '').replace(/\n/g, ' ');
     const utterance = new SpeechSynthesisUtterance(cleanText);
     
     const voices = window.speechSynthesis.getVoices();
     
-    // Aggressive hunt for the most human-like browser voices
     const preferredVoices = [
-      "Google हिन्दी",                        // Chrome's cloud-based Hindi/Hinglish (Very natural)
-      "Microsoft Neerja Online (Natural)",  // Windows 11 Cloud Voice
-      "Microsoft Neerja",                   // Windows 10 Default
-      "Veena",                              // Apple macOS/iOS Native
-      "Google UK English Female"            // Fallback for Chrome
+      "Google हिन्दी",                        
+      "Microsoft Neerja Online (Natural)",  
+      "Microsoft Neerja",                   
+      "Veena",                              
+      "Google UK English Female"            
     ];
 
     let selectedVoice = null;
@@ -160,7 +164,6 @@ export default function ChatWidget() {
       if (selectedVoice) break;
     }
 
-    // Ultimate fallback if none found
     if (!selectedVoice) {
       selectedVoice = voices.find(v => v.lang.includes('IN') && (v.name.includes('Female') || v.name.includes('female')));
     }
@@ -170,8 +173,8 @@ export default function ChatWidget() {
     }
 
     utterance.lang = 'en-IN';
-    utterance.rate = 0.95;  // 30-year-old mature pacing
-    utterance.pitch = 0.85; // Deepens the voice, removes the "kid" sound
+    utterance.rate = 0.95;  
+    utterance.pitch = 0.85; 
     
     window.speechSynthesis.speak(utterance);
   };
@@ -184,7 +187,6 @@ export default function ChatWidget() {
     }
   };
 
-  // ... (Keep your existing useEffects for mounting, welcome message, and scroll behavior here) ...
   useEffect(() => {
     setMounted(true);
     const storedName = localStorage.getItem("user_display_name");
@@ -202,7 +204,6 @@ export default function ChatWidget() {
     
     setMessages([{ role: "bot", text: welcomeText }]);
 
-    // Force browsers to load voices immediately
     if (typeof window !== "undefined") {
       window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
     }
@@ -217,8 +218,6 @@ export default function ChatWidget() {
     if (isOpen && lastMessage?.role === "bot") speak(lastMessage.text);
   }, [messages, isOpen, isVoiceEnabled]);
 
-
-  // 🔥 NEW TRIGGER SEND LOGIC FOR MIC AUTO-SEND
   const triggerSend = async (messageText: string) => {
     if (!messageText.trim() || isLoading) return;
     
@@ -238,7 +237,7 @@ export default function ChatWidget() {
       const result = await chat.sendMessage(messageText);
       setMessages(prev => [...prev, { role: "bot", text: result.response.text() }]);
     } catch (error) {
-      console.error("Chat Error:", error);
+      console.warn("Chat Error handled:", error);
       setMessages(prev => [...prev, { role: "bot", text: "Maaf kijiyega, I'm having a technical glitch. Kya aap wapas try kar sakte hain?" }]);
     } finally {
       setIsLoading(false);
@@ -254,11 +253,17 @@ export default function ChatWidget() {
   return createPortal(
     <div className="fixed bottom-4 right-4 z-[999999] flex flex-col items-end pointer-events-none font-sans">
       
-      {/* ... (Keep your exact same UI HTML/JSX from the previous code block here, it remains unchanged) ... */}
-      
+      {showOffer && !isOpen && (pathname?.includes("/internship") || pathname?.includes("/freelancex")) && (
+        <div className="bg-[#b31f24] text-white p-2.5 rounded-lg shadow-lg w-48 mb-3 animate-bounce-gentle pointer-events-auto relative border border-white/10">
+          <button onClick={() => setShowOffer(false)} className="absolute top-1 right-1 p-0.5 hover:bg-white/10 rounded-full"><X size={8} /></button>
+          <p className="text-[10px] font-bold text-center">
+            {pathname?.includes("/freelancex") ? "Global Career Growth Active! 🚀" : "Scholarship + 10% Off! 🌸"}
+          </p>
+        </div>
+      )}
+
       {isOpen ? (
         <div className="w-[290px] md:w-[320px] h-[460px] md:h-[530px] bg-white rounded-[1.8rem] shadow-[0_20px_50px_rgba(0,0,0,0.25)] flex flex-col overflow-hidden border border-slate-200 pointer-events-auto">
-          {/* Header */}
           <div className="bg-[#b31f24] p-3 text-white relative">
             <div className="absolute top-3 right-3 flex gap-1.5">
               <button onClick={toggleVoice} className="p-1 hover:bg-white/10 rounded-full transition-colors">
@@ -285,7 +290,6 @@ export default function ChatWidget() {
             </div>
           </div>
 
-          {/* Chat Window */}
           <div ref={scrollRef} className="flex-1 overflow-y-auto p-3.5 space-y-3.5 bg-[#fcfdfe] scroll-smooth">
             {messages.map((msg, i) => (
               <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
@@ -307,7 +311,37 @@ export default function ChatWidget() {
             )}
           </div>
 
-          {/* Input Area */}
+          <div className="px-3 py-2 bg-slate-50 border-t border-slate-100 flex gap-2 overflow-x-auto no-scrollbar">
+            {pathname?.includes("/freelancex") ? (
+              <>
+                <button onClick={() => setInput("How to get global clients?")} className="whitespace-nowrap px-3 py-1.5 bg-white border border-slate-200 rounded-full text-[9px] font-bold text-slate-600 hover:border-[#b31f24] transition-all flex items-center gap-1">
+                  <Briefcase size={10} /> Global Clients
+                </button>
+                <button onClick={() => setInput("What is ResumeNFT?")} className="whitespace-nowrap px-3 py-1.5 bg-white border border-slate-200 rounded-full text-[9px] font-bold text-slate-600 hover:border-[#b31f24] transition-all flex items-center gap-1">
+                  <Info size={10} /> ResumeNFT
+                </button>
+              </>
+            ) : pathname?.includes("/hirex") ? (
+              <>
+                <button onClick={() => setInput("Can you make 1 Lakh outbound sales calls?")} className="whitespace-nowrap px-3 py-1.5 bg-white border border-slate-200 rounded-full text-[9px] font-bold text-slate-600 hover:border-[#b31f24] transition-all flex items-center gap-1">
+                  <PhoneCall size={10} /> Outbound Calls
+                </button>
+                <button onClick={() => setInput("Can you generate a 5-min training video?")} className="whitespace-nowrap px-3 py-1.5 bg-white border border-slate-200 rounded-full text-[9px] font-bold text-slate-600 hover:border-[#b31f24] transition-all flex items-center gap-1">
+                  <Video size={10} /> AI Video Creation
+                </button>
+              </>
+            ) : (
+              <>
+                <button onClick={() => setInput("Tell me about your Outbound Voice capability")} className="whitespace-nowrap px-3 py-1.5 bg-white border border-slate-200 rounded-full text-[9px] font-bold text-slate-600 hover:border-[#b31f24] transition-all flex items-center gap-1">
+                  <PhoneCall size={10} /> AI Voice Calling
+                </button>
+                <button onClick={() => setInput("Tell me about the Foundation Plan")} className="whitespace-nowrap px-3 py-1.5 bg-white border border-slate-200 rounded-full text-[9px] font-bold text-slate-600 hover:border-[#b31f24] transition-all flex items-center gap-1">
+                  <Info size={10} /> Foundation Plan
+                </button>
+              </>
+            )}
+          </div>
+
           <div className="p-3 bg-white border-t border-slate-100">
              <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-xl px-2 py-0.5 focus-within:border-[#b31f24]/20 transition-all">
                 <button 
@@ -337,6 +371,8 @@ export default function ChatWidget() {
       )}
 
       <style jsx>{`
+        @keyframes bounce-gentle { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+        .animate-bounce-gentle { animation: bounce-gentle 4s ease-in-out infinite; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
       `}</style>
