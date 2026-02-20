@@ -26,10 +26,9 @@ function CheckoutContent() {
   const scholarshipCode = searchParams.get('scholarshipCode');
   const discountPercent = parseInt(searchParams.get('discount') || '0');
 
-  const SEAT_PRICE_INR = 1000000; // 10,000 INR
-  const SEAT_PRICE_USD = 15000;   // 150 USD
+  const SEAT_PRICE_INR = 1000000; 
+  const SEAT_PRICE_USD = 15000;   
 
-  // Default to Seat Reservation (10,000)
   const [paymentType, setPaymentType] = useState<'full' | 'seat'>('seat');
   const [paymentMethod, setPaymentMethod] = useState<'phonepe' | 'razorpay'>('phonepe');
   const [loading, setLoading] = useState(false);
@@ -44,11 +43,9 @@ function CheckoutContent() {
     github: ''
   });
 
-  // Calculate Specific Amounts for Logic
-  const fullPaymentValue = isIntl ? rawAmountUSD : rawAmountINR; // Discounted Total
-  const seatReservationValue = isIntl ? SEAT_PRICE_USD : SEAT_PRICE_INR; // 10k Fixed
+  const fullPaymentValue = isIntl ? rawAmountUSD : rawAmountINR; 
+  const seatReservationValue = isIntl ? SEAT_PRICE_USD : SEAT_PRICE_INR; 
 
-  // Current Active Amount (For Payment & Summary)
   const currentAmount = paymentType === 'full' ? fullPaymentValue : seatReservationValue;
     
   const currentCurrency = isIntl ? 'USD' : 'INR';
@@ -174,7 +171,6 @@ function CheckoutContent() {
             <p className="text-slate-400">Complete your profile to unlock LMS access.</p>
           </div>
 
-          {/* Early Bird Banner */}
           {isEarlyBird && (
              <div className="bg-gradient-to-r from-blue-900/40 to-indigo-900/40 border border-blue-500/30 p-4 rounded-2xl flex items-center gap-4 animate-in fade-in slide-in-from-top-4 duration-700">
                 <div className="p-3 bg-blue-500/20 rounded-full text-blue-400 shrink-0 animate-pulse">
@@ -320,7 +316,6 @@ function CheckoutContent() {
 
              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 
-                {/* OPTION 1: Registration Fee (Default) */}
                 <div 
                    onClick={() => setPaymentType('seat')}
                    className={`cursor-pointer p-5 rounded-2xl border-2 transition-all relative overflow-hidden ${paymentType === 'seat' ? 'bg-green-600/10 border-green-500 shadow-xl shadow-green-900/20' : 'bg-black/20 border-white/5 hover:border-white/10'}`}
@@ -351,7 +346,6 @@ function CheckoutContent() {
                     )}
                 </div>
 
-                {/* OPTION 2: Full Payment (Shows Full Amount) */}
                 <div 
                    onClick={() => setPaymentType('full')}
                    className={`cursor-pointer p-5 rounded-2xl border-2 transition-all relative overflow-hidden ${paymentType === 'full' ? 'bg-blue-600/10 border-blue-500 shadow-xl shadow-blue-500/20' : 'bg-black/20 border-white/5 hover:border-white/10'}`}
