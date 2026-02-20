@@ -185,7 +185,6 @@ function ScholarshipTestContent() {
         }),
       }).catch(err => console.error("Alert Sync Failed", err));
       
-      // 2. Submit Disqualified Status to Lead Database
       fetch('/api/scholarship-submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
