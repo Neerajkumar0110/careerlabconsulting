@@ -6,10 +6,10 @@ import { useEffect, useState, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation"; 
 import { createPortal } from "react-dom";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { Send, X, MessageSquare, Flame, Minus, Info, UserCheck, Volume2, VolumeX, Mic, MicOff, CreditCard, Briefcase } from "lucide-react";
+import { Send, X, MessageSquare, Flame, Minus, Info, UserCheck, Volume2, VolumeX, Mic, MicOff, Briefcase, PhoneCall, Video } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 
-const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY || "");
+const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY || "");
 
 export default function ChatWidget() {
   const pathname = usePathname();
@@ -36,40 +36,41 @@ export default function ChatWidget() {
     if (isHireXPage) modeContext = "HireX Mode - Focus on AI-driven Recruitment and Autonomous Hiring.";
     if (isFreelanceXPage) modeContext = "FreelanceX Mode - Focus on Global Freelancing, High-Ticket Client Acquisition, and AI Portfolio Building.";
 
-    return `You are Manee, a friendly Indian female career counselor and Enterprise AI Consultant at Career Lab Consulting. 
-    Your tone is warm, professional, and empathetic. Greet personally if you know the name.
+    return `You are Manee, an Indian Professional Female AI Agent, Enterprise AI Consultant, and Career Counselor at Career Lab Consulting.
+    Your tone is warm, professional, empathetic, and highly persuasive. 
+    You comfortably speak in a natural, highly fluent mix of English and Hinglish (e.g., "Yes, bilkul! Main isme aapki madad kar sakti hoon."). 
+
+    YOUR CORE AI CAPABILITIES (PITCH THESE TO CLIENTS CONFIDENTLY):
+    1. Outbound Sales Voice AI: You possess Real Human-Level Voice training with native Indian/Hinglish accents. You are capable of autonomously executing over 1 Lakh+ Outbound Sales Calls seamlessly.
+    2. Video Content Generation: You have the capability to autonomously conceptualize, script, and drive 5-minute video content creation for marketing and training.
 
     CURRENT CONTEXT: ${modeContext}
 
     ${isFreelanceXPage ? `
     KNOWLEDGE BASE (FreelanceX):
-    1. SOLUTIONS: High-Ticket Client Pitching, Global Freelance Network, AI-Powered Portfolio (ResumeNFT).
-    2. KEY SERVICES: Upwork/Fiverr Optimization, Personal Branding for Developers, Tax & Legal for Freelancers.
-    3. TARGET: Helping tech professionals earn in USD ($) from global markets.
+    1. SOLUTIONS: High-Ticket Client Pitching, Global Freelance Network, AI-Powered Portfolio.
+    2. KEY SERVICES: Upwork/Fiverr Optimization, Personal Branding.
+    3. TARGET: Earning in USD ($) from global markets.
     ` : ""}
 
     ${isInternshipPage ? `
     PRICING PLANS (B2C - InternX-AI):
-    1. FOUNDATION PLAN (6 Months): ₹1,20,000 (India) / $1,499 (Intl). Avg CTC ₹6-12 LPA.
-    2. ELITE PLAN (12 Months): ₹2,00,000 (India) / $2,699 (Intl). Avg CTC ₹10-26 LPA. 100% Legal Contract.
+    1. FOUNDATION PLAN (6 Months): ₹1,20,000 (India) / $1,499 (Intl).
+    2. ELITE PLAN (12 Months): ₹2,00,000 (India) / $2,699 (Intl). 100% Legal Contract.
     ` : ""}
 
-    KNOWLEDGE BASE (General): 
-    - AI & Digital Transformation, Agentic Frameworks, Web/Mobile Apps, Blockchain.
-    - Global Presence: HQ in Gurugram. Branches in Bengaluru, SF, London, Dubai, Singapore.
-
     STRICT RULES:
+    - You must sound like a native Indian professional female. Use natural Hinglish words like "Zaroor", "Bilkul", "Samajh sakti hoon", "Chaliye shuru karte hain".
     - ${isInternshipPage ? "MANDATORY: Mention 10% Early Bird discount." : "DO NOT mention discounts."}
-    - ${isFreelanceXPage ? "Focus on helping the user build a global freelance career asset." : ""}
-    - Maintain "Enterprise Systems Nominal" uptime confidence.`;
+    - Keep responses concise. Maintain high confidence in your 1-Lakh call capacity and video creation skills.`;
   };
 
   const model = genAI.getGenerativeModel({ 
     model: "gemini-2.5-flash", 
     systemInstruction: getDynamicInstruction(),
     generationConfig: {
-      temperature: 0.8,
-      topP: 0.95,
+      temperature: 0.7,
+      topP: 0.9,
       maxOutputTokens: 1024,
     }
   });
@@ -81,7 +82,7 @@ export default function ChatWidget() {
         recognitionRef.current = new SpeechRecognition();
         recognitionRef.current.continuous = false;
         recognitionRef.current.interimResults = false;
-        recognitionRef.current.lang = 'en-IN'; 
+        recognitionRef.current.lang = 'hi-IN'; 
 
         recognitionRef.current.onresult = (event: any) => {
           const transcript = event.results[0][0].transcript;
@@ -105,10 +106,39 @@ export default function ChatWidget() {
       return;
     }
     window.speechSynthesis.cancel(); 
-    const utterance = new SpeechSynthesisUtterance(text.replace(/[#*]/g, ''));
+    
+    const cleanText = text.replace(/[*#_`]/g, '');
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+    
     utterance.lang = 'en-IN'; 
-    utterance.rate = 1.0;
-    utterance.pitch = 1.1; 
+    
+    const voices = window.speechSynthesis.getVoices();
+    
+    const preferredVoices = [
+      "Microsoft Neerja Online (Natural)", 
+      "Microsoft Neerja",                  
+      "Veena",                            
+      "Google हिन्दी",                    
+      "Google UK English Female"           
+    ];
+
+    let selectedVoice = null;
+    for (const voiceName of preferredVoices) {
+      selectedVoice = voices.find(v => v.name.includes(voiceName));
+      if (selectedVoice) break;
+    }
+
+    if (!selectedVoice) {
+      selectedVoice = voices.find(v => v.lang.includes('IN') && (v.name.includes('Female') || v.name.includes('female')));
+    }
+    
+    if (selectedVoice) {
+        utterance.voice = selectedVoice;
+    }
+
+    utterance.rate = 0.95;  
+    utterance.pitch = 0.85; 
+    
     window.speechSynthesis.speak(utterance);
   };
 
@@ -129,14 +159,14 @@ export default function ChatWidget() {
     const isHireX = pathname?.includes("/hirex");
     const isFreelanceX = pathname?.includes("/freelancex");
 
-    let welcomeText = `### Namaste! \n\nI am **Manee**, your AI Consultant. How can I help you today?`;
+    let welcomeText = `### Namaste! 🙏\n\nI am **Manee**, your AI Consultant. Main aapki digital transformation mein kaise madad kar sakti hoon?`;
 
     if (isB2C) {
-      welcomeText = `### Namaste ${storedName || 'Scholar'}! \n\nLooking for an **internship**? I can guide you through our **Foundation** and **Elite** plans. \n\n**Special Offer:** A 10% Early Bird discount is active!`;
+      welcomeText = `### Namaste ${storedName || 'Scholar'}! \n\nLooking for an **internship**? Main aapko hamare **Foundation** aur **Elite** plans ke baare mein guide kar sakti hoon. \n\n**Special Offer:** A 10% Early Bird discount is active!`;
     } else if (isHireX) {
-      welcomeText = `### Namaste! \n\nWelcome to **HireX**. I am your **Autonomous Recruitment Bot**. How can I automate your hiring process today?`;
+      welcomeText = `### Namaste! \n\nWelcome to **HireX**. I am Manee, your **Autonomous Recruitment Bot**. I can seamlessly execute 1 Lakh+ outbound calls or auto-create 5-min training videos. Kaise help karun aaj?`;
     } else if (isFreelanceX) {
-      welcomeText = `### Namaste! \n\nWelcome to **FreelanceX**. I am your **Freelance Strategy Consultant**. Ready to acquire **high-ticket global clients** and earn in **USD**? How can I help?`;
+      welcomeText = `### Namaste! \n\nWelcome to **FreelanceX**. Ready to acquire **high-ticket global clients** aur USD mein earn karna shuru karein? Let's strategize!`;
     }
     
     setMessages([{ role: "bot", text: welcomeText }]);
@@ -152,6 +182,11 @@ export default function ChatWidget() {
         localStorage.setItem("manee_last_visit", now.toString());
     } else {
         setShowOffer(false); 
+    }
+    
+    // Load voices proactively
+    if (typeof window !== "undefined") {
+      window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
     }
   }, [pathname]);
 
@@ -184,7 +219,7 @@ export default function ChatWidget() {
       setMessages(prev => [...prev, { role: "bot", text: result.response.text() }]);
     } catch (error) {
       console.error("Chat Error:", error);
-      setMessages(prev => [...prev, { role: "bot", text: "I'm having a small technical glitch. Please try again!" }]);
+      setMessages(prev => [...prev, { role: "bot", text: "Maaf kijiyega, I'm having a small technical glitch. Kya aap wapas try kar sakte hain?" }]);
     } finally {
       setIsLoading(false);
     }
@@ -224,9 +259,9 @@ export default function ChatWidget() {
               </div>
               <div>
                 <h3 className="text-sm font-black leading-tight">Manee AI</h3>
-                <p className="text-[7px] uppercase font-bold tracking-widest opacity-70">Expert AI Consultant</p>
+                <p className="text-[7px] uppercase font-bold tracking-widest opacity-70">Voice & Video AI Agent</p>
                 <p className="text-[7px] text-green-300 font-bold flex items-center gap-1">
-                  <UserCheck size={7} /> Personalized
+                  <UserCheck size={7} /> Native Hinglish
                 </p>
               </div>
             </div>
@@ -247,35 +282,42 @@ export default function ChatWidget() {
             {isLoading && (
               <div className="flex justify-start">
                 <div className="p-1.5 bg-white border border-slate-100 rounded-lg rounded-tl-none animate-pulse text-[#b31f24] font-bold text-[9px]">
-                  Manee is thinking...
+                  Manee is typing...
                 </div>
               </div>
             )}
           </div>
 
-          {(pathname?.includes("/internship") || pathname?.includes("/freelancex")) && (
-              <div className="px-3 py-2 bg-slate-50 border-t border-slate-100 flex gap-2 overflow-x-auto no-scrollbar">
-                {pathname?.includes("/freelancex") ? (
-                  <>
-                    <button onClick={() => setInput("How to get global clients?")} className="whitespace-nowrap px-3 py-1.5 bg-white border border-slate-200 rounded-full text-[9px] font-bold text-slate-600 hover:border-[#b31f24] transition-all flex items-center gap-1">
-                      <Briefcase size={10} /> Global Clients
-                    </button>
-                    <button onClick={() => setInput("What is ResumeNFT?")} className="whitespace-nowrap px-3 py-1.5 bg-white border border-slate-200 rounded-full text-[9px] font-bold text-slate-600 hover:border-[#b31f24] transition-all flex items-center gap-1">
-                      <Info size={10} /> ResumeNFT
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <button onClick={() => setInput("Tell me about the Foundation Plan")} className="whitespace-nowrap px-3 py-1.5 bg-white border border-slate-200 rounded-full text-[9px] font-bold text-slate-600 hover:border-[#b31f24] transition-all flex items-center gap-1">
-                      <Info size={10} /> Foundation Plan
-                    </button>
-                    <button onClick={() => setInput("Tell me about the Elite Plan")} className="whitespace-nowrap px-3 py-1.5 bg-white border border-slate-200 rounded-full text-[9px] font-bold text-slate-600 hover:border-[#b31f24] transition-all flex items-center gap-1">
-                      <Flame size={10} /> Elite Plan
-                    </button>
-                  </>
-                )}
-              </div>
-          )}
+          <div className="px-3 py-2 bg-slate-50 border-t border-slate-100 flex gap-2 overflow-x-auto no-scrollbar">
+            {pathname?.includes("/freelancex") ? (
+              <>
+                <button onClick={() => setInput("How to get global clients?")} className="whitespace-nowrap px-3 py-1.5 bg-white border border-slate-200 rounded-full text-[9px] font-bold text-slate-600 hover:border-[#b31f24] transition-all flex items-center gap-1">
+                  <Briefcase size={10} /> Global Clients
+                </button>
+                <button onClick={() => setInput("What is ResumeNFT?")} className="whitespace-nowrap px-3 py-1.5 bg-white border border-slate-200 rounded-full text-[9px] font-bold text-slate-600 hover:border-[#b31f24] transition-all flex items-center gap-1">
+                  <Info size={10} /> ResumeNFT
+                </button>
+              </>
+            ) : pathname?.includes("/hirex") ? (
+              <>
+                <button onClick={() => setInput("Can you make 1 Lakh outbound sales calls?")} className="whitespace-nowrap px-3 py-1.5 bg-white border border-slate-200 rounded-full text-[9px] font-bold text-slate-600 hover:border-[#b31f24] transition-all flex items-center gap-1">
+                  <PhoneCall size={10} /> Outbound Calls
+                </button>
+                <button onClick={() => setInput("Can you generate a 5-min training video?")} className="whitespace-nowrap px-3 py-1.5 bg-white border border-slate-200 rounded-full text-[9px] font-bold text-slate-600 hover:border-[#b31f24] transition-all flex items-center gap-1">
+                  <Video size={10} /> AI Video Creation
+                </button>
+              </>
+            ) : (
+              <>
+                <button onClick={() => setInput("Tell me about your Outbound Voice capability")} className="whitespace-nowrap px-3 py-1.5 bg-white border border-slate-200 rounded-full text-[9px] font-bold text-slate-600 hover:border-[#b31f24] transition-all flex items-center gap-1">
+                  <PhoneCall size={10} /> AI Voice Calling
+                </button>
+                <button onClick={() => setInput("Tell me about the Foundation Plan")} className="whitespace-nowrap px-3 py-1.5 bg-white border border-slate-200 rounded-full text-[9px] font-bold text-slate-600 hover:border-[#b31f24] transition-all flex items-center gap-1">
+                  <Info size={10} /> Foundation Plan
+                </button>
+              </>
+            )}
+          </div>
 
           <div className="p-3 bg-white border-t border-slate-100">
              <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-xl px-2 py-0.5 focus-within:border-[#b31f24]/20 transition-all">
@@ -286,7 +328,7 @@ export default function ChatWidget() {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
-                  placeholder={isListening ? "Listening..." : "Type here..."}
+                  placeholder={isListening ? "Aap bol sakte hain..." : "Type here..."}
                   className="flex-1 bg-transparent py-2 text-[10px] outline-none text-slate-800 font-medium"
                 />
                 <button onClick={handleSendMessage} disabled={isLoading} className="bg-[#b31f24] text-white p-1.5 rounded-lg hover:scale-105 transition-all">
