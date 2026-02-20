@@ -134,12 +134,12 @@ function ScholarshipTestContent() {
 
     const handleVisibilityChange = () => {
         if (document.hidden) {
-            handleCheatAttempt();
+            handleCheatAttempt("switched tabs or minimized the window");
         }
     };
 
     const handleBlur = () => {
-        handleCheatAttempt();
+        handleCheatAttempt("unfocused the test window");
     };
 
     document.addEventListener("visibilitychange", handleVisibilityChange);
@@ -149,10 +149,19 @@ function ScholarshipTestContent() {
         document.removeEventListener("visibilitychange", handleVisibilityChange);
         window.removeEventListener("blur", handleBlur);
     };
-  }, [step, warnings]);
+  }, [step, warnings, userDetails.name]);
 
-  const handleCheatAttempt = () => {
+  const handleCheatAttempt = (actionType: string) => {
       if (step !== 'quiz') return;
+
+      fetch('/api/monitoring/alert', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+            studentName: userDetails.name || "Unknown Student", 
+            action: actionType 
+        }),
+      }).catch(err => console.error("Alert Sync Failed", err));
 
       if (warnings === 0) {
           setWarnings(1);
@@ -166,7 +175,17 @@ function ScholarshipTestContent() {
       setStep('disqualified');
       
       const fullPhoneNumber = `${userDetails.countryCode} ${userDetails.phone}`;
+
+      fetch('/api/monitoring/alert', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+            studentName: userDetails.name || "Unknown Student", 
+            action: "was DISQUALIFIED for repeated cheating attempts" 
+        }),
+      }).catch(err => console.error("Alert Sync Failed", err));
       
+      // 2. Submit Disqualified Status to Lead Database
       fetch('/api/scholarship-submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
