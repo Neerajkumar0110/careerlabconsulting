@@ -185,7 +185,7 @@ function ScholarshipTestContent() {
         }),
       }).catch(err => console.error("Alert Sync Failed", err));
       
-      fetch('/api/scholarship-submit', {
+      fetch('https://cms-tau-ivory.vercel.app/api/scholarship-submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -308,7 +308,7 @@ function ScholarshipTestContent() {
 
      const fullPhoneNumber = `${userDetails.countryCode} ${userDetails.phone}`;
 
-     fetch('/api/scholarship-submit', {
+     fetch('https://cms-tau-ivory.vercel.app/api/scholarship-submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
