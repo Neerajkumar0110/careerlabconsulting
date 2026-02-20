@@ -2,14 +2,13 @@
 
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { usePathname, useRouter } from "next/navigation"; 
 import { createPortal } from "react-dom";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { Send, X, MessageSquare, Flame, Minus, Info, UserCheck, Volume2, VolumeX, Mic, MicOff, Briefcase, PhoneCall, Video } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 
-// Initialize Gemini API
 const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY || "");
 
 export default function ChatWidget() {
@@ -24,11 +23,15 @@ export default function ChatWidget() {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<{ role: "user" | "bot"; text: string }[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const scrollRef = useRef<HTMLDivElement>(null);
   
-  // Refs for auto-send logic
-  const recognitionRef = useRef<any>(null); 
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const activeRecognitionRef = useRef<any>(null); 
   const currentInputRef = useRef(""); 
+  const messagesRef = useRef(messages); 
+  const isLoadingRef = useRef(isLoading);
+
+  useEffect(() => { messagesRef.current = messages; }, [messages]);
+  useEffect(() => { isLoadingRef.current = isLoading; }, [isLoading]);
 
   const getDynamicInstruction = () => {
     const isInternshipPage = pathname?.includes("/internship");
@@ -66,78 +69,111 @@ export default function ChatWidget() {
     }
   });
 
-  // 🎤 ROBUST MIC & SPEECH-TO-TEXT LOGIC
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-      if (SpeechRecognition) {
-        recognitionRef.current = new SpeechRecognition();
-        recognitionRef.current.continuous = false; 
-        recognitionRef.current.interimResults = true; 
-        recognitionRef.current.lang = 'hi-IN'; 
+  const triggerSend = useCallback(async (messageText: string) => {
+    if (!messageText.trim() || isLoadingRef.current) return;
+    
+    setMessages(prev => [...prev, { role: "user", text: messageText }]);
+    setInput("");
+    setIsLoading(true);
 
-        recognitionRef.current.onresult = (event: any) => {
-          let interimTranscript = '';
-          let finalTranscript = '';
+    try {
+      const chatHistory = messagesRef.current
+        .filter((msg, index) => !(index === 0 && msg.role === "bot"))
+        .map(m => ({
+          role: m.role === "user" ? "user" : "model",
+          parts: [{ text: m.text }],
+        }));
 
-          for (let i = event.resultIndex; i < event.results.length; ++i) {
-            if (event.results[i].isFinal) {
-              finalTranscript += event.results[i][0].transcript;
-            } else {
-              interimTranscript += event.results[i][0].transcript;
-            }
-          }
-
-          const currentText = finalTranscript || interimTranscript;
-          setInput(currentText);
-          currentInputRef.current = currentText; 
-        };
-
-        // 🚨 FIXED ERROR HANDLER 🚨
-        recognitionRef.current.onerror = (event: any) => {
-          setIsListening(false);
-          
-          // If the user denied permission or browser blocked it
-          if (event.error === 'not-allowed') {
-            alert("Microphone access is blocked! Please click the lock icon 🔒 next to the URL bar and allow microphone permissions.");
-          } else {
-            // Use console.warn instead of console.error to prevent Next.js overlay crashes
-            console.warn("Speech Recognition Info/Error:", event.error);
-          }
-        };
-
-        recognitionRef.current.onend = () => {
-          setIsListening(false);
-          if (currentInputRef.current.trim().length > 0) {
-            triggerSend(currentInputRef.current);
-            currentInputRef.current = ""; 
-          }
-        };
-      } else {
-        console.warn("Speech Recognition API not supported in this browser.");
-      }
+      const chat = model.startChat({ history: chatHistory });
+      const result = await chat.sendMessage(messageText);
+      setMessages(prev => [...prev, { role: "bot", text: result.response.text() }]);
+    } catch (error) {
+      setMessages(prev => [...prev, { role: "bot", text: "Maaf kijiyega, mujhe ek technical error aa raha hai. Kya aap phir se try kar sakte hain?" }]);
+    } finally {
+      setIsLoading(false);
     }
-  }, [messages, isLoading]);
+  }, []);
 
-  const toggleListening = () => {
+  // 🎤 THE KICKSTART HACK: Forces Chrome to ask for permissions properly
+  const toggleListening = async () => {
     if (isListening) {
-      recognitionRef.current?.stop();
-      setIsListening(false);
-    } else {
-      window.speechSynthesis.cancel();
-      setInput("");
-      currentInputRef.current = "";
-      setIsListening(true);
-      try {
-        recognitionRef.current?.start();
-      } catch (e) {
-        console.warn("Mic start error handled gracefully:", e);
-        setIsListening(false);
+      if (activeRecognitionRef.current) {
+        activeRecognitionRef.current.stop();
       }
+      setIsListening(false);
+      return;
+    }
+
+    window.speechSynthesis.cancel();
+    setInput("");
+    currentInputRef.current = "";
+
+    // 🔥 FORCE CHROME PERMISSION POPUP 🔥
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      // Stop the stream immediately, we only needed Chrome to grant the permission!
+      stream.getTracks().forEach(track => track.stop());
+    } catch (err) {
+      console.warn("UserMedia Permission Denied:", err);
+      alert("Please URL bar ke left side wale 'Settings/Tune' icon par click karein aur Microphone ko 'Allow' karein.");
+      return;
+    }
+
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("Speech recognition is not supported in this browser. Please use Chrome.");
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false; 
+    recognition.interimResults = true; 
+    recognition.lang = 'hi-IN'; 
+
+    recognition.onstart = () => {
+      setIsListening(true);
+    };
+
+    recognition.onresult = (event: any) => {
+      let interimTranscript = '';
+      let finalTranscript = '';
+
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        if (event.results[i].isFinal) {
+          finalTranscript += event.results[i][0].transcript;
+        } else {
+          interimTranscript += event.results[i][0].transcript;
+        }
+      }
+
+      const currentText = finalTranscript || interimTranscript;
+      setInput(currentText);
+      currentInputRef.current = currentText; 
+    };
+
+    recognition.onerror = (event: any) => {
+      setIsListening(false);
+      console.warn("Speech Error:", event.error);
+    };
+
+    recognition.onend = () => {
+      setIsListening(false);
+      if (currentInputRef.current.trim().length > 0) {
+        triggerSend(currentInputRef.current);
+        currentInputRef.current = ""; 
+      }
+    };
+
+    activeRecognitionRef.current = recognition;
+
+    try {
+      recognition.start();
+    } catch (e) {
+      console.warn("Could not start mic:", e);
+      setIsListening(false);
     }
   };
 
-  // 🗣️ OPTIMIZED TEXT-TO-SPEECH
   const speak = (text: string) => {
     if (!isVoiceEnabled || typeof window === "undefined") {
       window.speechSynthesis.cancel();
@@ -149,7 +185,6 @@ export default function ChatWidget() {
     const utterance = new SpeechSynthesisUtterance(cleanText);
     
     const voices = window.speechSynthesis.getVoices();
-    
     const preferredVoices = [
       "Google हिन्दी",                        
       "Microsoft Neerja Online (Natural)",  
@@ -217,32 +252,6 @@ export default function ChatWidget() {
     const lastMessage = messages[messages.length - 1];
     if (isOpen && lastMessage?.role === "bot") speak(lastMessage.text);
   }, [messages, isOpen, isVoiceEnabled]);
-
-  const triggerSend = async (messageText: string) => {
-    if (!messageText.trim() || isLoading) return;
-    
-    setMessages(prev => [...prev, { role: "user", text: messageText }]);
-    setInput("");
-    setIsLoading(true);
-
-    try {
-      const chatHistory = messages
-        .filter((msg, index) => !(index === 0 && msg.role === "bot"))
-        .map(m => ({
-          role: m.role === "user" ? "user" : "model",
-          parts: [{ text: m.text }],
-        }));
-
-      const chat = model.startChat({ history: chatHistory });
-      const result = await chat.sendMessage(messageText);
-      setMessages(prev => [...prev, { role: "bot", text: result.response.text() }]);
-    } catch (error) {
-      console.warn("Chat Error handled:", error);
-      setMessages(prev => [...prev, { role: "bot", text: "Maaf kijiyega, I'm having a technical glitch. Kya aap wapas try kar sakte hain?" }]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleSendMessage = () => {
     triggerSend(input);
@@ -314,28 +323,28 @@ export default function ChatWidget() {
           <div className="px-3 py-2 bg-slate-50 border-t border-slate-100 flex gap-2 overflow-x-auto no-scrollbar">
             {pathname?.includes("/freelancex") ? (
               <>
-                <button onClick={() => setInput("How to get global clients?")} className="whitespace-nowrap px-3 py-1.5 bg-white border border-slate-200 rounded-full text-[9px] font-bold text-slate-600 hover:border-[#b31f24] transition-all flex items-center gap-1">
+                <button onClick={() => triggerSend("How to get global clients?")} className="whitespace-nowrap px-3 py-1.5 bg-white border border-slate-200 rounded-full text-[9px] font-bold text-slate-600 hover:border-[#b31f24] transition-all flex items-center gap-1">
                   <Briefcase size={10} /> Global Clients
                 </button>
-                <button onClick={() => setInput("What is ResumeNFT?")} className="whitespace-nowrap px-3 py-1.5 bg-white border border-slate-200 rounded-full text-[9px] font-bold text-slate-600 hover:border-[#b31f24] transition-all flex items-center gap-1">
+                <button onClick={() => triggerSend("What is ResumeNFT?")} className="whitespace-nowrap px-3 py-1.5 bg-white border border-slate-200 rounded-full text-[9px] font-bold text-slate-600 hover:border-[#b31f24] transition-all flex items-center gap-1">
                   <Info size={10} /> ResumeNFT
                 </button>
               </>
             ) : pathname?.includes("/hirex") ? (
               <>
-                <button onClick={() => setInput("Can you make 1 Lakh outbound sales calls?")} className="whitespace-nowrap px-3 py-1.5 bg-white border border-slate-200 rounded-full text-[9px] font-bold text-slate-600 hover:border-[#b31f24] transition-all flex items-center gap-1">
+                <button onClick={() => triggerSend("Can you make 1 Lakh outbound sales calls?")} className="whitespace-nowrap px-3 py-1.5 bg-white border border-slate-200 rounded-full text-[9px] font-bold text-slate-600 hover:border-[#b31f24] transition-all flex items-center gap-1">
                   <PhoneCall size={10} /> Outbound Calls
                 </button>
-                <button onClick={() => setInput("Can you generate a 5-min training video?")} className="whitespace-nowrap px-3 py-1.5 bg-white border border-slate-200 rounded-full text-[9px] font-bold text-slate-600 hover:border-[#b31f24] transition-all flex items-center gap-1">
+                <button onClick={() => triggerSend("Can you generate a 5-min training video?")} className="whitespace-nowrap px-3 py-1.5 bg-white border border-slate-200 rounded-full text-[9px] font-bold text-slate-600 hover:border-[#b31f24] transition-all flex items-center gap-1">
                   <Video size={10} /> AI Video Creation
                 </button>
               </>
             ) : (
               <>
-                <button onClick={() => setInput("Tell me about your Outbound Voice capability")} className="whitespace-nowrap px-3 py-1.5 bg-white border border-slate-200 rounded-full text-[9px] font-bold text-slate-600 hover:border-[#b31f24] transition-all flex items-center gap-1">
+                <button onClick={() => triggerSend("Tell me about your Outbound Voice capability")} className="whitespace-nowrap px-3 py-1.5 bg-white border border-slate-200 rounded-full text-[9px] font-bold text-slate-600 hover:border-[#b31f24] transition-all flex items-center gap-1">
                   <PhoneCall size={10} /> AI Voice Calling
                 </button>
-                <button onClick={() => setInput("Tell me about the Foundation Plan")} className="whitespace-nowrap px-3 py-1.5 bg-white border border-slate-200 rounded-full text-[9px] font-bold text-slate-600 hover:border-[#b31f24] transition-all flex items-center gap-1">
+                <button onClick={() => triggerSend("Tell me about the Foundation Plan")} className="whitespace-nowrap px-3 py-1.5 bg-white border border-slate-200 rounded-full text-[9px] font-bold text-slate-600 hover:border-[#b31f24] transition-all flex items-center gap-1">
                   <Info size={10} /> Foundation Plan
                 </button>
               </>
