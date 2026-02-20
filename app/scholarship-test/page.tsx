@@ -154,7 +154,7 @@ function ScholarshipTestContent() {
   const handleCheatAttempt = (actionType: string) => {
       if (step !== 'quiz') return;
 
-      fetch('/api/monitoring/alert', {
+      fetch('https://cms-tau-ivory.vercel.app/api/monitoring/alert', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -176,7 +176,7 @@ function ScholarshipTestContent() {
       
       const fullPhoneNumber = `${userDetails.countryCode} ${userDetails.phone}`;
 
-      fetch('/api/monitoring/alert', {
+      fetch('https://cms-tau-ivory.vercel.app/api/monitoring/alert', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
