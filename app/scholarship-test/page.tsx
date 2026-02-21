@@ -193,7 +193,8 @@ function ScholarshipTestContent() {
             name: userDetails.name,
             email: userDetails.email,
             phone: fullPhoneNumber,
-            planName: planName
+            planName: planName,
+            cheatWarnings: warnings
         })
      }).catch(err => console.error("Failed to send DQ email", err));
   };
@@ -320,7 +321,8 @@ function ScholarshipTestContent() {
             totalQuestions: questions.length,
             scholarshipCode: formattedCode,
             discount: discountPercent,
-            planName: planName 
+            planName: planName,
+            cheatWarnings: warnings
         })
      }).catch(err => console.error("Failed to send scholarship email", err));
 
