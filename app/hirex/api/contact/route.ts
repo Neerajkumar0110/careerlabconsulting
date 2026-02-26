@@ -58,27 +58,27 @@ export async function POST(req: Request) {
           <tr>
             <td style="padding: 0 8px;">
               <a href="https://www.facebook.com/careerlabconsultingofficial" target="_blank" style="text-decoration: none;">
-                <img src="https://cdn.tools.unlayer.com/social/icons/circle-color/facebook.png" width="32" height="32" alt="Facebook" style="display: block; border: none;" />
+                <img src="https://img.icons8.com/color/48/facebook-new.png" width="30" height="30" alt="Facebook" style="display: block; border: none;" />
               </a>
             </td>
             <td style="padding: 0 8px;">
               <a href="https://x.com/CareerLabConsul" target="_blank" style="text-decoration: none;">
-                <img src="https://cdn.tools.unlayer.com/social/icons/circle-color/twitter.png" width="32" height="32" alt="Twitter / X" style="display: block; border: none;" />
+                <img src="https://img.icons8.com/ios-filled/48/twitterx--v1.png" width="30" height="30" alt="X (Twitter)" style="display: block; border: none;" />
               </a>
             </td>
             <td style="padding: 0 8px;">
               <a href="https://www.instagram.com/careerlabconsultingofficial" target="_blank" style="text-decoration: none;">
-                <img src="https://cdn.tools.unlayer.com/social/icons/circle-color/instagram.png" width="32" height="32" alt="Instagram" style="display: block; border: none;" />
+                <img src="https://img.icons8.com/color/48/instagram-new--v1.png" width="30" height="30" alt="Instagram" style="display: block; border: none;" />
               </a>
             </td>
             <td style="padding: 0 8px;">
               <a href="https://www.youtube.com/@careerlabconsulting4691" target="_blank" style="text-decoration: none;">
-                <img src="https://cdn.tools.unlayer.com/social/icons/circle-color/youtube.png" width="32" height="32" alt="YouTube" style="display: block; border: none;" />
+                <img src="https://img.icons8.com/color/48/youtube-play.png" width="30" height="30" alt="YouTube" style="display: block; border: none;" />
               </a>
             </td>
             <td style="padding: 0 8px;">
               <a href="https://www.linkedin.com/company/38144534" target="_blank" style="text-decoration: none;">
-                <img src="https://cdn.tools.unlayer.com/social/icons/circle-color/linkedin.png" width="32" height="32" alt="LinkedIn" style="display: block; border: none;" />
+                <img src="https://img.icons8.com/color/48/linkedin.png" width="30" height="30" alt="LinkedIn" style="display: block; border: none;" />
               </a>
             </td>
           </tr>
