@@ -21,15 +21,15 @@ export async function POST(req: Request) {
     const customLogoHTML = `
       <table border="0" cellpadding="0" cellspacing="0" style="margin: 0 auto;">
         <tr>
-          <td valign="middle" style="padding-right: 15px;">
-            <img src="https://careerlabconsulting.com/favicon.ico" width="48" height="48" alt="CLC Logo" style="display: block; border: none;" />
+          <td valign="middle" style="padding-right: 12px;">
+            <img src="https://careerlabconsulting.com/favicon.ico" width="40" height="40" alt="HireX Logo" style="display: block; border: none; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.2);" />
           </td>
           <td valign="middle" style="text-align: left;">
-            <div style="font-family: Arial, sans-serif; font-size: 28px; font-weight: 900; font-style: italic; line-height: 1;">
+            <div style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 26px; font-weight: 900; font-style: italic; line-height: 1; letter-spacing: -0.5px;">
               <span style="color: #ffffff;">Hire</span><span style="color: #38bdf8;">X</span>
             </div>
-            <div style="margin-top: 4px; font-family: monospace, Arial, sans-serif; font-size: 10px; font-weight: bold; text-transform: uppercase; color: #94a3b8; letter-spacing: 1px;">
-              <span style="color: #22c55e;">●</span> Your gateway to jobs and top talent
+            <div style="margin-top: 3px; font-family: 'JetBrains Mono', monospace, Arial; font-size: 9px; font-weight: 700; text-transform: uppercase; color: #94a3b8; letter-spacing: 1.5px;">
+              <span style="color: #10b981;">●</span> Gateway to top talent
             </div>
           </td>
         </tr>
@@ -37,16 +37,27 @@ export async function POST(req: Request) {
     `;
 
     const footerHTML = `
-      <div style="text-align: center; padding-top: 30px; padding-bottom: 20px; color: #64748b; font-size: 12px; line-height: 1.6;">
-        <p style="margin: 0; font-weight: bold; font-size: 14px; color: #475569;">Career Lab Consulting</p>
-        <p style="margin: 6px 0;">DLF Cyber City, 5th Floor, Cyber Green-2, Sec-25, Gurugram, India</p>
-        <p style="margin: 6px 0;">
-          <a href="tel:+918700236923" style="color: #2563eb; text-decoration: none; font-weight: bold;">+91 870023 6923</a> <span style="color: #cbd5e1; margin: 0 5px;">|</span> 
-          <a href="mailto:info@careerlabconsulting.com" style="color: #2563eb; text-decoration: none; font-weight: bold;">info@careerlabconsulting.com</a>
+      <div style="background-color: #f1f5f9; padding: 35px 20px; text-align: center; border-top: 1px solid #e2e8f0; border-radius: 0 0 12px 12px;">
+        <p style="margin: 0 0 10px 0; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 15px; color: #334155; text-transform: uppercase; letter-spacing: 1px;">Career Lab Consulting</p>
+        <p style="margin: 5px 0; font-family: 'Inter', sans-serif; color: #64748b; font-size: 13px; line-height: 1.5;">
+          DLF Cyber City, 5th Floor, Cyber Green-2<br>Sec-25, Gurugram, India
         </p>
-        <div style="margin: 20px 0; border-top: 1px solid #e2e8f0; width: 60%; margin-left: auto; margin-right: auto;"></div>
-        <p style="margin-top: 15px; margin-bottom: 0;">© ${new Date().getFullYear()} Career Lab Consulting. All rights reserved.</p>
-        <p style="margin: 4px 0 0 0;">Please do not reply to this automated email.</p>
+        
+        <table border="0" cellpadding="0" cellspacing="0" style="margin: 15px auto;">
+          <tr>
+            <td style="padding: 0 10px; border-right: 1px solid #cbd5e1;">
+              <a href="tel:+918700236923" style="color: #2563eb; text-decoration: none; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600;">📞 +91 870023 6923</a>
+            </td>
+            <td style="padding: 0 10px;">
+              <a href="mailto:info@careerlabconsulting.com" style="color: #2563eb; text-decoration: none; font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600;">✉️ info@careerlabconsulting.com</a>
+            </td>
+          </tr>
+        </table>
+        
+        <p style="margin: 25px 0 0 0; font-family: 'Inter', sans-serif; color: #94a3b8; font-size: 11px;">
+          © ${new Date().getFullYear()} Career Lab Consulting. All rights reserved.<br>
+          <span style="color: #cbd5e1;">This transmission was securely encrypted.</span>
+        </p>
       </div>
     `;
 
@@ -55,39 +66,50 @@ export async function POST(req: Request) {
       to: 'info@careerlabconsulting.com',    
       bcc: 'mr.deepanshujoshi@gmail.com',    
       replyTo: email,
-      subject: `New Lead Notification: ${name} - ${interest}`,
+      subject: `⚡ New HireX Lead: ${name} - ${interest}`,
       html: `
-        <div style="font-family: Arial, sans-serif; max-width: 650px; margin: 0 auto; background-color: #f8fafc; padding: 20px;">
-          <div style="background-color: #0f172a; padding: 30px 20px; border-radius: 8px 8px 0 0; text-align: center;">
-            ${customLogoHTML}
-          </div>
-          <div style="background-color: #ffffff; padding: 30px; border: 1px solid #e2e8f0; border-top: none; border-radius: 0 0 8px 8px;">
-            <h2 style="color: #1e293b; margin-top: 0; font-size: 20px; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px;">New Contact Form Submission</h2>
-            <p style="color: #475569; font-size: 14px;">A prospect has submitted an inquiry via the HireX platform.</p>
+        <div style="background-color: #f8fafc; padding: 40px 20px;">
+          <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);">
             
-            <table style="width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px;">
-              <tr>
-                <td style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; width: 120px; color: #64748b; font-weight: bold;">Full Name:</td>
-                <td style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; color: #0f172a;">${name}</td>
-              </tr>
-              <tr>
-                <td style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; color: #64748b; font-weight: bold;">Work Email:</td>
-                <td style="padding: 12px 0; border-bottom: 1px solid #f1f5f9;"><a href="mailto:${email}" style="color: #3b82f6; text-decoration: none;">${email}</a></td>
-              </tr>
-              <tr>
-                <td style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; color: #64748b; font-weight: bold;">Company:</td>
-                <td style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; color: #0f172a;">${company || 'N/A'}</td>
-              </tr>
-              <tr>
-                <td style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; color: #64748b; font-weight: bold;">Primary Interest:</td>
-                <td style="padding: 12px 0; border-bottom: 1px solid #f1f5f9; color: #0f172a; text-transform: capitalize;">${interest}</td>
-              </tr>
-            </table>
+            <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); padding: 35px 20px; text-align: center;">
+              ${customLogoHTML}
+            </div>
+            
+            <div style="padding: 40px 35px;">
+              <div style="border-bottom: 2px solid #f1f5f9; padding-bottom: 15px; margin-bottom: 25px;">
+                <h2 style="font-family: 'Inter', sans-serif; color: #0f172a; margin: 0; font-size: 22px; font-weight: 800; letter-spacing: -0.5px;">New Connection Initialized</h2>
+                <p style="font-family: 'Inter', sans-serif; color: #64748b; margin: 8px 0 0 0; font-size: 14px;">A new prospect has submitted the secure transmission form.</p>
+              </div>
+              
+              <table style="width: 100%; border-collapse: collapse; font-family: 'Inter', sans-serif; font-size: 14px;">
+                <tr>
+                  <td style="padding: 15px 0; border-bottom: 1px dashed #e2e8f0; width: 35%; color: #64748b; font-weight: 600; text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;">Sender Name</td>
+                  <td style="padding: 15px 0; border-bottom: 1px dashed #e2e8f0; color: #0f172a; font-weight: 500;">${name}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 15px 0; border-bottom: 1px dashed #e2e8f0; color: #64748b; font-weight: 600; text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;">Work Email</td>
+                  <td style="padding: 15px 0; border-bottom: 1px dashed #e2e8f0;">
+                    <a href="mailto:${email}" style="color: #2563eb; text-decoration: none; font-weight: 500; background-color: #eff6ff; padding: 4px 8px; border-radius: 4px;">${email}</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 15px 0; border-bottom: 1px dashed #e2e8f0; color: #64748b; font-weight: 600; text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;">Organization</td>
+                  <td style="padding: 15px 0; border-bottom: 1px dashed #e2e8f0; color: #0f172a; font-weight: 500;">${company || '<span style="color: #94a3b8; font-style: italic;">Not specified</span>'}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 15px 0; border-bottom: 1px dashed #e2e8f0; color: #64748b; font-weight: 600; text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;">Vector (Interest)</td>
+                  <td style="padding: 15px 0; border-bottom: 1px dashed #e2e8f0; color: #059669; font-weight: 700; text-transform: capitalize;">${interest}</td>
+                </tr>
+              </table>
 
-            <h3 style="color: #1e293b; margin-top: 30px; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;">Message Payload:</h3>
-            <div style="background-color: #f8fafc; padding: 20px; border-left: 4px solid #3b82f6; border-radius: 4px; color: #334155; font-size: 14px; white-space: pre-wrap; line-height: 1.6;">${message}</div>
+              <div style="margin-top: 35px;">
+                <p style="font-family: 'Inter', sans-serif; color: #64748b; font-weight: 700; text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px; margin: 0 0 10px 0;">Transmission Payload</p>
+                <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-left: 4px solid #38bdf8; padding: 20px; border-radius: 6px; font-family: 'Inter', sans-serif; color: #334155; font-size: 15px; line-height: 1.6; white-space: pre-wrap; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">${message}</div>
+              </div>
+            </div>
+            
+            ${footerHTML}
           </div>
-          ${footerHTML}
         </div>
       `,
     };
@@ -95,48 +117,51 @@ export async function POST(req: Request) {
     const userMailOptions = {
       from: `"HireX Team" <${process.env.SMTP_USER}>`,
       to: email, 
-      subject: `Welcome to HireX, ${name.split(' ')[0]} - Let's Transform Your Hiring`,
+      subject: `Connection Established, ${name.split(' ')[0]} - Welcome to HireX`,
       html: `
-        <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
-          
-          <div style="background-color: #0f172a; padding: 30px 20px; text-align: center;">
-            ${customLogoHTML}
-          </div>
+        <div style="background-color: #f8fafc; padding: 40px 20px;">
+          <div style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);">
+            
+            <div style="background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); padding: 35px 20px; text-align: center;">
+              ${customLogoHTML}
+            </div>
 
-          <div style="width: 100%; text-align: center; background-color: #f8fafc;">
-            <img src="https://img.freepik.com/free-vector/man-search-hiring-job-online-from-laptop_1150-52728.jpg?t=st=1772113141~exp=1772116741~hmac=fc0c977cde73aabd7da8cefcf954bcff189e2adb7438491e76c6bb4e57751402&w=1480" 
-                 alt="HireX Online Hiring" 
-                 style="width: 100%; max-width: 600px; height: auto; display: block; border-bottom: 3px solid #3b82f6;" />
-          </div>
+            <div style="width: 100%; text-align: center; background-color: #e0f2fe; border-bottom: 4px solid #38bdf8;">
+              <img src="https://img.freepik.com/free-vector/man-search-hiring-job-online-from-laptop_1150-52728.jpg?t=st=1772113141~exp=1772116741~hmac=fc0c977cde73aabd7da8cefcf954bcff189e2adb7438491e76c6bb4e57751402&w=1480" 
+                   alt="Modern Online Hiring" 
+                   style="width: 100%; max-width: 600px; height: auto; display: block;" />
+            </div>
 
-          <div style="padding: 40px 30px; color: #334155; line-height: 1.7; font-size: 16px;">
-            <h1 style="color: #0f172a; font-size: 24px; margin-top: 0; margin-bottom: 20px; text-align: center;">We've received your request!</h1>
-            
-            <p>Hi <strong>${name}</strong>,</p>
-            
-            <p>Thank you for initiating a connection with HireX. We are thrilled to see your interest in our <strong>${interest}</strong> solutions.</p>
-            
-            <p>Our talent acquisition experts are currently reviewing the details you provided. We are committed to helping you optimize your hiring workflow, and <strong>an agent will be in touch with you within the next 24 hours</strong> to discuss the next steps.</p>
-            
-            <div style="margin: 40px 0; background-color: #f8fafc; border-radius: 8px; padding: 25px; text-align: center; border: 1px solid #e2e8f0;">
-              <h3 style="color: #1e293b; margin-top: 0; font-size: 18px;">See HireX in Action</h3>
-              <p style="font-size: 14px; color: #64748b; margin-bottom: 20px;">Watch how we revolutionize talent acquisition.</p>
+            <div style="padding: 45px 35px; color: #334155; line-height: 1.8; font-size: 16px;">
+              <h1 style="color: #0f172a; font-size: 26px; font-weight: 800; margin-top: 0; margin-bottom: 25px; text-align: center; letter-spacing: -0.5px;">Transmission Successful.</h1>
               
-              <a href="https://videocdn.cdnpk.net/videos/6d8b7142-948a-477b-95f4-898cc2f20b3b/horizontal/previews/clear/large.mp4?token=exp=1772114620~hmac=7d44993cb368a20f4f4eea3fd3cbc885e1a2b7858a786e88fa918ed66a4cf3d4" target="_blank" style="display: inline-block; position: relative; text-decoration: none;">
-                <div style="background-color: #0f172a; padding: 15px 30px; border-radius: 6px; color: white; font-weight: bold; font-size: 16px; display: inline-flex; align-items: center; justify-content: center; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 4px 6px rgba(59, 130, 246, 0.3);">
-                  <span style="margin-right: 10px;">▶</span> Watch Video
+              <p style="font-size: 17px;">Hello <strong>${name}</strong>,</p>
+              
+              <p>Thank you for initiating a connection with HireX. We've successfully received your data payload regarding our <strong>${interest}</strong> solutions.</p>
+              
+              <p>Our talent acquisition engineers are currently processing your request. We are committed to upgrading your hiring infrastructure, and <strong>an agent will establish a direct comm-link with you within 24 hours.</strong></p>
+              
+              <div style="margin: 45px 0; background: linear-gradient(to bottom, #ffffff, #f8fafc); border-radius: 10px; padding: 35px 25px; text-align: center; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
+                <div style="background-color: #eff6ff; width: 60px; height: 60px; border-radius: 30px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 15px;">
+                  <span style="font-size: 24px;">🎥</span>
                 </div>
-              </a>
+                <h3 style="color: #0f172a; margin: 0 0 10px 0; font-size: 20px; font-weight: 700;">See the Future of Hiring</h3>
+                <p style="font-size: 15px; color: #64748b; margin: 0 0 25px 0; line-height: 1.5;">Watch how our AI-driven platform connects you with top-tier talent instantly.</p>
+                
+                <a href="https://videocdn.cdnpk.net/videos/6d8b7142-948a-477b-95f4-898cc2f20b3b/horizontal/previews/clear/large.mp4?token=exp=1772114620~hmac=7d44993cb368a20f4f4eea3fd3cbc885e1a2b7858a786e88fa918ed66a4cf3d4" target="_blank" style="text-decoration: none;">
+                  <div style="background-color: #2563eb; color: white; padding: 16px 32px; border-radius: 8px; font-weight: 700; font-size: 16px; display: inline-block; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 4px 14px 0 rgba(37, 99, 235, 0.39);">
+                    ▶ Play Presentation
+                  </div>
+                </a>
+              </div>
+              
+              <div style="margin-top: 40px; background-color: #f8fafc; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                <p style="margin: 0 0 10px 0; color: #64748b; font-size: 12px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px;">Encrypted Payload Log:</p>
+                <p style="margin: 0; font-style: italic; color: #475569; font-size: 15px; border-left: 3px solid #cbd5e1; padding-left: 15px;">"${message}"</p>
+              </div>
+              
             </div>
             
-            <div style="margin-top: 30px; padding-left: 15px; border-left: 4px solid #3b82f6;">
-              <p style="margin-top: 0; color: #94a3b8; font-size: 12px; text-transform: uppercase; font-weight: bold; letter-spacing: 1px;">Your Message:</p>
-              <p style="margin-bottom: 0; font-style: italic; color: #475569; font-size: 15px;">"${message}"</p>
-            </div>
-            
-          </div>
-          
-          <div style="background-color: #f8fafc; border-top: 1px solid #e2e8f0;">
             ${footerHTML}
           </div>
         </div>
