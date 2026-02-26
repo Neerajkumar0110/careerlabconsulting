@@ -289,10 +289,17 @@ function ScholarshipTestContent() {
      let calculatedScore = 0;
      const marksPerQuestion = 2; 
 
-     questions.forEach(q => {
-         if(answers[q.id] === q.answer) {
+     const formattedResponses = questions.map(q => {
+         const isCorrect = answers[q.id] === q.answer;
+         if(isCorrect) {
              calculatedScore += marksPerQuestion; 
          }
+         return {
+             question: q.question,
+             userAnswer: answers[q.id] || "Skipped/Not Answered",
+             correctAnswer: q.answer,
+             isCorrect: isCorrect
+         };
      });
      
      setScore(calculatedScore);
@@ -322,7 +329,8 @@ function ScholarshipTestContent() {
             scholarshipCode: formattedCode,
             discount: discountPercent,
             planName: planName,
-            cheatWarnings: warnings
+            cheatWarnings: warnings,
+            testResponses: formattedResponses 
         })
      }).catch(err => console.error("Failed to send scholarship email", err));
 
