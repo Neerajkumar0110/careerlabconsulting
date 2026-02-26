@@ -46,26 +46,24 @@ export default function ChatWidget() {
     const isFreelanceXPage = pathname?.includes("/freelancex");
     const isAptitudePage = pathname?.includes("/aptitude-test");
     
-    let modeContext = "B2B / Services Mode - Focus on enterprises and digital transformation.";
-    if (isInternshipPage) modeContext = "B2C / Internship Mode - Focus on students and guiding them to the 'Scholarship Test'.";
-    if (isHireXPage) modeContext = "HireX Mode - Focus on AI-driven Recruitment and the 'Aptitude Assessment'.";
-    if (isFreelanceXPage) modeContext = "FreelanceX Mode - Focus on Global Freelancing and AI Portfolio Building.";
-    if (isAptitudePage) modeContext = "Assessment Mode - You are an AI Proctor Assistant. Keep the candidate motivated.";
+    let modeContext = "B2B / Services Mode - Digital transformation and enterprise AI solutions.";
+    if (isInternshipPage) modeContext = "Internship Mode - Guiding students to take the 'Scholarship Test' for career growth.";
+    if (isHireXPage) modeContext = "HireX Mode - Focus on AI Recruitment, outbound calling engines, and the 'Aptitude Assessment'.";
+    if (isFreelanceXPage) modeContext = "FreelanceX Mode - Focus on global high-ticket client acquisition and earning in USD.";
+    if (isAptitudePage) modeContext = "Assessment Mode - Helping the candidate stay focused and calm during the hiring test.";
 
     return `You are Manee, an Autonomous Indian Professional Female AI Agent at Career Lab Consulting.
-    Tone: 30-year-old corporate expert, professional yet warm. 
-    Language: Natural English + Hinglish mix.
-
-    AUTONOMOUS GOALS:
-    - If user is on Internship page, push them to take the Scholarship Test.
-    - If user is on HireX, explain how our AI does 1 Lakh+ Outbound Calls autonomously.
-    - If user is interested in earning, pitch FreelanceX.
-    - Conversion trigger: Always suggest the relevant "Assessment" or "Test" on the current page.
+    Tone: 30-year-old corporate consultant, highly professional, fluent in Hinglish (Hindi + English).
+    
+    AUTONOMOUS BRAIN:
+    - If user asks for help/jobs, say: "Main aapki madad kar sakti hoon. Aap hamara assessment start karein?"
+    - Explain Outbound Sales AI: 1 Lakh calls/day with real human-level voice.
+    - If student asks about internship: Guide them to the 'Scholarship Test'.
 
     STRICT RULES:
-    - NO markdown formatting (no **, #, or _).
-    - Keep sentences clean and short for the Text-to-Speech engine.
-    - Current Page Context: ${modeContext}`;
+    - Sound natural and mature. Use Hinglish: "Zaroor! Main zaroor help karungi."
+    - NO Markdown formatting (no **, #). The voice engine needs clean text.
+    - Focus: ${modeContext}`;
   };
 
   const triggerSend = useCallback(async (messageText: string) => {
@@ -78,7 +76,7 @@ export default function ChatWidget() {
 
     try {
       const model = genAI.getGenerativeModel({ 
-        model: "gemini-2.5-flash",
+        model: "gemini-2.5-pro",
         systemInstruction: getDynamicInstruction()
       });
 
@@ -92,8 +90,10 @@ export default function ChatWidget() {
       const chat = model.startChat({ history: chatHistory });
       const result = await chat.sendMessage(userMsg);
       setMessages(prev => [...prev, { role: "bot", text: result.response.text() }]);
-    } catch (error) {
-      setMessages(prev => [...prev, { role: "bot", text: "Maaf kijiyega, mujhe ek technical error aa raha hai. Kya aap phir se try kar sakte hain?" }]);
+    } catch (error: any) {
+      console.error("Manee AI Error:", error);
+      // 🚀 QUOTA/429 HANDLING: Professional Fallback
+      setMessages(prev => [...prev, { role: "bot", text: "Maaf kijiyega, abhi bahut saare users mujhse baat kar rahe hain. Kya main aapko Assessment link bhejoon?" }]);
     } finally {
       setIsLoading(false);
     }
@@ -105,21 +105,12 @@ export default function ChatWidget() {
       setIsListening(false);
       return;
     }
-
     window.speechSynthesis.cancel();
-    setInput("");
-    currentInputRef.current = "";
-
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      stream.getTracks().forEach(track => track.stop());
-    } catch (err) {
-      alert("Please Microphone access allow karein.");
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("Browser speech recognition support nahi karta.");
       return;
     }
-
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    if (!SpeechRecognition) return;
 
     const recognition = new SpeechRecognition();
     recognition.continuous = false; 
@@ -133,7 +124,6 @@ export default function ChatWidget() {
       currentInputRef.current = currentText; 
     };
 
-    recognition.onerror = () => setIsListening(false);
     recognition.onend = () => {
       setIsListening(false);
       if (currentInputRef.current.trim().length > 0) {
@@ -141,7 +131,6 @@ export default function ChatWidget() {
         currentInputRef.current = ""; 
       }
     };
-
     activeRecognitionRef.current = recognition;
     recognition.start();
   };
@@ -155,6 +144,7 @@ export default function ChatWidget() {
     const cleanText = text.replace(/[*#_`]/g, '').replace(/\n/g, ' ');
     const utterance = new SpeechSynthesisUtterance(cleanText);
     const voices = window.speechSynthesis.getVoices();
+    // Optimized for Natural Indian Accents
     let selectedVoice = voices.find(v => v.name.includes("Google हिन्दी") || v.name.includes("Neerja") || v.lang === "en-IN");
     if (selectedVoice) utterance.voice = selectedVoice;
     utterance.lang = 'en-IN';
@@ -183,12 +173,12 @@ export default function ChatWidget() {
     const isFreelanceX = pathname?.includes("/freelancex");
 
     let welcomeText = `Namaste! I am Manee, your Autonomous AI Consultant. Main aapki digital transformation mein kaise madad kar sakti hoon?`;
-    if (isB2C) welcomeText = `Namaste ${storedName || 'Scholar'}! Kya aap Scholarship Test ke liye ready hain?`;
-    else if (isHireX) welcomeText = `Namaste! Welcome to HireX. Main Manee hoon. Humara AI engine 1 Lakh calls aur recruitment automate kar sakta hai. Details bataun?`;
-    else if (isFreelanceX) welcomeText = `Namaste! Welcome to FreelanceX. Globally USD mein earn karna shuru karein?`;
+    if (isB2C) welcomeText = `Namaste ${storedName || 'Scholar'}! Career guidance chahiye? Hamara scholarship test abhi live hai!`;
+    else if (isHireX) welcomeText = `Namaste! Welcome to HireX. Humara AI engine hiring ko 100% autonomous bana sakta hai. Details jaanni hain?`;
+    else if (isFreelanceX) welcomeText = `Namaste! Welcome to FreelanceX. Dollar ($) mein earn karna shuru karein?`;
     
     setMessages([{ role: "bot", text: welcomeText }]);
-    setTimeout(() => setShowOffer(true), 6000);
+    setTimeout(() => setShowOffer(true), 5000);
   }, [pathname]);
 
   useEffect(() => {
@@ -205,6 +195,7 @@ export default function ChatWidget() {
   return createPortal(
     <div className="fixed bottom-4 right-4 z-[999999] flex flex-col items-end pointer-events-none font-sans text-slate-900">
       
+      {/* 🌸 Autonomous Offer Notification */}
       {showOffer && !isOpen && (
         <motion.div 
           initial={{ opacity: 0, scale: 0.8, y: 20 }}
@@ -214,7 +205,7 @@ export default function ChatWidget() {
           <button onClick={() => setShowOffer(false)} className="absolute -top-2 -left-2 bg-black text-white rounded-full p-1 border border-white/20"><X size={10} /></button>
           <div className="flex items-center gap-2">
             <div className="bg-white/20 p-1.5 rounded-lg"><Sparkles size={14} className="text-yellow-300" /></div>
-            <p className="text-[10px] font-bold leading-tight">Manee: Limited slots for Assessment available! 🌸</p>
+            <p className="text-[10px] font-bold leading-tight">Manee: Limited hiring slots for top scorers are open! 🌸</p>
           </div>
         </motion.div>
       )}
@@ -225,14 +216,13 @@ export default function ChatWidget() {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           className="w-[320px] md:w-[380px] h-[550px] md:h-[620px] bg-white rounded-[2.5rem] shadow-[0_25px_60px_rgba(0,0,0,0.4)] flex flex-col overflow-hidden border border-slate-200 pointer-events-auto relative"
         >
-          
           {showVideoIntro && (
             <div className="absolute inset-0 z-[100] bg-black flex flex-col items-center justify-center">
                 <video 
                     ref={videoRef} autoPlay playsInline onEnded={() => setShowVideoIntro(false)}
                     className="w-full h-full object-cover"
                 >
-                    <source src="/ai-intro-video.mp4" type="video/mp4" /> 
+                    <source src="https://www.youtube.com/watch?v=whqLvigQWoE&t=61s" type="video/mp4" /> 
                 </video>
                 <button 
                     onClick={() => setShowVideoIntro(false)}
@@ -284,11 +274,11 @@ export default function ChatWidget() {
           </div>
 
           <div className="px-4 py-3 bg-white border-t border-slate-100 flex gap-2 overflow-x-auto no-scrollbar">
-                <button onClick={() => triggerSend("Start Assessment")} className="whitespace-nowrap px-4 py-2 bg-blue-50 border border-blue-100 rounded-full text-[10px] font-black text-blue-600 hover:bg-blue-600 hover:text-white transition-all flex items-center gap-2">
-                  <Trophy size={12} /> Take Assessment
+                <button onClick={() => triggerSend("Start My Assessment")} className="whitespace-nowrap px-4 py-2 bg-blue-50 border border-blue-100 rounded-full text-[10px] font-black text-blue-600 hover:bg-blue-600 hover:text-white transition-all flex items-center gap-2">
+                  <Trophy size={12} /> Start Assessment
                 </button>
-                <button onClick={() => triggerSend("Show me AI Voice Demo")} className="whitespace-nowrap px-4 py-2 bg-rose-50 border border-rose-100 rounded-full text-[10px] font-black text-[#b31f24] hover:bg-[#b31f24] hover:text-white transition-all flex items-center gap-2">
-                  <PhoneCall size={12} /> AI Voice Call
+                <button onClick={() => triggerSend("How does AI Voice Demo work?")} className="whitespace-nowrap px-4 py-2 bg-rose-50 border border-rose-100 rounded-full text-[10px] font-black text-[#b31f24] hover:bg-[#b31f24] hover:text-white transition-all flex items-center gap-2">
+                  <PhoneCall size={12} /> AI Voice Demo
                 </button>
           </div>
 
@@ -317,7 +307,6 @@ export default function ChatWidget() {
           <div className="absolute inset-0 bg-gradient-to-tr from-[#b31f24]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
           <img src="https://cdn-icons-png.flaticon.com/512/18355/18355220.png" className="w-full h-full object-contain relative z-10" alt="Manee AI" />
           <div className="absolute top-1 right-1 w-5 h-5 bg-red-600 rounded-full flex items-center justify-center text-[9px] text-white font-black animate-bounce border-2 border-white shadow-lg">1</div>
-          
           <div className="absolute inset-0 rounded-3xl border-2 border-[#b31f24]/20 animate-ping opacity-20"></div>
         </button>
       )}
