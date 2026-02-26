@@ -29,7 +29,7 @@ const FOOTER_LINKS = {
   ],
   Organization: [
     { name: 'About CLC', href: '/hirex/about' },
-    { name: 'Partner Program', href: '#' },
+    { name: 'Contact CLC', href: '/hirex/contact' },
     { name: 'Privacy Policy', href: '#' },
     { name: 'Terms of Service', href: '#' },
   ],
