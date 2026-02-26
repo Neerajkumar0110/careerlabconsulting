@@ -53,8 +53,38 @@ export async function POST(req: Request) {
             </td>
           </tr>
         </table>
+
+        <table border="0" cellpadding="0" cellspacing="0" style="margin: 20px auto 10px auto;">
+          <tr>
+            <td style="padding: 0 8px;">
+              <a href="https://www.facebook.com/careerlabconsultingofficial" target="_blank" style="text-decoration: none;">
+                <img src="https://cdn.tools.unlayer.com/social/icons/circle-color/facebook.png" width="32" height="32" alt="Facebook" style="display: block; border: none;" />
+              </a>
+            </td>
+            <td style="padding: 0 8px;">
+              <a href="https://x.com/CareerLabConsul" target="_blank" style="text-decoration: none;">
+                <img src="https://cdn.tools.unlayer.com/social/icons/circle-color/twitter.png" width="32" height="32" alt="Twitter / X" style="display: block; border: none;" />
+              </a>
+            </td>
+            <td style="padding: 0 8px;">
+              <a href="https://www.instagram.com/careerlabconsultingofficial" target="_blank" style="text-decoration: none;">
+                <img src="https://cdn.tools.unlayer.com/social/icons/circle-color/instagram.png" width="32" height="32" alt="Instagram" style="display: block; border: none;" />
+              </a>
+            </td>
+            <td style="padding: 0 8px;">
+              <a href="https://www.youtube.com/@careerlabconsulting4691" target="_blank" style="text-decoration: none;">
+                <img src="https://cdn.tools.unlayer.com/social/icons/circle-color/youtube.png" width="32" height="32" alt="YouTube" style="display: block; border: none;" />
+              </a>
+            </td>
+            <td style="padding: 0 8px;">
+              <a href="https://www.linkedin.com/company/38144534" target="_blank" style="text-decoration: none;">
+                <img src="https://cdn.tools.unlayer.com/social/icons/circle-color/linkedin.png" width="32" height="32" alt="LinkedIn" style="display: block; border: none;" />
+              </a>
+            </td>
+          </tr>
+        </table>
         
-        <p style="margin: 25px 0 0 0; font-family: 'Inter', sans-serif; color: #94a3b8; font-size: 11px;">
+        <p style="margin: 20px 0 0 0; font-family: 'Inter', sans-serif; color: #94a3b8; font-size: 11px;">
           © ${new Date().getFullYear()} Career Lab Consulting. All rights reserved.<br>
           <span style="color: #cbd5e1;">This message was sent securely.</span>
         </p>
