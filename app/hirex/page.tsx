@@ -2,6 +2,7 @@
 
 import Navbar from '@/components/hirex/layout/Navbar';
 import Hero from '@/components/hirex/home/Hero';
+import AptitudeCTA from '@/components/hirex/home/AptitudeCTA';
 import Features from '@/components/hirex/home/Features';
 import EmployerGrades from '@/components/hirex/home/EmployerGrades';
 import CandidatePreview from '@/components/hirex/home/CandidatePreview';
@@ -21,6 +22,7 @@ export default function Home() {
     <main className="min-h-screen bg-white">
       <Navbar />
       <Hero />
+      <AptitudeCTA />
       <Features />
       <EmployerGrades />
       <CandidatePreview />
