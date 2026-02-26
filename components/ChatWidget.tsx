@@ -222,7 +222,7 @@ export default function ChatWidget() {
                     ref={videoRef} autoPlay playsInline onEnded={() => setShowVideoIntro(false)}
                     className="w-full h-full object-cover"
                 >
-                    <source src="https://www.youtube.com/watch?v=whqLvigQWoE&t=61s" type="video/mp4" /> 
+                    <source src="/video.mp4" type="video/mp4" /> 
                 </video>
                 <button 
                     onClick={() => setShowVideoIntro(false)}
