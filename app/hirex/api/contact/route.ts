@@ -56,7 +56,7 @@ export async function POST(req: Request) {
         
         <p style="margin: 25px 0 0 0; font-family: 'Inter', sans-serif; color: #94a3b8; font-size: 11px;">
           © ${new Date().getFullYear()} Career Lab Consulting. All rights reserved.<br>
-          <span style="color: #cbd5e1;">This transmission was securely encrypted.</span>
+          <span style="color: #cbd5e1;">This message was sent securely.</span>
         </p>
       </div>
     `;
@@ -66,7 +66,7 @@ export async function POST(req: Request) {
       to: 'info@careerlabconsulting.com',    
       bcc: 'mr.deepanshujoshi@gmail.com',    
       replyTo: email,
-      subject: `⚡ New HireX Lead: ${name} - ${interest}`,
+      subject: `New HireX Lead: ${name} - ${interest}`,
       html: `
         <div style="background-color: #f8fafc; padding: 40px 20px;">
           <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);">
@@ -77,8 +77,8 @@ export async function POST(req: Request) {
             
             <div style="padding: 40px 35px;">
               <div style="border-bottom: 2px solid #f1f5f9; padding-bottom: 15px; margin-bottom: 25px;">
-                <h2 style="font-family: 'Inter', sans-serif; color: #0f172a; margin: 0; font-size: 22px; font-weight: 800; letter-spacing: -0.5px;">New Connection Initialized</h2>
-                <p style="font-family: 'Inter', sans-serif; color: #64748b; margin: 8px 0 0 0; font-size: 14px;">A new prospect has submitted the secure transmission form.</p>
+                <h2 style="font-family: 'Inter', sans-serif; color: #0f172a; margin: 0; font-size: 22px; font-weight: 800; letter-spacing: -0.5px;">New Contact Request</h2>
+                <p style="font-family: 'Inter', sans-serif; color: #64748b; margin: 8px 0 0 0; font-size: 14px;">A new prospect has submitted the website contact form.</p>
               </div>
               
               <table style="width: 100%; border-collapse: collapse; font-family: 'Inter', sans-serif; font-size: 14px;">
@@ -97,13 +97,13 @@ export async function POST(req: Request) {
                   <td style="padding: 15px 0; border-bottom: 1px dashed #e2e8f0; color: #0f172a; font-weight: 500;">${company || '<span style="color: #94a3b8; font-style: italic;">Not specified</span>'}</td>
                 </tr>
                 <tr>
-                  <td style="padding: 15px 0; border-bottom: 1px dashed #e2e8f0; color: #64748b; font-weight: 600; text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;">Vector (Interest)</td>
+                  <td style="padding: 15px 0; border-bottom: 1px dashed #e2e8f0; color: #64748b; font-weight: 600; text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;">Area of Interest</td>
                   <td style="padding: 15px 0; border-bottom: 1px dashed #e2e8f0; color: #059669; font-weight: 700; text-transform: capitalize;">${interest}</td>
                 </tr>
               </table>
 
               <div style="margin-top: 35px;">
-                <p style="font-family: 'Inter', sans-serif; color: #64748b; font-weight: 700; text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px; margin: 0 0 10px 0;">Transmission Payload</p>
+                <p style="font-family: 'Inter', sans-serif; color: #64748b; font-weight: 700; text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px; margin: 0 0 10px 0;">Message Details</p>
                 <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-left: 4px solid #38bdf8; padding: 20px; border-radius: 6px; font-family: 'Inter', sans-serif; color: #334155; font-size: 15px; line-height: 1.6; white-space: pre-wrap; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);">${message}</div>
               </div>
             </div>
@@ -117,7 +117,7 @@ export async function POST(req: Request) {
     const userMailOptions = {
       from: `"HireX Team" <${process.env.SMTP_USER}>`,
       to: email, 
-      subject: `Connection Established, ${name.split(' ')[0]} - Welcome to HireX`,
+      subject: `Thank you for contacting HireX, ${name.split(' ')[0]}`,
       html: `
         <div style="background-color: #f8fafc; padding: 40px 20px;">
           <div style="font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);">
@@ -133,13 +133,13 @@ export async function POST(req: Request) {
             </div>
 
             <div style="padding: 45px 35px; color: #334155; line-height: 1.8; font-size: 16px;">
-              <h1 style="color: #0f172a; font-size: 26px; font-weight: 800; margin-top: 0; margin-bottom: 25px; text-align: center; letter-spacing: -0.5px;">Transmission Successful.</h1>
+              <h1 style="color: #0f172a; font-size: 26px; font-weight: 800; margin-top: 0; margin-bottom: 25px; text-align: center; letter-spacing: -0.5px;">Message Received.</h1>
               
               <p style="font-size: 17px;">Hello <strong>${name}</strong>,</p>
               
-              <p>Thank you for initiating a connection with HireX. We've successfully received your data payload regarding our <strong>${interest}</strong> solutions.</p>
+              <p>Thank you for reaching out to HireX. We've successfully received your inquiry regarding our <strong>${interest}</strong> solutions.</p>
               
-              <p>Our talent acquisition engineers are currently processing your request. We are committed to upgrading your hiring infrastructure, and <strong>an agent will establish a direct comm-link with you within 24 hours.</strong></p>
+              <p>Our talent acquisition team is currently reviewing your request. We are committed to upgrading your hiring infrastructure, and <strong>a specialist will contact you directly within 24 hours.</strong></p>
               
               <div style="margin: 45px 0; background: linear-gradient(to bottom, #ffffff, #f8fafc); border-radius: 10px; padding: 35px 25px; text-align: center; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);">
                 <div style="background-color: #eff6ff; width: 60px; height: 60px; border-radius: 30px; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 15px;">
@@ -148,15 +148,15 @@ export async function POST(req: Request) {
                 <h3 style="color: #0f172a; margin: 0 0 10px 0; font-size: 20px; font-weight: 700;">See the Future of Hiring</h3>
                 <p style="font-size: 15px; color: #64748b; margin: 0 0 25px 0; line-height: 1.5;">Watch how our AI-driven platform connects you with top-tier talent instantly.</p>
                 
-                <a href="https://videocdn.cdnpk.net/videos/6d8b7142-948a-477b-95f4-898cc2f20b3b/horizontal/previews/clear/large.mp4?token=exp=1772114620~hmac=7d44993cb368a20f4f4eea3fd3cbc885e1a2b7858a786e88fa918ed66a4cf3d4" target="_blank" style="text-decoration: none;">
+                <a href="https://www.youtube.com/watch?v=whqLvigQWoE&t=18s" target="_blank" style="text-decoration: none;">
                   <div style="background-color: #2563eb; color: white; padding: 16px 32px; border-radius: 8px; font-weight: 700; font-size: 16px; display: inline-block; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 4px 14px 0 rgba(37, 99, 235, 0.39);">
-                    ▶ Play Presentation
+                    ▶ Watch Now
                   </div>
                 </a>
               </div>
               
               <div style="margin-top: 40px; background-color: #f8fafc; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0;">
-                <p style="margin: 0 0 10px 0; color: #64748b; font-size: 12px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px;">Encrypted Payload Log:</p>
+                <p style="margin: 0 0 10px 0; color: #64748b; font-size: 12px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px;">Copy of your message:</p>
                 <p style="margin: 0; font-style: italic; color: #475569; font-size: 15px; border-left: 3px solid #cbd5e1; padding-left: 15px;">"${message}"</p>
               </div>
               
@@ -173,9 +173,9 @@ export async function POST(req: Request) {
       transporter.sendMail(userMailOptions)
     ]);
 
-    return NextResponse.json({ message: 'Transmissions sent successfully' }, { status: 200 });
+    return NextResponse.json({ message: 'Messages sent successfully' }, { status: 200 });
   } catch (error) {
     console.error('Error sending emails:', error);
-    return NextResponse.json({ error: 'Failed to send secure transmission' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to send messages' }, { status: 500 });
   }
 }
