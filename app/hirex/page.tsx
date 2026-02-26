@@ -1,3 +1,5 @@
+// app/hirex/page.tsx
+
 import Navbar from '@/components/hirex/layout/Navbar';
 import Hero from '@/components/hirex/home/Hero';
 import Features from '@/components/hirex/home/Features';

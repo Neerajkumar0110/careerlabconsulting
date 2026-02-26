@@ -28,7 +28,7 @@ const FOOTER_LINKS = {
     { name: 'Job Inventory', href: '#' },
   ],
   Organization: [
-    { name: 'About CLC', href: '#' },
+    { name: 'About CLC', href: '/hirex/about' },
     { name: 'Partner Program', href: '#' },
     { name: 'Privacy Policy', href: '#' },
     { name: 'Terms of Service', href: '#' },
