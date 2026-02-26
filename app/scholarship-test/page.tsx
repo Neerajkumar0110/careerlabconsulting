@@ -56,8 +56,25 @@ const fallbackQuestions: Question[] = [
   { id: 6, question: "What is 2 + 2?", options: ["3", "4", "5", "22"], answer: "4", difficulty: "easy" },
   { id: 7, question: "Which symbol is used for single-line comments in Python?", options: ["//", "/*", "#", "--"], answer: "#", difficulty: "easy" },
   { id: 8, question: "What is the output of print(10 % 3)?", options: ["3", "1", "10", "0"], answer: "1", difficulty: "easy" },
-  { id: 9, question: "Which data structure follows LIFO principle?", options: ["Queue", "Stack", "Array", "Tree"], answer: "Stack", difficulty: "medium" },
-  { id: 10, question: "What is the time complexity of binary search?", options: ["O(n)", "O(log n)", "O(n^2)", "O(1)"], answer: "O(log n)", difficulty: "medium" },
+  { id: 9, question: "Which data type is used to store text in Java?", options: ["int", "String", "boolean", "float"], answer: "String", difficulty: "easy" },
+  { id: 10, question: "What does CPU stand for?", options: ["Central Process Unit", "Computer Personal Unit", "Central Processing Unit", "Central Processor Unit"], answer: "Central Processing Unit", difficulty: "easy" },
+  
+  { id: 11, question: "Which data structure follows LIFO principle?", options: ["Queue", "Stack", "Array", "Tree"], answer: "Stack", difficulty: "medium" },
+  { id: 12, question: "What is the time complexity of binary search?", options: ["O(n)", "O(log n)", "O(n^2)", "O(1)"], answer: "O(log n)", difficulty: "medium" },
+  { id: 13, question: "In React, what hook is used to manage state?", options: ["useContext", "useEffect", "useState", "useReducer"], answer: "useState", difficulty: "medium" },
+  { id: 14, question: "Which SQL clause is used to filter the results of a GROUP BY?", options: ["WHERE", "HAVING", "ORDER BY", "FILTER"], answer: "HAVING", difficulty: "medium" },
+  { id: 15, question: "What is the default port for HTTP?", options: ["443", "21", "80", "8080"], answer: "80", difficulty: "medium" },
+
+  { id: 16, question: "Which algorithm is used to find the shortest path in a graph?", options: ["DFS", "Kruskal's", "Dijkstra's", "Dijkstra's / Bellman-Ford"], answer: "Dijkstra's / Bellman-Ford", difficulty: "hard" },
+  { id: 17, question: "In object-oriented programming, what defines the 'is-a' relationship?", options: ["Encapsulation", "Polymorphism", "Inheritance", "Abstraction"], answer: "Inheritance", difficulty: "hard" },
+  { id: 18, question: "What is the worst-case time complexity of QuickSort?", options: ["O(n log n)", "O(n)", "O(n^2)", "O(log n)"], answer: "O(n^2)", difficulty: "hard" },
+  { id: 19, question: "Which HTTP status code signifies 'Forbidden'?", options: ["401", "403", "404", "500"], answer: "403", difficulty: "hard" },
+  { id: 20, question: "What is the main advantage of using a B-Tree over a Binary Search Tree?", options: ["Faster Search", "Less Memory", "Optimized for Disk I/O", "Easier to code"], answer: "Optimized for Disk I/O", difficulty: "hard" },
+  { id: 21, question: "In relational databases, what is a normal form designed to eliminate?", options: ["Indexes", "Primary Keys", "Data Redundancy", "Foreign Keys"], answer: "Data Redundancy", difficulty: "hard" },
+  { id: 22, question: "Which keyword in Java prevents a class from being subclassed?", options: ["static", "const", "final", "abstract"], answer: "final", difficulty: "hard" },
+  { id: 23, question: "In Node.js, how does the Event Loop handle asynchronous operations?", options: ["Multi-threading", "Single-threaded non-blocking I/O", "Synchronous blocking", "Parallel processing"], answer: "Single-threaded non-blocking I/O", difficulty: "hard" },
+  { id: 24, question: "What is 'Hoisting' in JavaScript?", options: ["Lifting heavy data", "Moving variable declarations to the top", "Removing undefined variables", "Compiling code faster"], answer: "Moving variable declarations to the top", difficulty: "hard" },
+  { id: 25, question: "Which of these is a NoSQL database?", options: ["PostgreSQL", "MySQL", "MongoDB", "Oracle"], answer: "MongoDB", difficulty: "hard" }
 ];
 
 function ScholarshipTestContent() {
@@ -69,7 +86,7 @@ function ScholarshipTestContent() {
   const [step, setStep] = useState<'details' | 'loading' | 'quiz' | 'result' | 'disqualified'>('details');
   const [userDetails, setUserDetails] = useState<UserDetails>({ 
       name: '', email: '', phone: '', countryCode: '+91',
-      qualification: '', collegeName: '', city: '', state: '' // 🚀 NEW
+      qualification: '', collegeName: '', city: '', state: '' 
   });
   
   const [otpSent, setOtpSent] = useState(false);
@@ -266,12 +283,26 @@ function ScholarshipTestContent() {
             generationConfig: { responseMimeType: "application/json" }
         });
 
-        const prompt = `Generate 25 multiple choice questions on General Aptitude, Basic Programming Logic, and AI awareness. 
-        Structure: 
-        - 10 Very Easy
-        - 5 Medium
-        - 10 Hard
-        Format: JSON Array of objects with keys: id (number), question (string), options (array of 4 strings), answer (string), difficulty (string).`;
+        const randomSeed = Math.floor(Math.random() * 10000);
+        const prompt = `You are an expert examiner creating a UNIQUE scholarship test. 
+        This test is for a student with a background in: ${userDetails.qualification || 'General Technology'}.
+        Seed ID for randomness: ${randomSeed}. ENSURE THESE QUESTIONS ARE DIFFERENT FROM PREVIOUS GENERATIONS.
+        
+        You MUST generate EXACTLY 25 multiple choice questions.
+        
+        The composition MUST strictly be:
+        - Exactly 10 questions with difficulty "easy" (General Aptitude, Basic Math, IT basics)
+        - Exactly 5 questions with difficulty "medium" (Programming concepts, Web Dev)
+        - Exactly 10 questions with difficulty "hard" (Advanced algorithms, AI, System Design, or Cloud)
+        
+        Format requirement: 
+        Return ONLY a valid JSON Array of exactly 25 objects. 
+        Each object must have these keys: 
+        id (number starting from 1 to 25), 
+        question (string), 
+        options (array of exactly 4 strings), 
+        answer (string exactly matching one option), 
+        difficulty (string "easy", "medium", or "hard").`;
         
         const result = await model.generateContent(prompt);
         const response = await result.response;
@@ -285,12 +316,16 @@ function ScholarshipTestContent() {
         }
 
         const data: Question[] = JSON.parse(text);
-        if (!Array.isArray(data) || data.length === 0) throw new Error("Invalid data format");
+        
+        if (!Array.isArray(data) || data.length !== 25) {
+            console.warn(`AI generated ${data?.length} questions instead of 25. Falling back to default 25.`);
+            throw new Error("Invalid question count from AI");
+        }
 
         setQuestions(data); 
         setStep('quiz');
     } catch (error) {
-        console.error("AI Generation Failed, using fallback", error);
+        console.error("AI Generation Failed or Invalid count, using fallback 25 questions", error);
         setQuestions(fallbackQuestions);
         setStep('quiz');
     }
@@ -321,7 +356,7 @@ function ScholarshipTestContent() {
      setGeneratedCode(formattedCode);
 
      const maxScholarship = planName === 'Foundation' ? 30 : 40;
-     const totalPossibleScore = questions.length * 2; 
+     const totalPossibleScore = questions.length * marksPerQuestion; 
      const rawPercentage = (calculatedScore / totalPossibleScore) * maxScholarship;
      const discountPercent = Math.min(Math.round(rawPercentage), maxScholarship);
 
@@ -336,13 +371,12 @@ function ScholarshipTestContent() {
             email: userDetails.email,
             phone: fullPhoneNumber,
             score: calculatedScore,
-            totalQuestions: questions.length,
+            totalQuestions: questions.length, 
             scholarshipCode: formattedCode,
             discount: discountPercent,
             planName: planName,
             cheatWarnings: warnings,
             testResponses: formattedResponses,
-            
             qualification: userDetails.qualification,
             collegeName: userDetails.collegeName,
             city: userDetails.city,
@@ -620,7 +654,7 @@ function ScholarshipTestContent() {
                     <div className="flex flex-col items-center justify-center h-full my-auto py-12">
                         <Loader2 className="w-16 h-16 text-blue-500 animate-spin mb-6" />
                         <h2 className="text-2xl font-bold text-white mb-2">Generating Questions...</h2>
-                        <p className="text-slate-500 text-sm">Curating 25 questions based on your profile.</p>
+                        <p className="text-slate-500 text-sm">Curating exactly 25 questions based on your profile.</p>
                     </div>
                 )}
 
