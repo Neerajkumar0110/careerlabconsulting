@@ -9,8 +9,8 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { 
   Loader2, ChevronRight, Trophy, Mail, GraduationCap, X, 
-  CheckCircle2, ArrowRight, Globe, ShieldCheck, ChevronDown,
-  Timer, AlertTriangle, Ban
+  CheckCircle2, ArrowRight, ShieldCheck, ChevronDown,
+  Timer, AlertTriangle, Ban, Building2, MapPin
 } from 'lucide-react';
 
 interface Question {
@@ -26,6 +26,10 @@ interface UserDetails {
   email: string;
   phone: string;
   countryCode: string;
+  qualification: string;
+  collegeName: string;
+  city: string;
+  state: string;
 }
 
 const countryList = [
@@ -63,7 +67,10 @@ function ScholarshipTestContent() {
   const planName = searchParams.get('plan') as 'Foundation' | 'Elite' || 'Foundation';
 
   const [step, setStep] = useState<'details' | 'loading' | 'quiz' | 'result' | 'disqualified'>('details');
-  const [userDetails, setUserDetails] = useState<UserDetails>({ name: '', email: '', phone: '', countryCode: '+91' });
+  const [userDetails, setUserDetails] = useState<UserDetails>({ 
+      name: '', email: '', phone: '', countryCode: '+91',
+      qualification: '', collegeName: '', city: '', state: '' // 🚀 NEW
+  });
   
   const [otpSent, setOtpSent] = useState(false);
   const [otpVerified, setOtpVerified] = useState(false);
@@ -194,9 +201,13 @@ function ScholarshipTestContent() {
             email: userDetails.email,
             phone: fullPhoneNumber,
             planName: planName,
-            cheatWarnings: warnings
+            cheatWarnings: warnings,
+            qualification: userDetails.qualification,
+            collegeName: userDetails.collegeName,
+            city: userDetails.city,
+            state: userDetails.state,
         })
-     }).catch(err => console.error("Failed to send DQ email", err));
+      }).catch(err => console.error("Failed to send DQ email", err));
   };
 
   const handleSendOtp = async () => {
@@ -330,7 +341,12 @@ function ScholarshipTestContent() {
             discount: discountPercent,
             planName: planName,
             cheatWarnings: warnings,
-            testResponses: formattedResponses 
+            testResponses: formattedResponses,
+            
+            qualification: userDetails.qualification,
+            collegeName: userDetails.collegeName,
+            city: userDetails.city,
+            state: userDetails.state,
         })
      }).catch(err => console.error("Failed to send scholarship email", err));
 
@@ -381,6 +397,8 @@ function ScholarshipTestContent() {
      router.push(`/checkout/b2c?${params.toString()}`);
   };
 
+  const isFormValid = userDetails.name && otpVerified && userDetails.phone && userDetails.qualification && userDetails.collegeName && userDetails.city && userDetails.state;
+
   return (
     <div className="min-h-screen bg-[#020617] text-white flex items-center justify-center p-4 md:p-8 font-sans">
         
@@ -428,9 +446,9 @@ function ScholarshipTestContent() {
             <div className="p-8 overflow-y-auto custom-scrollbar flex-grow flex flex-col">
                 
                 {step === 'details' && (
-                    <div className="space-y-8 flex flex-col justify-center h-full my-auto">
-                        <div className="text-center">
-                            <h4 className="text-3xl font-black text-white mb-2">Apply for <span className="text-blue-500">{planName}</span> Scholarship</h4>
+                    <div className="space-y-6 flex flex-col justify-center h-full my-auto">
+                        <div className="text-center mb-4">
+                            <h4 className="text-3xl font-black text-white mb-2">Apply for <span className="text-blue-500">{planName}</span></h4>
                             <p className="text-slate-400 text-sm max-w-md mx-auto">
                                 <span className="block mt-2 text-slate-500 text-xs font-medium">
                                     Scholarship Upto 50,000/- INR For Indian Students Only.
@@ -438,100 +456,163 @@ function ScholarshipTestContent() {
                             </p>
                         </div>
 
-                        <div className="space-y-5">
-                            <div className="space-y-2">
-                                <label className="text-xs font-bold text-slate-500 uppercase ml-1">Full Name</label>
-                                <input 
-                                    type="text" placeholder="John Doe" 
-                                    className="w-full bg-black/20 border border-white/10 rounded-xl p-4 text-white focus:outline-none focus:border-blue-500 transition-colors"
-                                    value={userDetails.name} onChange={(e) => setUserDetails({...userDetails, name: e.target.value})}
-                                />
-                            </div>
-
-                            <div className="space-y-2">
-                                <label className="text-xs font-bold text-slate-500 uppercase ml-1">Email Address</label>
-                                <div className="relative">
+                        <div className="space-y-4">
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="space-y-1.5">
+                                    <label className="text-[10px] font-bold text-slate-500 uppercase ml-1">Full Name</label>
                                     <input 
-                                        type="email" placeholder="john@example.com" 
-                                        disabled={otpVerified || otpSent}
-                                        className={`w-full bg-black/20 border rounded-xl p-4 pr-28 text-white focus:outline-none transition-colors ${otpVerified ? 'border-green-500/50 text-green-400' : 'border-white/10 focus:border-blue-500'}`}
-                                        value={userDetails.email} onChange={(e) => setUserDetails({...userDetails, email: e.target.value})}
+                                        type="text" placeholder="John Doe" 
+                                        className="w-full bg-black/20 border border-white/10 rounded-xl p-3.5 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors"
+                                        value={userDetails.name} onChange={(e) => setUserDetails({...userDetails, name: e.target.value})}
                                     />
-                                    <div className="absolute right-2 top-1.5 bottom-1.5">
-                                        {otpVerified ? (
-                                            <div className="h-full px-4 flex items-center gap-2 bg-green-500/10 text-green-400 rounded-lg text-xs font-bold border border-green-500/20">
-                                                <CheckCircle2 className="w-4 h-4" /> Verified
-                                            </div>
-                                        ) : (
-                                            !otpSent && (
-                                                <button 
-                                                    onClick={handleSendOtp}
-                                                    disabled={!userDetails.email || !userDetails.name || otpLoading}
-                                                    className="h-full px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center min-w-[80px]"
-                                                >
-                                                    {otpLoading ? <Loader2 className="w-4 h-4 animate-spin"/> : "Verify OTP"}
-                                                </button>
-                                            )
-                                        )}
+                                </div>
+                                <div className="space-y-1.5">
+                                    <label className="text-[10px] font-bold text-slate-500 uppercase ml-1">Email Address</label>
+                                    <div className="relative">
+                                        <input 
+                                            type="email" placeholder="john@example.com" 
+                                            disabled={otpVerified || otpSent}
+                                            className={`w-full bg-black/20 border rounded-xl p-3.5 pr-28 text-sm text-white focus:outline-none transition-colors ${otpVerified ? 'border-green-500/50 text-green-400' : 'border-white/10 focus:border-blue-500'}`}
+                                            value={userDetails.email} onChange={(e) => setUserDetails({...userDetails, email: e.target.value})}
+                                        />
+                                        <div className="absolute right-1.5 top-1.5 bottom-1.5">
+                                            {otpVerified ? (
+                                                <div className="h-full px-3 flex items-center gap-1.5 bg-green-500/10 text-green-400 rounded-lg text-[10px] font-bold border border-green-500/20">
+                                                    <CheckCircle2 className="w-3.5 h-3.5" /> Verified
+                                                </div>
+                                            ) : (
+                                                !otpSent && (
+                                                    <button 
+                                                        onClick={handleSendOtp}
+                                                        disabled={!userDetails.email || !userDetails.name || otpLoading}
+                                                        className="h-full px-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-[10px] font-bold transition-all disabled:opacity-50 flex items-center justify-center min-w-[70px]"
+                                                    >
+                                                        {otpLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin"/> : "Verify OTP"}
+                                                    </button>
+                                                )
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
-                                
-                                {otpSent && !otpVerified && (
-                                    <div className="mt-3 flex gap-2 animate-in slide-in-from-top-2">
-                                        <input 
-                                            type="text" placeholder="Enter 6-digit OTP" maxLength={6}
-                                            className="flex-grow bg-black/40 border border-white/20 rounded-xl p-3 text-white text-center tracking-widest font-mono text-lg focus:border-blue-500 outline-none"
-                                            value={userOtpInput} onChange={(e) => setUserOtpInput(e.target.value)}
-                                        />
-                                        <button 
-                                            onClick={handleVerifyOtp}
-                                            className="px-6 bg-green-600 hover:bg-green-500 text-white rounded-xl font-bold transition-colors"
-                                        >
-                                            Submit
-                                        </button>
-                                    </div>
-                                )}
                             </div>
+                            
+                            {otpSent && !otpVerified && (
+                                <div className="flex gap-2 animate-in slide-in-from-top-2">
+                                    <input 
+                                        type="text" placeholder="Enter 6-digit OTP" maxLength={6}
+                                        className="flex-grow bg-black/40 border border-white/20 rounded-xl p-3 text-white text-center tracking-widest font-mono text-sm focus:border-blue-500 outline-none"
+                                        value={userOtpInput} onChange={(e) => setUserOtpInput(e.target.value)}
+                                    />
+                                    <button onClick={handleVerifyOtp} className="px-6 bg-green-600 hover:bg-green-500 text-white rounded-xl text-sm font-bold transition-colors">
+                                        Submit
+                                    </button>
+                                </div>
+                            )}
 
-                            <div className="space-y-2">
-                                <label className="text-xs font-bold text-slate-500 uppercase ml-1">Phone Number</label>
-                                <div className="flex gap-2 h-14">
-                                    <div className="relative w-36 shrink-0 h-full">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="space-y-1.5">
+                                    <label className="text-[10px] font-bold text-slate-500 uppercase ml-1">Phone Number</label>
+                                    <div className="flex gap-2 h-[46px]">
+                                        <div className="relative w-28 shrink-0 h-full">
+                                            <select 
+                                                value={userDetails.countryCode}
+                                                onChange={(e) => setUserDetails({...userDetails, countryCode: e.target.value})}
+                                                className="w-full h-full appearance-none bg-black/20 border border-white/10 rounded-xl pl-3 pr-6 text-white focus:outline-none focus:border-blue-500 cursor-pointer text-sm"
+                                            >
+                                                {countryList.map((country) => (
+                                                    <option key={country.name} value={country.code} className="bg-[#0b0f1f]">
+                                                        {country.flag} {country.code}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                            <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500">
+                                                <ChevronDown className="w-3 h-3" />
+                                            </div>
+                                        </div>
+                                        <input 
+                                            type="tel" placeholder="98765 43210" 
+                                            className="flex-grow h-full bg-black/20 border border-white/10 rounded-xl px-4 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors"
+                                            value={userDetails.phone} onChange={(e) => setUserDetails({...userDetails, phone: e.target.value})}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="space-y-1.5">
+                                    <label className="text-[10px] font-bold text-slate-500 uppercase ml-1">Highest Qualification</label>
+                                    <div className="relative h-[46px]">
                                         <select 
-                                            value={userDetails.countryCode}
-                                            onChange={(e) => setUserDetails({...userDetails, countryCode: e.target.value})}
-                                            className="w-full h-full appearance-none bg-black/20 border border-white/10 rounded-xl pl-3 pr-8 text-white focus:outline-none focus:border-blue-500 cursor-pointer text-sm"
+                                            value={userDetails.qualification}
+                                            onChange={(e) => setUserDetails({...userDetails, qualification: e.target.value})}
+                                            className="w-full h-full appearance-none bg-black/20 border border-white/10 rounded-xl pl-4 pr-8 text-white focus:outline-none focus:border-blue-500 cursor-pointer text-sm"
                                         >
-                                            {countryList.map((country) => (
-                                                <option key={country.name} value={country.code} className="bg-[#0b0f1f]">
-                                                    {country.flag} {country.code}
-                                                </option>
-                                            ))}
+                                            <option value="" disabled className="bg-[#0b0f1f] text-slate-500">Select Qualification</option>
+                                            <option value="B.Tech/BE" className="bg-[#0b0f1f]">B.Tech/B.E.</option>
+                                            <option value="BCA" className="bg-[#0b0f1f]">BCA</option>
+                                            <option value="B.Sc" className="bg-[#0b0f1f]">B.Sc (Computer Science/IT)</option>
+                                            <option value="MCA" className="bg-[#0b0f1f]">MCA</option>
+                                            <option value="M.Tech/ME" className="bg-[#0b0f1f]">M.Tech/M.E.</option>
+                                            <option value="Diploma" className="bg-[#0b0f1f]">Diploma</option>
+                                            <option value="Other" className="bg-[#0b0f1f]">Other</option>
                                         </select>
                                         <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500">
                                             <ChevronDown className="w-4 h-4" />
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+
+                            <div className="space-y-1.5">
+                                <label className="text-[10px] font-bold text-slate-500 uppercase ml-1">College / University Name</label>
+                                <div className="relative">
+                                    <Building2 className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
                                     <input 
-                                        type="tel" placeholder="98765 43210" 
-                                        className="flex-grow h-full bg-black/20 border border-white/10 rounded-xl px-4 text-white focus:outline-none focus:border-blue-500 transition-colors"
-                                        value={userDetails.phone} onChange={(e) => setUserDetails({...userDetails, phone: e.target.value})}
+                                        type="text" placeholder="Enter your college name" 
+                                        className="w-full bg-black/20 border border-white/10 rounded-xl pl-10 pr-4 py-3.5 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors"
+                                        value={userDetails.collegeName} onChange={(e) => setUserDetails({...userDetails, collegeName: e.target.value})}
                                     />
                                 </div>
                             </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="space-y-1.5">
+                                    <label className="text-[10px] font-bold text-slate-500 uppercase ml-1">City</label>
+                                    <div className="relative">
+                                        <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                                        <input 
+                                            type="text" placeholder="e.g. New Delhi" 
+                                            className="w-full bg-black/20 border border-white/10 rounded-xl pl-9 pr-4 py-3.5 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors"
+                                            value={userDetails.city} onChange={(e) => setUserDetails({...userDetails, city: e.target.value})}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="space-y-1.5">
+                                    <label className="text-[10px] font-bold text-slate-500 uppercase ml-1">State</label>
+                                    <input 
+                                        type="text" placeholder="e.g. Delhi" 
+                                        className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none focus:border-blue-500 transition-colors"
+                                        value={userDetails.state} onChange={(e) => setUserDetails({...userDetails, state: e.target.value})}
+                                    />
+                                </div>
+                            </div>
+
                         </div>
 
-                        <button 
-                            onClick={generateQuiz}
-                            disabled={!userDetails.name || !otpVerified || !userDetails.phone}
-                            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2 shadow-lg shadow-blue-900/20"
-                        >
-                            {!otpVerified ? (
-                                <span className="flex items-center gap-2"><ShieldCheck className="w-4 h-4" /> Verify Email to Start</span>
-                            ) : (
-                                <>Start Assessment <ChevronRight className="w-5 h-5" /></>
-                            )}
-                        </button>
+                        <div className="pt-2">
+                            <button 
+                                onClick={generateQuiz}
+                                disabled={!isFormValid}
+                                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2 shadow-lg shadow-blue-900/20"
+                            >
+                                {!otpVerified ? (
+                                    <span className="flex items-center gap-2"><ShieldCheck className="w-4 h-4" /> Verify Email to Start</span>
+                                ) : !isFormValid ? (
+                                    <span className="flex items-center gap-2">Fill all details to proceed</span>
+                                ) : (
+                                    <>Start Assessment <ChevronRight className="w-5 h-5" /></>
+                                )}
+                            </button>
+                        </div>
                     </div>
                 )}
 
@@ -544,10 +625,10 @@ function ScholarshipTestContent() {
                 )}
 
                 {step === 'quiz' && questions.length > 0 && (
-                    <div className="flex flex-col h-full">
+                    <div className="flex flex-col h-full animate-in fade-in slide-in-from-right-4 duration-300">
                         <div className="flex justify-between items-center mb-8">
                             <div className="text-sm text-slate-400">
-                                Question <span className="text-white font-bold">{currentQuestionIndex + 1}</span> / {questions.length}
+                                Question <span className="text-white font-bold text-lg">{currentQuestionIndex + 1}</span> / {questions.length}
                             </div>
                             <span className={`uppercase font-bold text-[10px] px-3 py-1 rounded-full border ${
                                 questions[currentQuestionIndex].difficulty === 'easy' ? 'bg-green-500/10 text-green-400 border-green-500/20' :
@@ -569,7 +650,7 @@ function ScholarshipTestContent() {
                                     onClick={() => setAnswers({...answers, [questions[currentQuestionIndex].id]: opt})}
                                     className={`w-full text-left p-4 rounded-xl border-2 transition-all duration-200 ${
                                         answers[questions[currentQuestionIndex].id] === opt 
-                                        ? 'bg-blue-600 border-blue-500 text-white shadow-lg shadow-blue-900/20 transform scale-[1.02]' 
+                                        ? 'bg-blue-600 border-blue-500 text-white shadow-lg shadow-blue-900/20 transform scale-[1.01]' 
                                         : 'bg-white/5 border-white/5 text-slate-300 hover:bg-white/10 hover:border-white/20'
                                     }`}
                                 >
@@ -601,9 +682,9 @@ function ScholarshipTestContent() {
                             ) : (
                                 <button 
                                     onClick={submitQuiz}
-                                    className="px-8 py-3 rounded-xl bg-green-600 text-white font-bold hover:bg-green-500 transition-colors shadow-lg shadow-green-900/20"
+                                    className="px-8 py-3 rounded-xl bg-green-600 text-white font-bold hover:bg-green-500 transition-colors shadow-lg shadow-green-900/20 flex items-center gap-2"
                                 >
-                                    Submit Test
+                                    Submit Test <CheckCircle2 className="w-4 h-4"/>
                                 </button>
                             )}
                         </div>
