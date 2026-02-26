@@ -485,6 +485,9 @@ export default function Navbar() {
               <Link href="/insights" className="px-1 text-[10px] font-bold uppercase tracking-[2px] text-slate hover:text-white transition-all">
                 Insights
               </Link>
+              <Link href="/manee" className="px-1 text-[10px] font-bold uppercase tracking-[2px] text-slate hover:text-white transition-all">
+                Manee Ask
+              </Link>
             </div>
           </div>
 
