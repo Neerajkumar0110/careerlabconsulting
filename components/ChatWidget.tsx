@@ -287,7 +287,7 @@ export default function ChatWidget() {
           <button onClick={() => setShowOffer(false)} className="absolute -top-2 -left-2 bg-black text-white rounded-full p-1 border border-white/20"><X size={10} /></button>
           <div className="flex items-center gap-2">
             <div className="bg-black p-1.5 rounded-lg"><Sparkles size={14} className="text-yellow-300" /></div>
-            <p className="text-[10px] font-bold leading-tight">Manee - AI Recruitment Assistant</p>
+            <p className="text-[10px] font-bold leading-tight">May I Help You</p>
           </div>
         </motion.div>
       )}
