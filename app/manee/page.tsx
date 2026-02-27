@@ -7,70 +7,35 @@ import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/sections/Footer";
-import { Send, Loader2, Sparkles, User, Bot, Mic, MicOff, Settings, History, Trash2, Cpu, X } from "lucide-react";
-import ReactMarkdown from 'react-markdown'; // Added Markdown Parser
+import { Send, Loader2, Sparkles, User, Bot, Settings, History, Trash2, Cpu, X } from "lucide-react";
+
+// Image render karne ke liye helper function
+const renderMessage = (content: string) => {
+  // Regex to detect Markdown images: ![alt](url)
+  const parts = content.split(/(!\[.*?\]\(.*?\))/g);
+  
+  return parts.map((part, i) => {
+    const imgMatch = part.match(/!\[(.*?)\]\((.*?)\)/);
+    if (imgMatch) {
+      return (
+        <img 
+          key={i} 
+          src={imgMatch[2]} 
+          alt={imgMatch[1]} 
+          className="w-full max-w-2xl rounded-2xl mt-4 mb-2 shadow-2xl border border-white/10 object-cover bg-black/50 min-h-[200px]" 
+        />
+      );
+    }
+    return <span key={i} className="whitespace-pre-wrap">{part}</span>;
+  });
+};
 
 export default function ManeeOS() {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<{ role: 'user' | 'ai', content: string }[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isListening, setIsListening] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
-  
-  const recognitionRef = useRef<any>(null);
   const [activeModal, setActiveModal] = useState<'history' | 'core' | 'system' | null>(null);
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).speechRecognition;
-      if (SpeechRecognition) {
-        const recognition = new SpeechRecognition();
-        recognition.lang = 'en-IN';
-        recognition.continuous = false;
-        recognition.interimResults = false;
-
-        recognition.onresult = (event: any) => {
-          const transcript = event.results[0][0].transcript;
-          setInput((prev) => prev ? prev + ' ' + transcript : transcript);
-          setIsListening(false);
-        };
-
-        recognition.onerror = (event: any) => {
-          console.error("Mic error detail:", event.error);
-          setIsListening(false);
-          if (event.error === 'not-allowed') {
-             alert("MICROPHONE BLOCKED: Please click the 'Settings/Lock' icon in your browser URL bar, allow Microphone access, and refresh the page.");
-          }
-        };
-
-        recognition.onend = () => {
-          setIsListening(false);
-        };
-
-        recognitionRef.current = recognition;
-      }
-    }
-  }, []);
-
-  const toggleListening = () => {
-    if (!recognitionRef.current) {
-      alert("Voice recognition is not supported in this browser. Please use Chrome.");
-      return;
-    }
-
-    if (isListening) {
-      recognitionRef.current.stop();
-      setIsListening(false);
-    } else {
-      try {
-        recognitionRef.current.start();
-        setIsListening(true);
-      } catch (error: any) {
-        console.error("Failed to start mic:", error);
-        setIsListening(false);
-      }
-    }
-  };
 
   useEffect(() => {
     if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -161,14 +126,10 @@ export default function ManeeOS() {
                       ? 'bg-blue-600 text-white rounded-tr-none shadow-blue-500/20' 
                       : 'bg-white/[0.03] border border-white/10 text-slate-200 rounded-tl-none backdrop-blur-md'
                     }`}>
-                      {/* MARKDOWN PARSER ADDED HERE */}
-                      {msg.role === 'user' ? (
-                        <p className="whitespace-pre-wrap">{msg.content}</p>
-                      ) : (
-                        <div className="prose prose-invert prose-p:leading-relaxed prose-pre:bg-slate-900 prose-pre:border prose-pre:border-white/10 max-w-none">
-                          <ReactMarkdown>{msg.content}</ReactMarkdown>
-                        </div>
-                      )}
+                      {/* Yahan par renderMessage function ko call kiya hai */}
+                      <div className="w-full break-words">
+                        {renderMessage(msg.content)}
+                      </div>
                     </div>
                   </motion.div>
                 ))}
@@ -194,16 +155,8 @@ export default function ManeeOS() {
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                     placeholder="Initialize Manee Command..."
-                    className="relative w-full bg-[#03081a]/90 border border-white/10 rounded-2xl py-4 md:py-5 px-6 md:px-8 pr-16 focus:outline-none focus:border-blue-500/50 transition-all text-white text-base md:text-lg shadow-2xl placeholder:text-slate-700"
+                    className="relative w-full bg-[#03081a]/90 border border-white/10 rounded-2xl py-4 md:py-5 px-6 md:px-8 focus:outline-none focus:border-blue-500/50 transition-all text-white text-base md:text-lg shadow-2xl placeholder:text-slate-700"
                   />
-                  <button 
-                    onClick={toggleListening}
-                    className={`absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-xl transition-all ${
-                      isListening ? 'text-red-500 animate-pulse' : 'text-slate-500 hover:text-blue-500'
-                    }`}
-                  >
-                    {isListening ? <MicOff size={22} /> : <Mic size={22} />}
-                  </button>
                 </div>
                 <button 
                   onClick={handleSend} 
@@ -276,10 +229,6 @@ export default function ManeeOS() {
                   <h2 className="text-xl font-bold mb-6 flex items-center gap-3"><Settings className="text-blue-500"/> System Settings</h2>
                   <div className="space-y-4">
                     <div className="flex justify-between items-center p-4 bg-white/5 rounded-xl border border-white/5">
-                      <span className="text-slate-400">Voice Recognition</span>
-                      <span className="text-green-400 text-sm font-bold">Supported</span>
-                    </div>
-                    <div className="flex justify-between items-center p-4 bg-white/5 rounded-xl border border-white/5">
                       <span className="text-slate-400">Theme</span>
                       <span className="text-white text-sm">Dark Matter</span>
                     </div>
@@ -342,7 +291,6 @@ function SidebarIcon({ icon, label, onClick, danger = false }: any) {
         {icon}
       </button>
 
-      {/* Tooltip Blur Removed to fix ghosting */}
       {mounted && isHovered && createPortal(
         <div 
           className="fixed pointer-events-none transition-all duration-150 z-[9999]"
@@ -352,9 +300,9 @@ function SidebarIcon({ icon, label, onClick, danger = false }: any) {
             transform: 'translateY(-50%)', 
           }}
         >
-          <div className="bg-[#0f172a] border border-slate-700 text-[10px] px-3.5 py-1.5 rounded-lg uppercase tracking-[0.2em] font-bold text-white whitespace-nowrap shadow-2xl">
+          <div className="bg-[#0f172a] border border-white/10 text-[10px] px-3.5 py-1.5 rounded-lg uppercase tracking-[0.2em] font-bold text-white whitespace-nowrap shadow-2xl backdrop-blur-sm">
             {label}
-            <div className="absolute top-1/2 -left-1.5 -translate-y-1/2 w-3 h-3 bg-[#0f172a] border-l border-b border-slate-700 rotate-45" />
+            <div className="absolute top-1/2 -left-1.5 -translate-y-1/2 w-3 h-3 bg-[#0f172a] border-l border-b border-white/10 rotate-45" />
           </div>
         </div>,
         document.body
