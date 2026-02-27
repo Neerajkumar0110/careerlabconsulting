@@ -18,7 +18,6 @@ const HowItWorksSection = () => {
 
   return (
     <section className="relative py-12 sm:py-16 md:py-24 px-4 sm:px-8 md:px-12 bg-[#020617] overflow-hidden">
-      {/* Background Blurs */}
       <div 
         className="absolute top-1/2 left-0 -translate-y-1/2 w-64 sm:w-72 h-64 sm:h-72 bg-blue-600/10 rounded-full blur-[100px] -z-10 animate-pulse" 
         aria-hidden="true"

@@ -3,7 +3,13 @@
 import React, { useState, useMemo } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { driveToImage } from '@/utils/driveToImage';
+
+const driveToImage = (url: string): string => {
+  if (!url || !url.includes('drive.google.com')) return url;
+  const match = url.match(/\/d\/([^/]+)/);
+  const id = match ? match[1] : null;
+  return id ? `https://lh3.googleusercontent.com/d/${id}=s1600` : url;
+};
 
 interface Service {
   id: string;

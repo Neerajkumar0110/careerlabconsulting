@@ -8,12 +8,10 @@ const trustFeatures = [
   { icon: <Users className="w-5 h-5 text-green-400" />, title: "Multi-User Scale", desc: "Unlimited agents" },
 ];
 
-/* ── Dot ── */
 const Dot = ({ color = 'bg-red-500' }) => (
   <span className={`w-2.5 h-2.5 rounded-full ${color} inline-block`} />
 );
 
-/* ── Metric bar ── */
 const MetricBar = ({
   label,
   value,
