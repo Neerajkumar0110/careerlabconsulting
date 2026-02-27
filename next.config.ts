@@ -3,11 +3,15 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   compress: true,
-  poweredByHeader: false, 
+  poweredByHeader: false,
+
+  compiler: {
+    removeConsole: process.env.NODE_ENV === "production",
+  },
 
   images: {
     formats: ['image/avif', 'image/webp'],
-    minimumCacheTTL: 31536000, 
+    minimumCacheTTL: 31536000,
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     remotePatterns: [
@@ -19,10 +23,10 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'cdn.worldvectorlogo.com' },
       { protocol: 'https', hostname: 'upload.wikimedia.org' },
       { protocol: 'https', hostname: 'www.vectorlogo.zone' },
-      { protocol: 'https', hostname: 'media.licdn.com' }, 
-      { protocol: 'https', hostname: 'images.unsplash.com' }, 
+      { protocol: 'https', hostname: 'media.licdn.com' },
+      { protocol: 'https', hostname: 'images.unsplash.com' },
       { protocol: 'https', hostname: 'plus.unsplash.com' },
-      { protocol: 'https', hostname: 'i.pravatar.cc' }, 
+      { protocol: 'https', hostname: 'i.pravatar.cc' },
       { protocol: 'https', hostname: 'videocdn.cdnpk.net' },
       { protocol: 'https', hostname: 'img.freepik.com' },
       { protocol: 'https', hostname: 'cdn-icons-png.flaticon.com' },
@@ -42,11 +46,21 @@ const nextConfig: NextConfig = {
           { key: 'X-Content-Type-Options', value: 'nosniff' },
           { key: 'Referrer-Policy', value: 'origin-when-cross-origin' },
           { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
-          { key: 'Access-Control-Allow-Origin', value: '*' }, 
+          { key: 'Access-Control-Allow-Origin', value: '*' },
+          {
+            key: 'Link',
+            value: '<https://fonts.googleapis.com>; rel=preconnect, <https://fonts.gstatic.com>; rel=preconnect; crossorigin'
+          },
         ],
       },
       {
         source: '/fonts/(.*)',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
+      {
+        source: '/_next/static/(.*)',
         headers: [
           { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
         ],
@@ -56,6 +70,12 @@ const nextConfig: NextConfig = {
 
   experimental: {
     scrollRestoration: true,
+    optimizePackageImports: [
+      'lucide-react', 
+      'framer-motion', 
+      '@headlessui/react', 
+      'lodash'
+    ],
   },
 };
 
