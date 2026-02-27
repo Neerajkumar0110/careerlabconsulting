@@ -155,7 +155,7 @@ function AptitudeTestContent() {
             name: userDetails.name,
             email: userDetails.email,
             phone: fullPhoneNumber,
-            planName: 'College Hiring Aptitude',
+            planName: 'Career Lab Consulting Hiring',
             testType: 'aptitude', 
             cheatWarnings: warnings,
             qualification: userDetails.qualification,
@@ -220,7 +220,7 @@ function AptitudeTestContent() {
         
         const randomTopics = techKeywords.sort(() => 0.5 - Math.random()).slice(0, 3).join(', ');
 
-        const prompt = `You are an expert technical interviewer. Create a HIGHLY UNIQUE College Hiring Aptitude Test. 
+        const prompt = `You are an expert technical interviewer. Create a HIGHLY UNIQUE Career Lab Consulting Hiring Test. 
         IMPORTANT: This must be a completely new set of questions. Do not repeat previous generations.
         
         Candidate Context:
@@ -303,7 +303,7 @@ function AptitudeTestContent() {
             phone: fullPhoneNumber,
             score: calculatedScore,
             totalQuestions: questions.length, 
-            planName: 'College Hiring Aptitude',
+            planName: 'Career Lab Consulting Hiring',
             testType: 'aptitude', 
             cheatWarnings: warnings,
             testResponses: formattedResponses,
@@ -349,7 +349,7 @@ function AptitudeTestContent() {
             
             <div className="p-6 border-b border-white/10 flex justify-between items-center bg-[#020617]/50 backdrop-blur-md sticky top-0 z-20">
                 <h3 className="text-xl font-bold text-white flex items-center gap-2">
-                    <Briefcase className="text-purple-400" /> College Hiring Aptitude
+                    <Briefcase className="text-purple-400" /> Career Lab Consulting Hiring
                 </h3>
                 
                 {step === 'quiz' ? (
