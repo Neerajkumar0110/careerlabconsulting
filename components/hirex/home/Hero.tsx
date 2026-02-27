@@ -1,9 +1,11 @@
+// components/hirex/home/Hero.tsx
+
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { ArrowRight, ShieldCheck, Zap } from 'lucide-react';
+import { ArrowRight, ShieldCheck, Zap, Search, MapPin } from 'lucide-react';
 
 const SpaceBackground = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -63,10 +65,10 @@ const SpaceBackground = () => {
 
         if (x >= 0 && x < width && y >= 0 && y < height) {
           if (star.text) {
-            const baseFontSize = 16; 
+            const baseFontSize = 14; 
             const dynamicFontSize = Math.floor(size * baseFontSize);
             
-            ctx.font = `900 ${dynamicFontSize}px sans-serif`;
+            ctx.font = `500 ${dynamicFontSize}px sans-serif`;
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
 
@@ -130,7 +132,7 @@ export default function Hero() {
           <span className="tracking-widest uppercase md:text-[11px] text-[8px] font-black">AI-Autonomous Job Matching Engine</span>
         </div>
 
-        <h1 className="text-4xl md:text-4xl font-black text-white tracking-tighter mb-4 md:leading-[1.2] leading-[1.1] uppercase italic">
+        <h1 className="text-4xl md:text-6xl font-black text-white tracking-tighter mb-4 md:leading-[1.1] leading-[1.1] uppercase italic">
           Your Career, <span className="text-blue-500 italic">Quantified.</span> <br />
           Hiring, <span className="text-indigo-400">Automated.</span>
         </h1>
@@ -139,7 +141,31 @@ export default function Hero() {
           The first 360-degree career ecosystem syncing <span className="text-white font-bold underline decoration-blue-500/50">GitHub</span>, <span className="text-white font-bold underline decoration-indigo-500/50">LinkedIn</span>, and AI assessments.
         </p>
 
-        <div className="flex flex-col sm:flex-row justify-center gap-5 mb-15">
+        <div className="max-w-4xl mx-auto mb-10 px-2">
+          <div className="bg-white/5 backdrop-blur-xl border border-white/10 p-2 md:p-3 rounded-3xl md:rounded-full flex flex-col md:flex-row items-center gap-3 shadow-2xl">
+            <div className="flex items-center gap-3 flex-1 w-full px-4 border-b md:border-b-0 md:border-r border-white/10 pb-3 md:pb-0">
+              <Search className="text-blue-500 shrink-0" size={20} />
+              <input 
+                type="text" 
+                placeholder="Job title, skills, or company..." 
+                className="bg-transparent border-none outline-none text-white w-full placeholder:text-slate-500 text-sm md:text-base py-2"
+              />
+            </div>
+            <div className="flex items-center gap-3 flex-1 w-full px-4">
+              <MapPin className="text-indigo-400 shrink-0" size={20} />
+              <input 
+                type="text" 
+                placeholder="Location or Remote" 
+                className="bg-transparent border-none outline-none text-white w-full placeholder:text-slate-500 text-sm md:text-base py-2"
+              />
+            </div>
+            <button className="w-full md:w-auto bg-blue-600 hover:bg-blue-500 text-white font-black px-8 py-4 rounded-2xl md:rounded-full transition-all text-sm uppercase tracking-wider flex items-center justify-center gap-2">
+              Find Jobs <ArrowRight size={16} />
+            </button>
+          </div>
+        </div>
+
+        <div className="flex flex-col sm:flex-row justify-center gap-5 mb-16">
           <button className="flex items-center justify-center gap-3 bg-blue-600 text-white px-10 py-5 rounded-[1.5rem] text-sm font-black uppercase tracking-widest hover:bg-blue-500 transition-all shadow-xl shadow-blue-600/30 active:scale-95">
             Join as Candidate <ArrowRight size={18} />
           </button>
@@ -148,7 +174,7 @@ export default function Hero() {
           </button>
         </div>
         
-        <div className="relative mb-5">
+        <div className="relative mb-8">
           <div className="absolute inset-0 flex items-center" aria-hidden="true">
             <div className="w-full border-t border-white/10 opacity-30"></div>
           </div>
@@ -159,10 +185,10 @@ export default function Hero() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-12 items-center justify-items-center opacity-90">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-12 items-center justify-items-center opacity-90">
           {PARTNERS.map((partner) => (
-            <div key={partner.name} className="flex items-center gap-4 group cursor-pointer bg-white/[0.03] px-6 py-3 rounded-2xl border border-white/5 hover:border-blue-500/30 hover:bg-white/[0.05] transition-all">
-              <div className="relative h-7 w-7">
+            <div key={partner.name} className="w-full md:w-auto flex items-center gap-4 group cursor-pointer bg-white/[0.03] px-6 py-3 rounded-2xl border border-white/5 hover:border-blue-500/30 hover:bg-white/[0.05] transition-all">
+              <div className="relative h-7 w-7 shrink-0">
                 <Image src={partner.logo} alt={partner.name} fill sizes="28px" className="object-contain" />
               </div>
               <span className="text-sm font-black text-white tracking-widest uppercase italic">
