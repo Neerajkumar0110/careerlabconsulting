@@ -323,7 +323,7 @@ export default function Navbar() {
           <div className="flex items-center gap-10 h-full">
             <Link href="/" className="flex-shrink-0" aria-label="Home">
               <img src="/logo.png" alt="Career Lab Consulting" 
-                className="object-contain h-9 w-auto"
+                className="object-contain h-10 w-auto"
                 loading="eager"
               />
             </Link>
