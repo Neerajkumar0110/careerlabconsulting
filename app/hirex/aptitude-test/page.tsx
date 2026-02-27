@@ -11,7 +11,7 @@ import {
   Loader2, ChevronRight, Trophy, Mail, GraduationCap, X, 
   CheckCircle2, ArrowRight, ShieldCheck, ChevronDown,
   Timer, AlertTriangle, Ban, Building2, MapPin,
-  Briefcase
+  Briefcase, Eye, Lock, Zap
 } from 'lucide-react';
 
 interface Question {
@@ -93,6 +93,7 @@ function AptitudeTestContent() {
   const [timeLeft, setTimeLeft] = useState(900); 
   const [warnings, setWarnings] = useState(0);
   const [showWarningModal, setShowWarningModal] = useState(false);
+  const [showInstructionModal, setShowInstructionModal] = useState(false); // NEW STATE
 
   const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY || "");
 
@@ -197,6 +198,7 @@ function AptitudeTestContent() {
   };
 
   const generateQuiz = async (retryCount = 0) => {
+    setShowInstructionModal(false); 
     setStep('loading');
     
     if (!process.env.NEXT_PUBLIC_GEMINI_API_KEY) {
@@ -324,7 +326,7 @@ function AptitudeTestContent() {
     <div className="min-h-screen bg-[#020617] text-white flex items-center justify-center p-4 md:p-8 font-sans">
         
         {showWarningModal && (
-            <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in duration-300">
+            <div className="fixed inset-0 bg-black/80 z-[60] flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in duration-300">
                 <div className="bg-[#1e1e2f] border-2 border-yellow-500 rounded-2xl p-8 max-w-md text-center shadow-2xl shadow-yellow-500/20 transform scale-100 transition-transform">
                     <div className="bg-yellow-500/10 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
                         <AlertTriangle className="w-10 h-10 text-yellow-500 animate-pulse" />
@@ -341,6 +343,61 @@ function AptitudeTestContent() {
                     >
                         I Understand, Resume Test
                     </button>
+                </div>
+            </div>
+        )}
+
+        {showInstructionModal && (
+            <div className="fixed inset-0 bg-black/90 z-[100] flex items-center justify-center p-4 backdrop-blur-xl animate-in fade-in zoom-in-95 duration-300">
+                <div className="bg-[#0f172a] border border-purple-500/30 rounded-3xl p-8 max-w-lg w-full shadow-[0_0_50px_rgba(168,85,247,0.15)] relative overflow-hidden">
+                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-purple-500 to-transparent"></div>
+                    
+                    <div className="flex items-center gap-4 mb-6">
+                        <div className="bg-purple-500/20 p-3 rounded-2xl">
+                            <Lock className="w-8 h-8 text-purple-400" />
+                        </div>
+                        <div>
+                            <h2 className="text-2xl font-black text-white">Security Protocol</h2>
+                            <p className="text-purple-400 text-xs font-bold uppercase tracking-widest">Anti-Cheating AI Enabled</p>
+                        </div>
+                    </div>
+
+                    <div className="space-y-4 mb-8">
+                        <div className="flex gap-4 p-4 bg-white/5 rounded-2xl border border-white/5">
+                            <Eye className="w-6 h-6 text-blue-400 shrink-0" />
+                            <p className="text-slate-300 text-sm"><span className="text-white font-bold">Strict Monitoring:</span> Our AI tracks tab switching, window resizing, and focus loss in real-time.</p>
+                        </div>
+                        <div className="flex gap-4 p-4 bg-white/5 rounded-2xl border border-white/5">
+                            <AlertTriangle className="w-6 h-6 text-yellow-500 shrink-0" />
+                            <p className="text-slate-300 text-sm"><span className="text-white font-bold">One Warning Only:</span> You will get exactly <span className="text-yellow-500 underline">ONE</span> warning. The second violation results in instant disqualification.</p>
+                        </div>
+                        <div className="flex gap-4 p-4 bg-red-500/10 rounded-2xl border border-red-500/20">
+                            <Ban className="w-6 h-6 text-red-500 shrink-0" />
+                            <p className="text-red-200 text-sm"><span className="font-bold">Permanent Ban:</span> Cheating attempts will lead to a permanent block from all future Career Lab Consulting hiring cycles.</p>
+                        </div>
+                    </div>
+
+                    <div className="bg-blue-500/10 border border-blue-500/20 p-4 rounded-xl mb-8 flex items-start gap-3">
+                        <Zap className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
+                        <p className="text-blue-200 text-xs leading-relaxed">
+                            Please ensure your notifications are turned off and you have a stable internet connection. Do not attempt to use "Ctrl+C/V" or right-click during the test.
+                        </p>
+                    </div>
+
+                    <div className="flex gap-3">
+                        <button 
+                            onClick={() => setShowInstructionModal(false)}
+                            className="flex-1 bg-white/5 hover:bg-white/10 text-white font-bold py-4 rounded-2xl transition-all border border-white/10"
+                        >
+                            Go Back
+                        </button>
+                        <button 
+                            onClick={() => generateQuiz()}
+                            className="flex-[2] bg-purple-600 hover:bg-purple-500 text-white font-black py-4 rounded-2xl transition-all shadow-lg shadow-purple-500/25 flex items-center justify-center gap-2"
+                        >
+                            Accept & Start Exam <ArrowRight className="w-5 h-5" />
+                        </button>
+                    </div>
                 </div>
             </div>
         )}
@@ -521,7 +578,7 @@ function AptitudeTestContent() {
 
                         <div className="pt-2">
                             <button 
-                                onClick={() => generateQuiz(0)}
+                                onClick={() => setShowInstructionModal(true)} 
                                 disabled={!isFormValid}
                                 className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-4 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2 shadow-lg shadow-purple-900/20"
                             >
