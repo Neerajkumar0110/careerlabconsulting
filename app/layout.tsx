@@ -1,18 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import Script from "next/script";
-import dynamic from "next/dynamic";
-
-const ChatWidget = dynamic(() => import("@/components/ChatWidget"), { 
-  ssr: false,
-  loading: () => null 
-});
-
-const BackToTop = dynamic(() => import("@/components/BackToTop"), { 
-  ssr: false 
-});
+import ClientWrapper from "./client-wrapper"; 
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -116,9 +106,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {children}
         </main>
         
-        <ChatWidget />
-        <BackToTop />
-        <SpeedInsights />
+        <ClientWrapper />
       </body>
     </html>
   );
