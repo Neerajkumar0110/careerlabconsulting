@@ -31,6 +31,12 @@ interface UserDetails {
   collegeName: string;
   city: string;
   state: string;
+  fatherName: string;
+  fatherOccupation: string;
+  motherName: string;
+  motherOccupation: string;
+  pincode: string;
+  address: string;  
 }
 
 const countryList = [
@@ -76,7 +82,9 @@ function AptitudeTestContent() {
   const [step, setStep] = useState<'details' | 'loading' | 'quiz' | 'result' | 'disqualified'>('details');
   const [userDetails, setUserDetails] = useState<UserDetails>({ 
       name: '', email: '', phone: '', countryCode: '+91',
-      qualification: '', collegeName: '', city: '', state: '' 
+      qualification: '', collegeName: '', city: '', state: '',
+    fatherName: '', fatherOccupation: '', motherName: '', 
+    motherOccupation: '', pincode: '', address: ''
   });
   
   const [otpSent, setOtpSent] = useState(false);
@@ -554,6 +562,17 @@ function AptitudeTestContent() {
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="space-y-1.5">
+                                    <label className="text-[10px] font-bold text-slate-500 uppercase ml-1">Address</label>
+                                    <div className="relative">
+                                        <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                                        <input 
+                                            type="text" placeholder="e.g. H.No 123, ABC Street, XYZ Colony" 
+                                            className="w-full bg-black/20 border border-white/10 rounded-xl pl-9 pr-4 py-3.5 text-sm text-white focus:outline-none focus:border-purple-500 transition-colors"
+                                            value={userDetails.address} onChange={(e) => setUserDetails({...userDetails, address: e.target.value})}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="space-y-1.5">
                                     <label className="text-[10px] font-bold text-slate-500 uppercase ml-1">City</label>
                                     <div className="relative">
                                         <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
@@ -570,6 +589,52 @@ function AptitudeTestContent() {
                                         type="text" placeholder="e.g. Delhi" 
                                         className="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none focus:border-purple-500 transition-colors"
                                         value={userDetails.state} onChange={(e) => setUserDetails({...userDetails, state: e.target.value})}
+                                    />
+                                </div>
+                                <div className="space-y-1.5">
+                                    <label className="text-[10px] font-bold text-slate-500 uppercase ml-1">Pincode</label>
+                                    <input 
+                                        type="text" placeholder="110001" maxLength={6}
+                                        className="w-full bg-black/20 border border-white/10 rounded-xl p-3.5 text-sm text-white focus:outline-none focus:border-purple-500"
+                                        value={userDetails.pincode} onChange={(e) => setUserDetails({...userDetails, pincode: e.target.value})}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="space-y-1.5">
+                                    <label className="text-[10px] font-bold text-slate-500 uppercase ml-1">Father's Name</label>
+                                    <input 
+                                        type="text" placeholder="Mr. John Doe" 
+                                        className="w-full bg-black/20 border border-white/10 rounded-xl p-3.5 text-sm text-white focus:outline-none focus:border-purple-500"
+                                        value={userDetails.fatherName} onChange={(e) => setUserDetails({...userDetails, fatherName: e.target.value})}
+                                    />
+                                </div>
+                                <div className="space-y-1.5">
+                                    <label className="text-[10px] font-bold text-slate-500 uppercase ml-1">Father's Occupation</label>
+                                    <input 
+                                        type="text" placeholder="e.g. Business, Engineer" 
+                                        className="w-full bg-black/20 border border-white/10 rounded-xl p-3.5 text-sm text-white focus:outline-none focus:border-purple-500"
+                                        value={userDetails.fatherOccupation} onChange={(e) => setUserDetails({...userDetails, fatherOccupation: e.target.value})}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="space-y-1.5">
+                                    <label className="text-[10px] font-bold text-slate-500 uppercase ml-1">Mother's Name</label>
+                                    <input 
+                                        type="text" placeholder="Mrs. Jane Doe" 
+                                        className="w-full bg-black/20 border border-white/10 rounded-xl p-3.5 text-sm text-white focus:outline-none focus:border-purple-500"
+                                        value={userDetails.motherName} onChange={(e) => setUserDetails({...userDetails, motherName: e.target.value})}
+                                    />
+                                </div>
+                                <div className="space-y-1.5">
+                                    <label className="text-[10px] font-bold text-slate-500 uppercase ml-1">Mother's Occupation</label>
+                                    <input 
+                                        type="text" placeholder="e.g. Teacher, Homemaker" 
+                                        className="w-full bg-black/20 border border-white/10 rounded-xl p-3.5 text-sm text-white focus:outline-none focus:border-purple-500"
+                                        value={userDetails.motherOccupation} onChange={(e) => setUserDetails({...userDetails, motherOccupation: e.target.value})}
                                     />
                                 </div>
                             </div>
