@@ -9,7 +9,7 @@ import { motion } from 'framer-motion';
 
 export default function Logo({ isSticky = false }: { isSticky?: boolean }) {
   return (
-    <Link href="/" className="group flex items-center gap-2 md:gap-4 w-fit">
+    <Link href="/" className="group flex items-center gap-2 md:gap-0 w-fit">
       <div className="relative">
         <div
           className={`absolute -inset-1 rounded-xl blur opacity-25 group-hover:opacity-75 transition duration-500
@@ -42,7 +42,7 @@ export default function Logo({ isSticky = false }: { isSticky?: boolean }) {
       </div>
 
       <div className="flex flex-col justify-center h-12">
-        <span className={`text-[15px] md:text-4xl font-black tracking-tighter italic leading-[1.1] transition-colors duration-300 drop-shadow-sm group-hover:drop-shadow-[0_0_8px_rgba(59,130,246,0.25)] ${isSticky ? 'text-slate-900' : 'text-white'}`}>
+        <span className={`text-[15px] md:text-3xl font-black tracking-tighter italic leading-[1.1] transition-colors duration-300 drop-shadow-sm group-hover:drop-shadow-[0_0_8px_rgba(59,130,246,0.25)] ${isSticky ? 'text-slate-900' : 'text-white'}`}>
           Free
           <span className={`relative inline-block px-0 md:px-1 text-transparent bg-clip-text bg-gradient-to-r ${isSticky ? 'from-blue-600 to-cyan-500' : 'from-blue-400 to-cyan-300'}`}>
             lanceX

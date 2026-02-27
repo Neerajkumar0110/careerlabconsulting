@@ -18,9 +18,9 @@ export default function Logo({ isSticky = false }: { isSticky?: boolean }) {
         />
         
         <div className="relative w-12 h-12 flex items-center justify-center overflow-hidden">
-          <Image 
+          <Image
             src="/favicon.ico"
-            alt="CLC Logo"
+            alt="HireX"
             fill
             sizes="48px"
             className="object-contain relative"
