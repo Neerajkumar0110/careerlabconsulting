@@ -1,10 +1,18 @@
-import type { Metadata, Viewport } from "next"; 
+import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import Script from "next/script";
-import ChatWidget from "@/components/ChatWidget";
-import BackToTop from "@/components/BackToTop";
+import dynamic from "next/dynamic";
+
+const ChatWidget = dynamic(() => import("@/components/ChatWidget"), { 
+  ssr: false,
+  loading: () => null 
+});
+
+const BackToTop = dynamic(() => import("@/components/BackToTop"), { 
+  ssr: false 
+});
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,14 +23,14 @@ const geistSans = Geist({
 });
 
 export const viewport: Viewport = {
-  themeColor: "#020617", 
+  themeColor: "#020617",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://careerlabconsulting.com'), 
+  metadataBase: new URL('https://careerlabconsulting.com'),
   title: {
     default: "Career Lab Consulting | Enterprise AI Solution Ecosystem",
     template: "%s | Career Lab Consulting",
@@ -50,7 +58,7 @@ export const metadata: Metadata = {
     siteName: 'Career Lab Consulting',
     images: [
       {
-        url: '/logo.png', 
+        url: '/logo.png',
         width: 1200,
         height: 630,
         alt: 'Career Lab Consulting - AI Ecosystem',
@@ -74,13 +82,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className="scroll-smooth">
       <head>
-        <link rel="preconnect" href="https://images.pexels.com" />
-        <link rel="preconnect" href="https://images.unsplash.com" />
-        
+        <link rel="dns-prefetch" href="https://images.pexels.com" />
+        <link rel="dns-prefetch" href="https://images.unsplash.com" />
+        <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" />
+
         <Script
           id="schema-org"
           type="application/ld+json"
-          strategy="afterInteractive"
+          strategy="worker" 
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
@@ -103,9 +112,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className={`${geistSans.variable} antialiased font-sans bg-[#020617] text-white selection:bg-blue-500/30`}>
-        <main className="min-h-screen">
+        <main className="min-h-screen relative">
           {children}
         </main>
+        
         <ChatWidget />
         <BackToTop />
         <SpeedInsights />
