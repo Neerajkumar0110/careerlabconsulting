@@ -1,3 +1,5 @@
+// components/sections/B2BPricingSection.tsx
+
 'use client';
 
 import React, { useState, useEffect } from 'react';

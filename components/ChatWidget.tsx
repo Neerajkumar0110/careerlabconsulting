@@ -62,11 +62,35 @@ export default function ChatWidget() {
       * Aptitude Test: [Start Aptitude Test](https://www.careerlabconsulting.com/hirex/aptitude-test)
     - Explain Outbound Sales AI: Emphasize our capacity of 1 Lakh calls/day with real human-level voice.
 
+    PRICING KNOWLEDGE BASE (USE THIS TO ANSWER ALL PRICING QUERIES):
+    
+    B2C (Student/Internship) Pricing:
+    - Foundation Plan (6 Months): ₹1,20,000 (India) or $1,499 (International). EMI starts at ₹3,933. Max Scholarship: ₹50,000. Avg Scholarship: ₹20k-₹30k. Target Avg CTC: ₹6-12 LPA (India) / $40k-$60k (Intl). Features: Real Startup Agentic AI Projects, ResumeNFT, Python & Prompt Engineering, 1 Verified Internship.
+    - Elite Plan (12 Months): ₹2,00,000 (India) or $2,699 (International). EMI starts at ₹6,555. Max Scholarship: ₹1,00,000. Avg Scholarship: ₹40k-₹70k. Target Avg CTC: ₹10-26 LPA (India) / $80k-$120k (Intl). Features: 100% Legal Contract, 1-on-1 Mentoring, 3 Premium Bonus Internships, Germany/Remote Role Specialization.
+    
+    B2B (Enterprise/SaaS) Pricing:
+    1. Single Product:
+       - Starter: ₹25,000 / $350 (1 Core Module)
+       - Growth: ₹50,000 / $650 (3 Core Modules, Recommended)
+       - Advanced: ₹1,00,000 / $1,250 (All Core Modules)
+       - Enterprise: Custom
+    2. Combo:
+       - Starter: ₹50,000 / $650 (2 Product Suite)
+       - Growth: ₹1,00,000 / $1,250 (4 Product Suite, Recommended)
+       - Advanced: ₹2,00,000 / $2,500 (Complete Product Suite)
+       - Enterprise: Custom
+    3. All-in-One:
+       - Starter: ₹10,00,000 / $12,000 (Full Ecosystem Access)
+       - Growth: ₹15,00,000 / $18,000 (Scaling Infrastructure, Recommended)
+       - Advanced: ₹25,00,000 / $30,000 (Unlimited Scaling)
+       - Enterprise: Custom Gov-Grade Security
+    * If a B2B user wants Custom Architecture or Enterprise plans, instruct them to call +91 870023 6923 or mention they can book a consultation.
+
     STRICT RULES:
     - Always respond in proper, grammatically correct English. DO NOT use Hinglish.
-    - Example tone: "Certainly! I would be happy to assist you with that." or "Please click the link below to begin your assessment."
-    - Format links using standard Markdown: [Text](URL). Use bullet points for multiple links to ensure clean formatting.
-    - Keep responses concise, well-structured, and easy to read.
+    - Example tone: "Certainly! I would be happy to assist you with that." or "Here are our current pricing tiers for students."
+    - Format links using standard Markdown: [Text](URL). Use bullet points for multiple links and pricing lists to ensure clean formatting.
+    - Keep responses concise, well-structured, and easy to read. Do not overwhelm the user with all pricing at once; ask if they are looking for Student/B2C or Enterprise/B2B options if it is ambiguous.
     - Focus: ${modeContext}`;
   };
 
@@ -166,7 +190,6 @@ export default function ChatWidget() {
 
     const utterance = new SpeechSynthesisUtterance(cleanText);
     const voices = window.speechSynthesis.getVoices();
-    // Prefer English/US voices for proper corporate English tone
     let selectedVoice = voices.find(v => v.lang === "en-US" || v.lang === "en-IN" || v.name.includes("Google US English"));
     if (selectedVoice) utterance.voice = selectedVoice;
     utterance.lang = 'en-US';
