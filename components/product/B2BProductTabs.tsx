@@ -6,7 +6,13 @@ import Image from 'next/image';
 import { 
   Layers, Box, Cpu, CheckCircle2, Zap, TrendingUp, Search, Globe, Users, ShieldCheck, GraduationCap 
 } from 'lucide-react';
-import { driveToImage } from "@/utils/driveToImage";
+
+const driveToImage = (url: string): string => {
+  if (!url || !url.includes('drive.google.com')) return url;
+  const match = url.match(/\/d\/([^/]+)/);
+  const id = match ? match[1] : null;
+  return id ? `https://lh3.googleusercontent.com/d/${id}=s1600` : url;
+};
 
 const productData = {
   single: [

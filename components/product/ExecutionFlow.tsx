@@ -7,7 +7,6 @@ import {
   ArrowRight, CheckCircle2, TrendingUp, Zap, ChevronRight
 } from 'lucide-react';
 
-/* ── Animated counter ─────────────────────────────────── */
 interface CounterProps {
   to: number;
   suffix?: string;
