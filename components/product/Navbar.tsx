@@ -322,7 +322,7 @@ export default function Navbar() {
         <div className="max-w-[1440px] mx-auto px-6 h-full flex items-center justify-between">
           <div className="flex items-center gap-10 h-full">
             <Link href="/" className="flex-shrink-0" aria-label="Home">
-              <img src="/logo.png" alt="Career Lab Consulting Logo" 
+              <img src="/logo.png" alt="Career Lab Consulting" 
                 className="object-contain h-9 w-auto"
                 loading="eager"
               />

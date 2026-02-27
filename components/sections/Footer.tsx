@@ -3,14 +3,13 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import Script from 'next/script'; // Optimized script loading
+import Script from 'next/script'; 
 import { 
   Github, Twitter, Linkedin, Mail, ArrowUpRight, 
   Home, Box, Briefcase, Phone, X, Globe, MapPin, 
   Navigation, Facebook, Instagram, Youtube 
 } from 'lucide-react';
 
-// Static data moved outside component to optimize re-renders
 const footerLinks = {
   "Solutions": [
     { name: 'AI Agents', href: '/ai-agents' },
@@ -67,21 +66,16 @@ export default function B2BFooter() {
       <footer className="bg-[#020617] pt-20 pb-24 md:pb-12 border-t border-white/5 relative overflow-hidden" aria-labelledby="footer-heading">
         <h2 id="footer-heading" className="sr-only">Career Lab Consulting - Enterprise AI Solutions</h2>
         
-        {/* Ambient Background Effect */}
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[1000px] h-[400px] bg-blue-600/5 blur-[120px] -z-10 pointer-events-none" />
 
         <div className="max-w-[1400px] mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-20">
             
-            {/* Brand Column */}
             <div className="lg:col-span-3 flex flex-col items-start">
-              <Link href="/" aria-label="Career Lab Home">
-                <Image 
-                  src="/logo.png" 
-                  alt="Career Lab Consulting Logo" 
-                  width={192} 
-                  height={64}
-                  className="w-48 h-auto mb-6 filter drop-shadow-[0_0_15px_rgba(59,130,246,0.3)]" 
+              <Link href="/" aria-label="Career Lab Consulting" className='pb-5'>
+                <img src="/logo.png" alt="Career Lab Consulting"
+                  className="object-contain h-10 w-auto"
+                  loading="eager"
                 />
               </Link>
               <p className="text-slate-400 text-sm leading-relaxed font-medium mb-10">

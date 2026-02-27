@@ -112,50 +112,6 @@ const industriesMenu = [
   }
 ];
 
-const productMenu = [
-  {
-    id: 'single',
-    title: 'Single Suite Products',
-    icon: Package,
-    subtitle: 'Point solutions for specific business needs',
-    items: [
-      { name: 'Sales Suite', desc: 'AI lead conversion', href: '/products/sales' },
-      { name: 'Marketing Suite', desc: 'Omnichannel automation', href: '/products/marketing' },
-      { name: 'AI Website & Content', desc: 'GenAI site builder', href: '/products/content' },
-      { name: 'Finance & Commerce', desc: 'Automated ledger', href: '/products/finance' },
-      { name: 'People Suite', desc: 'Next-gen HR & Talent', href: '/products/people' },
-      { name: 'Support & Knowledge', desc: 'AI Helpdesk & Wiki', href: '/products/support' },
-      { name: 'Automation Platform', desc: 'Workflow orchestration', href: '/products/automation' },
-      { name: 'Intelligence Suite', desc: 'Advanced analytics', href: '/products/intelligence' },
-      { name: 'Governance Suite', desc: 'AI safety & compliance', href: '/products/governance' },
-      { name: 'Inventory & Supply Chain', desc: 'Predictive logistics', href: '/products/logistics' },
-      { name: 'Education Suite', desc: 'AI Learning Management', href: '/products/education' },
-    ]
-  },
-  {
-    id: 'combo',
-    title: 'Combo Suite Products',
-    icon: Layers,
-    subtitle: 'Integrated bundles for faster growth',
-    items: [
-      { name: 'Business Suite (Flagship)', desc: 'Sales + Marketing + Content', href: '/products/business-suite' },
-      { name: 'Operations Suite', desc: 'People + Finance + Inventory', href: '/products/operations-suite' },
-      { name: 'Growth Suite', desc: 'Business + Finance + Support', href: '/products/growth-suite' },
-      { name: 'Execution Suite', desc: 'Automation + Support + Governance', href: '/products/execution-suite' },
-      { name: 'Education Enterprise', desc: 'Education + People + Finance', href: '/products/education-enterprise' },
-    ]
-  },
-  {
-    id: 'master',
-    title: 'Master Product',
-    icon: Cpu,
-    subtitle: 'The complete AI ecosystem',
-    items: [
-      { name: 'CLC One', desc: 'All-in-One AI SaaS: All suites combined', href: '/products/clc-one' },
-    ]
-  }
-];
-
 const servicesMenu = [
   {
     id: 'consulting',
@@ -265,7 +221,6 @@ export default function Navbar() {
   const [isListening, setIsListening] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [searchResults, setSearchResults] = useState<any>({
-    products: [],
     services: [],
     industries: []
   });
@@ -286,23 +241,12 @@ export default function Navbar() {
     if (searchQuery.trim()) {
       performSearch(searchQuery);
     } else {
-      setSearchResults({ products: [], services: [], industries: [] });
+      setSearchResults({ services: [], industries: [] });
     }
   }, [searchQuery]);
 
   const performSearch = (query: string) => {
     const lowerQuery = query.toLowerCase();
-    
-    const productResults: any[] = [];
-    productMenu.forEach(category => {
-      category.items.forEach(item => {
-        if (item.name.toLowerCase().includes(lowerQuery) || 
-            item.desc.toLowerCase().includes(lowerQuery) ||
-            category.title.toLowerCase().includes(lowerQuery)) {
-          productResults.push({ ...item, category: category.title });
-        }
-      });
-    });
 
     const serviceResults: any[] = [];
     servicesMenu.forEach(category => {
@@ -325,7 +269,6 @@ export default function Navbar() {
     });
 
     setSearchResults({
-      products: productResults.slice(0, 5),
       services: serviceResults.slice(0, 5),
       industries: industryResults.slice(0, 5)
     });
@@ -413,7 +356,7 @@ export default function Navbar() {
           <div className="grid grid-cols-2 gap-y-4 gap-x-8 overflow-y-auto max-h-[320px] pr-4 custom-scrollbar">
             {items[activeTab].items.map((item: any, i: number) => (
               <Link key={i} href={item.href} className="flex items-start gap-4 group p-3 -ml-3 rounded-xl hover:bg-white/5 transition-all">
-                {menuType === 'products' ? (
+                {menuType === '' ? (
                   <div className="flex-1">
                     <p className="text-sm font-bold text-white group-hover:text-blue-400 transition-colors">{item.name}</p>
                     <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">{item.desc}</p>
@@ -453,7 +396,10 @@ export default function Navbar() {
             </Link>
             
             <div className="hidden xl:flex items-center gap-6 h-full">
-              {['products', 'services', 'industries'].map((menu) => (
+              <Link href="/product" className="px-1 text-[10px] font-bold uppercase tracking-[2px] text-slate hover:text-white transition-all">
+                Products
+              </Link>
+              {['services', 'industries'].map((menu) => (
                 <div key={menu} className="h-full flex items-center" 
                   onMouseEnter={() => handleMenuEnter(menu)} 
                   onMouseLeave={() => setActiveMenu(null)}>
@@ -466,15 +412,12 @@ export default function Navbar() {
                   </button>
                   {activeMenu === menu && (
                     <MegaMenuContent 
-                      items={menu === 'products' ? productMenu : menu === 'services' ? servicesMenu : industriesMenu} 
+                      items={menu === 'services' ? servicesMenu : industriesMenu} 
                       menuType={menu} 
                     />
                   )}
                 </div>
               ))}
-              <Link href="/product" className="px-1 text-[10px] font-bold uppercase tracking-[2px] text-slate hover:text-white transition-all">
-                Products
-              </Link>
               <Link href="/freelancex" className="px-1 text-[10px] font-bold uppercase tracking-[2px] text-slate hover:text-white transition-all">
                 FreelanceX
               </Link>
@@ -532,7 +475,6 @@ export default function Navbar() {
 
             <div className="space-y-3">
               {[
-                { label: 'Products', data: productMenu },
                 { label: 'Services', data: servicesMenu },
                 { label: 'Industries', data: industriesMenu }
               ].map((section) => (
@@ -638,7 +580,7 @@ export default function Navbar() {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search products, services, industries..."
+                  placeholder="Search services, industries..."
                   className="w-full bg-white/5 border-2 border-white/10 rounded-2xl py-6 pl-16 pr-24 text-lg text-white placeholder-slate-500 outline-none focus:border-blue-500 transition-colors"
                   autoFocus
                 />
@@ -669,7 +611,6 @@ export default function Navbar() {
 
             <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-3">
               {[
-                { label: 'Products', icon: Package },
                 { label: 'Services', icon: Zap },
                 { label: 'Industries', icon: Monitor },
                 { label: 'Case Studies', icon: Layers }
@@ -687,8 +628,7 @@ export default function Navbar() {
 
             {searchQuery && (
               <div className="mt-8 space-y-4 max-h-[400px] overflow-y-auto custom-scrollbar">
-                {searchResults.products.length === 0 && 
-                 searchResults.services.length === 0 && 
+                {searchResults.services.length === 0 && 
                  searchResults.industries.length === 0 ? (
                   <div className="text-center py-12">
                     <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-slate-800 mb-4">
