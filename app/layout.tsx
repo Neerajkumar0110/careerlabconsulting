@@ -16,7 +16,7 @@ export const viewport: Viewport = {
   themeColor: "#020617",
   width: "device-width",
   initialScale: 1,
-  maximumScale: 5,
+  maximumScale: 5, 
 };
 
 export const metadata: Metadata = {
@@ -102,7 +102,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className={`${geistSans.variable} antialiased font-sans bg-[#020617] text-white selection:bg-blue-500/30`}>
-        <main className="min-h-screen relative">
+        <main className="min-h-screen relative" id="main-content">
           {children}
         </main>
         
