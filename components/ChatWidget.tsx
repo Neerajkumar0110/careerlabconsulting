@@ -18,7 +18,6 @@ const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY || "
 
 export default function ChatWidget() {
   const pathname = usePathname();
-  const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [showVideoIntro, setShowVideoIntro] = useState(false); 
@@ -52,31 +51,36 @@ export default function ChatWidget() {
     if (isFreelanceXPage) modeContext = "FreelanceX Mode - Focus on global high-ticket client acquisition and earning in USD.";
     if (isAptitudePage) modeContext = "Assessment Mode - Helping the candidate stay focused and calm during the hiring test.";
 
-    return `You are Manee, an Autonomous Indian Professional Female AI Agent at Career Lab Consulting.
-    Tone: 30-year-old corporate consultant, highly professional, fluent in Hinglish (Hindi + English).
+    return `You are Manee, an Autonomous Professional Female AI Agent at Career Lab Consulting.
+    Tone: 30-year-old corporate consultant, highly professional, polite, and fluent in proper English.
     
-    AUTONOMOUS BRAIN:
-    - If user asks for help/jobs, say: "Main aapki madad kar sakti hoon. Aap hamara assessment start karein?"
-    - Explain Outbound Sales AI: 1 Lakh calls/day with real human-level voice.
-    - If student asks about internship: Guide them to the 'Scholarship Test'.
+    AUTONOMOUS BRAIN & EXACT LINKS TO USE:
+    - If a student asks about internships, scholarships, or career opportunities, provide these exact clickable links using Markdown bullet points:
+      * Foundation Plan: [Foundation Scholarship Test](https://www.careerlabconsulting.com/scholarship-test?plan=Foundation)
+      * Elite Plan: [Elite Scholarship Test](https://www.careerlabconsulting.com/scholarship-test?plan=Elite)
+    - If a user asks about hiring, job assessments, or aptitude test, provide this exact clickable link:
+      * Aptitude Test: [Start Aptitude Test](https://www.careerlabconsulting.com/hirex/aptitude-test)
+    - Explain Outbound Sales AI: Emphasize our capacity of 1 Lakh calls/day with real human-level voice.
 
     STRICT RULES:
-    - Sound natural and mature. Use Hinglish: "Zaroor! Main zaroor help karungi."
-    - NO Markdown formatting (no **, #). The voice engine needs clean text.
+    - Always respond in proper, grammatically correct English. DO NOT use Hinglish.
+    - Example tone: "Certainly! I would be happy to assist you with that." or "Please click the link below to begin your assessment."
+    - Format links using standard Markdown: [Text](URL). Use bullet points for multiple links to ensure clean formatting.
+    - Keep responses concise, well-structured, and easy to read.
     - Focus: ${modeContext}`;
   };
 
   const triggerSend = useCallback(async (messageText: string) => {
-    if (!messageText.trim() || isLoadingRef.current) return;
-    
     const userMsg = messageText.trim();
+    if (!userMsg || isLoadingRef.current) return;
+    
     setMessages(prev => [...prev, { role: "user", text: userMsg }]);
     setInput("");
     setIsLoading(true);
 
     try {
       const model = genAI.getGenerativeModel({ 
-        model: "gemini-2.5-pro",
+        model: "gemini-3-flash-preview",
         systemInstruction: getDynamicInstruction()
       });
 
@@ -89,11 +93,23 @@ export default function ChatWidget() {
 
       const chat = model.startChat({ history: chatHistory });
       const result = await chat.sendMessage(userMsg);
-      setMessages(prev => [...prev, { role: "bot", text: result.response.text() }]);
+      const responseText = result.response.text();
+      
+      setMessages(prev => [...prev, { role: "bot", text: responseText }]);
     } catch (error: any) {
       console.error("Manee AI Error:", error);
-      // 🚀 QUOTA/429 HANDLING: Professional Fallback
-      setMessages(prev => [...prev, { role: "bot", text: "Maaf kijiyega, abhi bahut saare users mujhse baat kar rahe hain. Kya main aapko Assessment link bhejoon?" }]);
+      
+      let errorMsg = "I apologize, but my systems are currently updating. May I send you the direct link to the Assessment instead?";
+      
+      if (error.message?.includes("429")) {
+        console.warn("Quota Exceeded");
+        errorMsg = "I apologize, but I am currently experiencing high traffic. Please try again in a few moments, or feel free to start your Assessment using the buttons below.";
+      } else if (error.message?.includes("404")) {
+        console.warn("Model Not Found");
+        errorMsg = "Connection error. Model not found in this region. Please verify your API key access.";
+      }
+
+      setMessages(prev => [...prev, { role: "bot", text: errorMsg }]);
     } finally {
       setIsLoading(false);
     }
@@ -108,14 +124,14 @@ export default function ChatWidget() {
     window.speechSynthesis.cancel();
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (!SpeechRecognition) {
-      alert("Browser speech recognition support nahi karta.");
+      alert("Speech recognition is not supported in this browser.");
       return;
     }
 
     const recognition = new SpeechRecognition();
     recognition.continuous = false; 
     recognition.interimResults = true; 
-    recognition.lang = 'hi-IN'; 
+    recognition.lang = 'en-IN';
 
     recognition.onstart = () => setIsListening(true);
     recognition.onresult = (event: any) => {
@@ -141,13 +157,19 @@ export default function ChatWidget() {
       return;
     }
     window.speechSynthesis.cancel(); 
-    const cleanText = text.replace(/[*#_`]/g, '').replace(/\n/g, ' ');
+    
+    let cleanText = text
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+      .replace(/https?:\/\/[^\s]+/g, '') 
+      .replace(/[*#_`]/g, '') 
+      .replace(/\n/g, ' '); 
+
     const utterance = new SpeechSynthesisUtterance(cleanText);
     const voices = window.speechSynthesis.getVoices();
-    // Optimized for Natural Indian Accents
-    let selectedVoice = voices.find(v => v.name.includes("Google हिन्दी") || v.name.includes("Neerja") || v.lang === "en-IN");
+    // Prefer English/US voices for proper corporate English tone
+    let selectedVoice = voices.find(v => v.lang === "en-US" || v.lang === "en-IN" || v.name.includes("Google US English"));
     if (selectedVoice) utterance.voice = selectedVoice;
-    utterance.lang = 'en-IN';
+    utterance.lang = 'en-US';
     utterance.rate = 1.0;
     window.speechSynthesis.speak(utterance);
   };
@@ -172,10 +194,10 @@ export default function ChatWidget() {
     const isHireX = pathname?.includes("/hirex");
     const isFreelanceX = pathname?.includes("/freelancex");
 
-    let welcomeText = `Namaste! I am Manee, your Autonomous AI Consultant. Main aapki digital transformation mein kaise madad kar sakti hoon?`;
-    if (isB2C) welcomeText = `Namaste ${storedName || 'Scholar'}! Career guidance chahiye? Hamara scholarship test abhi live hai!`;
-    else if (isHireX) welcomeText = `Namaste! Welcome to HireX. Humara AI engine hiring ko 100% autonomous bana sakta hai. Details jaanni hain?`;
-    else if (isFreelanceX) welcomeText = `Namaste! Welcome to FreelanceX. Dollar ($) mein earn karna shuru karein?`;
+    let welcomeText = `Hello! I am Manee, your Autonomous AI Consultant. How can I assist you with your digital transformation today?`;
+    if (isB2C) welcomeText = `Hello ${storedName || 'Scholar'}! Are you looking for career guidance? Our scholarship test is currently live!`;
+    else if (isHireX) welcomeText = `Hello and welcome to HireX. Our AI engine can make your hiring process 100% autonomous. Would you like to know more?`;
+    else if (isFreelanceX) welcomeText = `Hello and welcome to FreelanceX. Ready to start earning globally in USD?`;
     
     setMessages([{ role: "bot", text: welcomeText }]);
     setTimeout(() => setShowOffer(true), 5000);
@@ -195,7 +217,6 @@ export default function ChatWidget() {
   return createPortal(
     <div className="fixed bottom-4 right-4 z-[999999] flex flex-col items-end pointer-events-none font-sans text-slate-900">
       
-      {/* 🌸 Autonomous Offer Notification */}
       {showOffer && !isOpen && (
         <motion.div 
           initial={{ opacity: 0, scale: 0.8, y: 20 }}
@@ -205,7 +226,7 @@ export default function ChatWidget() {
           <button onClick={() => setShowOffer(false)} className="absolute -top-2 -left-2 bg-black text-white rounded-full p-1 border border-white/20"><X size={10} /></button>
           <div className="flex items-center gap-2">
             <div className="bg-white/20 p-1.5 rounded-lg"><Sparkles size={14} className="text-yellow-300" /></div>
-            <p className="text-[10px] font-bold leading-tight">Manee: Limited hiring slots for top scorers are open! 🌸</p>
+            <p className="text-[10px] font-bold leading-tight">Manee: Limited hiring slots for top scorers are currently open! 🌸</p>
           </div>
         </motion.div>
       )}
@@ -262,13 +283,24 @@ export default function ChatWidget() {
                 <div className={`max-w-[88%] p-4 rounded-[1.5rem] text-[13px] leading-relaxed shadow-sm ${
                   msg.role === "user" ? "bg-black text-white rounded-tr-none" : "bg-white text-slate-800 rounded-tl-none border border-slate-100"
                 }`}>
-                  <ReactMarkdown>{msg.text}</ReactMarkdown>
+                  <ReactMarkdown
+                    components={{
+                      p: ({node, ...props}) => <p className="m-0 mb-2 last:mb-0" {...props} />,
+                      ul: ({node, ...props}) => <ul className="m-0 pl-4 list-disc space-y-1 my-2" {...props} />,
+                      li: ({node, ...props}) => <li className="pl-1 marker:text-slate-400" {...props} />,
+                      a: ({ node, ...props }) => (
+                        <a {...props} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 underline font-semibold transition-colors decoration-1 underline-offset-2" />
+                      )
+                    }}
+                  >
+                    {msg.text}
+                  </ReactMarkdown>
                 </div>
               </motion.div>
             ))}
             {isLoading && (
               <div className="flex justify-start">
-                <div className="px-4 py-2 bg-white border border-slate-100 rounded-2xl rounded-tl-none animate-pulse text-[#b31f24] font-black text-[10px] tracking-widest uppercase">Manee is thinking...</div>
+                <div className="px-4 py-2 bg-white border border-slate-100 rounded-2xl rounded-tl-none animate-pulse text-[#b31f24] font-black text-[10px] tracking-widest uppercase">Manee is typing...</div>
               </div>
             )}
           </div>
@@ -277,7 +309,7 @@ export default function ChatWidget() {
                 <button onClick={() => triggerSend("Start My Assessment")} className="whitespace-nowrap px-4 py-2 bg-blue-50 border border-blue-100 rounded-full text-[10px] font-black text-blue-600 hover:bg-blue-600 hover:text-white transition-all flex items-center gap-2">
                   <Trophy size={12} /> Start Assessment
                 </button>
-                <button onClick={() => triggerSend("How does AI Voice Demo work?")} className="whitespace-nowrap px-4 py-2 bg-rose-50 border border-rose-100 rounded-full text-[10px] font-black text-[#b31f24] hover:bg-[#b31f24] hover:text-white transition-all flex items-center gap-2">
+                <button onClick={() => triggerSend("How does the AI Voice Demo work?")} className="whitespace-nowrap px-4 py-2 bg-rose-50 border border-rose-100 rounded-full text-[10px] font-black text-[#b31f24] hover:bg-[#b31f24] hover:text-white transition-all flex items-center gap-2">
                   <PhoneCall size={12} /> AI Voice Demo
                 </button>
           </div>
@@ -290,7 +322,7 @@ export default function ChatWidget() {
                 <input 
                   value={input} onChange={(e) => setInput(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && triggerSend(input)}
-                  placeholder={isListening ? "Listening..." : "Poochiye, main yahan hoon..."}
+                  placeholder={isListening ? "Listening..." : "How can I help you today?"}
                   className="flex-1 bg-transparent py-3 text-[13px] outline-none text-slate-800 font-medium placeholder:text-slate-400"
                 />
                 <button onClick={() => triggerSend(input)} disabled={isLoading || !input.trim()} className="bg-[#b31f24] text-white p-2.5 rounded-2xl hover:scale-105 transition-all shadow-lg shadow-red-500/20 disabled:opacity-30">
