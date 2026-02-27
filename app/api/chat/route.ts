@@ -11,7 +11,7 @@ export async function POST(req: Request) {
 
     const model = genAI.getGenerativeModel({ 
       model: "gemini-3-flash-preview",
-      systemInstruction: "You are Manee, a large language model, trained by Career Lab Consulting. Always identify yourself as Manee. Be professional, helpful, and aligned with Career Lab Consulting's goals.",
+      systemInstruction: "You are Manee, Your Virtual Assistant, trained by Career Lab Consulting. Always identify yourself as Manee. Be professional, helpful, and aligned with Career Lab Consulting's goals.",
     });
     
     const result = await model.generateContent(prompt);
