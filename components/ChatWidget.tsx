@@ -52,7 +52,7 @@ export default function ChatWidget() {
     if (isAptitudePage) modeContext = "Assessment Mode - Helping the candidate stay focused and calm during the hiring test.";
 
     return `You are Manee, an Autonomous Professional Female AI Agent at Career Lab Consulting.
-    Tone: 30-year-old corporate consultant, highly professional, polite, and fluent in proper English.
+    Tone: 30-year-old corporate consultant, highly professional, polite, and fluent in Hinglish (a mix of Hindi and English).
     
     AUTONOMOUS BRAIN & EXACT LINKS TO USE:
     - If a student asks about internships, scholarships, or career opportunities, provide these exact clickable links using Markdown bullet points:
@@ -87,8 +87,9 @@ export default function ChatWidget() {
     * If a B2B user wants Custom Architecture or Enterprise plans, instruct them to call +91 870023 6923 or mention they can book a consultation.
 
     STRICT RULES:
-    - Always respond in proper, grammatically correct English. DO NOT use Hinglish.
-    - Example tone: "Certainly! I would be happy to assist you with that." or "Here are our current pricing tiers for students."
+    - ALWAYS respond in a natural, friendly Hinglish (Hindi written in English alphabets mixed with English words). DO NOT use pure English.
+    - Example tone: "Zaroor! Main isme aapki help kar sakti hoon." or "Students ke liye humare current pricing tiers yeh hain."
+    - Keep it professional. Don't use excessive slang, just standard conversational Hinglish.
     - Format links using standard Markdown: [Text](URL). Use bullet points for multiple links and pricing lists to ensure clean formatting.
     - Keep responses concise, well-structured, and easy to read. Do not overwhelm the user with all pricing at once; ask if they are looking for Student/B2C or Enterprise/B2B options if it is ambiguous.
     - Focus: ${modeContext}`;
@@ -123,14 +124,14 @@ export default function ChatWidget() {
     } catch (error: any) {
       console.error("Manee AI Error:", error);
       
-      let errorMsg = "I apologize, but my systems are currently updating. May I send you the direct link to the Assessment instead?";
+      let errorMsg = "Maaf kijiyega, mere systems abhi update ho rahe hain. Kya main aapko Assessment ka direct link bhej doon?";
       
       if (error.message?.includes("429")) {
         console.warn("Quota Exceeded");
-        errorMsg = "I apologize, but I am currently experiencing high traffic. Please try again in a few moments, or feel free to start your Assessment using the buttons below.";
+        errorMsg = "Maaf kijiyega, abhi bahut zyada traffic hai. Kripya kuch der mein try karein, ya fir niche diye gaye buttons se apna Assessment start karein.";
       } else if (error.message?.includes("404")) {
         console.warn("Model Not Found");
-        errorMsg = "Connection error. Model not found in this region. Please verify your API key access.";
+        errorMsg = "Connection error. Is region mein model nahi mila. Kripya apni API key access verify karein.";
       }
 
       setMessages(prev => [...prev, { role: "bot", text: errorMsg }]);
@@ -155,7 +156,7 @@ export default function ChatWidget() {
     const recognition = new SpeechRecognition();
     recognition.continuous = false; 
     recognition.interimResults = true; 
-    recognition.lang = 'en-IN';
+    recognition.lang = 'en-IN'; 
 
     recognition.onstart = () => setIsListening(true);
     recognition.onresult = (event: any) => {
@@ -191,26 +192,40 @@ export default function ChatWidget() {
     const utterance = new SpeechSynthesisUtterance(cleanText);
     const voices = window.speechSynthesis.getVoices();
     
-    // Prioritize Indian Female Voice (Veena, Heera, Aditi, or generic female en-IN)
     let selectedVoice = voices.find(v => 
-      v.lang === "en-IN" && (v.name.toLowerCase().includes("female") || v.name.includes("Veena") || v.name.includes("Heera") || v.name.includes("Aditi"))
+      (v.lang === "en-IN" || v.lang === "hi-IN") && (v.name.toLowerCase().includes("female") || v.name.includes("Veena") || v.name.includes("Heera") || v.name.includes("Aditi") || v.name.includes("Neerja") || v.name.includes("Kajal") || v.name.includes("Swara"))
     );
     
-    // Fallback 1: Any Indian Voice
     if (!selectedVoice) {
-      selectedVoice = voices.find(v => v.lang === "en-IN");
+      selectedVoice = voices.find(v => v.lang === "en-IN" || v.lang === "hi-IN");
     }
     
-    // Fallback 2: Any available female voice or Google US English
     if (!selectedVoice) {
       selectedVoice = voices.find(v => v.name.toLowerCase().includes("female") || v.name.includes("Google US English"));
     }
 
-    if (selectedVoice) utterance.voice = selectedVoice;
+    if (selectedVoice) {
+      utterance.voice = selectedVoice;
+      utterance.lang = selectedVoice.lang.includes("hi") ? 'hi-IN' : 'en-IN'; 
+    } else {
+      utterance.lang = 'en-IN'; 
+    }
     
-    utterance.lang = 'en-IN'; // Set explicitly to Indian English
-    utterance.rate = 1.0;
-    utterance.pitch = 1.1; // Slightly higher pitch for a more natural female tone
+    const lowerText = cleanText.toLowerCase();
+    let speed = 1.0;
+    let pitch = 1.1; 
+
+    if (lowerText.includes("maaf") || lowerText.includes("sorry") || lowerText.includes("unfortunately") || lowerText.includes("error")) {
+      pitch = 0.9;
+      speed = 0.9;
+    } 
+    else if (lowerText.includes("badhai") || lowerText.includes("welcome") || lowerText.includes("great") || lowerText.includes("zaroor") || cleanText.includes("!")) {
+      pitch = 1.25;
+      speed = 1.05;
+    }
+
+    utterance.rate = speed;
+    utterance.pitch = pitch;
     
     window.speechSynthesis.speak(utterance);
   };
@@ -235,15 +250,14 @@ export default function ChatWidget() {
     const isHireX = pathname?.includes("/hirex");
     const isFreelanceX = pathname?.includes("/freelancex");
 
-    let welcomeText = `Hello! I am Manee, your Autonomous AI Consultant. How can I assist you with your digital transformation today?`;
-    if (isB2C) welcomeText = `Hello ${storedName || 'Scholar'}! Are you looking for career guidance? Our scholarship test is currently live!`;
-    else if (isHireX) welcomeText = `Hello and welcome to HireX. Our AI engine can make your hiring process 100% autonomous. Would you like to know more?`;
-    else if (isFreelanceX) welcomeText = `Hello and welcome to FreelanceX. Ready to start earning globally in USD?`;
+    let welcomeText = `Hello! Main Manee hoon, aapki Autonomous AI Consultant. Aaj main aapki digital transformation mein kaise help kar sakti hoon?`;
+    if (isB2C) welcomeText = `Hello ${storedName || 'Scholar'}! Kya aap career guidance dhund rahe hain? Hamara scholarship test abhi live hai!`;
+    else if (isHireX) welcomeText = `Hello and welcome to HireX! Hamara AI engine aapke hiring process ko 100% autonomous bana sakta hai. Kya aap aur janna chahenge?`;
+    else if (isFreelanceX) welcomeText = `Hello and welcome to FreelanceX! Kya aap globally USD mein earn karne ke liye ready hain?`;
     
     setMessages([{ role: "bot", text: welcomeText }]);
     setTimeout(() => setShowOffer(true), 5000);
     
-    // Optional: Pre-load voices on mount to ensure they are available immediately
     if (typeof window !== "undefined" && window.speechSynthesis) {
         window.speechSynthesis.getVoices();
     }
@@ -272,7 +286,7 @@ export default function ChatWidget() {
           <button onClick={() => setShowOffer(false)} className="absolute -top-2 -left-2 bg-black text-white rounded-full p-1 border border-white/20"><X size={10} /></button>
           <div className="flex items-center gap-2">
             <div className="bg-white/20 p-1.5 rounded-lg"><Sparkles size={14} className="text-yellow-300" /></div>
-            <p className="text-[10px] font-bold leading-tight">Manee: Limited hiring slots for top scorers are currently open! 🌸</p>
+            <p className="text-[10px] font-bold leading-tight">Manee: Limited hiring slots abhi open hain, jaldi karein! 🌸</p>
           </div>
         </motion.div>
       )}
@@ -281,7 +295,7 @@ export default function ChatWidget() {
         <motion.div 
           initial={{ opacity: 0, y: 100, scale: 0.9 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
-          className="w-[320px] md:w-[380px] h-[480px] md:h-[540px] bg-white rounded-[2.5rem] shadow-[0_25px_60px_rgba(0,0,0,0.4)] flex flex-col overflow-hidden border border-slate-200 pointer-events-auto relative"
+          className="w-[300px] md:w-[350px] h-[420px] md:h-[480px] bg-white rounded-[2.5rem] shadow-[0_25px_60px_rgba(0,0,0,0.4)] flex flex-col overflow-hidden border border-slate-200 pointer-events-auto relative"
         >
           {showVideoIntro && (
             <div className="absolute inset-0 z-[100] bg-black flex flex-col items-center justify-center">
@@ -300,33 +314,33 @@ export default function ChatWidget() {
             </div>
           )}
 
-          <div className="bg-gradient-to-b from-[#b31f24] to-[#8c181c] p-5 text-white shadow-lg">
+          <div className="bg-gradient-to-b from-[#b31f24] to-[#8c181c] p-4 text-white shadow-lg">
             <div className="flex justify-between items-center">
                 <div className="flex items-center gap-3">
                     <div className="relative">
-                        <div className="w-12 h-12 rounded-2xl overflow-hidden border-2 border-white/30 shadow-xl bg-white p-0.5">
+                        <div className="w-10 h-10 rounded-2xl overflow-hidden border-2 border-white/30 shadow-xl bg-white p-0.5">
                             <img src="https://cdn-icons-png.flaticon.com/512/18355/18355220.png" alt="Manee" className="w-full h-full object-contain" />
                         </div>
-                        <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-[#b31f24] rounded-full animate-pulse"></div>
+                        <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-green-500 border-2 border-[#b31f24] rounded-full animate-pulse"></div>
                     </div>
                     <div>
-                        <h3 className="text-[15px] font-black tracking-tight">Manee AI</h3>
-                        <p className="text-[8px] uppercase font-black tracking-[0.15em] text-rose-200">Autonomous Enterprise Agent</p>
+                        <h3 className="text-[14px] font-black tracking-tight">Manee AI</h3>
+                        <p className="text-[7.5px] uppercase font-black tracking-[0.15em] text-rose-200">Autonomous Enterprise Agent</p>
                     </div>
                 </div>
                 <div className="flex gap-2">
-                    <button onClick={toggleVoice} className="p-2 hover:bg-white/10 rounded-xl transition-all">
-                      {isVoiceEnabled ? <Volume2 size={18} /> : <VolumeX size={18} />}
+                    <button onClick={toggleVoice} className="p-1.5 hover:bg-white/10 rounded-xl transition-all">
+                      {isVoiceEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
                     </button>
-                    <button onClick={() => setIsOpen(false)} className="p-2 hover:bg-white/10 rounded-xl transition-all"><Minus size={20} /></button>
+                    <button onClick={() => setIsOpen(false)} className="p-1.5 hover:bg-white/10 rounded-xl transition-all"><Minus size={18} /></button>
                 </div>
             </div>
           </div>
 
-          <div ref={scrollRef} className="flex-1 overflow-y-auto p-5 space-y-5 bg-[#f8f9fb] custom-scrollbar">
+          <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-4 bg-[#f8f9fb] custom-scrollbar">
             {messages.map((msg, i) => (
               <motion.div initial={{ opacity: 0, x: msg.role === "user" ? 20 : -20 }} animate={{ opacity: 1, x: 0 }} key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-                <div className={`max-w-[88%] p-4 rounded-[1.5rem] text-[13px] leading-relaxed shadow-sm ${
+                <div className={`max-w-[88%] p-3.5 rounded-[1.25rem] text-[12px] leading-relaxed shadow-sm ${
                   msg.role === "user" ? "bg-black text-white rounded-tr-none" : "bg-white text-slate-800 rounded-tl-none border border-slate-100"
                 }`}>
                   <ReactMarkdown
@@ -346,33 +360,33 @@ export default function ChatWidget() {
             ))}
             {isLoading && (
               <div className="flex justify-start">
-                <div className="px-4 py-2 bg-white border border-slate-100 rounded-2xl rounded-tl-none animate-pulse text-[#b31f24] font-black text-[10px] tracking-widest uppercase">Manee is typing...</div>
+                <div className="px-3 py-2 bg-white border border-slate-100 rounded-xl rounded-tl-none animate-pulse text-[#b31f24] font-black text-[9px] tracking-widest uppercase">Manee is typing...</div>
               </div>
             )}
           </div>
 
-          <div className="px-4 py-3 bg-white border-t border-slate-100 flex gap-2 overflow-x-auto no-scrollbar">
-                <button onClick={() => triggerSend("Start My Assessment")} className="whitespace-nowrap px-4 py-2 bg-blue-50 border border-blue-100 rounded-full text-[10px] font-black text-blue-600 hover:bg-blue-600 hover:text-white transition-all flex items-center gap-2">
-                  <Trophy size={12} /> Start Assessment
+          <div className="px-3 py-2.5 bg-white border-t border-slate-100 flex gap-2 overflow-x-auto no-scrollbar">
+                <button onClick={() => triggerSend("Start My Assessment")} className="whitespace-nowrap px-3 py-1.5 bg-blue-50 border border-blue-100 rounded-full text-[9px] font-black text-blue-600 hover:bg-blue-600 hover:text-white transition-all flex items-center gap-1.5">
+                  <Trophy size={10} /> Start Assessment
                 </button>
-                <button onClick={() => triggerSend("How does the AI Voice Demo work?")} className="whitespace-nowrap px-4 py-2 bg-rose-50 border border-rose-100 rounded-full text-[10px] font-black text-[#b31f24] hover:bg-[#b31f24] hover:text-white transition-all flex items-center gap-2">
-                  <PhoneCall size={12} /> AI Voice Demo
+                <button onClick={() => triggerSend("How does the AI Voice Demo work?")} className="whitespace-nowrap px-3 py-1.5 bg-rose-50 border border-rose-100 rounded-full text-[9px] font-black text-[#b31f24] hover:bg-[#b31f24] hover:text-white transition-all flex items-center gap-1.5">
+                  <PhoneCall size={10} /> AI Voice Demo
                 </button>
           </div>
 
-          <div className="p-5 bg-white border-t border-slate-100">
-             <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-[1.5rem] px-4 py-1.5 focus-within:border-[#b31f24]/40 focus-within:bg-white transition-all shadow-inner">
-                <button onClick={toggleListening} className={`p-2 rounded-xl transition-all ${isListening ? "bg-red-500 text-white animate-pulse shadow-lg shadow-red-500/30" : "text-slate-400 hover:text-slate-600"}`}>
-                  {isListening ? <MicOff size={18} /> : <Mic size={18} />}
+          <div className="p-3 bg-white border-t border-slate-100">
+             <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-[1.25rem] px-3 py-1 focus-within:border-[#b31f24]/40 focus-within:bg-white transition-all shadow-inner">
+                <button onClick={toggleListening} className={`p-1.5 rounded-xl transition-all ${isListening ? "bg-red-500 text-white animate-pulse shadow-lg shadow-red-500/30" : "text-slate-400 hover:text-slate-600"}`}>
+                  {isListening ? <MicOff size={16} /> : <Mic size={16} />}
                 </button>
                 <input 
                   value={input} onChange={(e) => setInput(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && triggerSend(input)}
                   placeholder={isListening ? "Listening..." : "How can I help you today?"}
-                  className="flex-1 bg-transparent py-3 text-[13px] outline-none text-slate-800 font-medium placeholder:text-slate-400"
+                  className="flex-1 bg-transparent py-2.5 text-[12px] outline-none text-slate-800 font-medium placeholder:text-slate-400"
                 />
-                <button onClick={() => triggerSend(input)} disabled={isLoading || !input.trim()} className="bg-[#b31f24] text-white p-2.5 rounded-2xl hover:scale-105 transition-all shadow-lg shadow-red-500/20 disabled:opacity-30">
-                  <Send size={16} />
+                <button onClick={() => triggerSend(input)} disabled={isLoading || !input.trim()} className="bg-[#b31f24] text-white p-2 rounded-xl hover:scale-105 transition-all shadow-lg shadow-red-500/20 disabled:opacity-30">
+                  <Send size={14} />
                 </button>
              </div>
           </div>
@@ -380,11 +394,11 @@ export default function ChatWidget() {
       ) : (
         <button 
             onClick={openChatWithIntro} 
-            className="w-20 h-20 bg-white rounded-3xl p-3 shadow-[0_15px_40px_rgba(0,0,0,0.2)] hover:scale-110 transition-all pointer-events-auto border-2 border-slate-100 relative group overflow-hidden"
+            className="w-16 h-16 md:w-20 md:h-20 bg-white rounded-3xl p-3 shadow-[0_15px_40px_rgba(0,0,0,0.2)] hover:scale-110 transition-all pointer-events-auto border-2 border-slate-100 relative group overflow-hidden"
         >
           <div className="absolute inset-0 bg-gradient-to-tr from-[#b31f24]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
           <img src="https://cdn-icons-png.flaticon.com/512/18355/18355220.png" className="w-full h-full object-contain relative z-10" alt="Manee AI" />
-          <div className="absolute top-1 right-1 w-5 h-5 bg-red-600 rounded-full flex items-center justify-center text-[9px] text-white font-black animate-bounce border-2 border-white shadow-lg">1</div>
+          <div className="absolute top-1 right-1 w-4 h-4 bg-red-600 rounded-full flex items-center justify-center text-[8px] text-white font-black animate-bounce border-2 border-white shadow-lg">1</div>
           <div className="absolute inset-0 rounded-3xl border-2 border-[#b31f24]/20 animate-ping opacity-20"></div>
         </button>
       )}
