@@ -171,6 +171,12 @@ function AptitudeTestContent() {
             collegeName: userDetails.collegeName,
             city: userDetails.city,
             state: userDetails.state,
+            fatherName: userDetails.fatherName,
+            fatherOccupation: userDetails.fatherOccupation,
+            motherName: userDetails.motherName,
+            motherOccupation: userDetails.motherOccupation,
+            pincode: userDetails.pincode,
+            address: userDetails.address,
         })
       }).catch(err => console.error("Failed to send DQ email", err));
   };
