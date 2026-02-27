@@ -22,7 +22,7 @@ export default function ManeeOS() {
     }
     const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).speechRecognition;
     const recognition = new SpeechRecognition();
-    recognition.lang = 'en-US';
+    recognition.lang = 'en-IN';
     recognition.interimResults = false;
 
     if (!isListening) {
