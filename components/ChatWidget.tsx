@@ -190,10 +190,28 @@ export default function ChatWidget() {
 
     const utterance = new SpeechSynthesisUtterance(cleanText);
     const voices = window.speechSynthesis.getVoices();
-    let selectedVoice = voices.find(v => v.lang === "en-US" || v.lang === "en-IN" || v.name.includes("Google US English"));
+    
+    // Prioritize Indian Female Voice (Veena, Heera, Aditi, or generic female en-IN)
+    let selectedVoice = voices.find(v => 
+      v.lang === "en-IN" && (v.name.toLowerCase().includes("female") || v.name.includes("Veena") || v.name.includes("Heera") || v.name.includes("Aditi"))
+    );
+    
+    // Fallback 1: Any Indian Voice
+    if (!selectedVoice) {
+      selectedVoice = voices.find(v => v.lang === "en-IN");
+    }
+    
+    // Fallback 2: Any available female voice or Google US English
+    if (!selectedVoice) {
+      selectedVoice = voices.find(v => v.name.toLowerCase().includes("female") || v.name.includes("Google US English"));
+    }
+
     if (selectedVoice) utterance.voice = selectedVoice;
-    utterance.lang = 'en-US';
+    
+    utterance.lang = 'en-IN'; // Set explicitly to Indian English
     utterance.rate = 1.0;
+    utterance.pitch = 1.1; // Slightly higher pitch for a more natural female tone
+    
     window.speechSynthesis.speak(utterance);
   };
 
@@ -224,6 +242,11 @@ export default function ChatWidget() {
     
     setMessages([{ role: "bot", text: welcomeText }]);
     setTimeout(() => setShowOffer(true), 5000);
+    
+    // Optional: Pre-load voices on mount to ensure they are available immediately
+    if (typeof window !== "undefined" && window.speechSynthesis) {
+        window.speechSynthesis.getVoices();
+    }
   }, [pathname]);
 
   useEffect(() => {
@@ -258,7 +281,7 @@ export default function ChatWidget() {
         <motion.div 
           initial={{ opacity: 0, y: 100, scale: 0.9 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
-          className="w-[320px] md:w-[380px] h-[550px] md:h-[620px] bg-white rounded-[2.5rem] shadow-[0_25px_60px_rgba(0,0,0,0.4)] flex flex-col overflow-hidden border border-slate-200 pointer-events-auto relative"
+          className="w-[320px] md:w-[380px] h-[480px] md:h-[540px] bg-white rounded-[2.5rem] shadow-[0_25px_60px_rgba(0,0,0,0.4)] flex flex-col overflow-hidden border border-slate-200 pointer-events-auto relative"
         >
           {showVideoIntro && (
             <div className="absolute inset-0 z-[100] bg-black flex flex-col items-center justify-center">
