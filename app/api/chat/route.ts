@@ -19,7 +19,7 @@ export async function POST(req: Request) {
 
     if (isImageRequest) {
       const imageModel = genAI.getGenerativeModel({ 
-        model: "gemini-3-pro-image-preview", 
+        model: "gemini-3.1-flash-image-preview", 
         systemInstruction: `
           You are Manee's Image Generation Engine. The user wants an image.
           You MUST create a detailed prompt and return ONLY a Markdown image link using pollinations.ai.
@@ -33,7 +33,7 @@ export async function POST(req: Request) {
 
     } else {
       const textModel = genAI.getGenerativeModel({ 
-        model: "gemini-3.1-pro-preview", 
+        model: "gemini-3-flash-preview", 
         systemInstruction: `
           Your name is Manee. You are a Virtual Assistant trained by Career Lab Consulting.
           

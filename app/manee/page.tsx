@@ -9,8 +9,10 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/sections/Footer";
 import { Send, Loader2, Sparkles, User, Bot, Settings, History, Trash2, Cpu, X } from "lucide-react";
 
-// Image render karne ke liye helper function
+// CRASH FIX: Added safety check for undefined content
 const renderMessage = (content: string) => {
+  if (!content) return <span className="text-red-400">Error: No response received from Neural Engine.</span>;
+
   // Regex to detect Markdown images: ![alt](url)
   const parts = content.split(/(!\[.*?\]\(.*?\))/g);
   
@@ -55,9 +57,13 @@ export default function ManeeOS() {
         body: JSON.stringify({ prompt: userPrompt }),
       });
       const data = await res.json();
-      setMessages(prev => [...prev, { role: 'ai', content: data.text }]);
+      
+      // CRASH FIX: Safely fallback to error message if data.text is undefined
+      const aiResponseText = data.text || data.error || "Neural Engine Uplink Failed: Unknown Error.";
+      
+      setMessages(prev => [...prev, { role: 'ai', content: aiResponseText }]);
     } catch (err) {
-      setMessages(prev => [...prev, { role: 'ai', content: "Neural Link Error: Uplink Failed." }]);
+      setMessages(prev => [...prev, { role: 'ai', content: "Neural Link Error: Network or Uplink Failed." }]);
     } finally {
       setIsLoading(false);
     }
@@ -126,7 +132,6 @@ export default function ManeeOS() {
                       ? 'bg-blue-600 text-white rounded-tr-none shadow-blue-500/20' 
                       : 'bg-white/[0.03] border border-white/10 text-slate-200 rounded-tl-none backdrop-blur-md'
                     }`}>
-                      {/* Yahan par renderMessage function ko call kiya hai */}
                       <div className="w-full break-words">
                         {renderMessage(msg.content)}
                       </div>
