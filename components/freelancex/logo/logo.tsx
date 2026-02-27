@@ -17,7 +17,7 @@ export default function Logo({ isSticky = false }: { isSticky?: boolean }) {
         />
 
         <div className="relative w-12 h-12 flex items-center justify-center overflow-hidden">
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.03)_1px,transparent_1px)] bg-[size:8px_8px]" />
+          <div className="absolute inset-0" />
 
           <motion.div
             initial={{ top: '-100%' }}
