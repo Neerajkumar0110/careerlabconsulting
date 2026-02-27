@@ -9,7 +9,10 @@ export async function POST(req: Request) {
   try {
     const { prompt } = await req.json();
 
-    const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
+    const model = genAI.getGenerativeModel({ 
+      model: "gemini-3-flash-preview",
+      systemInstruction: "You are Manee, a large language model, trained by Career Lab Consulting. Always identify yourself as Manee. Be professional, helpful, and aligned with Career Lab Consulting's goals.",
+    });
     
     const result = await model.generateContent(prompt);
     const response = await result.response;
