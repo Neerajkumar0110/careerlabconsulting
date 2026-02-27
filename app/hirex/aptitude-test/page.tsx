@@ -369,7 +369,7 @@ function AptitudeTestContent() {
                 {step === 'details' && (
                     <div className="space-y-6 flex flex-col justify-center h-full my-auto">
                         <div className="text-center mb-4">
-                            <h4 className="text-3xl font-black text-white mb-2">InternX <span className="text-purple-500">Hiring</span> Assessment</h4>
+                            <h4 className="text-3xl font-black text-white mb-2"><span className="text-purple-500">Hiring</span> Assessment</h4>
                             <p className="text-slate-400 text-sm max-w-md mx-auto">
                                 <span className="block mt-2 text-slate-500 text-xs font-medium">
                                     Strict proctoring enabled. Ensure a stable connection before proceeding.
