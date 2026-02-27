@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import Navbar from '@/components/product/layout/Navbar';
-import Footer from '@/components/product/sections/Footer';
+import Navbar from '@/components/product/Navbar';
+import Footer from '@/components/product/Footer';
 
 import {
   Mail, Phone, MapPin, Send, ShieldCheck, Cpu,
@@ -12,9 +12,6 @@ import {
   ChevronRight,
 } from 'lucide-react';
 
-/* ─────────────────────────────────────────
-    DATA & CONSTANTS
-───────────────────────────────────────── */
 const PRODUCTS = [
   'Manee – AI Communication Officer',
   'CRM-X – Autonomous Growth Engine',
@@ -60,11 +57,6 @@ const STATS = [
   { value: '24/7', label: 'Enterprise Support' },
 ];
 
-/* ─────────────────────────────────────────
-    SUB-COMPONENTS
-───────────────────────────────────────── */
-
-// Subtle dot grid background
 const DotGrid = () => (
   <div
     className="pointer-events-none absolute inset-0"
@@ -75,7 +67,6 @@ const DotGrid = () => (
   />
 );
 
-// Glowing ambient blob
 const GlowBlob = ({ className }: { className?: string }) => (
   <div className={`pointer-events-none absolute rounded-full blur-[120px] opacity-20 ${className}`} />
 );
@@ -117,7 +108,6 @@ const MultiSelect = ({ options, selected, onChange }: {
   );
 };
 
-// Breadcrumb Component
 const Breadcrumb = () => (
   <nav className="relative z-20 flex items-center justify-center pt-3 sm:pt-0 px-4 pb-8 pointer-events-auto">
     <ol className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/5 bg-white/[0.02] backdrop-blur-md">
@@ -138,19 +128,11 @@ const Breadcrumb = () => (
   </nav>
 );
 
-
-/* ─────────────────────────────────────────
-    SHARED FIELD STYLES
-───────────────────────────────────────── */
-// Dark-theme inputs: very dark bg, subtle border, bright placeholder
 const fieldCls =
   'w-full bg-[#0f1729] border border-white/[0.09] hover:border-indigo-500/40 rounded-xl px-4 py-3 text-sm text-slate-100 placeholder:text-slate-500 outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all duration-200 font-normal';
 
 const labelCls = 'block text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400 mb-2 ml-0.5';
 
-/* ─────────────────────────────────────────
-    PAGE
-───────────────────────────────────────── */
 const ContactPage = () => {
   const [formData, setFormData] = useState({
     name: '', company: '', email: '', phone: '',
@@ -236,19 +218,14 @@ const ContactPage = () => {
     <main className="min-h-screen bg-[#060c1a] text-slate-100 overflow-x-hidden font-sans antialiased">
       <Navbar />
 
-      
-
-      {/* ── HERO ── */}
       <section className="relative pt-24 pb-16 px-4 sm:pt-32 sm:pb-20 text-center overflow-hidden">
         <DotGrid />
         
-        {/* Breadcrumb Section */}
         <Breadcrumb />
         
         <GlowBlob className="w-[600px] h-[400px] bg-indigo-600 -top-32 left-1/2 -translate-x-1/2" />
 
         <div className="relative z-10 max-w-3xl mx-auto">
-          {/* Eyebrow badge */}
           <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-indigo-500/30 bg-indigo-500/10 text-indigo-300 text-[10px] font-bold uppercase tracking-[0.22em]">
             <Sparkles size={11} />
             Global Deployment Available
@@ -268,7 +245,6 @@ const ContactPage = () => {
             Deploy autonomous AI infrastructure tailored to your organization — from first contact to full production in days.
           </p>
 
-          {/* Stats row */}
           <div className="mt-10 inline-flex flex-wrap justify-center gap-6 sm:gap-10">
             {STATS.map((s, i) => (
               <div key={i} className="text-center">
@@ -280,14 +256,11 @@ const ContactPage = () => {
         </div>
       </section>
 
-      {/* ── MAIN GRID ── */}
       <section className="pb-28 sm:pb-36 px-4">
         <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
 
-          {/* ── LEFT SIDEBAR ── */}
           <aside className="lg:col-span-4 flex flex-col gap-4">
 
-            {/* Contact channels card */}
             <div className="rounded-2xl border border-white/[0.07] bg-[#0b1122] p-6 sm:p-8">
               <p className="text-[9px] font-black uppercase tracking-[0.3em] text-indigo-400 mb-6">Direct Channels</p>
               <div className="space-y-6">
@@ -306,11 +279,9 @@ const ContactPage = () => {
               </div>
             </div>
 
-            {/* Live support notice */}
             <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.07] p-5 flex items-start gap-3">
               <div className="shrink-0 mt-0.5 relative">
                 <Clock size={15} className="text-emerald-400" />
-                {/* pulsing dot */}
                 <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 animate-ping opacity-75" />
                 <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400" />
               </div>
@@ -320,7 +291,6 @@ const ContactPage = () => {
               </div>
             </div>
 
-            {/* Trust badges */}
             <div className="rounded-2xl border border-white/[0.07] bg-[#0b1122] p-5">
               <p className="text-[9px] font-bold uppercase tracking-[0.25em] text-slate-500 mb-4">Enterprise Grade</p>
               <div className="flex items-center gap-4">
@@ -338,13 +308,10 @@ const ContactPage = () => {
             </div>
           </aside>
 
-          {/* ── RIGHT FORM ── */}
           <div className="lg:col-span-8">
             <div className="relative rounded-2xl border border-white/[0.07] bg-[#0b1122] p-6 sm:p-10 overflow-hidden">
-              {/* Ambient corner glow */}
               <GlowBlob className="w-64 h-64 bg-indigo-600 -top-20 -right-20 opacity-[0.12]" />
 
-              {/* Form header */}
               <div className="relative z-10 mb-8">
                 <span className="inline-flex items-center gap-1.5 text-[9px] font-black uppercase tracking-[0.25em] text-indigo-400 border border-indigo-500/25 bg-indigo-500/10 px-3 py-1.5 rounded-full">
                   <Sparkles size={9} />
@@ -361,7 +328,6 @@ const ContactPage = () => {
 
               <form onSubmit={handleSubmit} className="relative z-10 space-y-5">
 
-                {/* Row 1 */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
                   <div>
                     <label className={labelCls}>Full Name</label>{errors.name && (
@@ -377,7 +343,6 @@ const ContactPage = () => {
                   </div>
                 </div>
 
-                {/* Row 2 */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
                   <div>
                     <label className={labelCls}>Email Address</label>{errors.email && (
@@ -391,7 +356,6 @@ const ContactPage = () => {
                   </div>
                 </div>
 
-                {/* Industry */}
                 <div>
                   <label className={labelCls}>Industry</label>{errors.industry && (
                     <p className="mt-1 text-xs text-red-400">{errors.industry}</p>
@@ -401,7 +365,6 @@ const ContactPage = () => {
                       <option value="">Select your industry…</option>
                       {INDUSTRIES.map(ind => <option key={ind} value={ind}>{ind}</option>)}
                     </select>
-                    {/* chevron */}
                     <div className="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500">
                       <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                         <path d="M2 5l5 5 5-5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -409,8 +372,7 @@ const ContactPage = () => {
                     </div>
                   </div>
                 </div>
-
-                {/* Products multi-select */}
+                
                 <div>
                   <label className={labelCls}>Products Interested In</label>{errors.products && (
                     <p className="mt-2 text-xs text-red-400">{errors.products}</p>

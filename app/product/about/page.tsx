@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useRef } from 'react';
-import Navbar from '@/components/product/layout/Navbar';
-import Footer from '@/components/product/sections/Footer';
+import Navbar from '@/components/product/Navbar';
+import Footer from '@/components/product/Footer';
 import Link from 'next/link';
 import {
   ArrowRight, Shield, Cpu, Globe2, Layers,
