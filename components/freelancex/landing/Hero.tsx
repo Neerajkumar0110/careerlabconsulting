@@ -63,22 +63,22 @@ const SpaceBackground = () => {
 
         if (x >= 0 && x < width && y >= 0 && y < height) {
           if (star.text) {
-            const baseFontSize = 16;
+            const baseFontSize = 14; 
             const dynamicFontSize = Math.floor(size * baseFontSize);
-
-            ctx.font = `900 ${dynamicFontSize}px sans-serif`;
+            
+            ctx.font = `500 ${dynamicFontSize}px sans-serif`;
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
 
             ctx.shadowBlur = 8;
             ctx.shadowColor = "rgba(255, 255, 255, 0.5)";
-
+            
             ctx.globalAlpha = opacity;
             ctx.fillStyle = "#FFFFFF";
             ctx.fillText(star.text, x, y);
-
+            
             ctx.shadowBlur = 0;
-            ctx.globalAlpha = 1.0;
+            ctx.globalAlpha = 1.0; 
           } else {
             ctx.beginPath();
             ctx.fillStyle = `rgba(255, 255, 255, ${opacity * 0.8})`;
@@ -131,7 +131,7 @@ export default function Hero() {
         </div>
 
         <h1 className="text-4xl md:text-5xl font-black text-white tracking-tighter mb-5 md:leading-[1.2] leading-[1.1] uppercase italic">
-          Scale <span className="text-blue-500 italic">your,</span> <br />
+          Scale <span className="text-blue-500 italic">Your,</span> <br />
           Digital <span className="text-indigo-400">Ambition.</span>
         </h1>
 
