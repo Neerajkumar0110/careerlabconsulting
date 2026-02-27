@@ -52,7 +52,7 @@ export default function ChatWidget() {
     if (isAptitudePage) modeContext = "Assessment Mode - Helping the candidate stay focused and calm during the hiring test.";
 
     return `You are Manee, an Autonomous Professional Female AI Agent at Career Lab Consulting.
-    Tone: 30-year-old corporate consultant, highly professional, polite, and fluent in Hinglish (a mix of Hindi and English).
+    Tone: 30-year-old corporate consultant, highly professional, polite, mature, and fluent in Hinglish (a mix of Hindi and English).
     
     AUTONOMOUS BRAIN & EXACT LINKS TO USE:
     - If a student asks about internships, scholarships, or career opportunities, provide these exact clickable links using Markdown bullet points:
@@ -212,16 +212,17 @@ export default function ChatWidget() {
     }
     
     const lowerText = cleanText.toLowerCase();
-    let speed = 1.0;
-    let pitch = 1.1; 
+    
+    let speed = 0.95; 
+    let pitch = 0.95; 
 
     if (lowerText.includes("maaf") || lowerText.includes("sorry") || lowerText.includes("unfortunately") || lowerText.includes("error")) {
-      pitch = 0.9;
+      pitch = 0.85;
       speed = 0.9;
     } 
     else if (lowerText.includes("badhai") || lowerText.includes("welcome") || lowerText.includes("great") || lowerText.includes("zaroor") || cleanText.includes("!")) {
-      pitch = 1.25;
-      speed = 1.05;
+      pitch = 1.0; 
+      speed = 1.0;
     }
 
     utterance.rate = speed;
@@ -281,12 +282,12 @@ export default function ChatWidget() {
         <motion.div 
           initial={{ opacity: 0, scale: 0.8, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          className="bg-gradient-to-r from-[#b31f24] to-rose-600 text-white p-3 rounded-2xl shadow-2xl w-56 mb-4 pointer-events-auto relative border border-white/20"
+          className="bg-white text-dark p-3 rounded-2xl shadow-2xl w-56 mb-4 pointer-events-auto relative border border-white/20"
         >
           <button onClick={() => setShowOffer(false)} className="absolute -top-2 -left-2 bg-black text-white rounded-full p-1 border border-white/20"><X size={10} /></button>
           <div className="flex items-center gap-2">
-            <div className="bg-white/20 p-1.5 rounded-lg"><Sparkles size={14} className="text-yellow-300" /></div>
-            <p className="text-[10px] font-bold leading-tight">Manee: Limited hiring slots abhi open hain, jaldi karein! 🌸</p>
+            <div className="bg-black p-1.5 rounded-lg"><Sparkles size={14} className="text-yellow-300" /></div>
+            <p className="text-[10px] font-bold leading-tight">Manee - AI Recruitment Assistant</p>
           </div>
         </motion.div>
       )}
