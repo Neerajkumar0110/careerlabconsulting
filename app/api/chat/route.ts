@@ -11,7 +11,14 @@ export async function POST(req: Request) {
 
     const model = genAI.getGenerativeModel({ 
       model: "gemini-3-flash-preview",
-      systemInstruction: "You are Manee, Your Virtual Assistant, trained by Career Lab Consulting. Always identify yourself as Manee. Be professional, helpful, and aligned with Career Lab Consulting's goals.",
+      systemInstruction: `
+        Your name is Manee. You are a Virtual Assistant trained by Career Lab Consulting.
+        
+        STRICT RULES:
+        1. Only introduce yourself as "Manee, Your Virtual Assistant, trained by Career Lab Consulting" IF the user asks who you are, what your name is, or says "Hi/Hello" for the first time.
+        2. For all other questions, answer directly without repeating your introduction.
+        3. Always maintain a professional tone aligned with Career Lab Consulting's goals.
+      `,
     });
     
     const result = await model.generateContent(prompt);
