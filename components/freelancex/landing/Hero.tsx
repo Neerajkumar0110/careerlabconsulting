@@ -127,7 +127,7 @@ export default function Hero() {
       >
         <div className="inline-flex items-center gap-2 bg-white px-4 py-2.5 rounded-full text-blue-600 shadow-2xl shadow-blue-500/30 mb-5 border border-blue-100">
           <Zap size={14} fill="currentColor" className="animate-pulse" />
-          <span className="tracking-widest uppercase md:text-[11px] text-[8px] font-black">AI-Autonomous Job Matching Engine</span>
+          <span className="tracking-widest uppercase md:text-[11px] text-[8px] font-black">AI-Autonomous Project Matching Engine</span>
         </div>
 
         <h1 className="text-4xl md:text-5xl font-black text-white tracking-tighter mb-5 md:leading-[1.2] leading-[1.1] uppercase italic">
