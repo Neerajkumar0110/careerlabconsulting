@@ -1,4 +1,4 @@
-// components/sections/B2BPricingSection.tsx
+// components/product/B2BPricingSection.tsx
 
 'use client';
 
