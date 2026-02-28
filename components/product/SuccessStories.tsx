@@ -15,24 +15,6 @@ const OWNER_PHONE = "918700236923";
 
 const stories = [
   {
-    id: 1,
-    title: "AI-Powered Recruitment for Growth",
-    description: "Career Lab Consulting implemented an advanced filtering system for our corporate partners, streamlining the talent acquisition process and reducing hiring time by half.",
-    metric1: { value: "45%", label: "reduction in hiring cost" },
-    metric2: { value: "98.2%", label: "client satisfaction rate" },
-    image: "https://drive.google.com/file/d/1Oz_lwH6pszMQqa3jYgdhneBQM-ae0pdw/view?usp=drive_link",
-    videoUrl: "https://www.youtube.com/watch?v=XO5JaG1e5m0" 
-  },
-  {
-    id: 2,
-    title: "Automated Sales Funnel for Tech Firms",
-    description: "We deployed intelligent agents that handle initial outreach and lead qualification, allowing sales teams to focus only on closing high-value deals.",
-    metric1: { value: "120%", label: "increase in lead volume" },
-    metric2: { value: "3.5x", label: "ROI in first quarter" },
-    image: "https://drive.google.com/file/d/1nArqUOe-KxcjUpGqfwgZl80sixtprBY_/view?usp=drive_link",
-    videoUrl: "https://www.youtube.com/shorts/_NIWQjjMvfw" 
-  },
-  {
     id: 3,
     title: "AI Resume Screening System",
     description: "Implemented machine learning tools to automatically screen and rank candidates, enabling recruiters to focus on interviewing the best matches.",
