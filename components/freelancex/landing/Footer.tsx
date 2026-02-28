@@ -210,7 +210,7 @@ export default function Footer() {
         
         <Link href="#reports" className="flex flex-col items-center justify-center min-w-[64px] h-full text-slate-500 hover:text-blue-400 transition-colors">
           <Briefcase className="w-6 h-6 mb-1" aria-hidden="true" />
-          <span className="text-[9px] font-black uppercase tracking-tighter">Reports</span>
+          <span className="text-[9px] font-black uppercase tracking-tighter">Employers</span>
         </Link>
         
         <Link 
