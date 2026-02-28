@@ -30,6 +30,7 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'img.freepik.com' },
       { protocol: 'https', hostname: 'cdn-icons-png.flaticon.com' },
       { protocol: 'https', hostname: 'cdnjs.cloudflare.com' },
+      { protocol: 'https', hostname: 'www.pngall.com', port: '', pathname: '/**', },
       { protocol: 'https', hostname: 'lh3.googleusercontent.com', pathname: '/d/**' },
       { protocol: 'https', hostname: 'drive.google.com', pathname: '/**' },
       { protocol: 'http', hostname: 'googleusercontent.com', pathname: '/**' },

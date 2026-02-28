@@ -2,16 +2,15 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Logo from '@/components/freelancex/logo/logo';
 
 const NAV_LINKS = [
-  { name: 'Features', href: '#features' },
-  { name: 'Employers', href: '#employers' },
-  { name: 'AI Test', href: '#test' },
-  { name: 'Reports', href: '#reports' },
+  { name: 'Features', href: '/freelancex/features' },
+  { name: 'Employers', href: '/freelancex/ai-employers' }, 
+  { name: 'AI Test', href: '/freelancex/ai-test' },
+  { name: 'Reports', href: '/freelancex/reports' },
 ];
 
 export default function Navbar() {
@@ -70,18 +69,24 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center gap-4">
-            <button className={`hidden sm:block text-[11px] font-black uppercase tracking-widest transition-colors ${
-              scrolled ? 'text-slate-600 hover:text-[#0f172a]' : 'text-slate-300 hover:text-white'
-            }`}>
+            <Link 
+              href="/freelancex/login" 
+              className={`hidden sm:block text-[11px] font-black uppercase tracking-widest transition-colors ${
+                scrolled ? 'text-slate-600 hover:text-[#0f172a]' : 'text-slate-300 hover:text-white'
+              }`}
+            >
               Log in
-            </button>
-            <button className={`px-5 py-2 text-[11px] font-black uppercase tracking-widest rounded-full transition-all active:scale-95 ${
-              scrolled
-                ? 'bg-[#0f172a] text-white hover:bg-blue-700'
-                : 'bg-blue-600 text-white shadow-[0_0_20px_rgba(37,99,235,0.4)] hover:bg-blue-500'
-            }`}>
+            </Link>
+            <Link 
+              href="/freelancex/signup" 
+              className={`px-5 py-2.5 text-[11px] font-black uppercase tracking-widest rounded-full transition-all active:scale-95 flex items-center justify-center ${
+                scrolled
+                  ? 'bg-[#0f172a] text-white hover:bg-blue-700'
+                  : 'bg-blue-600 text-white shadow-[0_0_20px_rgba(37,99,235,0.4)] hover:bg-blue-500'
+              }`}
+            >
               Sign up
-            </button>
+            </Link>
 
             <button
               className={`md:hidden p-1 ${scrolled ? 'text-[#0f172a]' : 'text-white'}`}
@@ -116,11 +121,15 @@ export default function Navbar() {
                   </Link>
                 ))}
                 <div className={`h-px w-full ${scrolled ? 'bg-slate-100' : 'bg-white/10'}`} />
-                <button className={`text-xs font-black uppercase tracking-widest py-2 ${
-                  scrolled ? 'text-[#0f172a]' : 'text-white'
-                }`}>
+                <Link 
+                  href="/freelancex/login" 
+                  onClick={() => setIsOpen(false)}
+                  className={`text-xs font-black uppercase tracking-widest py-2 ${
+                    scrolled ? 'text-[#0f172a]' : 'text-white'
+                  }`}
+                >
                   Candidate Login
-                </button>
+                </Link>
               </div>
             </motion.div>
           )}
