@@ -161,7 +161,7 @@ export default function Hero() {
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row justify-center gap-5 mb-15 relative z-10">
+        <div className="flex flex-col sm:flex-row justify-center gap-5 mb-10 relative z-10">
           <button className="flex items-center justify-center gap-3 bg-blue-600 text-white px-10 py-5 rounded-[1.5rem] text-sm font-black uppercase tracking-widest hover:bg-blue-500 transition-all shadow-xl shadow-blue-600/30 active:scale-95">
             Find Work<ArrowRight size={18} />
           </button>
@@ -170,7 +170,7 @@ export default function Hero() {
           </button>
         </div>
 
-        <div className="relative mb-14">
+        <div className="relative mb-10">
           <div className="absolute inset-0 flex items-center" aria-hidden="true">
             <div className="w-full border-t border-white/10 opacity-30"></div>
           </div>
