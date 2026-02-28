@@ -3,7 +3,7 @@
 import React, { useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { ArrowRight, ShieldCheck, Zap } from 'lucide-react';
+import { ArrowRight, ShieldCheck, Zap, Search } from 'lucide-react';
 
 const SpaceBackground = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -123,7 +123,7 @@ export default function Hero() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="relative z-10 max-w-7xl mx-auto text-center mb-15 mt-8 md:mt-0"
+        className="relative z-10 max-w-7xl mx-auto text-center mb-15 mt-8 md:mt-0 w-full"
       >
         <div className="inline-flex items-center gap-2 bg-white px-4 py-2.5 rounded-full text-blue-600 shadow-2xl shadow-blue-500/30 mb-5 border border-blue-100">
           <Zap size={14} fill="currentColor" className="animate-pulse" />
@@ -139,7 +139,29 @@ export default function Hero() {
           Connecting businesses in need to freelancers who deliver <span className="text-white font-bold underline decoration-blue-500/50">GitHub</span>, <span className="text-white font-bold underline decoration-indigo-500/50">LinkedIn</span>, and AI assessments.
         </p>
 
-        <div className="flex flex-col sm:flex-row justify-center gap-5 mb-15">
+        <div className="max-w-3xl mx-auto mb-10 relative z-20">
+          <div className="flex flex-col sm:flex-row items-center gap-2 bg-white/[0.03] border border-white/10 rounded-[1.5rem] p-2 backdrop-blur-md transition-all hover:border-white/20 focus-within:border-blue-500/50 shadow-2xl">
+            <div className="pl-4 hidden sm:block text-slate-400">
+              <Search size={20} />
+            </div>
+            <input 
+              type="text" 
+              placeholder="Search skills, developers, or projects..." 
+              className="w-full sm:flex-1 bg-transparent border-none outline-none text-white text-[15px] placeholder:text-slate-500 py-3 px-4 sm:px-2"
+            />
+            <div className="w-full sm:w-auto flex items-center border-t sm:border-t-0 sm:border-l border-white/10">
+              <select className="w-full sm:w-auto bg-transparent text-slate-300 text-[14px] outline-none px-4 py-3 cursor-pointer focus:outline-none appearance-none">
+                <option value="talent" className="bg-[#020617] text-white">Find Talent</option>
+                <option value="work" className="bg-[#020617] text-white">Find Work</option>
+              </select>
+            </div>
+            <button className="w-full sm:w-auto bg-blue-600 text-white px-8 py-3 rounded-[1rem] text-xs font-black uppercase tracking-widest hover:bg-blue-500 transition-all shadow-lg shadow-blue-600/20 active:scale-95">
+              Search
+            </button>
+          </div>
+        </div>
+
+        <div className="flex flex-col sm:flex-row justify-center gap-5 mb-15 relative z-10">
           <button className="flex items-center justify-center gap-3 bg-blue-600 text-white px-10 py-5 rounded-[1.5rem] text-sm font-black uppercase tracking-widest hover:bg-blue-500 transition-all shadow-xl shadow-blue-600/30 active:scale-95">
             Find Work<ArrowRight size={18} />
           </button>
