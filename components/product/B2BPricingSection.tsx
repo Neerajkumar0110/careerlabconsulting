@@ -4,9 +4,15 @@
 
 import React, { useState, useEffect } from 'react';
 import { 
-  Check, Zap, Crown, Building2, 
-  Calendar, Rocket, ArrowRight, 
-  Phone, MessageCircle
+  ArrowRight,
+  Building2,
+  Calendar,
+  Check,
+  Crown,
+  MessageCircle,
+  Phone,
+  Rocket,
+  Zap
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import ScheduleMeetingModal from './ScheduleMeetingModal'; 
