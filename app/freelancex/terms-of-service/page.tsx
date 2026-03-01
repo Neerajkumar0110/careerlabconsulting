@@ -2,12 +2,12 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-// FIXED: Removed "Link" from here to prevent collision with next/link
+// 100% Cleaned Lucide Imports (No 'Link' here)
 import { 
   FileSignature, Handshake, ShieldAlert, 
   Wallet, Code2, Gavel, Terminal, 
   ChevronRight, AlertTriangle, Scale,
-  MapPin, Phone, Mail
+  MapPin, Phone, Mail 
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -104,7 +104,8 @@ const TERMS_CLAUSES = [
 
 function FingerprintIcon(props: any) {
   return (
-    <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinelinejoin="round">
+    // FIXED: Changed strokeLinelinejoin to strokeLinejoin to resolve React DOM error
+    <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M2 12C2 6.48 6.48 2 12 2s10 4.48 10 10"/>
       <path d="M5 12c0-3.87 3.13-7 7-7s7 3.13 7 7"/>
       <path d="M8 12c0-2.21 1.79-4 4-4s4 1.79 4 4"/>
