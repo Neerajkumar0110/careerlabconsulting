@@ -12,22 +12,22 @@ import Logo from "@/components/freelancex/logo/logo";
 
 const FOOTER_LINKS = {
   "Platform": [
-    { name: 'Community', href: '#test' },
-    { name: 'Referral Program', href: '#reports' },
-    { name: 'Events', href: '#employers' },
-    { name: 'Leaderboard', href: '#' },
+    { name: 'Community', href: '/freelancex/community' },
+    { name: 'Referral Program', href: '/freelancex/referral-program' },
+    { name: 'Events', href: '/freelancex/events' },
+    { name: 'Leaderboard', href: '/freelancex/leaderboard' },
   ],
   "Ecosystem": [
-    { name: 'FreelanceX Talent', href: '#' },
-    { name: 'CLC Consulting', href: '#' },
-    { name: 'Manee AI Lab', href: '#' },
-    { name: 'X-Secure Protocol', href: '#' },
+    { name: 'FreelanceX Talent', href: '/freelancex/talent' },
+    { name: 'CLC Consulting', href: '/freelancex/consulting' },
+    { name: 'Manee AI Lab', href: '/freelancex/manee' },
+    { name: 'X-Secure Protocol', href: '/freelancex/protocol' },
   ],
   "Company": [
-    { name: 'About Us', href: '#' },
-    { name: 'Partner Program', href: '#' },
-    { name: 'Privacy Policy', href: '#' },
-    { name: 'Terms of Service', href: '#' },
+    { name: 'About Us', href: '/freelancex/about' },
+    { name: 'Partner Program', href: '/freelancex/partner-program' },
+    { name: 'Privacy Policy', href: '/freelancex/privacy-policy' },
+    { name: 'Terms of Service', href: '/freelancex/terms-of-service' },
   ],
 };
 

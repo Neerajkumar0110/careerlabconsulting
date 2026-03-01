@@ -1,0 +1,204 @@
+'use client';
+
+import React from 'react';
+import { motion } from 'framer-motion';
+import { 
+  Shield, Lock, Fingerprint, FileCode2, 
+  Terminal, ChevronRight, CheckCircle2, 
+  AlertTriangle, Network, Cpu,
+  ShieldCheck
+} from 'lucide-react';
+import Link from 'next/link';
+
+import Navbar from '@/components/freelancex/layout/HomeNavbar';
+import Footer from '@/components/freelancex/landing/Footer';
+
+const PROTOCOL_RULES = [
+  { 
+    id: "01", 
+    title: "Biological Vetting", 
+    desc: "Every node must pass a rigorous neural and technical audit. Only the top 1% of global talent is granted access to the ecosystem. Mediocrity is rejected.", 
+    icon: Fingerprint,
+    color: "text-blue-400",
+    bg: "bg-blue-500/10",
+    border: "border-blue-500/20"
+  },
+  { 
+    id: "02", 
+    title: "Zero-Trust Security", 
+    desc: "All intellectual property is protected under strict NDAs and end-to-end encrypted communication channels. Data leaks are physically impossible.", 
+    icon: Shield,
+    color: "text-emerald-400",
+    bg: "bg-emerald-500/10",
+    border: "border-emerald-500/20"
+  },
+  { 
+    id: "03", 
+    title: "Escrow Mandate", 
+    desc: "Capital is locked in secure digital vaults before sprints begin. Funds are only released upon successful verification of the deliverables. Zero fraud.", 
+    icon: Lock,
+    color: "text-indigo-400",
+    bg: "bg-indigo-500/10",
+    border: "border-indigo-500/20"
+  },
+  { 
+    id: "04", 
+    title: "Architectural Excellence", 
+    desc: "No spaghetti code. All deliverables must meet enterprise-grade standards, pass automated linting protocols, and be infinitely scalable.", 
+    icon: FileCode2,
+    color: "text-purple-400",
+    bg: "bg-purple-500/10",
+    border: "border-purple-500/20"
+  },
+];
+
+export default function ProtocolPage() {
+  return (
+    <div className="min-h-screen bg-[#020617] text-white flex flex-col font-sans selection:bg-indigo-500/30 overflow-x-hidden">
+      <Navbar />
+
+      <main className="flex-grow pt-24 md:pt-32 pb-16 md:pb-24 relative">
+        <div className="absolute top-0 right-0 w-[300px] md:w-[800px] h-[300px] md:h-[600px] bg-blue-600/10 blur-[120px] rounded-full pointer-events-none -z-0" />
+        <div className="absolute bottom-1/4 left-0 w-[300px] md:w-[600px] h-[300px] md:h-[600px] bg-indigo-600/10 blur-[120px] rounded-full pointer-events-none -z-0" />
+        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 mix-blend-soft-light pointer-events-none" />
+
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-16 md:space-y-24">
+          
+          <div className="text-center space-y-6 md:space-y-8 max-w-4xl mx-auto">
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-md"
+            >
+              <Network size={14} className="text-indigo-400" />
+              <span className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-slate-300">The Manifesto</span>
+            </motion.div>
+            
+            <motion.h1 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="text-5xl sm:text-6xl md:text-8xl font-black tracking-tighter leading-[1.05]"
+            >
+              The <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400">0x99 Protocol.</span>
+            </motion.h1>
+            
+            <motion.p 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="text-slate-400 text-sm md:text-xl font-medium leading-relaxed max-w-2xl mx-auto px-4"
+            >
+              FreelanceX is not a marketplace. It is an exclusive network governed by strict technological and ethical laws. Read the directives before initializing your node.
+            </motion.p>
+          </div>
+
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="max-w-4xl mx-auto bg-[#050b14] border border-white/10 rounded-2xl md:rounded-[2rem] overflow-hidden shadow-2xl"
+          >
+            <div className="bg-white/5 border-b border-white/5 px-4 md:px-6 py-3 md:py-4 flex items-center justify-between">
+               <div className="flex gap-2">
+                 <div className="w-3 h-3 rounded-full bg-red-500/80" />
+                 <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
+                 <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
+               </div>
+               <div className="text-[9px] md:text-[10px] font-mono text-slate-500 tracking-widest">system_core@freelancex:~</div>
+               <Terminal size={14} className="text-slate-500 hidden sm:block" />
+            </div>
+            
+            <div className="p-6 md:p-10 font-mono text-[10px] md:text-sm space-y-4 text-blue-400/80">
+               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="flex items-start gap-3">
+                 <span className="text-emerald-400">root@protocol ~$</span>
+                 <span className="text-slate-300">run ./verify_node_integrity.sh</span>
+               </motion.div>
+               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.0 }} className="text-slate-500">
+                 [System] Analyzing network request...
+               </motion.div>
+               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.5 }} className="text-slate-500">
+                 [System] Establishing end-to-end encrypted connection...
+               </motion.div>
+               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.0 }} className="text-emerald-400 flex items-center gap-2">
+                 <CheckCircle2 size={14} /> CONNECTION SECURE. LOADING DIRECTIVES.
+               </motion.div>
+            </div>
+          </motion.div>
+
+          <div className="max-w-4xl mx-auto space-y-6 md:space-y-8">
+             <div className="flex items-center gap-4 mb-10 md:mb-16">
+               <Cpu className="text-indigo-400" size={32} />
+               <h2 className="text-2xl md:text-4xl font-black uppercase tracking-tight">Core Directives</h2>
+             </div>
+
+             <div className="space-y-6 md:space-y-8 relative">
+                <div className="hidden md:block absolute top-0 bottom-0 left-[3.5rem] w-[2px] bg-gradient-to-b from-indigo-500/50 via-purple-500/50 to-transparent" />
+
+                {PROTOCOL_RULES.map((rule, idx) => (
+                  <motion.div 
+                    key={idx}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: idx * 0.1 }}
+                    className="relative flex flex-col md:flex-row gap-6 md:gap-10 items-start group"
+                  >
+                    <div className="flex items-center gap-4 md:block relative z-10 bg-[#020617]">
+                      <div className={`w-14 h-14 md:w-28 md:h-28 rounded-2xl md:rounded-[2rem] bg-[#0a0f1d] border ${rule.border} flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-500`}>
+                        <rule.icon className={rule.color} size={24} />
+                      </div>
+                      <div className="md:hidden text-2xl font-black text-white/20">{rule.id}</div>
+                    </div>
+
+                    <div className="flex-1 bg-[#0a0f1d]/60 border border-white/5 rounded-[1.5rem] md:rounded-[2.5rem] p-6 md:p-10 backdrop-blur-xl group-hover:bg-white/[0.02] group-hover:border-white/10 transition-all">
+                      <div className="flex items-center justify-between mb-4">
+                        <h3 className="text-xl md:text-2xl font-black text-white">{rule.title}</h3>
+                        <span className="hidden md:block text-4xl font-black text-white/5">{rule.id}</span>
+                      </div>
+                      <p className="text-slate-400 text-sm md:text-base leading-relaxed font-medium">
+                        {rule.desc}
+                      </p>
+                    </div>
+                  </motion.div>
+                ))}
+             </div>
+          </div>
+
+          <div className="max-w-4xl mx-auto pt-10">
+             <div className="relative rounded-[2rem] md:rounded-[3rem] overflow-hidden bg-gradient-to-r from-blue-900/40 to-indigo-900/40 border border-blue-500/30 p-8 md:p-16 text-center backdrop-blur-xl shadow-2xl">
+                <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-soft-light" />
+                
+                <div className="relative z-10 space-y-8">
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-500/10 text-blue-400 mb-2">
+                    <AlertTriangle size={32} />
+                  </div>
+                  <h2 className="text-3xl md:text-5xl font-black text-white leading-tight">Acknowledge & <br/> <span className="text-blue-400">Initialize.</span></h2>
+                  <p className="text-slate-300 text-sm md:text-base max-w-xl mx-auto">
+                    By proceeding, you agree to adhere to the 0x99 Protocol. Violation of these directives will result in immediate network expulsion.
+                  </p>
+                  
+                  <div className="pt-6">
+                    <Link 
+                      href="/freelancex/signup"
+                      className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 md:px-12 md:py-5 bg-white text-black font-black text-[10px] md:text-xs uppercase tracking-[0.2em] rounded-xl md:rounded-2xl hover:scale-105 transition-all shadow-[0_0_40px_rgba(255,255,255,0.2)]"
+                    >
+                      Accept Protocol & Enter Network <ChevronRight size={18} />
+                    </Link>
+                  </div>
+                </div>
+             </div>
+          </div>
+
+          <div className="flex items-center justify-center gap-3 py-6 text-[8px] md:text-[9px] font-black uppercase tracking-[0.3em] text-slate-500">
+             <ShieldCheck size={14} className="text-indigo-500" /> 
+             <span>Decentralized Governance Active</span>
+          </div>
+
+        </div>
+      </main>
+
+      <Footer />
+    </div>
+  );
+}
