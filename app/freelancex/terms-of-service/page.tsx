@@ -2,13 +2,13 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
+// FIXED: Removed "Link" from here to prevent collision with next/link
 import { 
   FileSignature, Handshake, ShieldAlert, 
   Wallet, Code2, Gavel, Terminal, 
   ChevronRight, AlertTriangle, Scale,
-  MapPin, Phone, Mail // Added missing icons for Contact Hub
+  MapPin, Phone, Mail
 } from 'lucide-react';
-// FIXED: Removed Link icon from lucide-react to avoid conflict with next/link
 import Link from 'next/link';
 
 import Navbar from '@/components/freelancex/layout/HomeNavbar';
@@ -208,7 +208,7 @@ export default function TermsOfServicePage() {
             ))}
           </div>
 
-          {/* --- CONTACT HUB (NEW ADDITION) --- */}
+          {/* --- CONTACT HUB --- */}
           <div className="pt-8">
             <h3 className="text-center text-2xl font-black text-white mb-8">Contact Hub</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
