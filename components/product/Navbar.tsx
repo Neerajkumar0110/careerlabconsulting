@@ -3,116 +3,29 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { 
-  Search, X, Menu, ChevronDown, Zap, Code, Globe, Shield, 
+  Search, X, Menu, ChevronDown, Zap,
   Package, Layers, Cpu, CheckCircle2, ChevronRight, ArrowRight,
-  HeartPulse, ShoppingCart, Landmark, Factory, 
-  Car, Scale, GraduationCap, Monitor, Mic, Sparkles, Blocks
+  Monitor, Mic, Sparkles
 } from 'lucide-react';
 
-const industriesMenu = [
-  {
-    id: 'tech',
-    title: 'Technology & SaaS',
-    layer: 'Digital Innovation Layer',
-    icon: Monitor,
-    items: [
-      { name: "Cloud Infrastructure", href: "/industries/tech-cloud" },
-      { name: "SaaS Platforms", href: "/industries/tech-saas" },
-      { name: "AI Research & Development", href: "/industries/tech-ai" },
-      { name: "Cybersecurity Firms", href: "/industries/tech-security" },
-      { name: "DevOps & Automation", href: "/industries/tech-devops" }
-    ]
-  },
-  {
-    id: 'healthcare',
-    title: 'Healthcare & Pharma',
-    layer: 'Life Sciences Layer',
-    icon: HeartPulse,
-    items: [
-      { name: "Telemedicine Systems", href: "/industries/health-tele" },
-      { name: "Clinical Data Management", href: "/industries/health-data" },
-      { name: "Pharmaceutical AI", href: "/industries/health-pharma" },
-      { name: "Medical Device Software", href: "/industries/health-devices" },
-      { name: "Health Insurance Tech", href: "/industries/health-insurance" }
-    ]
-  },
-  {
-    id: 'finance',
-    title: 'Finance & Banking',
-    layer: 'FinTech & Wealth Layer',
-    icon: Landmark,
-    items: [
-      { name: "Investment Banking", href: "/industries/fin-banking" },
-      { name: "FinTech Innovations", href: "/industries/fin-tech" },
-      { name: "Asset & Wealth Management", href: "/industries/fin-wealth" },
-      { name: "Risk & Compliance", href: "/industries/fin-risk" },
-      { name: "Blockchain Solutions", href: "/industries/fin-blockchain" }
-    ]
-  },
-  {
-    id: 'retail',
-    title: 'Retail & E-commerce',
-    layer: 'Consumer Goods Layer',
-    icon: ShoppingCart,
-    items: [
-      { name: "Direct-to-Consumer (D2C)", href: "/industries/retail-d2c" },
-      { name: "Inventory Management", href: "/industries/retail-inventory" },
-      { name: "Customer Loyalty AI", href: "/industries/retail-loyalty" },
-      { name: "Supply Chain Logistics", href: "/industries/retail-supply" },
-      { name: "Marketplace Platforms", href: "/industries/retail-market" }
-    ]
-  },
-  {
-    id: 'manufacturing',
-    title: 'Manufacturing',
-    layer: 'Industrial 4.0 Layer',
-    icon: Factory,
-    items: [
-      { name: "Smart Factory Systems", href: "/industries/man-smart" },
-      { name: "Predictive Maintenance", href: "/industries/man-maintenance" },
-      { name: "Industrial Automation", href: "/industries/man-auto" },
-      { name: "Quality Control Systems", href: "/industries/man-quality" }
-    ]
-  },
-  {
-    id: 'automotive',
-    title: 'Automotive',
-    layer: 'Mobility & Auto Layer',
-    icon: Car,
-    items: [
-      { name: "Autonomous Vehicle AI", href: "/industries/auto-ai" },
-      { name: "Connected Car Services", href: "/industries/auto-connected" },
-      { name: "Fleet Management", href: "/industries/auto-fleet" },
-      { name: "Electric Vehicle Tech", href: "/industries/auto-ev" }
-    ]
-  },
-  {
-    id: 'legal',
-    title: 'Legal & Compliance',
-    layer: 'Professional Services Layer',
-    icon: Scale,
-    items: [
-      { name: "Legal Document AI", href: "/industries/legal-ai" },
-      { name: "Compliance Monitoring", href: "/industries/legal-comp" },
-      { name: "Contract Management", href: "/industries/legal-contract" },
-      { name: "Intellectual Property Tech", href: "/industries/legal-ip" }
-    ]
-  },
-  {
-    id: 'education',
-    title: 'Education',
-    layer: 'EdTech & Learning Layer',
-    icon: GraduationCap,
-    items: [
-      { name: "Adaptive Learning Systems", href: "/industries/edu-learning" },
-      { name: "Institutional Management", href: "/industries/edu-inst" },
-      { name: "Student Engagement AI", href: "/industries/edu-ai" },
-      { name: "Digital Certification", href: "/industries/edu-cert" }
-    ]
-  }
-];
-
 const productMenu = [
+  {
+    id: 'core',
+    title: 'Core Products',
+    icon: Zap,
+    subtitle: 'Autonomous AI infrastructure for every department',
+    items: [
+      { name: 'Manee', desc: 'Omni-Channel AI Communication', href: '/product/manee' },
+      { name: 'CRM-X', desc: 'Autonomous Growth & Marketing', href: '/product/crmx' },
+      { name: 'TwinX', desc: 'Intelligent Executive Assistant', href: '/product/twinx' },
+      { name: 'ErpX', desc: 'AI Finance & Ledger Command', href: '/product/erpx' },
+      { name: 'HrX', desc: 'Autonomous Recruitment AI', href: '/product/hrx' },
+      { name: 'SuppX', desc: '24/7 Autonomous Support', href: '/product/suppx' },
+      { name: 'LegalOS', desc: 'Autonomous Legal Intelligence', href: '/product/legalos' },
+      { name: 'LMS-X', desc: '3D AR/VR Immersive Learning', href: '/product/lmsx' },
+      { name: 'EduX', desc: 'Institutional AI Ecosystem', href: '/product/edux' },
+    ]
+  },
   {
     id: 'single',
     title: 'Single Suite Products',
@@ -209,7 +122,10 @@ export default function Navbar() {
 
   const handleMenuEnter = (menu: string) => {
     setActiveMenu(menu);
-    setActiveTab(0);
+  };
+
+  const handleMenuLeave = () => {
+    setActiveMenu(null);
   };
 
   const handleVoiceSearch = () => {
@@ -253,12 +169,12 @@ export default function Navbar() {
   };
 
   const MegaMenuContent = ({ items, menuType }: { items: any[], menuType: string }) => (
-    <div 
-      className="fixed inset-x-0 top-20 flex justify-center px-6 pt-2 z-[999] h-fit" 
-      onMouseLeave={() => setActiveMenu(null)}
-    >
-      <div className="absolute inset-0 -z-10 h-screen w-screen" onMouseEnter={() => setActiveMenu(null)} />
-      <div className="w-full max-w-[1200px] bg-[#0b0f1a] border border-white/10 rounded-2xl shadow-[0_40px_80px_-20px_rgba(0,0,0,0.8)] overflow-hidden flex min-h-[550px]">
+    <>
+      {/* Invisible bridge to prevent mouseLeave */}
+      <div className="absolute top-full left-0 right-0 h-2 bg-transparent z-[99998]" />
+      
+      <div className="fixed inset-x-0 top-20 flex justify-center px-6 pt-2 z-[99999] pointer-events-auto">
+        <div className="w-full max-w-[1200px] bg-[#0b0f1a] border border-white/10 rounded-2xl shadow-[0_40px_80px_-20px_rgba(0,0,0,0.8)] overflow-hidden flex min-h-[550px] pointer-events-auto">
         <div className="w-[300px] bg-[#0a0d16] p-4 border-r border-white/10 flex-shrink-0">
           <div className="space-y-1">
             {items.map((cat, idx) => (
@@ -305,20 +221,21 @@ export default function Navbar() {
           </div>
 
           <div className="mt-auto pt-8 border-t border-white/5">
-            <Link href="/industries/explore-full-education-capability" className="text-[10px] font-bold text-blue-400 hover:text-blue-300 flex items-center gap-2 group uppercase tracking-[2px]">
+            <Link href="/product/more" className="text-[10px] font-bold text-blue-400 hover:text-blue-300 flex items-center gap-2 group uppercase tracking-[2px]">
               Explore More <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
         </div>
       </div>
     </div>
+    </>
   );
 
   return (
     <>
       {isMounted && (
         <>
-      <nav className="fixed top-0 left-0 right-0 z-[1000] bg-[#020617]/95 backdrop-blur-xl border-b border-white/10 h-20">
+      <nav className="fixed top-0 left-0 right-0 z-[9999] bg-[#020617]/95 backdrop-blur-xl border-b border-white/10 h-20 pointer-events-auto">
         <div className="max-w-[1440px] mx-auto px-6 h-full flex items-center justify-between">
           <div className="flex items-center gap-10 h-full">
             <Link href="/" className="flex-shrink-0" aria-label="Home">
@@ -333,9 +250,12 @@ export default function Navbar() {
                 About Us
               </Link>
               {['products'].map((menu) => (
-                <div key={menu} className="h-full flex items-center" 
-                  onMouseEnter={() => handleMenuEnter(menu)} 
-                  onMouseLeave={() => setActiveMenu(null)}>
+                <div 
+                  key={menu} 
+                  className="h-full flex items-center relative" 
+                  onMouseEnter={() => handleMenuEnter(menu)}
+                  onMouseLeave={() => handleMenuLeave()}
+                >
                   <button 
                     className={`flex items-center gap-2 text-[10px] font-bold uppercase tracking-[2px] transition-all hover:text-white ${activeMenu === menu ? 'text-blue-400' : 'text-slate'}`}
                     aria-expanded={activeMenu === menu}
@@ -386,7 +306,7 @@ export default function Navbar() {
       </nav>
 
       {isMobileMenuOpen && (
-        <div className="fixed inset-0 z-[2000] bg-[#0a0a0a] overflow-y-auto">
+        <div className="fixed inset-0 z-[99998] bg-[#0a0a0a] overflow-y-auto">
           <div className="p-6 min-h-screen flex flex-col">
             <div className="flex justify-between items-center mb-6">
               <Link href="/" onClick={() => setIsMobileMenuOpen(false)} aria-label="Home">
@@ -475,7 +395,7 @@ export default function Navbar() {
       )}
 
       {isSearchOpen && (
-        <div className="fixed inset-0 z-[2500] bg-black/95 backdrop-blur-2xl flex items-center justify-center p-6">
+        <div className="fixed inset-0 z-[99997] bg-black/95 backdrop-blur-2xl flex items-center justify-center p-6">
           <button 
             onClick={() => {
               setIsSearchOpen(false);

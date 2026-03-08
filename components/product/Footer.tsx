@@ -7,28 +7,29 @@ import Script from 'next/script'; // Optimized script loading
 import { 
   Github, Twitter, Linkedin, Mail, ArrowUpRight, 
   Home, Box, Briefcase, Phone, X, Globe, MapPin, 
-  Navigation, Facebook, Instagram, Youtube 
+  Navigation, Facebook, Instagram, Youtube, 
+  Info
 } from 'lucide-react';
 
 // Static data moved outside component to optimize re-renders
 const footerLinks = {
-  "Solutions": [
-    { name: 'AI Agents', href: '/ai-agents' },
-    { name: 'Neural Training', href: '/neural-training' },
-    { name: 'Custom LLMs', href: '/custom-llms' },
-    { name: 'Security Protocol', href: '/security-protocol' },
+  "Flagship Platform": [
+    { name: 'CLC One', href: '/products/clc-one' },
+    { name: 'Business Suite', href: '/products/business-suite' },
   ],
-  "Business Hub": [
-    { name: 'AI Employers (Jobs)', href: '/ai-employers' },
-    { name: 'Freelancer Platform', href: '/freelancer-platform' },
-    { name: 'Project Development', href: '/project-development' },
-    { name: 'Individual Projects', href: '/individual-projects' },
+
+  "Enterprise Solutions": [
+    { name: 'Sales & Marketing Suite', href: '/products/sales' },
+    { name: 'Finance & Commerce', href: '/products/finance' },
+    { name: 'People Suite', href: '/products/people' },
+    { name: 'Automation Platform', href: '/products/automation' },
   ],
-  "Infrastructure": [
-    { name: 'About Us', href: '/about' },
-    { name: 'Case Studies', href: '/case-studies' },
+
+  "Company": [
+    { name: 'About Us', href: '/product/about' },
+    { name: 'Case Studies', href: '/case-study' },
     { name: 'Documentation', href: '/documentation' },
-    { name: 'Contact', href: '/contact' },
+    { name: 'Contact', href: '/product/contact' },
   ],
 };
 
@@ -51,7 +52,19 @@ const locations = [
   { country: "Germany", city: "Berlin", address: "Grünberger Str. 54, 10245 Berlin, Germany", phone: "+493051588345" }
 ];
 
-const productList = ["AI Voice", "AI CRM", "AI HRMS", "AI ERP", "AI LMS", "AI TwinX", "AI School Management", "AI University Management", "AI Legal", "AI Admin"];
+// const productList = ["AI Voice", "AI CRM", "AI HRMS", "AI ERP", "AI LMS", "AI TwinX", "AI School Management", "AI University Management", "AI Legal", "AI Admin"];
+
+const productList = [
+  { name: "Manee", href: "/product/manee" },
+  { name: "CRM-X", href: "/product/crmx" },
+  { name: "ErpX", href: "/product/erpx" },
+  { name: "HrX", href: "/product/hrx" },
+  { name: "TwinX", href: "/product/twinx" },
+  { name: "LegalOS", href: "/product/legalos" },
+  { name: "LMS-X", href: "/product/lmsx" },
+  { name: "EduX", href: "/product/edux" },
+  { name: "SuppX", href: "/product/suppx" },
+];
 
 export default function B2BFooter() {
   const [isProductOpen, setIsProductOpen] = useState(false);
@@ -193,7 +206,7 @@ export default function B2BFooter() {
           <div className="pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">
             <div className="flex flex-wrap justify-center items-center gap-x-8 gap-y-4">
               <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">© 2015 - {currentYear} Career Lab Consulting</span>
-              {['Privacy Policy', 'Terms of Service', 'Refund Policy', 'Examination Policy', 'Escalation Policy'].map((item) => (
+              {['Privacy Policy', 'Terms of Service', 'Refund Policy'].map((item) => (
                 <Link key={item} href={`/${item.toLowerCase().replace(/ /g, '-')}`} className="text-[10px] text-slate-500 font-bold uppercase tracking-widest hover:text-blue-400 transition-colors">
                   {item}
                 </Link>
@@ -220,7 +233,14 @@ export default function B2BFooter() {
             </div>
             <div className="grid grid-cols-1 gap-1 overflow-y-auto max-h-[50vh] pr-2">
               {productList.map((item) => (
-                <Link key={item} href={`/products/${item.toLowerCase().replace(/ /g, '-')}`} onClick={() => setIsProductOpen(false)} className="text-left text-slate-400 hover:text-blue-400 text-sm font-bold py-4 border-b border-white/5 transition-colors uppercase tracking-wider">{item}</Link>
+                <Link 
+                  key={item.name} 
+                  href={item.href}
+                  onClick={() => setIsProductOpen(false)} 
+                  className="text-left text-slate-400 hover:text-blue-400 text-sm font-bold py-4 border-b border-white/5 transition-colors tracking-widest"
+                >
+                  {item.name}
+                </Link>
               ))}
             </div>
           </div>
@@ -248,9 +268,9 @@ export default function B2BFooter() {
             <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.414 0 .018 5.393 0 12.03c0 2.123.544 4.197 1.583 6.012L0 24l6.117-1.605a11.745 11.745 0 005.925 1.603h.005c6.635 0 12.028-5.391 12.032-12.027a11.812 11.812 0 00-3.476-8.513z"/>
           </svg>
         </Link>
-        <Link href="/ai-employers" className="flex flex-col items-center justify-center min-w-[64px] h-full text-slate-500 hover:text-blue-400 transition-colors">
-          <Briefcase className="w-6 h-6 mb-1" aria-hidden="true" />
-          <span className="text-[9px] font-black uppercase tracking-tighter">Jobs</span>
+        <Link href="/about" className="flex flex-col items-center justify-center min-w-[64px] h-full text-slate-500 hover:text-blue-400 transition-colors">
+          <Info className="w-6 h-6 mb-1" />
+          <span className="text-[9px] font-black uppercase tracking-tighter">About</span>
         </Link>
         <Link href="/contact" className="flex flex-col items-center justify-center min-w-[64px] h-full text-slate-500 hover:text-blue-400 transition-colors">
           <Phone className="w-6 h-6 mb-1" aria-hidden="true" />
