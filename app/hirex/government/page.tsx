@@ -9,7 +9,7 @@ import {
   Landmark, ShieldCheck, Scale, Server, 
   Users, ArrowRight, CheckCircle2, X, 
   Building, Send, Lock, FileText, 
-  Network, Database
+  Network, Database, Globe, Fingerprint, Shield
 } from 'lucide-react';
 
 const GOVERNMENT_FEATURES = [
@@ -70,8 +70,8 @@ export default function GovernmentPage() {
       
       {/* Authoritative Background Ambience */}
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <div className="absolute top-0 right-0 w-[500px] md:w-[900px] h-[500px] md:h-[900px] bg-indigo-600/10 blur-[150px] rounded-full translate-x-1/4 -translate-y-1/4" />
-        <div className="absolute bottom-0 left-0 w-[400px] md:w-[700px] h-[400px] md:h-[700px] bg-slate-600/10 blur-[120px] rounded-full -translate-x-1/4 translate-y-1/4" />
+        <div className="absolute top-0 right-0 w-[500px] md:w-[900px] h-[500px] md:h-[800px] bg-indigo-600/10 blur-[150px] rounded-full translate-x-1/4 -translate-y-1/4" />
+        <div className="absolute bottom-0 left-0 w-[400px] md:w-[600px] h-[400px] md:h-[600px] bg-slate-600/10 blur-[120px] rounded-full -translate-x-1/4 translate-y-1/4" />
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:64px_64px] opacity-20" />
       </div>
 
@@ -126,7 +126,7 @@ export default function GovernmentPage() {
             
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {GOVERNMENT_FEATURES.map((feat, idx) => (
-                <div key={idx} className={`${feat.colSpan} bg-slate-900/50 backdrop-blur-xl border border-white/10 rounded-[2rem] p-8 md:p-10 hover:border-white/20 transition-all duration-300 group overflow-hidden relative`}>
+                <div key={idx} className={`${feat.colSpan} bg-slate-900/50 backdrop-blur-xl border border-white/10 rounded-[2rem] p-8 md:p-10 hover:border-white/20 transition-all duration-300 group overflow-hidden relative shadow-2xl`}>
                   <div className={`absolute -right-10 -bottom-10 w-40 h-40 ${feat.bg} blur-3xl rounded-full opacity-50 group-hover:opacity-100 transition-opacity`} />
                   <div className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl ${feat.bg} border ${feat.border} flex items-center justify-center mb-6 relative z-10 shadow-lg`}>
                     <feat.icon className={`w-6 h-6 md:w-7 md:h-7 ${feat.color}`} />
@@ -138,12 +138,12 @@ export default function GovernmentPage() {
             </div>
           </div>
 
-          {/* Extreme Security / Anti-Cheat Section */}
-          <div className="bg-[#0b0f1f]/80 backdrop-blur-2xl border border-indigo-500/20 rounded-[2rem] md:rounded-[3rem] p-8 md:p-16 mb-20 md:mb-32 shadow-[0_0_50px_rgba(99,102,241,0.1)]">
+          {/* Extreme Security / Anti-Cheat Section (FIXED IMAGE) */}
+          <div className="bg-[#0b0f1f]/80 backdrop-blur-2xl border border-indigo-500/20 rounded-[2rem] md:rounded-[3rem] p-8 md:p-16 mb-20 md:mb-32 shadow-[0_0_50px_rgba(99,102,241,0.1)] overflow-hidden">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <div>
-                <h2 className="text-3xl md:text-5xl font-black mb-6">Eradicate Examination Fraud</h2>
-                <p className="text-slate-400 leading-relaxed mb-8">
+                <h2 className="text-3xl md:text-5xl font-black mb-6 leading-tight">Eradicate Examination Fraud</h2>
+                <p className="text-slate-400 leading-relaxed mb-8 text-base md:text-lg">
                   Paper leaks and proxy candidates plague traditional public exams. HireX deploys military-grade digital countermeasures to ensure absolute assessment integrity.
                 </p>
                 <div className="space-y-4">
@@ -157,42 +157,54 @@ export default function GovernmentPage() {
                       <div className="w-6 h-6 rounded-full bg-indigo-500/20 flex items-center justify-center shrink-0">
                         <CheckCircle2 className="w-4 h-4 text-indigo-400" />
                       </div>
-                      <span className="text-sm md:text-base text-slate-300">{item}</span>
+                      <span className="text-sm md:text-base text-slate-300 font-medium">{item}</span>
                     </div>
                   ))}
                 </div>
               </div>
-              <div className="relative aspect-square md:aspect-auto md:h-[400px] flex items-center justify-center bg-black/40 border border-white/5 rounded-3xl overflow-hidden">
-                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10" />
-                <div className="relative z-10 text-center">
-                  <Lock className="w-16 h-16 text-indigo-400 mx-auto mb-6 animate-pulse" />
-                  <div className="bg-indigo-500/10 border border-indigo-500/30 px-6 py-3 rounded-full text-indigo-300 font-mono text-sm tracking-widest">
-                    SYSTEM SECURED
+
+              {/* PREMIUM TECH IMAGE REPLACING BROKEN COMPONENT */}
+              <div className="relative group">
+                <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-cyan-500 rounded-[2rem] blur opacity-25 group-hover:opacity-40 transition duration-1000"></div>
+                <div className="relative aspect-video lg:aspect-square bg-slate-900 rounded-[2rem] overflow-hidden border border-white/10 shadow-2xl flex items-center justify-center">
+                  <img 
+                    src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop" 
+                    alt="Cyber Security Defense"
+                    className="absolute inset-0 w-full h-full object-cover opacity-60 grayscale-[30%] group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent" />
+                  
+                  {/* Status Overlay */}
+                  <div className="relative z-10 text-center">
+                    <div className="w-20 h-20 bg-indigo-500/20 backdrop-blur-md rounded-full border border-indigo-500/50 flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(99,102,241,0.4)] animate-pulse">
+                      <Lock className="w-10 h-10 text-indigo-400" />
+                    </div>
+                    <div className="bg-indigo-500/10 border border-indigo-500/30 px-6 py-2.5 rounded-full text-indigo-300 font-mono text-xs md:text-sm tracking-[0.2em] shadow-lg">
+                      SYSTEM SECURED
+                    </div>
                   </div>
                 </div>
-                {/* Simulated scanning rings */}
-                <div className="absolute w-[200px] h-[200px] border border-indigo-500/20 rounded-full animate-ping" style={{ animationDuration: '4s' }} />
-                <div className="absolute w-[300px] h-[300px] border border-indigo-500/10 rounded-full animate-ping" style={{ animationDuration: '4s', animationDelay: '1s' }} />
               </div>
             </div>
           </div>
 
-          {/* CTA Banner */}
+          {/* FINAL CTA SECTION */}
           <div className="max-w-5xl mx-auto p-8 md:p-14 rounded-[2rem] md:rounded-[3rem] bg-gradient-to-br from-indigo-700 to-slate-900 border border-indigo-500/20 flex flex-col md:flex-row items-center justify-between gap-8 shadow-2xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 blur-[80px] rounded-full pointer-events-none" />
+            <div className="absolute top-0 right-0 w-80 h-80 bg-white/10 blur-[100px] rounded-full pointer-events-none" />
             
             <div className="relative z-10 text-center md:text-left max-w-xl">
-              <h2 className="text-3xl md:text-3xl font-black text-white mb-4">Ready to modernize state hiring?</h2>
-              <p className="text-indigo-100 text-sm md:text-lg">
-                Connect with our cleared technical architects to discuss sovereign deployments and compliance protocols.
+              <h2 className="text-3xl md:text-4xl font-black text-white mb-4">Protect National Interests</h2>
+              <p className="text-indigo-100 text-sm md:text-lg leading-relaxed">
+                Connect with our cleared technical architects to discuss air-gapped sovereign deployments and high-security compliance protocols.
               </p>
             </div>
             
             <button 
               onClick={() => setIsModalOpen(true)}
-              className="relative z-10 w-full md:w-auto px-8 py-4 bg-white text-black font-black rounded-2xl hover:scale-105 transition-transform shadow-[0_10px_40px_rgba(0,0,0,0.3)] flex items-center justify-center gap-2"
+              className="relative z-10 w-full md:w-auto px-8 py-4 bg-white text-indigo-900 font-black rounded-2xl hover:scale-105 transition-transform shadow-[0_10px_40px_rgba(0,0,0,0.3)] flex items-center justify-center gap-2 group"
             >
-              Initiate Secure Comms <ShieldCheck className="w-5 h-5 text-indigo-800" />
+              Initiate Secure Comms 
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
 
@@ -201,9 +213,9 @@ export default function GovernmentPage() {
 
       {/* GOVERNMENT SALES MODAL (WhatsApp Integration) */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-300">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-300">
           <div className="relative w-full max-w-lg bg-[#0b0f1f] border border-indigo-500/30 rounded-[2rem] overflow-hidden shadow-[0_0_50px_rgba(99,102,241,0.2)]">
-            <button onClick={() => setIsModalOpen(false)} className="absolute top-6 right-6 p-2 text-slate-500 hover:text-white transition-colors bg-white/5 rounded-full z-10">
+            <button onClick={() => setIsModalOpen(false)} className="absolute top-6 right-6 p-2 text-slate-500 hover:text-white transition-colors bg-white/5 rounded-full z-10 shadow-lg">
               <X className="w-5 h-5" />
             </button>
             
@@ -211,51 +223,53 @@ export default function GovernmentPage() {
               <div className="absolute -top-20 -left-20 w-40 h-40 bg-indigo-500/20 blur-3xl rounded-full" />
               
               <div className="mb-8 text-center relative z-10">
-                <div className="w-16 h-16 bg-indigo-500/10 text-indigo-500 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-indigo-500/20">
+                <div className="w-16 h-16 bg-indigo-500/10 text-indigo-500 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-indigo-500/20 shadow-xl">
                   <Landmark className="w-8 h-8" />
                 </div>
-                <h3 className="text-2xl font-bold">Secure Inquiry Portal</h3>
-                <p className="text-slate-400 text-sm mt-1">Direct channel to our public sector architects.</p>
+                <h3 className="text-2xl font-bold text-white">Secure Inquiry Portal</h3>
+                <p className="text-slate-400 text-sm mt-1">Authorized access only. Routed to public sector team.</p>
               </div>
 
               <form onSubmit={handleWhatsAppSubmit} className="space-y-4 relative z-10">
                 <div className="relative">
                   <input 
                     required type="text" placeholder="Official Name"
-                    className="bg-white/5 border border-white/10 rounded-xl p-4 text-sm focus:border-indigo-500 outline-none w-full"
+                    className="bg-white/5 border border-white/10 rounded-xl p-4 text-sm text-white focus:border-indigo-500 outline-none w-full placeholder:text-slate-600 transition-all"
                     value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})}
                   />
                 </div>
                 <div className="relative">
                   <input 
                     required type="email" placeholder="Gov/Mil Email Address"
-                    className="bg-white/5 border border-white/10 rounded-xl p-4 text-sm focus:border-indigo-500 outline-none w-full"
+                    className="bg-white/5 border border-white/10 rounded-xl p-4 text-sm text-white focus:border-indigo-500 outline-none w-full placeholder:text-slate-600 transition-all"
                     value={formData.email} onChange={e => setFormData({...formData, email: e.target.value})}
                   />
                 </div>
                 <div className="relative">
-                  <Building className="absolute left-4 top-4 w-4 h-4 text-slate-500" />
+                  <Building className="absolute left-4 top-4 w-4 h-4 text-slate-600" />
                   <input 
                     required type="text" placeholder="Agency / Department Name"
-                    className="bg-white/5 border border-white/10 rounded-xl p-4 pl-12 text-sm focus:border-indigo-500 outline-none w-full"
+                    className="bg-white/5 border border-white/10 rounded-xl p-4 pl-12 text-sm text-white focus:border-indigo-500 outline-none w-full placeholder:text-slate-600 transition-all"
                     value={formData.agency} onChange={e => setFormData({...formData, agency: e.target.value})}
                   />
                 </div>
                 <div className="relative">
                   <input 
                     required type="text" placeholder="Your Designation/Rank"
-                    className="bg-white/5 border border-white/10 rounded-xl p-4 text-sm focus:border-indigo-500 outline-none w-full"
+                    className="bg-white/5 border border-white/10 rounded-xl p-4 text-sm text-white focus:border-indigo-500 outline-none w-full placeholder:text-slate-600 transition-all"
                     value={formData.role} onChange={e => setFormData({...formData, role: e.target.value})}
                   />
                 </div>
                 
                 <button 
                   type="submit"
-                  className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-black py-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-indigo-900/40 mt-6"
+                  className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-black py-4 rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-indigo-900/40 mt-6 active:scale-95"
                 >
                   Send Encrypted Request <Send className="w-4 h-4" />
                 </button>
-                <p className="text-[10px] text-center text-slate-500 uppercase tracking-widest font-mono mt-4">Routed securely to: +91 870023 6923</p>
+                <p className="text-[10px] text-center text-slate-500 uppercase tracking-widest font-mono mt-6 border-t border-white/5 pt-4">
+                  Secure Link: +91 870023 6923
+                </p>
               </form>
             </div>
           </div>

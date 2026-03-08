@@ -70,7 +70,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <head>
         <link rel="dns-prefetch" href="https://images.pexels.com" />
         <link rel="dns-prefetch" href="https://images.unsplash.com" />
@@ -101,7 +101,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
       </head>
-      <body className={`${geistSans.variable} antialiased font-sans bg-[#020617] text-white selection:bg-blue-500/30`}>
+      <body className={`${geistSans.variable} antialiased font-sans bg-[#020617] text-white selection:bg-blue-500/30`} suppressHydrationWarning>
         <main className="min-h-screen relative" id="main-content">
           {children}
         </main>
