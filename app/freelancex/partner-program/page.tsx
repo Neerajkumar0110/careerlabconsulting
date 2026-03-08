@@ -9,7 +9,8 @@ import {
   ShieldCheck, ArrowRight, CheckCircle2, 
   ChevronRight, X, Loader2, Building, 
   Mail, Phone, Briefcase, Network, Layers,
-  Globe, Activity
+  Globe, Activity,
+  Zap
 } from 'lucide-react';
 import Link from 'next/link';
 
