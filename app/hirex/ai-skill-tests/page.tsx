@@ -13,7 +13,7 @@ import {
   Camera, Lock, Eye
 } from 'lucide-react';
 
-const CATEGORIES = ["All", "Frontend", "Backend", "DevOps", "AI/ML", "Database"];
+const CATEGORIES = ["All", "Frontend", "Backend", "DevOps", "Database"];
 
 const SKILL_TESTS = [
   {
@@ -134,16 +134,9 @@ export default function AISkillTestsPage() {
             <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-white mb-6 drop-shadow-lg">
               AI Adaptive <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-cyan-300">Skill Tests</span>
             </h1>
-            <p className="text-lg text-slate-400 leading-relaxed mb-8">
+            <p className="text-lg md:text-[17px] text-slate-400 leading-relaxed mb-8">
               Select your domain. Our Generative AI will create a dynamic, one-of-a-kind evaluation environment tailored to test your true engineering depth. No static questions. No predictable patterns.
             </p>
-            
-            <div className="inline-flex flex-col sm:flex-row items-center gap-3 bg-emerald-500/10 border border-emerald-500/20 px-5 py-3 rounded-2xl">
-              <ShieldCheck className="w-5 h-5 text-emerald-500 flex-shrink-0" />
-              <span className="text-sm font-medium text-emerald-200/90 text-left sm:text-center">
-                All skill tests are verified by Career Lab Consulting AI Engine and sync directly with your HireX Candidate Profile.
-              </span>
-            </div>
           </div>
 
           <div className="mt-12 max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-4 bg-slate-900/50 backdrop-blur-xl p-2 md:p-3 rounded-3xl border border-white/10 shadow-2xl">
@@ -312,19 +305,11 @@ export default function AISkillTestsPage() {
                <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-[2rem] blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
                <div className="relative aspect-[4/3] rounded-[2rem] overflow-hidden border border-white/10 shadow-2xl">
                  <img
-                   src="https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=2070&auto=format&fit=crop"
+                   src="https://img.freepik.com/free-photo/standard-quality-control-concept-m_23-2150041861.jpg?t=st=1772964478~exp=1772968078~hmac=db3a0a0099538fbc0b829d9231f54d97b94149742696167027e769b49682bf47&w=1480"
                    alt="AI Proctoring Security"
                    className="absolute inset-0 w-full h-full object-cover"
                  />
                  <div className="absolute inset-0 bg-slate-900/70 backdrop-blur-[3px]"></div>
-                 
-                 <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center z-10">
-                   <div className="w-20 h-20 bg-emerald-500/20 backdrop-blur-md rounded-full border border-emerald-500/50 flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(16,185,129,0.4)] animate-[pulse_2s_ease-in-out_infinite]">
-                     <ShieldCheck className="w-10 h-10 text-emerald-400" />
-                   </div>
-                   <h3 className="text-white font-bold text-2xl tracking-tight mb-3">Proctoring Active</h3>
-                   <p className="text-emerald-300 text-sm font-medium bg-emerald-500/10 px-4 py-1.5 rounded-full border border-emerald-500/20">Verified by Career Lab AI Engine</p>
-                 </div>
                </div>
             </div>
             
