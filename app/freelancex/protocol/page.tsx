@@ -1,3 +1,5 @@
+// app/freelancex/protocol/page.tsx
+
 'use client';
 
 import React from 'react';
@@ -6,7 +8,7 @@ import {
   Shield, Lock, Fingerprint, FileCode2, 
   Terminal, ChevronRight, CheckCircle2, 
   AlertTriangle, Network, Cpu,
-  ShieldCheck
+  ShieldCheck, XCircle, AlertOctagon, ShieldAlert
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -50,6 +52,37 @@ const PROTOCOL_RULES = [
     bg: "bg-purple-500/10",
     border: "border-purple-500/20"
   },
+];
+
+// NEW DATA FOR THE ADDED SECTION
+const ENFORCEMENT_MATRIX = [
+  {
+    level: "Critical Infraction",
+    violation: "IP / Data Exfiltration Attempt",
+    consequence: "Permanent Network Ban & Legal Prosecution",
+    icon: XCircle,
+    color: "text-rose-500",
+    bg: "bg-rose-500/10",
+    border: "border-rose-500/20"
+  },
+  {
+    level: "High Infraction",
+    violation: "Milestone Abandonment (>48h)",
+    consequence: "Escrow Forfeiture & Rank Degradation",
+    icon: AlertOctagon,
+    color: "text-orange-500",
+    bg: "bg-orange-500/10",
+    border: "border-orange-500/20"
+  },
+  {
+    level: "Medium Infraction",
+    violation: "Sub-Standard Code Delivery",
+    consequence: "Mandatory Refactor & AI Re-Audit",
+    icon: ShieldAlert,
+    color: "text-amber-500",
+    bg: "bg-amber-500/10",
+    border: "border-amber-500/20"
+  }
 ];
 
 export default function ProtocolPage() {
@@ -165,13 +198,55 @@ export default function ProtocolPage() {
              </div>
           </div>
 
+          {/* --- NEW SECTION 1: THE ENFORCEMENT MATRIX --- */}
+          <div className="max-w-4xl mx-auto pt-6 md:pt-10">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-10 border-b border-white/5 pb-8">
+              <div>
+                <h2 className="text-2xl md:text-4xl font-black uppercase tracking-tight flex items-center gap-4">
+                  <AlertTriangle className="text-rose-500" size={32} /> 
+                  Enforcement Matrix
+                </h2>
+                <p className="text-slate-400 font-medium mt-3 text-sm md:text-base">Zero tolerance for protocol violations. Autonomous systems enforce rules globally.</p>
+              </div>
+              <div className="px-4 py-2 bg-rose-500/10 border border-rose-500/20 rounded-full text-rose-400 text-[10px] font-black uppercase tracking-widest flex items-center gap-2 shrink-0">
+                <div className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse" /> Active Monitoring
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {ENFORCEMENT_MATRIX.map((item, i) => (
+                <motion.div 
+                  key={i}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  className={`bg-[#0a0f1d]/80 border ${item.border} rounded-[2rem] p-6 md:p-8 backdrop-blur-xl relative overflow-hidden group`}
+                >
+                  <div className={`absolute top-0 right-0 w-32 h-32 ${item.bg} blur-3xl rounded-full opacity-50 group-hover:opacity-100 transition-opacity`} />
+                  <div className={`w-10 h-10 rounded-xl ${item.bg} border ${item.border} flex items-center justify-center mb-6 relative z-10`}>
+                    <item.icon size={18} className={item.color} />
+                  </div>
+                  <div className="relative z-10">
+                    <span className={`text-[9px] font-black uppercase tracking-widest ${item.color} block mb-2`}>{item.level}</span>
+                    <h4 className="text-base font-bold text-white mb-4 leading-snug">{item.violation}</h4>
+                    <div className="pt-4 border-t border-white/10 mt-auto">
+                      <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest block mb-1">Action Protocol</span>
+                      <p className="text-slate-300 text-sm font-medium">{item.consequence}</p>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
           <div className="max-w-4xl mx-auto pt-10">
              <div className="relative rounded-[2rem] md:rounded-[3rem] overflow-hidden bg-gradient-to-r from-blue-900/40 to-indigo-900/40 border border-blue-500/30 p-8 md:p-16 text-center backdrop-blur-xl shadow-2xl">
                 <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-soft-light" />
                 
                 <div className="relative z-10 space-y-8">
                   <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-500/10 text-blue-400 mb-2">
-                    <AlertTriangle size={32} />
+                    <ShieldCheck size={32} />
                   </div>
                   <h2 className="text-3xl md:text-5xl font-black text-white leading-tight">Acknowledge & <br/> <span className="text-blue-400">Initialize.</span></h2>
                   <p className="text-slate-300 text-sm md:text-base max-w-xl mx-auto">

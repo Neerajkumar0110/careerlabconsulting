@@ -1,3 +1,5 @@
+// app/freelancex/talent-pool/page.tsx
+
 'use client';
 
 import React, { useState, useMemo } from 'react';
@@ -5,7 +7,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Search, Filter, MapPin, Zap, Star, ShieldCheck, 
   Clock, CheckCircle2, ChevronRight, Briefcase, 
-  Code2, Terminal, Users, X, Loader2, Mail, LayoutTemplate
+  Code2, Terminal, Users, X, Loader2, Mail, LayoutTemplate,
+  Cpu, Binary, Layers, Activity, Globe, Rocket
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -128,7 +131,7 @@ export default function TalentPage() {
     
     setTimeout(() => {
       const ownerPhone = "918700236923";
-      const message = `*🚀 New Hiring Inquiry (Talent Page)*%0A%0A*Target Node:* ${selectedTalent.name} (${selectedTalent.id})%0A*Role:* ${selectedTalent.role}%0A%0A*Employer Company:* ${formData.company}%0A*Employer Email:* ${formData.email}%0A*Project Scope:* ${formData.projectDetails}`;
+      const message = `*🚀 New Hiring Inquiry (Talent Page)*%0A%0A*Target Node:* ${selectedTalent?.name} (${selectedTalent?.id})%0A*Role:* ${selectedTalent?.role}%0A%0A*Employer Company:* ${formData.company}%0A*Employer Email:* ${formData.email}%0A*Project Scope:* ${formData.projectDetails}`;
       window.open(`https://wa.me/${ownerPhone}?text=${message}`, '_blank');
       
       setIsSubmitting(false);
@@ -147,9 +150,9 @@ export default function TalentPage() {
         <div className="absolute top-1/2 left-0 w-full md:w-[600px] h-[400px] md:h-[600px] bg-indigo-600/10 blur-[150px] rounded-full pointer-events-none -z-0" />
         <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 mix-blend-soft-light pointer-events-none" />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-12 md:space-y-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-16 md:space-y-24">
           
-          {/* Header & Search Section */}
+          {/* Header & Search Section (ORIGINAL) */}
           <div className="text-center space-y-6 max-w-4xl mx-auto">
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 backdrop-blur-md">
               <Zap size={12} className="text-blue-400" />
@@ -165,7 +168,7 @@ export default function TalentPage() {
             </motion.p>
           </div>
 
-          {/* Search Bar & Filters */}
+          {/* Search Bar & Filters (ORIGINAL) */}
           <div className="space-y-6 max-w-5xl mx-auto">
             <div className="relative group">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-indigo-600/20 rounded-2xl blur-lg opacity-50 group-hover:opacity-100 transition-opacity" />
@@ -198,7 +201,49 @@ export default function TalentPage() {
             </div>
           </div>
 
-          {/* Talent Grid */}
+          {/* --- NEW SECTION 1: VETTING INTELLIGENCE CONSOLE --- */}
+          <section className="bg-slate-900/40 border border-white/5 rounded-[2.5rem] md:rounded-[3rem] p-6 md:p-16 relative overflow-hidden shadow-2xl">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500" />
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              <div className="space-y-6 text-center lg:text-left">
+                <h2 className="text-3xl md:text-5xl font-black tracking-tight leading-tight uppercase">Vetting <br className="hidden lg:block"/> <span className="text-blue-400 italic">Intelligence.</span></h2>
+                <p className="text-slate-400 leading-relaxed font-medium text-sm md:text-base">Our AI doesn't just scan resumes. It audits logic consistency, code security, and architectural depth through a rigorous neural sync process.</p>
+                <div className="grid grid-cols-2 gap-4 pt-4">
+                  {[
+                    { label: "Logic Audit", icon: Binary, val: "99.8%" },
+                    { label: "Security Trace", icon: ShieldCheck, val: "Hardened" },
+                    { label: "Sync Latency", icon: Activity, val: "1.2ms" },
+                    { label: "Identity Hash", icon: Layers, val: "Verified" }
+                  ].map((stat, i) => (
+                    <div key={i} className="p-4 bg-white/5 rounded-2xl border border-white/5 text-left">
+                      <stat.icon size={18} className="text-blue-400 mb-2" />
+                      <p className="text-[9px] md:text-[10px] font-black text-slate-500 uppercase mb-1">{stat.label}</p>
+                      <span className="text-base md:text-lg font-black">{stat.val}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="relative group">
+                <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl blur opacity-20 group-hover:opacity-40 transition duration-1000" />
+                <div className="relative bg-[#020617] border border-white/10 rounded-[2rem] p-6 md:p-8 shadow-2xl">
+                  <div className="flex gap-2 mb-6">
+                    <div className="w-3 h-3 rounded-full bg-red-500/50" />
+                    <div className="w-3 h-3 rounded-full bg-yellow-500/50" />
+                    <div className="w-3 h-3 rounded-full bg-green-500/50" />
+                  </div>
+                  <div className="font-mono text-[10px] md:text-xs space-y-3 text-slate-500">
+                    <p className="text-blue-400">// ANALYZING_CANDIDATE_NODE</p>
+                    <p>&gt; Scanning Repository logic... [OK]</p>
+                    <p>&gt; Verifying Architectural Depth... [S-TIER]</p>
+                    <p>&gt; Cross-referencing Global Indices... [NOMINAL]</p>
+                    <p className="text-emerald-400 pt-4 animate-pulse">&gt; NODE_STATUS: ELITE_VERIFIED</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Talent Grid (ORIGINAL) */}
           <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             <AnimatePresence mode="popLayout">
               {filteredTalent.length > 0 ? (
@@ -295,14 +340,48 @@ export default function TalentPage() {
             </AnimatePresence>
           </motion.div>
 
-          {/* CTA Section */}
+          {/* --- NEW SECTION 2: GLOBAL AVAILABILITY GRID --- */}
+          <section className="grid lg:grid-cols-3 gap-6 md:gap-8">
+            <div className="lg:col-span-2 bg-[#0a0f1d] border border-white/10 rounded-[2.5rem] md:rounded-[3rem] p-8 md:p-10 flex flex-col justify-between relative overflow-hidden shadow-3xl">
+              <div className="absolute top-0 right-0 p-10 opacity-[0.03] pointer-events-none"><Globe size={250} /></div>
+              <div className="relative z-10 text-center md:text-left">
+                <h3 className="text-2xl md:text-4xl font-black mb-4 tracking-tight uppercase">Global Presence <br className="hidden md:block"/> <span className="text-blue-400 italic">Hubs.</span></h3>
+                <p className="text-slate-400 text-sm md:text-base leading-relaxed max-w-md mx-auto md:mx-0">Our talent isn't just remote; it's globally distributed across primary high-fidelity tech hubs for 24/7 project velocity.</p>
+              </div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mt-10 relative z-10">
+                {[
+                  { region: "USA", nodes: 124, progress: "80%" },
+                  { region: "UK", nodes: 84, progress: "60%" },
+                  { region: "INDIA", nodes: 312, progress: "95%" },
+                  { region: "JAPAN", nodes: 45, progress: "40%" }
+                ].map((hub, i) => (
+                  <div key={i} className="space-y-2 bg-white/[0.02] p-4 rounded-2xl border border-white/5">
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{hub.region}</span>
+                    <h4 className="text-xl font-black text-white">{hub.nodes} <span className="text-[9px] text-slate-500 uppercase">Nodes</span></h4>
+                    <div className="h-1.5 bg-white/10 rounded-full overflow-hidden mt-2">
+                      <motion.div initial={{ width: 0 }} whileInView={{ width: hub.progress }} className="h-full bg-blue-500" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="bg-gradient-to-br from-blue-600 to-indigo-900 rounded-[2.5rem] md:rounded-[3rem] p-8 md:p-10 flex flex-col justify-between shadow-3xl text-center md:text-left">
+              <ShieldCheck size={48} className="text-white mb-6 mx-auto md:mx-0" />
+              <div>
+                <h3 className="text-2xl md:text-3xl font-black text-white mb-3 leading-tight">Enterprise Grade <br/> Protection</h3>
+                <p className="text-blue-100/70 text-sm leading-relaxed mb-8">All talent engagements are protected by E2E encrypted NDAs and milestone-based secure escrow.</p>
+              </div>
+              <button className="w-full py-4 bg-white/10 border border-white/20 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-white/20 transition-all shadow-xl">View Security Specs</button>
+            </div>
+          </section>
+
           <div className="relative rounded-[2rem] md:rounded-[3rem] overflow-hidden bg-gradient-to-r from-blue-600/20 to-indigo-600/20 border border-blue-500/20 p-8 md:p-16 text-center space-y-8 backdrop-blur-xl">
              <div className="absolute inset-0 bg-blue-600/5 blur-[100px] rounded-full pointer-events-none" />
              <div className="relative z-10">
                <h2 className="text-3xl md:text-5xl font-black text-white leading-tight mb-4">Can't find the exact match?</h2>
                <p className="text-slate-400 text-sm md:text-lg max-w-xl mx-auto mb-8">Let our AI matchmaker analyze your project requirements and automatically pair you with the perfect specialized node.</p>
                <button className="inline-flex items-center gap-3 px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white font-black text-[10px] md:text-xs uppercase tracking-[0.2em] rounded-xl md:rounded-2xl transition-all shadow-xl">
-                  Run AI Matchmaker <Zap size={16} fill="currentColor" />
+                 Run AI Matchmaker <Zap size={16} fill="currentColor" />
                </button>
              </div>
           </div>
@@ -314,7 +393,7 @@ export default function TalentPage() {
 
       {/* --- DEPLOYMENT MODAL (HIRE POPUP) --- */}
       <AnimatePresence>
-        {isModalOpen && selectedTalent && (
+        {isModalOpen && (
           <div className="fixed inset-0 z-[200] flex items-center justify-center px-4 sm:px-6">
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsModalOpen(false)} className="absolute inset-0 bg-black/95 backdrop-blur-md" />
             <motion.div initial={{ scale: 0.95, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.95, opacity: 0, y: 20 }} className="relative bg-[#0a0f1d] border border-white/10 p-6 md:p-12 rounded-[2rem] md:rounded-[3rem] max-w-xl w-full shadow-3xl overflow-hidden z-10">
@@ -324,13 +403,18 @@ export default function TalentPage() {
                <div className="mb-8 text-center md:text-left border-b border-white/5 pb-6">
                   <span className="text-[9px] font-black uppercase text-blue-400 tracking-[0.3em] mb-2 block">Deployment Protocol</span>
                   <h3 className="text-2xl font-black mb-2 tracking-tight">Initiate Contract</h3>
-                  <div className="flex items-center justify-center md:justify-start gap-4 mt-4">
-                    <img src={selectedTalent.avatar} className="w-12 h-12 rounded-full object-cover border border-white/10" alt="Talent" />
-                    <div className="text-left">
-                      <p className="text-sm font-bold text-white">{selectedTalent.name}</p>
-                      <p className="text-[10px] font-medium text-slate-400">{selectedTalent.role} • {selectedTalent.rate}</p>
+                  
+                  {selectedTalent ? (
+                    <div className="flex items-center justify-center md:justify-start gap-4 mt-4">
+                      <img src={selectedTalent.avatar} className="w-12 h-12 rounded-full object-cover border border-white/10" alt="Talent" />
+                      <div className="text-left">
+                        <p className="text-sm font-bold text-white">{selectedTalent.name}</p>
+                        <p className="text-[10px] font-medium text-slate-400">{selectedTalent.role} • {selectedTalent.rate}</p>
+                      </div>
                     </div>
-                  </div>
+                  ) : (
+                    <p className="text-[10px] font-medium text-slate-400 mt-2">Enterprise Squad / General Inquiry</p>
+                  )}
                </div>
 
                <form onSubmit={handleSubmit} className="space-y-4 md:space-y-5">

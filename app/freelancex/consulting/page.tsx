@@ -1,3 +1,5 @@
+// app/freelancex/consulting/page.tsx
+
 'use client';
 
 import React, { useState } from 'react';
@@ -6,7 +8,7 @@ import {
   Building2, BrainCircuit, Cloud, Activity, 
   ArrowRight, ShieldCheck, ChevronRight, X, 
   Loader2, Mail, Users, Briefcase, Target, 
-  LineChart, Network, CheckCircle2
+  LineChart, Network, CheckCircle2, Globe, Database
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -193,6 +195,40 @@ export default function ConsultingPage() {
             </div>
           </div>
 
+          {/* --- NEW SECTION: HIGH-STAKES USE CASES --- */}
+          <section className="bg-[#0a0f1d] border border-white/5 rounded-[3rem] p-8 md:p-16 relative overflow-hidden shadow-2xl">
+             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-600/5 blur-[150px] rounded-full pointer-events-none" />
+             <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center relative z-10">
+                
+                <div className="lg:col-span-5 space-y-6">
+                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-black uppercase tracking-widest">
+                      <Target size={12} /> Strategic Impact
+                   </div>
+                   <h2 className="text-3xl md:text-5xl font-black leading-tight tracking-tight">High-Stakes <br/> <span className="text-blue-400 italic">Interventions.</span></h2>
+                   <p className="text-slate-400 text-lg leading-relaxed font-medium">When failure isn't an option, enterprises call us. We deploy specialized strike teams for critical, time-sensitive technical operations.</p>
+                   <button onClick={() => setIsModalOpen(true)} className="mt-4 px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl text-xs font-black uppercase tracking-widest transition-all flex items-center gap-2">
+                     Discuss Your Challenge <ChevronRight size={16} />
+                   </button>
+                </div>
+
+                <div className="lg:col-span-7 grid sm:grid-cols-2 gap-6">
+                   {[
+                     { title: "M&A Tech Due Diligence", desc: "Pre-acquisition audits of codebases, security postures, and architectural debt.", icon: ShieldCheck, color: "text-blue-400" },
+                     { title: "Cloud Cost Optimization", desc: "Refactoring inefficient cloud workloads to reduce AWS/GCP operational costs by 30-50%.", icon: Cloud, color: "text-emerald-400" },
+                     { title: "Monolith Decoupling", desc: "Safe, zero-downtime migration from legacy monoliths to scalable microservices.", icon: Database, color: "text-purple-400" },
+                     { title: "Rescue Operations", desc: "Emergency intervention for failing deployments, severe data breaches, or architecture collapse.", icon: Activity, color: "text-rose-400" }
+                   ].map((usecase, i) => (
+                     <div key={i} className="p-6 bg-white/[0.02] border border-white/5 hover:border-white/10 rounded-[2rem] transition-all group cursor-default">
+                        <usecase.icon className={`${usecase.color} mb-4 group-hover:scale-110 transition-transform`} size={24} />
+                        <h4 className="text-lg font-bold text-white mb-2">{usecase.title}</h4>
+                        <p className="text-sm text-slate-400 leading-relaxed">{usecase.desc}</p>
+                     </div>
+                   ))}
+                </div>
+
+             </div>
+          </section>
+
           {/* --- THE BLUEPRINT PROCESS --- */}
           <div className="bg-[#0a0f1d]/40 border border-white/5 rounded-[2rem] md:rounded-[3rem] p-8 md:p-16 relative overflow-hidden">
              <div className="absolute right-0 top-0 opacity-5 pointer-events-none">
@@ -229,7 +265,7 @@ export default function ConsultingPage() {
                 <div className="pt-6">
                   <button 
                     onClick={() => setIsModalOpen(true)}
-                    className="w-full sm:w-auto py-5 px-10 bg-white hover:bg-blue-50 text-black font-black uppercase tracking-[0.2em] rounded-2xl transition-all shadow-[0_0_50px_rgba(255,255,255,0.2)] flex items-center justify-center gap-3 mx-auto text-xs"
+                    className="w-full sm:w-auto py-5 px-10 bg-white hover:bg-blue-50 text-black font-black uppercase tracking-[0.2em] rounded-2xl transition-all shadow-[0_0_50px_rgba(255,255,255,0.2)] flex items-center justify-center gap-3 mx-auto text-xs active:scale-95"
                   >
                     Initiate Advisory Session <ChevronRight size={18} />
                   </button>
@@ -283,7 +319,7 @@ export default function ConsultingPage() {
                       <input required type="text" placeholder="Company Name" className="w-full bg-white/5 border border-white/10 rounded-xl md:rounded-2xl py-4 pl-12 pr-6 text-sm outline-none focus:border-blue-500 transition-all text-white placeholder:text-slate-600" onChange={e => setFormData({...formData, company: e.target.value})} />
                     </div>
                     <div className="relative group">
-                      <select required className="w-full bg-white/5 border border-white/10 rounded-xl md:rounded-2xl py-4 px-6 text-sm outline-none focus:border-blue-500 transition-all text-slate-300 appearance-none" onChange={e => setFormData({...formData, budget: e.target.value})}>
+                      <select required className="w-full bg-white/5 border border-white/10 rounded-xl md:rounded-2xl py-4 px-6 text-sm outline-none focus:border-blue-500 transition-all text-slate-300 appearance-none cursor-pointer" onChange={e => setFormData({...formData, budget: e.target.value})}>
                         <option value="Flexible" className="bg-[#020617]">Estimated Budget</option>
                         <option value="$10k - $50k" className="bg-[#020617]">$10k - $50k</option>
                         <option value="$50k - $150k" className="bg-[#020617]">$50k - $150k</option>
@@ -296,7 +332,7 @@ export default function ConsultingPage() {
                      <textarea required rows={4} placeholder="Briefly describe your technical bottlenecks or goals..." className="w-full bg-white/5 border border-white/10 rounded-xl md:rounded-2xl py-4 px-6 text-sm outline-none focus:border-blue-500 transition-all text-white placeholder:text-slate-600 resize-none" onChange={e => setFormData({...formData, scope: e.target.value})} />
                   </div>
 
-                  <button disabled={isSubmitting} type="submit" className="w-full py-4 md:py-5 bg-blue-600 hover:bg-blue-500 text-white font-black uppercase tracking-[0.2em] rounded-xl md:rounded-2xl shadow-xl transition-all flex items-center justify-center gap-3 mt-4 text-[10px] md:text-xs">
+                  <button disabled={isSubmitting} type="submit" className="w-full py-4 md:py-5 bg-blue-600 hover:bg-blue-500 text-white font-black uppercase tracking-[0.2em] rounded-xl md:rounded-2xl shadow-xl transition-all flex items-center justify-center gap-3 mt-4 text-[10px] md:text-xs active:scale-95 disabled:opacity-50">
                     {isSubmitting ? <Loader2 className="animate-spin" size={18} /> : <>Submit Advisory Request <ChevronRight size={16} /></>}
                   </button>
                   <p className="text-[8px] md:text-[9px] text-center text-slate-500 uppercase tracking-widest mt-4">Protected by strict Non-Disclosure Agreements</p>

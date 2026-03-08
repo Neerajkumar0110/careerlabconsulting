@@ -1,3 +1,5 @@
+// app/freelancex/partner-program/page.tsx
+
 'use client';
 
 import React, { useState } from 'react';
@@ -6,7 +8,8 @@ import {
   Handshake, Target, Rocket, DollarSign, 
   ShieldCheck, ArrowRight, CheckCircle2, 
   ChevronRight, X, Loader2, Building, 
-  Mail, Phone, Briefcase, Network, Layers
+  Mail, Phone, Briefcase, Network, Layers,
+  Globe, Activity
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -45,6 +48,14 @@ const BENEFITS = [
   { title: "Co-Branded Deployments", desc: "White-label our AI vetting and deployment engine to serve your own enterprise clients seamlessly." },
   { title: "Priority Protocol Support", desc: "Get direct 24/7 access to a dedicated Principal Partner Manager for instant issue resolution." },
   { title: "Exclusive Alpha Access", desc: "Partners get first-look access to our internal AI tools, unreleased features, and global networking events." }
+];
+
+// NEW DATA FOR METRICS SECTION
+const TRUST_METRICS = [
+  { label: "Partner Payouts (YTD)", value: "$12.4M", icon: DollarSign, color: "text-emerald-400" },
+  { label: "Active Syndicates", value: "342", icon: Building, color: "text-blue-400" },
+  { label: "Global Reach", value: "48 Hubs", icon: Globe, color: "text-indigo-400" },
+  { label: "Escrow Dispute Rate", value: "< 0.01%", icon: ShieldCheck, color: "text-purple-400" }
 ];
 
 export default function PartnerProgramPage() {
@@ -131,6 +142,20 @@ export default function PartnerProgramPage() {
                 Apply for Alliance <ArrowRight size={16} />
               </button>
             </motion.div>
+          </div>
+
+          {/* --- NEW SECTION: PARTNERSHIP TRUST METRICS --- */}
+          <div className="bg-[#0a0f1d]/40 border border-white/5 rounded-[2rem] md:rounded-[3rem] p-6 md:p-12 backdrop-blur-xl">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+              {TRUST_METRICS.map((metric, i) => (
+                <div key={i} className="text-center space-y-4 p-6 border-b sm:border-b-0 sm:border-r border-white/5 last:border-0 relative group">
+                  <div className="absolute inset-0 bg-gradient-to-t from-white/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-3xl" />
+                  <metric.icon size={28} className={`${metric.color} mx-auto`} />
+                  <h3 className="text-3xl md:text-4xl font-black text-white tracking-tight">{metric.value}</h3>
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">{metric.label}</p>
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* --- PARTNERSHIP MODELS --- */}
@@ -258,8 +283,8 @@ export default function PartnerProgramPage() {
                     </select>
                   </div>
 
-                  <button disabled={isSubmitting} type="submit" className="w-full py-4 md:py-5 bg-blue-600 hover:bg-blue-500 text-white font-black uppercase tracking-[0.2em] rounded-xl md:rounded-2xl shadow-xl transition-all flex items-center justify-center gap-3 mt-4 text-[10px] md:text-xs">
-                    {isSubmitting ? <Loader2 className="animate-spin" size={18} /> : <>Transmit Application <ChevronRight size={16} /></>}
+                  <button disabled={isSubmitting} type="submit" className="w-full py-5 bg-blue-600 hover:bg-blue-500 text-white font-black uppercase tracking-[0.2em] rounded-xl md:rounded-2xl transition-all flex justify-center items-center gap-3 shadow-xl active:scale-95 disabled:opacity-50">
+                    {isSubmitting ? <Loader2 className="animate-spin" size={20}/> : <><Zap size={18} /> Transmit Application</>}
                   </button>
                   <p className="text-[8px] md:text-[9px] text-center text-slate-500 uppercase tracking-widest mt-4">Partner Team will review within 24 hours</p>
                </form>
