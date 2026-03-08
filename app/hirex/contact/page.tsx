@@ -6,7 +6,12 @@ import React, { useState } from 'react';
 import Navbar from '@/components/hirex/layout/Navbar';
 import Footer from '@/components/hirex/home/Footer';
 import Link from 'next/link';
-import { Mail, Phone, MapPin, Send, Globe } from 'lucide-react';
+import { 
+  Mail, Phone, MapPin, Send, Globe, 
+  MessageSquare, ShieldCheck, Zap, Server, 
+  Building2, HelpCircle, 
+  ArrowRight
+} from 'lucide-react';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -70,9 +75,9 @@ export default function ContactPage() {
     {
       title: "HQ Coordinates",
       value: "Gurugram, India",
-      subtext: "DLF Cyber City, 5th Floor, Cyber Green-2, Sec-25",
+      subtext: "DLF Cyber City, 5th Floor, Cyber Green-2",
       icon: MapPin,
-      action: "https://maps.app.goo.gl/L75gvLCgiUQqysk99",
+      action: "#headquarters",
       actionText: "View on Map"
     }
   ];
@@ -80,6 +85,7 @@ export default function ContactPage() {
   return (
     <main className="min-h-screen relative overflow-hidden selection:bg-blue-500/30 selection:text-blue-200 text-white bg-[#020617]">
       
+      {/* Dynamic Background */}
       <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-blue-600/10 blur-[150px] rounded-full translate-x-1/3 -translate-y-1/3" />
         <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-cyan-600/10 blur-[120px] rounded-full -translate-x-1/3 translate-y-1/3" />
@@ -88,69 +94,70 @@ export default function ContactPage() {
 
       <Navbar />
 
-      <section className="relative pt-32 pb-24 z-10">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      {/* SECTION 1: Contact Header & Main Form */}
+      <section className="relative pt-32 pb-16 md:pt-40 md:pb-24 z-10">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           
-          <div className="max-w-3xl mb-16">
-            <nav className="mb-6 flex items-center space-x-2 text-sm font-medium text-slate-400">
+          <div className="max-w-3xl mb-12 md:mb-16 text-center lg:text-left mx-auto lg:mx-0">
+            <nav className="mb-6 flex items-center justify-center lg:justify-start space-x-2 text-sm font-medium text-slate-400">
               <Link href="/" className="hover:text-blue-400 transition-colors">Home</Link>
               <span>/</span>
               <span className="text-blue-300">Contact</span>
             </nav>
-            <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-white mb-6 drop-shadow-lg">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-white mb-6 drop-shadow-lg leading-tight">
               Initialize <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">Connection</span>
             </h1>
-            <p className="text-lg text-slate-300 leading-relaxed max-w-2xl">
+            <p className="text-base sm:text-lg text-slate-300 leading-relaxed max-w-2xl mx-auto lg:mx-0">
               Ready to upgrade your talent acquisition? Reach out to our team to deploy autonomous AI interviews, schedule a demo, or request custom integrations for your enterprise.
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-12 gap-12 lg:gap-8 items-start">
+          <div className="grid lg:grid-cols-12 gap-10 lg:gap-12 items-start">
             
-            <div className="lg:col-span-5 space-y-6">
+            {/* Contact Info Cards */}
+            <div className="lg:col-span-5 space-y-4 sm:space-y-6">
               {CONTACT_NODES.map((node, index) => (
-                <div key={index} className="group relative bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded-3xl p-6 md:p-8 transition-all duration-300 hover:bg-slate-900/60 hover:border-blue-500/30">
-                  <div className="flex items-start gap-5">
+                <div key={index} className="group relative bg-slate-900/40 backdrop-blur-xl border border-white/10 rounded-2xl sm:rounded-3xl p-6 sm:p-8 transition-all duration-300 hover:bg-slate-900/60 hover:border-blue-500/30">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5">
                     <div className="w-12 h-12 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-blue-500/20 transition-all duration-300">
                       <node.icon className="w-6 h-6 text-blue-400" />
                     </div>
                     <div>
                       <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-1">{node.title}</h3>
-                      <p className="text-xl font-bold text-white mb-1">{node.value}</p>
-                      <p className="text-sm text-slate-500 mb-4">{node.subtext}</p>
-                      <a href={node.action} target={node.action.startsWith('http') ? "_blank" : "_self"} className="inline-flex items-center gap-2 text-sm font-semibold text-blue-400 hover:text-cyan-300 transition-colors">
+                      <p className="text-lg sm:text-xl font-bold text-white mb-1">{node.value}</p>
+                      <p className="text-xs sm:text-sm text-slate-500 mb-3 sm:mb-4">{node.subtext}</p>
+                      <a href={node.action} target={node.action.startsWith('http') ? "_blank" : "_self"} className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-blue-400 hover:text-cyan-300 transition-colors">
                         {node.actionText}
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                        </svg>
+                        <ArrowRight className="w-4 h-4" />
                       </a>
                     </div>
                   </div>
                 </div>
               ))}
 
-              <div className="bg-gradient-to-br from-emerald-900/20 to-slate-900/40 border border-emerald-500/20 rounded-3xl p-6 flex items-center gap-4">
+              <div className="bg-gradient-to-br from-emerald-900/20 to-slate-900/40 border border-emerald-500/20 rounded-2xl sm:rounded-3xl p-5 sm:p-6 flex items-center gap-4">
                 <div className="relative flex h-4 w-4 shrink-0">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-500 border-2 border-slate-900"></span>
                 </div>
                 <div>
                   <h4 className="text-sm font-bold text-white">HireX Support Agents Online</h4>
-                  <p className="text-xs text-emerald-400/80 mt-1 font-mono uppercase tracking-wider">All systems operational</p>
+                  <p className="text-[10px] sm:text-xs text-emerald-400/80 mt-1 font-mono uppercase tracking-wider">All systems operational</p>
                 </div>
               </div>
             </div>
 
+            {/* Main Contact Form */}
             <div className="lg:col-span-7">
-              <div className="relative bg-slate-900/60 backdrop-blur-2xl border border-white/10 rounded-[2.5rem] p-8 md:p-12 shadow-[0_0_50px_rgba(0,0,0,0.5)]">
-                <div className="absolute top-0 right-0 p-8 hidden md:block">
-                  <Globe className="w-24 h-24 text-blue-500/5" />
+              <div className="relative bg-slate-900/60 backdrop-blur-2xl border border-white/10 rounded-3xl sm:rounded-[2.5rem] p-6 sm:p-10 md:p-12 shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden">
+                <div className="absolute top-0 right-0 p-8 hidden md:block pointer-events-none">
+                  <Globe className="w-24 h-24 text-blue-500/5 animate-[spin_60s_linear_infinite]" />
                 </div>
                 
-                <h2 className="text-2xl font-bold text-white mb-8">Send a Secure Transmission</h2>
+                <h2 className="text-2xl sm:text-3xl font-bold text-white mb-6 sm:mb-8 relative z-10">Send a Secure Transmission</h2>
                 
-                <form onSubmit={handleSubmit} className="space-y-6 relative z-10">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6 relative z-10">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
                     <div className="space-y-2">
                       <label htmlFor="name" className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Full Name</label>
                       <input 
@@ -160,7 +167,7 @@ export default function ContactPage() {
                         value={formData.name}
                         onChange={handleChange}
                         required
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all"
+                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all text-sm sm:text-base"
                         placeholder="John Doe"
                       />
                     </div>
@@ -173,13 +180,13 @@ export default function ContactPage() {
                         value={formData.email}
                         onChange={handleChange}
                         required
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all"
+                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all text-sm sm:text-base"
                         placeholder="john@company.com"
                       />
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
                     <div className="space-y-2">
                       <label htmlFor="company" className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Company</label>
                       <input 
@@ -188,7 +195,7 @@ export default function ContactPage() {
                         name="company"
                         value={formData.company}
                         onChange={handleChange}
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all"
+                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all text-sm sm:text-base"
                         placeholder="Acme Corp"
                       />
                     </div>
@@ -199,7 +206,7 @@ export default function ContactPage() {
                         name="interest"
                         value={formData.interest}
                         onChange={handleChange}
-                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all appearance-none cursor-pointer"
+                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all appearance-none cursor-pointer text-sm sm:text-base"
                         style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`, backgroundPosition: `right 1rem center`, backgroundRepeat: `no-repeat`, backgroundSize: `1.5em 1.5em` }}
                       >
                         <option value="enterprise" className="bg-slate-900 text-white">Enterprise Hiring Solution</option>
@@ -219,22 +226,22 @@ export default function ContactPage() {
                       onChange={handleChange}
                       required
                       rows={5}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all resize-none"
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all resize-none text-sm sm:text-base"
                       placeholder="Tell us about your hiring bottlenecks..."
                     ></textarea>
                   </div>
 
                   {submitStatus.type && (
-                    <div className={`p-4 rounded-xl text-sm ${submitStatus.type === 'success' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'}`}>
+                    <div className={`p-4 rounded-xl text-sm font-medium ${submitStatus.type === 'success' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'}`}>
                       {submitStatus.msg}
                     </div>
                   )}
 
-                  <div className="pt-4">
+                  <div className="pt-2 sm:pt-4">
                     <button 
                       type="submit"
                       disabled={isSubmitting}
-                      className="group relative w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 bg-blue-600 text-white font-bold rounded-xl transition-all duration-300 hover:bg-blue-500 hover:shadow-[0_0_30px_rgba(37,99,235,0.4)] disabled:opacity-70 disabled:cursor-not-allowed"
+                      className="group relative w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-3.5 sm:py-4 bg-blue-600 text-white font-bold rounded-xl transition-all duration-300 hover:bg-blue-500 hover:shadow-[0_0_30px_rgba(37,99,235,0.4)] disabled:opacity-70 disabled:cursor-not-allowed"
                     >
                       {isSubmitting ? (
                         <div className="flex items-center gap-2">
@@ -257,15 +264,94 @@ export default function ContactPage() {
             </div>
 
           </div>
-          <div className="w-full h-64 md:h-100 rounded-3xl overflow-hidden border border-white/10 relative mt-12 md:mt-24">
-                <iframe 
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3506.662988882718!2d77.0623762!3d28.4896943!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390ce5b02b6f908d%3A0x3f9da383c70066be!2sCareer%20Lab%20Consulting%20Pvt%20Ltd!5e0!3m2!1sen!2sin!4v1772108517896!5m2!1sen!2sin" 
-                  className="w-full h-full border-0 absolute inset-0" 
-                  allowFullScreen 
-                  loading="lazy" 
-                  referrerPolicy="no-referrer-when-downgrade"
-                ></iframe>
-           </div>
+        </div>
+      </section>
+
+      {/* NEW SECTION 2: Trusted Partners (Social Proof) */}
+      <section className="relative py-12 border-t border-white/5 bg-slate-900/30">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-8">Trusted by Global Tech Enterprises</p>
+          <div className="flex flex-wrap justify-center items-center gap-8 sm:gap-16 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
+            <div className="flex items-center gap-2 font-black text-xl text-white"><Zap className="text-blue-400"/> TechFlow</div>
+            <div className="flex items-center gap-2 font-black text-xl text-white"><Server className="text-emerald-400"/> NexusNet</div>
+            <div className="flex items-center gap-2 font-black text-xl text-white"><ShieldCheck className="text-purple-400"/> SecureAI</div>
+            <div className="flex items-center gap-2 font-black text-xl text-white"><Building2 className="text-cyan-400"/> CloudCore</div>
+          </div>
+        </div>
+      </section>
+
+      {/* NEW SECTION 3: Enterprise FAQ */}
+      <section className="relative py-16 md:py-24 border-t border-white/5">
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-white mb-4">Frequently Asked Questions</h2>
+            <p className="text-slate-400">Common queries regarding our AI hiring infrastructure.</p>
+          </div>
+          
+          <div className="space-y-4">
+            {[
+              { q: "How long does it take to deploy HireX AI for our company?", a: "Standard enterprise deployment takes less than 48 hours. Our team will map your custom tech-stack requirements and integrate directly with your existing ATS." },
+              { q: "Can we customize the AI grading benchmarks?", a: "Yes. You have full control over the rubrics. You can set specific minimum thresholds for logic, system design, and communication for every distinct role." },
+              { q: "Is the AI assessment secure from cheating?", a: "Absolutely. We utilize enterprise-grade proctoring, including tab-tracking, real-time gaze analysis, and dynamic question generation to ensure 100% integrity." },
+              { q: "Do you offer custom API integrations?", a: "Yes, our enterprise tier includes dedicated API support to push 360-reports directly into Slack, MS Teams, or any custom internal dashboard." }
+            ].map((faq, i) => (
+              <div key={i} className="bg-slate-900/40 border border-white/10 rounded-2xl p-6 hover:bg-slate-900/60 transition-colors">
+                <div className="flex items-start gap-4">
+                  <HelpCircle className="w-6 h-6 text-blue-400 shrink-0 mt-0.5" />
+                  <div>
+                    <h3 className="text-white font-bold text-lg mb-2">{faq.q}</h3>
+                    <p className="text-slate-400 text-sm leading-relaxed">{faq.a}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* NEW SECTION 4: Global HQ Map & Stats (GENUINE GOOGLE MAP IFRAME) */}
+      <section id="headquarters" className="relative py-16 md:py-24 border-t border-white/5 bg-slate-900/20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            
+            <div>
+              <h2 className="text-3xl font-bold text-white mb-6">Global Infrastructure. <br/><span className="text-blue-400">Local Support.</span></h2>
+              <p className="text-slate-400 mb-8 leading-relaxed">
+                While our AI evaluation engine runs globally on decentralized edge servers, our core strategy and enterprise support team operates directly out of India's premier tech hub. Feel free to verify our headquarters.
+              </p>
+              
+              <div className="grid grid-cols-2 gap-6 mb-8">
+                <div className="bg-white/5 border border-white/10 p-5 rounded-2xl">
+                  <h4 className="text-2xl font-black text-white mb-1">99.9%</h4>
+                  <p className="text-xs text-slate-400 uppercase tracking-wider font-bold">API Uptime</p>
+                </div>
+                <div className="bg-white/5 border border-white/10 p-5 rounded-2xl">
+                  <h4 className="text-2xl font-black text-white mb-1">12+</h4>
+                  <p className="text-xs text-slate-400 uppercase tracking-wider font-bold">Edge Regions</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3 text-sm text-slate-300 bg-blue-500/10 border border-blue-500/20 p-4 rounded-xl inline-flex">
+                <MapPin className="w-5 h-5 text-blue-400 shrink-0" />
+                DLF Cyber City, 5th Floor, Cyber Green-2, Gurugram
+              </div>
+            </div>
+
+            {/* Premium Genuine Google Map Integration */}
+            <div className="relative w-full h-[400px] md:h-[500px] rounded-[2rem] overflow-hidden border border-white/10 shadow-[0_0_40px_rgba(0,0,0,0.5)] group bg-slate-800">
+              {/* Subtle overlay that disappears on hover to keep the dark aesthetic when not interacting */}
+              <div className="absolute inset-0 bg-blue-900/20 mix-blend-overlay pointer-events-none group-hover:bg-transparent transition-colors duration-500 z-10 shadow-[inset_0_0_30px_rgba(0,0,0,0.8)]"></div>
+              
+              <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3506.662988882718!2d77.0623762!3d28.4896943!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390ce5b02b6f908d%3A0x3f9da383c70066be!2sCareer%20Lab%20Consulting%20Pvt%20Ltd!5e0!3m2!1sen!2sin!4v1772967575076!5m2!1sen!2sin" 
+                className="w-full h-full border-0 absolute inset-0 grayscale-[20%] opacity-90 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700" 
+                allowFullScreen 
+                loading="lazy" 
+                referrerPolicy="no-referrer-when-downgrade"
+              ></iframe>
+            </div>
+
+          </div>
         </div>
       </section>
 
