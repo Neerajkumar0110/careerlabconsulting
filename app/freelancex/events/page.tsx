@@ -327,7 +327,7 @@ export default function EventsPage() {
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setActiveVideo(null)} className="absolute inset-0 bg-black/98 backdrop-blur-3xl" />
             <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className="relative w-full max-w-6xl aspect-video bg-black rounded-3xl overflow-hidden shadow-[0_0_100px_rgba(0,0,0,1)] border border-white/10">
               <button onClick={() => setActiveVideo(null)} className="absolute top-6 right-6 z-50 p-4 bg-white/5 hover:bg-red-500 rounded-full transition-all"><X size={24} /></button>
-              <iframe width="100%" height="100%" src={`https://www.youtube.com/embed/${activeVideo}?autoplay=1`} frameBorder="0" allowFullScreen />
+              <iframe width="100%" height="100%" src={`https://www.youtube.com/embed/${activeVideo}`} title="Event Recording" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
             </motion.div>
           </div>
         )}
