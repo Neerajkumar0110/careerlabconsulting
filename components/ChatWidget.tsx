@@ -3,13 +3,13 @@
 "use client";
 
 import { useEffect, useState, useRef, useCallback } from "react";
-import { usePathname, useRouter } from "next/navigation"; 
+import { usePathname } from "next/navigation"; 
 import { createPortal } from "react-dom";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { 
-  Send, X, MessageSquare, Flame, Minus, Info, 
-  UserCheck, Volume2, VolumeX, Mic, MicOff, 
-  Briefcase, PhoneCall, Video as VideoIcon, Play, Sparkles, Trophy 
+  Send, X, Minus, 
+  Volume2, VolumeX, Mic, MicOff, 
+  PhoneCall, Sparkles, Trophy 
 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { motion } from "framer-motion";
