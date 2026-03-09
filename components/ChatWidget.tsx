@@ -29,6 +29,7 @@ export default function ChatWidget() {
   const [messages, setMessages] = useState<{ role: "user" | "bot"; text: string }[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   
+  const currentAudioRef = useRef<HTMLAudioElement | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null); 
   const activeRecognitionRef = useRef<any>(null); 
@@ -51,48 +52,25 @@ export default function ChatWidget() {
     if (isFreelanceXPage) modeContext = "FreelanceX Mode - Focus on global high-ticket client acquisition and earning in USD.";
     if (isAptitudePage) modeContext = "Assessment Mode - Helping the candidate stay focused and calm during the hiring test.";
 
-    return `You are Manee, an Autonomous Professional Female AI Agent at Career Lab Consulting.
-    Tone: 30-year-old corporate consultant, highly professional, polite, mature, and fluent in Hinglish (a mix of Hindi and English).
+    return `You are Manee, an Expert Consultant at Career Lab Consulting.
     
-    AUTONOMOUS BRAIN & EXACT LINKS TO USE:
-    - If a student asks about internships, scholarships, or career opportunities, provide these exact clickable links using Markdown bullet points:
-      * Foundation Plan: [Foundation Scholarship Test](https://www.careerlabconsulting.com/scholarship-test?plan=Foundation)
-      * Elite Plan: [Elite Scholarship Test](https://www.careerlabconsulting.com/scholarship-test?plan=Elite)
-    - If a user asks about hiring, job assessments, or aptitude test, provide this exact clickable link:
-      * Aptitude Test: [Start Aptitude Test](https://www.careerlabconsulting.com/hirex/aptitude-test)
-    - Explain Outbound Sales AI: Emphasize our capacity of 1 Lakh calls/day with real human-level voice.
+    CRITICAL VOICE & TONE INSTRUCTIONS (ACT LIKE A REAL HUMAN CALLER):
+    - Tone: Highly conversational, warm, and natural. Act exactly like a real human Indian telecaller (like "Kavya").
+    - Language: Natural Hinglish. 
+    - USE CONVERSATIONAL FILLERS: Start sentences naturally with words like "Haan,", "Dekhiye,", "Toh,", "Acha," "Ji,". This makes the text-to-speech sound 100% human.
+    - SHORT SENTENCES: Do not write long essays. Keep sentences short so the AI voice takes natural breaths.
+    - Example: Instead of "The Elite plan costs Rs 200000", say "Dekhiye, humara jo Elite plan hai na... wo lagbhag 2 Lakhs ka hai."
+    
+    AUTONOMOUS BRAIN & EXACT LINKS TO USE (Always format as standard Markdown links [Text](URL)):
+    - Foundation Plan: [Foundation Scholarship Test](https://www.careerlabconsulting.com/scholarship-test?plan=Foundation)
+    - Elite Plan: [Elite Scholarship Test](https://www.careerlabconsulting.com/scholarship-test?plan=Elite)
+    - Aptitude Test: [Start Aptitude Test](https://www.careerlabconsulting.com/hirex/aptitude-test)
 
-    PRICING KNOWLEDGE BASE (USE THIS TO ANSWER ALL PRICING QUERIES):
+    PRICING KNOWLEDGE BASE:
+    B2C: Foundation Plan (6 Months): ₹1,20k. Elite Plan (12 Months): ₹2,00k.
+    B2B: Starter: ₹25,000. Growth: ₹50,000. Advanced: ₹1,00,000. (For custom plans, ask them to call +91 870023 6923).
     
-    B2C (Student/Internship) Pricing:
-    - Foundation Plan (6 Months): ₹1,20,000 (India) or $1,499 (International). EMI starts at ₹3,933. Max Scholarship: ₹50,000. Avg Scholarship: ₹20k-₹30k. Target Avg CTC: ₹6-12 LPA (India) / $40k-$60k (Intl). Features: Real Startup Agentic AI Projects, ResumeNFT, Python & Prompt Engineering, 1 Verified Internship.
-    - Elite Plan (12 Months): ₹2,00,000 (India) or $2,699 (International). EMI starts at ₹6,555. Max Scholarship: ₹1,00,000. Avg Scholarship: ₹40k-₹70k. Target Avg CTC: ₹10-26 LPA (India) / $80k-$120k (Intl). Features: 100% Legal Contract, 1-on-1 Mentoring, 3 Premium Bonus Internships, Germany/Remote Role Specialization.
-    
-    B2B (Enterprise/SaaS) Pricing:
-    1. Single Product:
-       - Starter: ₹25,000 / $350 (1 Core Module)
-       - Growth: ₹50,000 / $650 (3 Core Modules, Recommended)
-       - Advanced: ₹1,00,000 / $1,250 (All Core Modules)
-       - Enterprise: Custom
-    2. Combo:
-       - Starter: ₹50,000 / $650 (2 Product Suite)
-       - Growth: ₹1,00,000 / $1,250 (4 Product Suite, Recommended)
-       - Advanced: ₹2,00,000 / $2,500 (Complete Product Suite)
-       - Enterprise: Custom
-    3. All-in-One:
-       - Starter: ₹10,00,000 / $12,000 (Full Ecosystem Access)
-       - Growth: ₹15,00,000 / $18,000 (Scaling Infrastructure, Recommended)
-       - Advanced: ₹25,00,000 / $30,000 (Unlimited Scaling)
-       - Enterprise: Custom Gov-Grade Security
-    * If a B2B user wants Custom Architecture or Enterprise plans, instruct them to call +91 870023 6923 or mention they can book a consultation.
-
-    STRICT RULES:
-    - ALWAYS respond in a natural, friendly Hinglish (Hindi written in English alphabets mixed with English words). DO NOT use pure English.
-    - Example tone: "Zaroor! Main isme aapki help kar sakti hoon." or "Students ke liye humare current pricing tiers yeh hain."
-    - Keep it professional. Don't use excessive slang, just standard conversational Hinglish.
-    - Format links using standard Markdown: [Text](URL). Use bullet points for multiple links and pricing lists to ensure clean formatting.
-    - Keep responses concise, well-structured, and easy to read. Do not overwhelm the user with all pricing at once; ask if they are looking for Student/B2C or Enterprise/B2B options if it is ambiguous.
-    - Focus: ${modeContext}`;
+    Focus: ${modeContext}`;
   };
 
   const triggerSend = useCallback(async (messageText: string) => {
@@ -123,17 +101,7 @@ export default function ChatWidget() {
       setMessages(prev => [...prev, { role: "bot", text: responseText }]);
     } catch (error: any) {
       console.error("Manee AI Error:", error);
-      
-      let errorMsg = "Maaf kijiyega, mere systems abhi update ho rahe hain. Kya main aapko Assessment ka direct link bhej doon?";
-      
-      if (error.message?.includes("429")) {
-        console.warn("Quota Exceeded");
-        errorMsg = "Maaf kijiyega, abhi bahut zyada traffic hai. Kripya kuch der mein try karein, ya fir niche diye gaye buttons se apna Assessment start karein.";
-      } else if (error.message?.includes("404")) {
-        console.warn("Model Not Found");
-        errorMsg = "Connection error. Is region mein model nahi mila. Kripya apni API key access verify karein.";
-      }
-
+      let errorMsg = "Maaf kijiyega, network error aa raha hai. Kya main aapko Assessment ka direct link bhej doon?";
       setMessages(prev => [...prev, { role: "bot", text: errorMsg }]);
     } finally {
       setIsLoading(false);
@@ -146,7 +114,10 @@ export default function ChatWidget() {
       setIsListening(false);
       return;
     }
+    
+    if (currentAudioRef.current) currentAudioRef.current.pause();
     window.speechSynthesis.cancel();
+    
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (!SpeechRecognition) {
       alert("Speech recognition is not supported in this browser.");
@@ -176,65 +147,58 @@ export default function ChatWidget() {
     recognition.start();
   };
 
-  const speak = (text: string) => {
+  const speak = async (text: string) => {
     if (!isVoiceEnabled || typeof window === "undefined" || showVideoIntro) {
-      window.speechSynthesis.cancel();
+      if (currentAudioRef.current) currentAudioRef.current.pause();
       return;
     }
+
+    if (currentAudioRef.current) {
+      currentAudioRef.current.pause();
+      currentAudioRef.current = null;
+    }
     window.speechSynthesis.cancel(); 
-    
+
+    // Advanced Text Cleaning for Human Voice (Replacing punctuation with natural pauses)
     let cleanText = text
-      .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
-      .replace(/https?:\/\/[^\s]+/g, '') 
-      .replace(/[*#_`]/g, '') 
-      .replace(/\n/g, ' '); 
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') // Extract text from links
+      .replace(/https?:\/\/[^\s]+/g, '') // Remove URLs
+      .replace(/[*#_`]/g, '') // Remove markdown
+      .replace(/\.\.\./g, ', ') // Convert ellipsis to comma for natural pause
+      .trim(); 
 
-    const utterance = new SpeechSynthesisUtterance(cleanText);
-    const voices = window.speechSynthesis.getVoices();
-    
-    let selectedVoice = voices.find(v => 
-      (v.lang === "en-IN" || v.lang === "hi-IN") && (v.name.toLowerCase().includes("female") || v.name.includes("Veena") || v.name.includes("Heera") || v.name.includes("Aditi") || v.name.includes("Neerja") || v.name.includes("Kajal") || v.name.includes("Swara"))
-    );
-    
-    if (!selectedVoice) {
-      selectedVoice = voices.find(v => v.lang === "en-IN" || v.lang === "hi-IN");
-    }
-    
-    if (!selectedVoice) {
-      selectedVoice = voices.find(v => v.name.toLowerCase().includes("female") || v.name.includes("Google US English"));
-    }
+    try {
+      const response = await fetch('/api/google-voice', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: cleanText }),
+      });
 
-    if (selectedVoice) {
-      utterance.voice = selectedVoice;
-      utterance.lang = selectedVoice.lang.includes("hi") ? 'hi-IN' : 'en-IN'; 
-    } else {
-      utterance.lang = 'en-IN'; 
-    }
-    
-    const lowerText = cleanText.toLowerCase();
-    
-    let speed = 0.95; 
-    let pitch = 0.95; 
+      if (!response.ok) throw new Error("Audio generation failed");
 
-    if (lowerText.includes("maaf") || lowerText.includes("sorry") || lowerText.includes("unfortunately") || lowerText.includes("error")) {
-      pitch = 0.85;
-      speed = 0.9;
-    } 
-    else if (lowerText.includes("badhai") || lowerText.includes("welcome") || lowerText.includes("great") || lowerText.includes("zaroor") || cleanText.includes("!")) {
-      pitch = 1.0; 
-      speed = 1.0;
-    }
+      const data = await response.json();
+      
+      const audioUrl = `data:audio/mp3;base64,${data.audioContent}`;
+      const audio = new Audio(audioUrl);
+      
+      currentAudioRef.current = audio;
+      await audio.play();
 
-    utterance.rate = speed;
-    utterance.pitch = pitch;
-    
-    window.speechSynthesis.speak(utterance);
+    } catch (error) {
+      console.error("Premium Voice Error:", error);
+      const utterance = new SpeechSynthesisUtterance(cleanText);
+      utterance.lang = 'hi-IN';
+      window.speechSynthesis.speak(utterance);
+    }
   };
 
   const toggleVoice = () => {
     const newState = !isVoiceEnabled;
     setIsVoiceEnabled(newState);
-    if (!newState) window.speechSynthesis.cancel();
+    if (!newState) {
+      if (currentAudioRef.current) currentAudioRef.current.pause();
+      window.speechSynthesis.cancel();
+    }
   };
 
   const openChatWithIntro = () => {
@@ -251,10 +215,9 @@ export default function ChatWidget() {
     const isHireX = pathname?.includes("/hirex");
     const isFreelanceX = pathname?.includes("/freelancex");
 
-    let welcomeText = `Hello! Main Manee hoon, aapki Autonomous AI Consultant. Aaj main aapki digital transformation mein kaise help kar sakti hoon?`;
-    if (isB2C) welcomeText = `Hello ${storedName || 'Scholar'}! Kya aap career guidance dhund rahe hain? Hamara scholarship test abhi live hai!`;
-    else if (isHireX) welcomeText = `Hello and welcome to HireX! Hamara AI engine aapke hiring process ko 100% autonomous bana sakta hai. Kya aap aur janna chahenge?`;
-    else if (isFreelanceX) welcomeText = `Hello and welcome to FreelanceX! Kya aap globally USD mein earn karne ke liye ready hain?`;
+    let welcomeText = `Haan hello! Main Manee baat kar rahi hoon, aapki AI Consultant. Aaj main aapki kaise help kar sakti hoon?`;
+    if (isB2C) welcomeText = `Haan hello ${storedName || 'Scholar'}! Main Manee hoon. Kya aap career guidance dhund rahe hain?`;
+    else if (isHireX) welcomeText = `Hello, welcome to HireX! Dekhiye, hamara AI engine aapki hiring ko 100% autonomous bana sakta hai. Kya aap aur janna chahenge?`;
     
     setMessages([{ role: "bot", text: welcomeText }]);
     setTimeout(() => setShowOffer(true), 5000);
