@@ -45,30 +45,35 @@ export default function ChatWidget() {
     const isHireXPage = pathname?.includes("/hirex");
     const isFreelanceXPage = pathname?.includes("/freelancex");
     const isAptitudePage = pathname?.includes("/aptitude-test");
+    const isProductPage = pathname?.includes("/product"); // ADDED PRODUCT PAGE CHECK
     
     let modeContext = "B2B / Services Mode - Digital transformation and enterprise AI solutions.";
     if (isInternshipPage) modeContext = "Internship Mode - Guiding students to take the 'Scholarship Test' for career growth.";
     if (isHireXPage) modeContext = "HireX Mode - Focus on AI Recruitment, outbound calling engines, and the 'Aptitude Assessment'.";
     if (isFreelanceXPage) modeContext = "FreelanceX Mode - Focus on global high-ticket client acquisition and earning in USD.";
     if (isAptitudePage) modeContext = "Assessment Mode - Helping the candidate stay focused and calm during the hiring test.";
+    if (isProductPage) modeContext = "Product/SaaS Mode - You are pitching our Enterprise AI Products (Calling Engines, Hiring Automations). Keep the tone extremely positive, reassuring, and solution-oriented. Tell them how our AI can save costs and scale their business 10x. Encourage them to book a consultation.";
 
     return `You are Manee, an Expert Consultant at Career Lab Consulting.
     
     CRITICAL VOICE & TONE INSTRUCTIONS (ACT LIKE A REAL HUMAN CALLER):
-    - Tone: Highly conversational, warm, and natural. Act exactly like a real human Indian telecaller (like "Kavya").
+    - Tone: Highly conversational, warm, natural, and extremely positive. Act exactly like a real human Indian B2B sales/telecaller.
     - Language: Natural Hinglish. 
     - USE CONVERSATIONAL FILLERS: Start sentences naturally with words like "Haan,", "Dekhiye,", "Toh,", "Acha," "Ji,". This makes the text-to-speech sound 100% human.
+    - POSITIVE REINFORCEMENT: Always frame our products as the ultimate, easy-to-use solution for their business growth.
     - SHORT SENTENCES: Do not write long essays. Keep sentences short so the AI voice takes natural breaths.
-    - Example: Instead of "The Elite plan costs Rs 200000", say "Dekhiye, humara jo Elite plan hai na... wo lagbhag 2 Lakhs ka hai."
+    - Example: Instead of "The Elite plan costs Rs 200000", say "Dekhiye, humara jo Elite plan hai na... wo lagbhag 2 Lakhs ka hai, jo aapko massive ROI dega."
     
     AUTONOMOUS BRAIN & EXACT LINKS TO USE (Always format as standard Markdown links [Text](URL)):
+    - Product / Enterprise Consultation: Ask them to call +91 870023 6923 directly.
     - Foundation Plan: [Foundation Scholarship Test](https://www.careerlabconsulting.com/scholarship-test?plan=Foundation)
     - Elite Plan: [Elite Scholarship Test](https://www.careerlabconsulting.com/scholarship-test?plan=Elite)
     - Aptitude Test: [Start Aptitude Test](https://www.careerlabconsulting.com/hirex/aptitude-test)
 
     PRICING KNOWLEDGE BASE:
     B2C: Foundation Plan (6 Months): ₹1,20k. Elite Plan (12 Months): ₹2,00k.
-    B2B: Starter: ₹25,000. Growth: ₹50,000. Advanced: ₹1,00,000. (For custom plans, ask them to call +91 870023 6923).
+    B2B: Starter: ₹25,000 (1 Core Module). Growth: ₹50,000 (3 Core Modules). Advanced: ₹1,00,000 (Complete Product Suite).
+    * If they want full ecosystem access or a custom architecture, tell them we have Enterprise plans and they should call us.
     
     Focus: ${modeContext}`;
   };
@@ -159,12 +164,11 @@ export default function ChatWidget() {
     }
     window.speechSynthesis.cancel(); 
 
-    // Advanced Text Cleaning for Human Voice (Replacing punctuation with natural pauses)
     let cleanText = text
-      .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') // Extract text from links
-      .replace(/https?:\/\/[^\s]+/g, '') // Remove URLs
-      .replace(/[*#_`]/g, '') // Remove markdown
-      .replace(/\.\.\./g, ', ') // Convert ellipsis to comma for natural pause
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') 
+      .replace(/https?:\/\/[^\s]+/g, '') 
+      .replace(/[*#_`]/g, '') 
+      .replace(/\.\.\./g, ', ') 
       .trim(); 
 
     try {
@@ -214,10 +218,17 @@ export default function ChatWidget() {
     const isB2C = pathname?.includes("/internship");
     const isHireX = pathname?.includes("/hirex");
     const isFreelanceX = pathname?.includes("/freelancex");
+    const isProduct = pathname?.includes("/product"); // CHECK FOR PRODUCT ROUTE
 
     let welcomeText = `Haan hello! Main Manee baat kar rahi hoon, aapki AI Consultant. Aaj main aapki kaise help kar sakti hoon?`;
-    if (isB2C) welcomeText = `Haan hello ${storedName || 'Scholar'}! Main Manee hoon. Kya aap career guidance dhund rahe hain?`;
-    else if (isHireX) welcomeText = `Hello, welcome to HireX! Dekhiye, hamara AI engine aapki hiring ko 100% autonomous bana sakta hai. Kya aap aur janna chahenge?`;
+    
+    if (isB2C) {
+      welcomeText = `Haan hello ${storedName || 'Scholar'}! Main Manee hoon. Kya aap career guidance dhund rahe hain?`;
+    } else if (isHireX) {
+      welcomeText = `Hello, welcome to HireX! Dekhiye, hamara AI engine aapki hiring ko 100% autonomous bana sakta hai. Kya aap aur janna chahenge?`;
+    } else if (isProduct) { // NEW WELCOME TEXT FOR PRODUCT PAGE
+      welcomeText = `Haan hello! Welcome to Career Lab Products. Dekhiye, agar aap apne business ko AI ke through 10x scale karna chahte hain, toh aap bilkul sahi jagah hain. Main kis product ke baare mein aapki help karoon?`;
+    }
     
     setMessages([{ role: "bot", text: welcomeText }]);
     setTimeout(() => setShowOffer(true), 5000);
