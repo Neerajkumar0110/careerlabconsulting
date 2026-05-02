@@ -1,76 +1,101 @@
-// components/product/B2BPricingSection.tsx
-
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { 
-  ArrowRight,
-  Building2,
-  Calendar,
-  Check,
-  Crown,
-  MessageCircle,
-  Phone,
-  Rocket,
-  Zap
+import {
+  ArrowRight, Building2, Calendar, Check, Crown,
+  MessageCircle, Phone, Rocket, Zap,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import ScheduleMeetingModal from './ScheduleMeetingModal'; 
+import ScheduleMeetingModal from './ScheduleMeetingModal';
+import { usePageContent } from '@/hooks/usePageContent';
 
-const CONTACT_INFO = {
-  whatsapp: "918700236923",
-  email: "info@careerlabconsulting.com"
-};
+// ── helpers ───────────────────────────────────────────────────────────────────
+function safeParse<T>(raw: string, fallback: T): T {
+  try { return JSON.parse(raw) as T; } catch { return fallback; }
+}
 
-type PricingCategory = 'Single Product' | 'Combo' | 'All-in-One';
+const ICON_MAP: Record<string, React.ElementType> = { Rocket, Zap, Crown, Building2 };
 
-interface PricingTier {
+// ── Types ─────────────────────────────────────────────────────────────────────
+export type PricingCategory = 'Single Product' | 'Combo' | 'All-in-One';
+
+export interface PricingTier {
   name: string;
   priceINR: string;
   priceUSD: string;
   rawPriceINR?: number;
   rawPriceUSD?: number;
   features: string[];
-  icon: any;
+  icon: string;          // key into ICON_MAP
   isEnterprise?: boolean;
   description: string;
+  isRecommended?: boolean;
 }
 
-const CATEGORIES: Record<PricingCategory, PricingTier[]> = {
+export interface PricingCategories {
+  'Single Product': PricingTier[];
+  'Combo': PricingTier[];
+  'All-in-One': PricingTier[];
+}
+
+// ── Defaults ──────────────────────────────────────────────────────────────────
+const DEFAULT_CATEGORIES: PricingCategories = {
   'Single Product': [
-    { name: 'Starter', priceINR: '₹25,000', priceUSD: '$350', rawPriceINR: 2500000, rawPriceUSD: 35000, icon: Rocket, description: 'Perfect for small teams starting their journey.', features: ['1 Core Module', 'Email Support', 'Basic Analytics', 'Single User Access'] },
-    { name: 'Growth', priceINR: '₹50,000', priceUSD: '$650', rawPriceINR: 5000000, rawPriceUSD: 65000, icon: Zap, description: 'Scaling tools for growing businesses.', features: ['3 Core Modules', 'Priority Support', 'Advanced Analytics', '5 User Access'] },
-    { name: 'Advanced', priceINR: '₹1,00,000', priceUSD: '$1,250', rawPriceINR: 10000000, rawPriceUSD: 125000, icon: Crown, description: 'The power of full modular control.', features: ['All Core Modules', '24/7 Support', 'Custom Reporting', 'Unlimited Users'] },
-    { name: 'Enterprise', priceINR: 'Custom', priceUSD: 'Custom', isEnterprise: true, icon: Building2, description: 'Custom infrastructure for big players.', features: ['Dedicated Infra', 'SLA Guarantee', 'Custom Workflows', 'On-Premise Option'] },
+    { name: 'Starter',    priceINR: '₹25,000',    priceUSD: '$350',    rawPriceINR: 2500000,   rawPriceUSD: 35000,   icon: 'Rocket',   description: 'Perfect for small teams starting their journey.',   features: ['1 Core Module', 'Email Support', 'Basic Analytics', 'Single User Access'] },
+    { name: 'Growth',     priceINR: '₹50,000',    priceUSD: '$650',    rawPriceINR: 5000000,   rawPriceUSD: 65000,   icon: 'Zap',      description: 'Scaling tools for growing businesses.',             features: ['3 Core Modules', 'Priority Support', 'Advanced Analytics', '5 User Access'], isRecommended: true },
+    { name: 'Advanced',   priceINR: '₹1,00,000',  priceUSD: '$1,250',  rawPriceINR: 10000000,  rawPriceUSD: 125000,  icon: 'Crown',    description: 'The power of full modular control.',               features: ['All Core Modules', '24/7 Support', 'Custom Reporting', 'Unlimited Users'] },
+    { name: 'Enterprise', priceINR: 'Custom',      priceUSD: 'Custom',  icon: 'Building2', isEnterprise: true,  description: 'Custom infrastructure for big players.',           features: ['Dedicated Infra', 'SLA Guarantee', 'Custom Workflows', 'On-Premise Option'] },
   ],
   'Combo': [
-    { name: 'Starter', priceINR: '₹50,000', priceUSD: '$650', rawPriceINR: 5000000, rawPriceUSD: 65000, icon: Rocket, description: 'Bundled essentials for startups.', features: ['2 Product Suite', 'Shared Data Lake', 'Basic Automations', 'Standard Security'] },
-    { name: 'Growth', priceINR: '₹1,00,000', priceUSD: '$1,250', rawPriceINR: 10000000, rawPriceUSD: 125000, icon: Zap, description: 'Full synergy across your business.', features: ['4 Product Suite', 'Unified Dashboard', 'Advance Automations', 'Audit Logs'] },
-    { name: 'Advanced', priceINR: '₹2,00,000', priceUSD: '$2,500', rawPriceINR: 20000000, rawPriceUSD: 250000, icon: Crown, description: 'Intelligence-driven enterprise suite.', features: ['Complete Product Suite', 'AI Insights', 'Custom Integrations', 'White-labeling'] },
-    { name: 'Enterprise', priceINR: 'Custom', priceUSD: 'Custom', isEnterprise: true, icon: Building2, description: 'Maximum scale, zero compromise.', features: ['Unlimited Users', 'Data Sovereignty', 'Custom Development', 'VIP Support'] },
+    { name: 'Starter',    priceINR: '₹50,000',    priceUSD: '$650',    rawPriceINR: 5000000,   rawPriceUSD: 65000,   icon: 'Rocket',   description: 'Bundled essentials for startups.',                 features: ['2 Product Suite', 'Shared Data Lake', 'Basic Automations', 'Standard Security'] },
+    { name: 'Growth',     priceINR: '₹1,00,000',  priceUSD: '$1,250',  rawPriceINR: 10000000,  rawPriceUSD: 125000,  icon: 'Zap',      description: 'Full synergy across your business.',               features: ['4 Product Suite', 'Unified Dashboard', 'Advance Automations', 'Audit Logs'], isRecommended: true },
+    { name: 'Advanced',   priceINR: '₹2,00,000',  priceUSD: '$2,500',  rawPriceINR: 20000000,  rawPriceUSD: 250000,  icon: 'Crown',    description: 'Intelligence-driven enterprise suite.',             features: ['Complete Product Suite', 'AI Insights', 'Custom Integrations', 'White-labeling'] },
+    { name: 'Enterprise', priceINR: 'Custom',      priceUSD: 'Custom',  icon: 'Building2', isEnterprise: true,  description: 'Maximum scale, zero compromise.',                  features: ['Unlimited Users', 'Data Sovereignty', 'Custom Development', 'VIP Support'] },
   ],
   'All-in-One': [
-    { name: 'Starter', priceINR: '₹10,00,000', priceUSD: '$12,000', rawPriceINR: 100000000, rawPriceUSD: 1200000, icon: Rocket, description: 'Total ecosystem access for regions.', features: ['Full Ecosystem Access', 'Enterprise Security', 'Regional Hosting', 'Training Portal'] },
-    { name: 'Growth', priceINR: '₹15,00,000', priceUSD: '$18,000', rawPriceINR: 150000000, rawPriceUSD: 1800000, icon: Zap, description: 'The ultimate scaling powerhouse.', features: ['Scaling Infrastructure', 'Global CDN', 'AI Operations Pack', '24/7 Dedicated Ops'] },
-    { name: 'Advanced', priceINR: '₹25,00,000', priceUSD: '$30,000', rawPriceINR: 250000000, rawPriceUSD: 3000000, icon: Crown, description: 'The pinnacle of B2B SaaS tech.', features: ['Unlimited Scaling', 'Custom LLM Training', 'Full Source Audit', 'Infinite API calls'] },
-    { name: 'Enterprise', priceINR: 'Custom', priceUSD: 'Custom', isEnterprise: true, icon: Building2, description: 'Bespoke government-grade tech.', features: ['Gov-Grade Security', 'On-Premise Option', 'Bespoke AI Solutions', 'Lifetime Updates'] },
-  ]
+    { name: 'Starter',    priceINR: '₹10,00,000', priceUSD: '$12,000', rawPriceINR: 100000000, rawPriceUSD: 1200000, icon: 'Rocket',   description: 'Total ecosystem access for regions.',              features: ['Full Ecosystem Access', 'Enterprise Security', 'Regional Hosting', 'Training Portal'] },
+    { name: 'Growth',     priceINR: '₹15,00,000', priceUSD: '$18,000', rawPriceINR: 150000000, rawPriceUSD: 1800000, icon: 'Zap',      description: 'The ultimate scaling powerhouse.',                 features: ['Scaling Infrastructure', 'Global CDN', 'AI Operations Pack', '24/7 Dedicated Ops'], isRecommended: true },
+    { name: 'Advanced',   priceINR: '₹25,00,000', priceUSD: '$30,000', rawPriceINR: 250000000, rawPriceUSD: 3000000, icon: 'Crown',    description: 'The pinnacle of B2B SaaS tech.',                   features: ['Unlimited Scaling', 'Custom LLM Training', 'Full Source Audit', 'Infinite API calls'] },
+    { name: 'Enterprise', priceINR: 'Custom',      priceUSD: 'Custom',  icon: 'Building2', isEnterprise: true,  description: 'Bespoke government-grade tech.',                   features: ['Gov-Grade Security', 'On-Premise Option', 'Bespoke AI Solutions', 'Lifetime Updates'] },
+  ],
 };
 
+const CATEGORY_KEYS: PricingCategory[] = ['Single Product', 'Combo', 'All-in-One'];
+
+// ── Main Component ────────────────────────────────────────────────────────────
 export default function B2BPricingSection() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<PricingCategory>('Single Product');
   const [isMeetingModalOpen, setIsMeetingModalOpen] = useState(false);
-  const [selectedPlanForBooking, setSelectedPlanForBooking] = useState<{category: string, tier: string} | null>(null);
+  const [selectedPlanForBooking, setSelectedPlanForBooking] = useState<{ category: string; tier: string } | null>(null);
   const [currency, setCurrency] = useState<'INR' | 'USD'>('INR');
 
+  const { get } = usePageContent('b2b-pricing');
+
+  // CMS values
+  const headline       = get('header', 'headline',       'Flexible');
+  const headlineAccent = get('header', 'headline_accent','Pricing');
+  const subheading     = get('header', 'subheading',     'Scale your business infrastructure with our modular SaaS solutions. No hidden fees.');
+  const accentColor    = get('header', 'accent_color',   '#2563eb');
+  const whatsapp       = get('contact', 'whatsapp',      '918700236923');
+  const phone          = get('contact', 'phone',         '+91 870023 6923');
+  const consultLabel   = get('contact', 'consult_label', 'Book Consultation');
+
+  // Per-category JSON from CMS
+  const singleRaw  = get('categories', 'single_json',     JSON.stringify(DEFAULT_CATEGORIES['Single Product']));
+  const comboRaw   = get('categories', 'combo_json',      JSON.stringify(DEFAULT_CATEGORIES['Combo']));
+  const allInOneRaw= get('categories', 'all_in_one_json', JSON.stringify(DEFAULT_CATEGORIES['All-in-One']));
+
+  const CATEGORIES: PricingCategories = {
+    'Single Product': safeParse(singleRaw,   DEFAULT_CATEGORIES['Single Product']),
+    'Combo':          safeParse(comboRaw,    DEFAULT_CATEGORIES['Combo']),
+    'All-in-One':     safeParse(allInOneRaw, DEFAULT_CATEGORIES['All-in-One']),
+  };
+
+  // Auto-detect currency
   useEffect(() => {
-    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    if (timeZone.includes('Asia/Kolkata') || timeZone.includes('Calcutta')) {
-      setCurrency('INR');
-    } else {
-      setCurrency('USD');
-    }
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    setCurrency(tz.includes('Asia/Kolkata') || tz.includes('Calcutta') ? 'INR' : 'USD');
   }, []);
 
   const openBooking = (tierName: string) => {
@@ -78,63 +103,60 @@ export default function B2BPricingSection() {
     setIsMeetingModalOpen(true);
   };
 
-  const openWhatsApp = () => {
-    const message = `Hi, I am interested in the Enterprise Plan (${activeTab}). Can we talk?`;
-    window.open(`https://wa.me/${CONTACT_INFO.whatsapp}?text=${encodeURIComponent(message)}`, '_blank');
+  const openWhatsApp = (tier: PricingTier) => {
+    const msg = `Hi, I am interested in the ${tier.name} Plan (${activeTab}). Can we talk?`;
+    window.open(`https://wa.me/${whatsapp}?text=${encodeURIComponent(msg)}`, '_blank');
   };
 
   const handleGetStarted = (tier: PricingTier) => {
     const priceValue = currency === 'INR' ? tier.priceINR : tier.priceUSD;
-    const rawValue = currency === 'INR' ? tier.rawPriceINR : tier.rawPriceUSD;
-    
+    const rawValue   = currency === 'INR' ? tier.rawPriceINR : tier.rawPriceUSD;
     if (!rawValue) return;
-
-    const params = new URLSearchParams({
-      plan: tier.name,
-      category: activeTab,
-      price: priceValue,
-      amount: rawValue.toString(),
-      currency: currency
-    });
+    const params = new URLSearchParams({ plan: tier.name, category: activeTab, price: priceValue, amount: rawValue.toString(), currency });
     router.push(`/checkout?${params.toString()}`);
   };
 
   return (
     <section className="relative py-24 bg-[#020617] text-white overflow-hidden" id="pricing">
+      {/* Background glows */}
       <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-600/10 blur-[120px] rounded-full" />
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-600/10 blur-[120px] rounded-full" />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-6">
+        {/* Header */}
         <div className="text-center mb-12">
-          <div className="animate-fade-in-up">
-            <h2 className="text-5xl md:text-7xl font-black tracking-tighter mb-4">
-              Flexible <span className="text-blue-500">Pricing</span>
-            </h2>
-            <p className="text-slate-400 max-w-2xl mx-auto text-lg mb-6">
-              Scale your business infrastructure with our modular SaaS solutions. No hidden fees.
-            </p>
-            <div className="flex justify-center gap-4 mb-10">
-                <span className={`text-xs font-bold ${currency === 'INR' ? 'text-blue-400' : 'text-slate-500'}`}>INR</span>
-                <button 
-                    onClick={() => setCurrency(currency === 'INR' ? 'USD' : 'INR')}
-                    className="w-10 h-5 bg-white/10 rounded-full relative flex items-center px-1"
-                >
-                    <div className={`w-3 h-3 bg-blue-500 rounded-full transition-all duration-300 ${currency === 'USD' ? 'translate-x-5' : 'translate-x-0'}`} />
-                </button>
-                <span className={`text-xs font-bold ${currency === 'USD' ? 'text-blue-400' : 'text-slate-500'}`}>USD</span>
-            </div>
+          <h2 className="text-5xl md:text-7xl font-black tracking-tighter mb-4">
+            {headline}{' '}
+            <span style={{ color: accentColor }}>{headlineAccent}</span>
+          </h2>
+          <p className="text-slate-400 max-w-2xl mx-auto text-lg mb-6">{subheading}</p>
+
+          {/* Currency toggle */}
+          <div className="flex justify-center items-center gap-4 mb-10">
+            <span className={`text-xs font-bold ${currency === 'INR' ? 'text-blue-400' : 'text-slate-500'}`}>INR</span>
+            <button
+              onClick={() => setCurrency(c => c === 'INR' ? 'USD' : 'INR')}
+              className="w-10 h-5 bg-white/10 rounded-full relative flex items-center px-1"
+            >
+              <div className={`w-3 h-3 bg-blue-500 rounded-full transition-all duration-300 ${currency === 'USD' ? 'translate-x-5' : 'translate-x-0'}`} />
+            </button>
+            <span className={`text-xs font-bold ${currency === 'USD' ? 'text-blue-400' : 'text-slate-500'}`}>USD</span>
           </div>
-          
+
+          {/* Tab bar */}
           <div className="inline-flex p-1.5 bg-white/5 border border-white/10 rounded-2xl backdrop-blur-xl mb-12">
-            {(Object.keys(CATEGORIES) as PricingCategory[]).map((cat) => (
+            {CATEGORY_KEYS.map(cat => (
               <button
                 key={cat}
                 onClick={() => setActiveTab(cat)}
                 className={`relative px-6 py-3 rounded-xl text-xs md:text-sm font-bold transition-all duration-300 ${
-                  activeTab === cat ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/25' : 'text-slate-400 hover:text-white hover:bg-white/5'
+                  activeTab === cat
+                    ? 'text-white shadow-lg'
+                    : 'text-slate-400 hover:text-white hover:bg-white/5'
                 }`}
+                style={activeTab === cat ? { background: accentColor, boxShadow: `0 4px 24px ${accentColor}40` } : {}}
               >
                 {cat}
               </button>
@@ -142,43 +164,59 @@ export default function B2BPricingSection() {
           </div>
         </div>
 
+        {/* Tier cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {CATEGORIES[activeTab].map((tier) => (
-              <div 
+          {CATEGORIES[activeTab].map((tier) => {
+            const Icon = ICON_MAP[tier.icon] ?? Rocket;
+            return (
+              <div
                 key={`${activeTab}-${tier.name}`}
                 className={`group relative p-8 rounded-[2.5rem] border transition-all duration-500 flex flex-col hover:-translate-y-2 ${
-                  tier.name === 'Growth' 
-                    ? 'bg-blue-600/5 border-blue-500/50 scale-100 lg:scale-105 shadow-[0_20px_50px_rgba(37,99,235,0.15)] z-20' 
+                  tier.isRecommended
+                    ? 'scale-100 lg:scale-105 z-20'
                     : 'bg-white/[0.02] border-white/10 hover:border-white/30 hover:shadow-xl'
                 }`}
+                style={
+                  tier.isRecommended
+                    ? { background: `${accentColor}0d`, borderColor: `${accentColor}80`, boxShadow: `0 20px 50px ${accentColor}26` }
+                    : {}
+                }
               >
-                {tier.name === 'Growth' && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-blue-500 text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-[0.2em] shadow-xl">
+                {tier.isRecommended && (
+                  <div
+                    className="absolute -top-4 left-1/2 -translate-x-1/2 text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-[0.2em] text-white shadow-xl"
+                    style={{ background: accentColor }}
+                  >
                     Recommended
                   </div>
                 )}
 
                 <div className="mb-6 flex justify-between items-start">
-                  <div className={`p-3 rounded-2xl ${tier.name === 'Growth' ? 'bg-blue-500 text-white' : 'bg-white/5 text-blue-400'}`}>
-                    <tier.icon size={28} />
+                  <div
+                    className="p-3 rounded-2xl"
+                    style={tier.isRecommended ? { background: accentColor, color: '#fff' } : { background: 'rgba(255,255,255,0.05)', color: accentColor }}
+                  >
+                    <Icon size={28} />
                   </div>
                 </div>
 
                 <h3 className="text-2xl font-black uppercase mb-1">{tier.name}</h3>
                 <p className="text-slate-500 text-xs mb-6 line-clamp-2 h-8">{tier.description}</p>
-                
+
                 <div className="mb-8">
                   <div className="text-4xl font-bold text-white tracking-tight">
                     {currency === 'INR' ? tier.priceINR : tier.priceUSD}
                   </div>
-                  {!tier.isEnterprise && <div className="text-slate-500 text-xs mt-1 uppercase tracking-widest">Single License</div>}
+                  {!tier.isEnterprise && (
+                    <div className="text-slate-500 text-xs mt-1 uppercase tracking-widest">Single License</div>
+                  )}
                 </div>
-                
+
                 <div className="space-y-4 mb-10 flex-1">
-                  {tier.features.map((f) => (
+                  {tier.features.map(f => (
                     <div key={f} className="flex items-start gap-3 text-sm text-slate-300">
-                      <div className="mt-1 bg-blue-500/20 p-0.5 rounded-full">
-                        <Check className="w-3 h-3 text-blue-500" />
+                      <div className="mt-1 p-0.5 rounded-full" style={{ background: `${accentColor}33` }}>
+                        <Check className="w-3 h-3" style={{ color: accentColor }} />
                       </div>
                       {f}
                     </div>
@@ -188,14 +226,13 @@ export default function B2BPricingSection() {
                 <div className="flex flex-col gap-3">
                   {tier.isEnterprise ? (
                     <>
-                      <button 
-                        onClick={openWhatsApp}
+                      <button
+                        onClick={() => openWhatsApp(tier)}
                         className="w-full py-3 rounded-2xl font-black uppercase tracking-wider text-[11px] bg-white text-black hover:bg-slate-200 transition-all flex items-center justify-center gap-2"
                       >
                         <MessageCircle className="w-4 h-4" /> Contact Sales
                       </button>
-                      
-                      <button 
+                      <button
                         onClick={() => openBooking(tier.name)}
                         className="w-full py-3 rounded-2xl font-black uppercase tracking-wider text-[11px] bg-white/5 border border-white/10 hover:bg-white/10 transition-all flex items-center justify-center gap-2 text-slate-300"
                       >
@@ -204,18 +241,14 @@ export default function B2BPricingSection() {
                     </>
                   ) : (
                     <>
-                      <button 
+                      <button
                         onClick={() => handleGetStarted(tier)}
-                        className={`w-full py-4 rounded-2xl font-black uppercase tracking-[0.15em] text-[11px] transition-all flex items-center justify-center gap-3 active:scale-[0.95] ${
-                          tier.name === 'Growth' 
-                            ? 'bg-blue-600 hover:bg-blue-500 text-white' 
-                            : 'bg-white text-black hover:bg-slate-200'
-                        }`}
+                        className="w-full py-4 rounded-2xl font-black uppercase tracking-[0.15em] text-[11px] transition-all flex items-center justify-center gap-3 active:scale-[0.95]"
+                        style={tier.isRecommended ? { background: accentColor, color: '#fff' } : { background: '#fff', color: '#0f172a' }}
                       >
                         <Rocket className="w-4 h-4" /> Get Started <ArrowRight className="w-3 h-3" />
                       </button>
-
-                      <button 
+                      <button
                         onClick={() => openBooking(tier.name)}
                         className="w-full py-3 rounded-2xl font-black uppercase tracking-wider text-[10px] bg-white/5 border border-white/5 hover:border-white/20 hover:bg-white/10 transition-all flex items-center justify-center gap-2 text-slate-400 hover:text-white"
                       >
@@ -225,32 +258,38 @@ export default function B2BPricingSection() {
                   )}
                 </div>
               </div>
-            ))}
+            );
+          })}
         </div>
 
-        <div className="mt-20 p-8 rounded-[3rem] bg-gradient-to-r from-blue-600/10 via-transparent to-purple-600/10 border border-white/10 flex flex-col md:flex-row items-center justify-between gap-6 backdrop-blur-sm">
+        {/* Bottom CTA bar */}
+        <div className="mt-20 p-8 rounded-[3rem] border border-white/10 flex flex-col md:flex-row items-center justify-between gap-6 backdrop-blur-sm"
+          style={{ background: `linear-gradient(to right, ${accentColor}1a, transparent, rgba(147,51,234,0.1))` }}
+        >
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
-              <Phone className="text-blue-400" />
+            <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ background: `${accentColor}33` }}>
+              <Phone style={{ color: accentColor }} />
             </div>
             <div>
               <h4 className="font-bold text-lg">Prefer to talk directly?</h4>
-              <p className="text-slate-400 text-sm">Call us at <span className="text-white font-semibold">+91 870023 6923</span> or book a consultation.</p>
+              <p className="text-slate-400 text-sm">
+                Call us at <span className="text-white font-semibold">{phone}</span> or book a consultation.
+              </p>
             </div>
           </div>
-          <button 
+          <button
             onClick={() => openBooking('Custom Architecture')}
             className="px-8 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl font-bold transition-all text-sm flex items-center gap-2"
           >
             <Calendar className="w-4 h-4" />
-            Book Consultation
+            {consultLabel}
           </button>
         </div>
       </div>
 
-      <ScheduleMeetingModal 
-        isOpen={isMeetingModalOpen} 
-        onClose={() => setIsMeetingModalOpen(false)} 
+      <ScheduleMeetingModal
+        isOpen={isMeetingModalOpen}
+        onClose={() => setIsMeetingModalOpen(false)}
         planInfo={selectedPlanForBooking}
       />
     </section>

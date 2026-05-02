@@ -1,83 +1,157 @@
-import Link from "next/link";
-import Image from "next/image";
-import {
-  Plane,
-  Cpu,
-  Radar,
-  Settings,
-  Map,
-  ArrowRight,
-  Activity,
-} from "lucide-react";
-import B2CHeader from "@/components/b2c/B2CHeader";
-import Footer from "@/components/b2c/Footer";
+// app/internx/drone-automation-engineer/page.tsx
 
-export const metadata = {
-  title: "InternX – Drone & Automation Engineer Internship | Career Lab",
-  description:
-    "Join the InternX Drone & Automation Engineer Internship. Learn autonomous drones, AI-powered navigation, automation systems, and real-world deployment with hands-on industry projects.",
+'use client';
+
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  Plane, Cpu, Radar, Settings, Map,
+  ArrowRight, Activity, X, Loader2,
+  ChevronRight, Mail, Users,
+} from 'lucide-react';
+import Link from 'next/link';
+import B2CHeader from '@/components/b2c/B2CHeader';
+import Footer from '@/components/b2c/Footer';
+import { usePageContent } from '@/hooks/usePageContent';
+
+const ICON_MAP: Record<string, React.ElementType> = {
+  Plane, Cpu, Radar, Settings, Map, ArrowRight, Activity,
 };
 
-export default function InternXDroneAutomationEngineerPage() {
+function safeParse<T>(raw: string, fallback: T): T {
+  try { return JSON.parse(raw) as T; } catch { return fallback; }
+}
+
+const DEFAULT_STATS = JSON.stringify([
+  { label: 'Weeks',          value: '16+' },
+  { label: 'Drone Missions', value: '10+' },
+  { label: 'AI Models',      value: '8+'  },
+  { label: 'Career Support', value: '100%'},
+]);
+const DEFAULT_CHIPS = JSON.stringify([
+  { icon: 'Plane',    label: 'Autonomous Drones'     },
+  { icon: 'Radar',    label: 'Navigation & Sensors'  },
+  { icon: 'Cpu',      label: 'AI Control Systems'    },
+  { icon: 'Settings', label: 'Automation Pipelines'  },
+]);
+const DEFAULT_WHY_FEATURES = JSON.stringify([
+  { icon: 'Map',      title: 'Autonomous Navigation', desc: 'Drones rely on AI-driven perception and navigation systems.' },
+  { icon: 'Activity', title: 'High-Impact Use Cases', desc: 'Used in surveillance, delivery, mapping, agriculture, and disaster response.' },
+  { icon: 'Settings', title: 'Automation at Scale',   desc: 'Automate fleets, missions, and workflows using intelligent systems.' },
+]);
+const DEFAULT_LEARN_ITEMS = JSON.stringify([
+  'Drone fundamentals & flight mechanics',
+  'Sensors, GPS & IMU systems',
+  'AI-based navigation & obstacle avoidance',
+  'Autonomous mission planning',
+  'Computer vision for aerial analysis',
+  'Drone communication protocols',
+  'Automation workflows & control logic',
+  'Simulation & testing environments',
+  'Safety, compliance & regulations',
+  'Deployment of drone systems',
+]);
+const DEFAULT_EXPERIENCE_FEATURES = JSON.stringify([
+  { icon: 'Plane',     title: 'Live Drone Projects', desc: 'Work on real-world drone missions and automation systems.' },
+  { icon: 'Cpu',       title: 'AI Integration',      desc: 'Integrate AI models with autonomous control pipelines.' },
+  { icon: 'ArrowRight',title: 'Career Readiness',    desc: 'Portfolio projects, interview prep, and drone industry guidance.' },
+]);
+
+interface StatItem    { label: string; value: string }
+interface ChipItem    { icon: string; label: string }
+interface FeatureItem { icon: string; title: string; desc: string }
+
+export default function InternXDroneAutomationPage() {
+  const [isModalOpen, setIsModalOpen]   = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData]         = useState({ name: '', email: '' });
+
+  const { get } = usePageContent('internx-drone');
+
+  // ── CMS values ────────────────────────────────────────────────────────────
+  const accentColor      = get('hero', 'accent_color',     '#a855f7');
+  const accentShadow     = get('hero', 'accent_shadow',    'rgba(168,85,247,0.3)');
+  const badgeText        = get('hero', 'badge_text',       'InternX Program');
+  const heroHeadline     = get('hero', 'headline',         'Drone & Automation Engineer Internship');
+  const heroBody         = get('hero', 'body_text',        'Build intelligent autonomous drone systems. Work on AI-powered navigation, automation workflows, aerial data collection, and smart control systems used in defense, logistics, agriculture, and smart cities.');
+  const heroImageUrl     = get('hero', 'hero_image_url',   'https://img.freepik.com/free-photo/drone-operator-piloting-flying-drone-sunset_23-2152007746.jpg');
+  const applyBtnLabel    = get('hero', 'apply_btn_label',  'Apply Now');
+  const finderBtnLabel   = get('hero', 'finder_btn_label', 'Find My Program');
+  const waNumber         = get('hero', 'whatsapp_number',  '918700236923');
+
+  const chipItems        = safeParse<ChipItem[]>(get('hero', 'chips_json', DEFAULT_CHIPS), []);
+  const statsItems       = safeParse<StatItem[]>(get('stats', 'items_json', DEFAULT_STATS), []);
+
+  const whySectionTitle  = get('why', 'section_title', 'Why Drone & Automation Engineering?');
+  const whyFeatures      = safeParse<FeatureItem[]>(get('why', 'features_json', DEFAULT_WHY_FEATURES), []);
+
+  const learnTitle       = get('learn', 'section_title', 'What You Will Learn');
+  const learnItems       = safeParse<string[]>(get('learn', 'items_json', DEFAULT_LEARN_ITEMS), []);
+
+  const expTitle         = get('experience', 'section_title', 'Internship Experience');
+  const expFeatures      = safeParse<FeatureItem[]>(get('experience', 'features_json', DEFAULT_EXPERIENCE_FEATURES), []);
+
+  const ctaHeadline      = get('cta', 'headline',          'Build Autonomous Systems That Fly');
+  const ctaBody          = get('cta', 'body_text',         'Launch a high-impact career in drones, automation, and intelligent systems.');
+  const ctaApplyLabel    = get('cta', 'apply_btn_label',   'Apply Now');
+  const ctaAdvisorLabel  = get('cta', 'advisor_btn_label', 'Talk to Advisor');
+
+  const modalBadge       = get('apply_modal', 'badge_label',      'Drone & Automation Internship – Apply');
+  const modalBtnLabel    = get('apply_modal', 'btn_label',        'Submit Application');
+  const modalFooterNote  = get('apply_modal', 'footer_note',      'Secure application powered by InternX Career Lab');
+  const modalWaNumber    = get('apply_modal', 'whatsapp_number',  '918700236923');
+
+  const handleApply = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    const msg = `*🚁 Drone & Automation Internship Application*%0A*Name:* ${formData.name}%0A*Email:* ${formData.email}`;
+    setTimeout(() => {
+      window.open(`https://wa.me/${modalWaNumber}?text=${msg}`, '_blank');
+      setIsSubmitting(false);
+      setIsModalOpen(false);
+    }, 1500);
+  };
+
   return (
     <main className="bg-[#0a0a0a] text-white">
       <B2CHeader />
 
       {/* HERO */}
       <section className="relative pt-36 pb-28 overflow-hidden border-b border-white/10">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(168,85,247,0.18),transparent_60%)]" />
-
+        <div className="absolute inset-0" style={{ background: `radial-gradient(circle at top, ${accentColor}2e, transparent 60%)` }} />
         <div className="relative max-w-[1200px] mx-auto px-6 grid md:grid-cols-2 gap-14 items-center">
-          
-          {/* LEFT */}
           <div>
-            <span className="inline-flex items-center gap-2 mb-5 px-4 py-1 rounded-full border border-purple-500/30 bg-purple-500/10 text-xs font-black uppercase tracking-widest text-purple-400">
-              InternX Program
+            <span className="inline-flex items-center gap-2 mb-5 px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest"
+              style={{ border: `1px solid ${accentColor}4d`, background: `${accentColor}1a`, color: accentColor }}>
+              {badgeText}
             </span>
-
-            <h1 className="text-2xl md:text-4xl font-black leading-tight">
-              Drone & Automation Engineer Internship
-            </h1>
-
-            <p className="mt-6 text-sm text-slate-400 max-w-xl">
-              Build intelligent autonomous drone systems.
-              Work on AI-powered navigation, automation workflows, aerial data
-              collection, and smart control systems used in defense, logistics,
-              agriculture, and smart cities.
-            </p>
-
-            {/* CHIPS */}
-            <div className="mt-8 flex flex-wrap gap-4">
-              <Chip icon={<Plane className="w-4 h-4" />} label="Autonomous Drones" />
-              <Chip icon={<Radar className="w-4 h-4" />} label="Navigation & Sensors" />
-              <Chip icon={<Cpu className="w-4 h-4" />} label="AI Control Systems" />
-              <Chip icon={<Settings className="w-4 h-4" />} label="Automation Pipelines" />
+            <h1 className="text-2xl md:text-4xl font-black leading-tight">{heroHeadline}</h1>
+            <p className="mt-6 text-sm text-slate-400 max-w-xl">{heroBody}</p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              {chipItems.map((chip, i) => {
+                const Icon = ICON_MAP[chip.icon] ?? Plane;
+                return (
+                  <div key={i} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm text-slate-300">
+                    <Icon className="w-4 h-4" style={{ color: accentColor }} />
+                    <span>{chip.label}</span>
+                  </div>
+                );
+              })}
             </div>
-
-            {/* CTA */}
             <div className="mt-12 flex flex-wrap gap-4">
-              <Link
-                href="/b2c/apply"
-                className="bg-purple-600 hover:bg-purple-500 px-10 py-4 rounded-xl font-black text-xs uppercase tracking-widest flex items-center gap-2 shadow-xl shadow-purple-600/30"
-              >
-                Apply Now <ArrowRight className="w-4 h-4" />
-              </Link>
-
-              <Link
-                href="/b2c/program-finder"
-                className="border border-white/20 hover:border-purple-500/50 px-10 py-4 rounded-xl font-bold text-xs uppercase tracking-widest"
-              >
-                Find My Program
+              <button onClick={() => setIsModalOpen(true)}
+                className="px-10 py-4 rounded-xl font-black text-xs uppercase tracking-widest flex items-center gap-2 shadow-xl transition-all hover:scale-105 active:scale-95"
+                style={{ background: accentColor, boxShadow: `0 20px 40px ${accentShadow}` }}>
+                {applyBtnLabel} <ArrowRight className="w-4 h-4" />
+              </button>
+              <Link href="/b2c/program-finder"
+                className="border border-white/20 hover:border-white/40 px-10 py-4 rounded-xl font-bold text-xs uppercase tracking-widest transition-all">
+                {finderBtnLabel}
               </Link>
             </div>
           </div>
-
           <div className="relative hidden md:flex justify-end">
-            <img
-              src="https://img.freepik.com/free-photo/drone-operator-piloting-flying-drone-sunset_23-2152007746.jpg"
-              alt="Drone & Automation Engineer Illustration"
-              className="drop-shadow-2xl"
-            />
+            <img src={heroImageUrl} alt={heroHeadline} className="drop-shadow-2xl rounded-2xl" />
           </div>
         </div>
       </section>
@@ -85,175 +159,143 @@ export default function InternXDroneAutomationEngineerPage() {
       {/* STATS */}
       <section className="py-16 border-b border-white/10 bg-[#0d0d0d]">
         <div className="max-w-[1200px] mx-auto px-6 grid md:grid-cols-4 gap-8 text-center">
-          <Stat label="Weeks" value="16+" />
-          <Stat label="Drone Missions" value="10+" />
-          <Stat label="AI Models" value="8+" />
-          <Stat label="Career Support" value="100%" />
+          {statsItems.map((s, i) => (
+            <div key={i}>
+              <div className="text-3xl font-black" style={{ color: accentColor }}>{s.value}</div>
+              <div className="mt-2 text-sm text-slate-400 uppercase tracking-widest">{s.label}</div>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* WHY DRONES & AUTOMATION */}
+      {/* WHY */}
       <section className="py-28 border-b border-white/10">
         <div className="max-w-[1200px] mx-auto px-6">
-          <h2 className="text-3xl md:text-4xl font-black mb-16">
-            Why Drone & Automation Engineering?
-          </h2>
-
+          <h2 className="text-3xl md:text-4xl font-black mb-16">{whySectionTitle}</h2>
           <div className="grid md:grid-cols-3 gap-8">
-            <Feature
-              icon={Map}
-              title="Autonomous Navigation"
-              desc="Drones rely on AI-driven perception and navigation systems."
-            />
-            <Feature
-              icon={Activity}
-              title="High-Impact Use Cases"
-              desc="Used in surveillance, delivery, mapping, agriculture, and disaster response."
-            />
-            <Feature
-              icon={Settings}
-              title="Automation at Scale"
-              desc="Automate fleets, missions, and workflows using intelligent systems."
-            />
+            {whyFeatures.map((f, i) => {
+              const Icon = ICON_MAP[f.icon] ?? Activity;
+              return (
+                <motion.div key={i} whileHover={{ y: -6 }}
+                  className="p-8 rounded-2xl border border-white/10 bg-white/5 transition-all"
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = `${accentColor}4d`; (e.currentTarget as HTMLElement).style.background = `${accentColor}0d`; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.1)'; (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.05)'; }}>
+                  <Icon className="w-7 h-7 mb-5" style={{ color: accentColor }} />
+                  <h3 className="font-bold text-lg mb-3">{f.title}</h3>
+                  <p className="text-sm text-slate-400 leading-relaxed">{f.desc}</p>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* WHAT YOU WILL LEARN */}
+      {/* LEARN */}
       <section className="py-28 border-b border-white/10 bg-[#0d0d0d]">
         <div className="max-w-[1200px] mx-auto px-6">
-          <h2 className="text-3xl md:text-4xl font-black mb-16">
-            What You Will Learn
-          </h2>
-
+          <h2 className="text-3xl md:text-4xl font-black mb-16">{learnTitle}</h2>
           <div className="grid md:grid-cols-2 gap-6">
-            {[
-              "Drone fundamentals & flight mechanics",
-              "Sensors, GPS & IMU systems",
-              "AI-based navigation & obstacle avoidance",
-              "Autonomous mission planning",
-              "Computer vision for aerial analysis",
-              "Drone communication protocols",
-              "Automation workflows & control logic",
-              "Simulation & testing environments",
-              "Safety, compliance & regulations",
-              "Deployment of drone systems",
-            ].map((item) => (
-              <div
-                key={item}
-                className="p-5 rounded-xl border border-white/10 bg-white/5 hover:bg-purple-500/5 hover:border-purple-500/30 transition"
-              >
+            {learnItems.map((item, i) => (
+              <motion.div key={i} whileHover={{ x: 4 }}
+                className="p-5 rounded-xl border border-white/10 bg-white/5 flex items-center gap-3 transition-all cursor-default"
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = `${accentColor}4d`; (e.currentTarget as HTMLElement).style.background = `${accentColor}0d`; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.1)'; (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.05)'; }}>
+                <ChevronRight className="w-4 h-4 flex-shrink-0" style={{ color: accentColor }} />
                 {item}
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* INTERNSHIP EXPERIENCE */}
+      {/* EXPERIENCE */}
       <section className="py-28 border-b border-white/10">
         <div className="max-w-[1200px] mx-auto px-6">
-          <h2 className="text-3xl md:text-4xl font-black mb-16">
-            Internship Experience
-          </h2>
-
+          <h2 className="text-3xl md:text-4xl font-black mb-16">{expTitle}</h2>
           <div className="grid md:grid-cols-3 gap-8">
-            <Feature
-              icon={Plane}
-              title="Live Drone Projects"
-              desc="Work on real-world drone missions and automation systems."
-            />
-            <Feature
-              icon={Cpu}
-              title="AI Integration"
-              desc="Integrate AI models with autonomous control pipelines."
-            />
-            <Feature
-              icon={ArrowRight}
-              title="Career Readiness"
-              desc="Portfolio projects, interview prep, and drone industry guidance."
-            />
+            {expFeatures.map((f, i) => {
+              const Icon = ICON_MAP[f.icon] ?? Activity;
+              return (
+                <motion.div key={i} whileHover={{ y: -6 }}
+                  className="p-8 rounded-2xl border border-white/10 bg-white/5 transition-all"
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = `${accentColor}4d`; (e.currentTarget as HTMLElement).style.background = `${accentColor}0d`; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.1)'; (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.05)'; }}>
+                  <Icon className="w-7 h-7 mb-5" style={{ color: accentColor }} />
+                  <h3 className="font-bold text-lg mb-3">{f.title}</h3>
+                  <p className="text-sm text-slate-400 leading-relaxed">{f.desc}</p>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* FINAL CTA */}
+      {/* CTA */}
       <section className="relative py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-tr from-purple-600/20 via-transparent to-transparent" />
-
+        <div className="absolute inset-0" style={{ background: `linear-gradient(to top right, ${accentColor}33, transparent)` }} />
         <div className="relative max-w-[900px] mx-auto px-6 text-center">
-          <h2 className="text-4xl md:text-5xl font-black">
-            Build Autonomous Systems That Fly
-          </h2>
-
-          <p className="mt-6 text-slate-400">
-            Launch a high-impact career in drones, automation, and intelligent systems.
-          </p>
-
-          <div className="mt-14 flex justify-center gap-4">
-            <Link
-              href="/b2c/apply"
-              className="bg-purple-600 hover:bg-purple-500 px-14 py-5 rounded-xl font-black text-xs uppercase tracking-widest shadow-xl shadow-purple-600/40"
-            >
-              Apply Now
-            </Link>
-            <Link
-              href="/b2c/contact"
-              className="border border-white/20 px-14 py-5 rounded-xl font-bold text-xs uppercase tracking-widest"
-            >
-              Talk to Advisor
+          <h2 className="text-4xl md:text-5xl font-black">{ctaHeadline}</h2>
+          <p className="mt-6 text-slate-400">{ctaBody}</p>
+          <div className="mt-14 flex justify-center gap-4 flex-wrap">
+            <button onClick={() => setIsModalOpen(true)}
+              className="px-14 py-5 rounded-xl font-black text-xs uppercase tracking-widest shadow-xl hover:scale-105 transition-all active:scale-95"
+              style={{ background: accentColor, boxShadow: `0 20px 40px ${accentShadow}` }}>
+              {ctaApplyLabel}
+            </button>
+            <Link href="/b2c/contact"
+              className="border border-white/20 px-14 py-5 rounded-xl font-bold text-xs uppercase tracking-widest hover:border-white/40 transition-all">
+              {ctaAdvisorLabel}
             </Link>
           </div>
         </div>
       </section>
 
       <Footer />
+
+      {/* APPLY MODAL */}
+      <AnimatePresence>
+        {isModalOpen && (
+          <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              onClick={() => setIsModalOpen(false)}
+              className="absolute inset-0 bg-black/95 backdrop-blur-md" />
+            <motion.div initial={{ scale: 0.9, opacity: 0, y: 30 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.9, opacity: 0, y: 30 }}
+              className="relative bg-[#0d0d0d] border border-white/10 p-8 md:p-12 rounded-[2.5rem] max-w-lg w-full shadow-3xl overflow-hidden">
+              <button onClick={() => setIsModalOpen(false)} className="absolute top-8 right-8 p-2 text-slate-500 hover:text-white transition-colors"><X size={24} /></button>
+              <div className="mb-10">
+                <p className="text-[10px] font-black uppercase tracking-[0.3em] mb-3" style={{ color: accentColor }}>{modalBadge}</p>
+                <h3 className="text-2xl font-black tracking-tight">{heroHeadline}</h3>
+              </div>
+              <form onSubmit={handleApply} className="space-y-4">
+                <div className="relative">
+                  <Users className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600" size={16} />
+                  <input required type="text" placeholder="Full Name"
+                    className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 pl-12 text-sm text-white focus:outline-none transition-all placeholder:text-slate-700"
+                    onFocus={e => (e.currentTarget.style.borderColor = accentColor)}
+                    onBlur={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)')}
+                    value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} />
+                </div>
+                <div className="relative">
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600" size={16} />
+                  <input required type="email" placeholder="Email Address"
+                    className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 pl-12 text-sm text-white focus:outline-none transition-all placeholder:text-slate-700"
+                    onFocus={e => (e.currentTarget.style.borderColor = accentColor)}
+                    onBlur={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)')}
+                    value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} />
+                </div>
+                <button disabled={isSubmitting} type="submit"
+                  className="w-full py-5 text-white font-black uppercase tracking-[0.2em] rounded-2xl shadow-xl transition-all flex items-center justify-center gap-3 disabled:opacity-50 text-[10px] active:scale-95"
+                  style={{ background: accentColor }}>
+                  {isSubmitting ? <Loader2 className="animate-spin" size={20} /> : <>{modalBtnLabel} <ChevronRight size={18} /></>}
+                </button>
+                <p className="text-[8px] font-black text-center text-slate-600 uppercase tracking-widest mt-6 leading-relaxed border-t border-white/5 pt-4">
+                  {modalFooterNote}
+                </p>
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </main>
-  );
-}
-
-/* ---------- COMPONENTS ---------- */
-
-function Chip({
-  icon,
-  label,
-}: {
-  icon: React.ReactNode;
-  label: string;
-}) {
-  return (
-    <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm text-slate-300">
-      <span className="text-purple-400">{icon}</span>
-      <span>{label}</span>
-    </div>
-  );
-}
-
-function Feature({
-  icon: Icon,
-  title,
-  desc,
-}: {
-  icon: any;
-  title: string;
-  desc: string;
-}) {
-  return (
-    <div className="p-8 rounded-2xl border border-white/10 bg-white/5 hover:border-purple-500/30 hover:bg-purple-500/5 transition">
-      <Icon className="w-7 h-7 text-purple-400 mb-5" />
-      <h3 className="font-bold text-lg mb-3">{title}</h3>
-      <p className="text-sm text-slate-400 leading-relaxed">{desc}</p>
-    </div>
-  );
-}
-
-function Stat({ label, value }: { label: string; value: string }) {
-  return (
-    <div>
-      <div className="text-3xl font-black text-purple-400">{value}</div>
-      <div className="mt-2 text-sm text-slate-400 uppercase tracking-widest">
-        {label}
-      </div>
-    </div>
   );
 }

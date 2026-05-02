@@ -9,7 +9,7 @@ import { motion } from 'framer-motion';
 
 export default function Logo({ isSticky = false }: { isSticky?: boolean }) {
   return (
-    <Link href="/" className="group flex items-center gap-2 md:gap-0 w-fit">
+    <Link href="/freelancex" className="group flex items-center gap-2 md:gap-0 w-fit">
       <div className="relative">
         <div
           className={`absolute -inset-1 rounded-xl blur opacity-25 group-hover:opacity-75 transition duration-500

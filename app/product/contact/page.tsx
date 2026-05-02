@@ -112,7 +112,7 @@ const Breadcrumb = () => (
   <nav className="relative z-20 flex items-center justify-center pt-3 sm:pt-0 px-4 pb-8 pointer-events-auto">
     <ol className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/5 bg-white/[0.02] backdrop-blur-md">
       <li className="flex items-center">
-        <Link href="/" className="text-slate-400 hover:text-indigo-400 transition-colors">
+        <Link href="/product/" className="text-slate-400 hover:text-indigo-400 transition-colors">
           <Home size={14} />
         </Link>
       </li>

@@ -238,7 +238,7 @@ export default function Navbar() {
       <nav className="fixed top-0 left-0 right-0 z-[9999] bg-[#020617]/95 backdrop-blur-xl border-b border-white/10 h-20 pointer-events-auto">
         <div className="max-w-[1440px] mx-auto px-6 h-full flex items-center justify-between">
           <div className="flex items-center gap-10 h-full">
-            <Link href="/" className="flex-shrink-0" aria-label="Home">
+            <Link href="/product/" className="flex-shrink-0" aria-label="Home">
               <img src="/logo.png" alt="Career Lab Consulting" 
                 className="object-contain h-10 w-auto"
                 loading="eager"
@@ -246,7 +246,7 @@ export default function Navbar() {
             </Link>
             
             <div className="hidden xl:flex items-center gap-6 h-full">
-              <Link href="/about" className="px-1 text-[10px] font-bold uppercase tracking-[2px] text-slate hover:text-white transition-all">
+              <Link href="/product/about" className="px-1 text-[10px] font-bold uppercase tracking-[2px] text-slate hover:text-white transition-all">
                 About Us
               </Link>
               {['products'].map((menu) => (
@@ -271,10 +271,10 @@ export default function Navbar() {
                   )}
                 </div>
               ))}
-              <Link href="/contact" className="px-1 text-[10px] font-bold uppercase tracking-[2px] text-slate hover:text-white transition-all">
+              <Link href="/product/contact" className="px-1 text-[10px] font-bold uppercase tracking-[2px] text-slate hover:text-white transition-all">
                 Contact Us
               </Link>
-              <Link href="/manee" className="px-1 text-[10px] font-bold uppercase tracking-[2px] text-slate hover:text-white transition-all">
+              <Link href="/product/manee" className="px-1 text-[10px] font-bold uppercase tracking-[2px] text-slate hover:text-white transition-all">
                 Manee Ask
               </Link>
             </div>

@@ -1,137 +1,161 @@
-import Link from "next/link";
-import Image from "next/image";
-import {
-  Megaphone,
-  Brain,
-  BarChart3,
-  Target,
-  Users,
-  ArrowRight,
-  TrendingUp,
-} from "lucide-react";
-import B2CHeader from "@/components/b2c/B2CHeader";
-import Footer from "@/components/b2c/Footer";
+// app/internx/ai-marketing-specialist/page.tsx
+'use client';
 
-export const metadata = {
-  title: "InternX – AI Marketing Specialist Internship | Career Lab",
-  description:
-    "Join the InternX AI Marketing Specialist Internship. Learn AI-powered growth marketing, performance analytics, automation, and go-to-market execution with real-world projects.",
-};
+import React from 'react';
+import Link from 'next/link';
+import { Megaphone, Brain, BarChart3, Target, Users, ArrowRight, TrendingUp } from 'lucide-react';
+import B2CHeader from '@/components/b2c/B2CHeader';
+import Footer from '@/components/b2c/Footer';
+import { usePageContent } from '@/hooks/usePageContent';
+
+// ── Icon map ──────────────────────────────────────────────────────────────────
+const ICON_MAP: Record<string, React.ElementType> = { Megaphone, Brain, BarChart3, Target, Users, ArrowRight, TrendingUp };
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function safeParse<T>(raw: string, fallback: T): T {
+  try { return JSON.parse(raw) as T; } catch { return fallback; }
+}
+
+// ── Types ─────────────────────────────────────────────────────────────────────
+interface StatItem { label: string; value: string }
+interface CardItem { id: number; icon: string; title: string; description: string }
+
+// ── Defaults ──────────────────────────────────────────────────────────────────
+const DEFAULT_STATS = JSON.stringify([
+  { label: 'Weeks', value: '12+' }, { label: 'Campaigns', value: '10+' },
+  { label: 'AI Tools', value: '15+' }, { label: 'Career Support', value: '100%' },
+]);
+const DEFAULT_WHY_CARDS = JSON.stringify([
+  { id: 1, icon: 'Brain',  title: 'AI-First Growth',          description: 'AI transforms how brands acquire, retain, and engage customers.' },
+  { id: 2, icon: 'Target', title: 'Precision Targeting',      description: 'Use data and AI to reach the right audience at the right time.' },
+  { id: 3, icon: 'Users',  title: 'Customer-Centric Strategy',description: 'Design personalized, high-impact customer journeys.' },
+]);
+const DEFAULT_LEARN_ITEMS = JSON.stringify([
+  'AI-driven digital marketing strategies', 'Performance & growth analytics',
+  'Marketing automation & workflows', 'SEO, paid ads & campaign optimization',
+  'Customer segmentation & personalization', 'A/B testing & experimentation',
+  'AI tools for content & creatives', 'Go-to-market planning',
+  'Brand & product positioning', 'Marketing dashboards & reporting',
+]);
+const DEFAULT_EXP_CARDS = JSON.stringify([
+  { id: 1, icon: 'Megaphone', title: 'Real Campaigns',   description: 'Work on live AI-powered marketing campaigns and funnels.' },
+  { id: 2, icon: 'BarChart3', title: 'Growth Metrics',   description: 'Measure ROI, CAC, LTV, and performance metrics.' },
+  { id: 3, icon: 'ArrowRight',title: 'Career Readiness', description: 'Portfolio projects, interview prep, and placement guidance.' },
+]);
+
+// ── Subcomponents ─────────────────────────────────────────────────────────────
+function Feature({ icon: Icon, title, desc, accent }: { icon: React.ElementType; title: string; desc: string; accent: string }) {
+  return (
+    <div
+      className="p-8 rounded-2xl border border-white/10 bg-white/5 transition cursor-default"
+      onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.borderColor = `${accent}4d`; (e.currentTarget as HTMLDivElement).style.background = `${accent}0d`; }}
+      onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(255,255,255,0.1)'; (e.currentTarget as HTMLDivElement).style.background = 'rgba(255,255,255,0.05)'; }}
+    >
+      <Icon className="w-7 h-7 mb-5" style={{ color: accent }} />
+      <h3 className="font-bold text-lg mb-3">{title}</h3>
+      <p className="text-sm text-slate-400 leading-relaxed">{desc}</p>
+    </div>
+  );
+}
 
 export default function InternXAIMarketingSpecialistPage() {
+  const { get } = usePageContent('internx-ai-marketing-specialist');
+
+  const accent          = get('hero', 'accent_color',        '#ec4899');
+  const badgeText       = get('hero', 'badge_text',          'InternX Program');
+  const headline        = get('hero', 'headline',            'AI Marketing Specialist Internship');
+  const heroBody        = get('hero', 'body_text',           'Learn how to use AI to drive growth, optimize campaigns, and scale digital products.');
+  const btnPrimaryLabel = get('hero', 'btn_primary_label',   'Apply Now');
+  const btnPrimaryHref  = get('hero', 'btn_primary_href',    '/b2c/apply');
+  const btnSecLabel     = get('hero', 'btn_secondary_label', 'Find My Program');
+  const btnSecHref      = get('hero', 'btn_secondary_href',  '/b2c/program-finder');
+  const heroImage       = get('hero', 'hero_image_url',      'https://img.freepik.com/free-photo/businessman-working-futuristic-office_23-2151003702.jpg');
+
+  const stats      = safeParse<StatItem[]>(get('stats',      'items_json',  DEFAULT_STATS),       []);
+  const whyCards   = safeParse<CardItem[]>(get('why',        'cards_json',  DEFAULT_WHY_CARDS),   []);
+  const learnItems = safeParse<string[]>(get('learn',        'items_json',  DEFAULT_LEARN_ITEMS), []);
+  const expCards   = safeParse<CardItem[]>(get('experience', 'cards_json',  DEFAULT_EXP_CARDS),   []);
+
+  const whyHeadline  = get('why',        'headline', 'Why AI Marketing?');
+  const learnHeadline= get('learn',      'headline', 'What You Will Learn');
+  const expHeadline  = get('experience', 'headline', 'Internship Experience');
+
+  const ctaHeadline  = get('cta', 'headline',            'Become an AI-Powered Marketing Leader');
+  const ctaBody      = get('cta', 'body_text',           'Build future-ready marketing skills powered by AI and data.');
+  const ctaPrimLabel = get('cta', 'btn_primary_label',   'Apply Now');
+  const ctaPrimHref  = get('cta', 'btn_primary_href',    '/b2c/apply');
+  const ctaSecLabel  = get('cta', 'btn_secondary_label', 'Talk to Advisor');
+  const ctaSecHref   = get('cta', 'btn_secondary_href',  '/b2c/contact');
+
   return (
     <main className="bg-[#0a0a0a] text-white">
       <B2CHeader />
 
-      {/* HERO */}
+      {/* ── HERO ──────────────────────────────────────────────────────────── */}
       <section className="relative pt-36 pb-28 overflow-hidden border-b border-white/10">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(236,72,153,0.18),transparent_60%)]" />
-
+        <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(circle at top, ${accent}2e, transparent 60%)` }} />
         <div className="relative max-w-[1200px] mx-auto px-6 grid md:grid-cols-2 gap-14 items-center">
-          
-          {/* LEFT */}
           <div>
-            <span className="inline-flex items-center gap-2 mb-5 px-4 py-1 rounded-full border border-pink-500/30 bg-pink-500/10 text-xs font-black uppercase tracking-widest text-pink-400">
-              InternX Program
+            <span
+              className="inline-flex items-center gap-2 mb-5 px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest"
+              style={{ border: `1px solid ${accent}4d`, background: `${accent}1a`, color: accent }}
+            >
+              {badgeText}
             </span>
-
-            <h1 className="text-2xl md:text-4xl font-black leading-tight">
-              AI Marketing Specialist Internship
-            </h1>
-
-            <p className="mt-6 text-sm text-slate-400 max-w-xl">
-              Learn how to use AI to drive growth, optimize campaigns, and scale
-              digital products. Master data-driven marketing, automation, and
-              modern go-to-market strategies.
-            </p>
-
+            <h1 className="text-2xl md:text-4xl font-black leading-tight">{headline}</h1>
+            <p className="mt-6 text-sm text-slate-400 max-w-xl">{heroBody}</p>
             <div className="mt-12 flex flex-wrap gap-4">
-              <Link
-                href="/b2c/apply"
-                className="bg-pink-600 hover:bg-pink-500 px-10 py-4 rounded-xl font-black text-xs uppercase tracking-widest flex items-center gap-2 shadow-xl shadow-pink-600/30"
-              >
-                Apply Now <ArrowRight className="w-4 h-4" />
+              <Link href={btnPrimaryHref}
+                className="px-10 py-4 rounded-xl font-black text-xs uppercase tracking-widest flex items-center gap-2 shadow-xl"
+                style={{ background: accent, boxShadow: `0 20px 30px ${accent}4d` }}>
+                {btnPrimaryLabel} <ArrowRight className="w-4 h-4" />
               </Link>
-
-              <Link
-                href="/b2c/program-finder"
-                className="border border-white/20 hover:border-pink-500/50 px-10 py-4 rounded-xl font-bold text-xs uppercase tracking-widest"
-              >
-                Find My Program
+              <Link href={btnSecHref}
+                className="border border-white/20 px-10 py-4 rounded-xl font-bold text-xs uppercase tracking-widest transition-all"
+                onMouseEnter={e => (e.currentTarget.style.borderColor = `${accent}80`)}
+                onMouseLeave={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)')}>
+                {btnSecLabel}
               </Link>
             </div>
           </div>
-
           <div className="relative hidden md:flex justify-end">
-            <img
-              src="https://img.freepik.com/free-photo/businessman-working-futuristic-office_23-2151003702.jpg"
-              alt="AI Marketing Specialist Illustration"
-              className="drop-shadow-2xl"
-            />
+            <img src={heroImage} alt={headline} className="drop-shadow-2xl" />
           </div>
         </div>
       </section>
 
+      {/* ── STATS ─────────────────────────────────────────────────────────── */}
       <section className="py-16 border-b border-white/10 bg-[#0d0d0d]">
         <div className="max-w-[1200px] mx-auto px-6 grid md:grid-cols-4 gap-8 text-center">
-          <Stat label="Weeks" value="12+" />
-          <Stat label="Campaigns" value="10+" />
-          <Stat label="AI Tools" value="15+" />
-          <Stat label="Career Support" value="100%" />
+          {stats.map(s => (
+            <div key={s.label}>
+              <div className="text-3xl font-black" style={{ color: accent }}>{s.value}</div>
+              <div className="mt-2 text-sm text-slate-400 uppercase tracking-widest">{s.label}</div>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* WHY AI MARKETING */}
+      {/* ── WHY ───────────────────────────────────────────────────────────── */}
       <section className="py-28 border-b border-white/10">
         <div className="max-w-[1200px] mx-auto px-6">
-          <h2 className="text-3xl md:text-4xl font-black mb-16">
-            Why AI Marketing?
-          </h2>
-
+          <h2 className="text-3xl md:text-4xl font-black mb-16">{whyHeadline}</h2>
           <div className="grid md:grid-cols-3 gap-8">
-            <Feature
-              icon={Brain}
-              title="AI-First Growth"
-              desc="AI transforms how brands acquire, retain, and engage customers."
-            />
-            <Feature
-              icon={Target}
-              title="Precision Targeting"
-              desc="Use data and AI to reach the right audience at the right time."
-            />
-            <Feature
-              icon={Users}
-              title="Customer-Centric Strategy"
-              desc="Design personalized, high-impact customer journeys."
-            />
+            {whyCards.map(c => { const Icon = ICON_MAP[c.icon] ?? ArrowRight; return <Feature key={c.id} icon={Icon} title={c.title} desc={c.description} accent={accent} />; })}
           </div>
         </div>
       </section>
 
-      {/* WHAT YOU WILL LEARN */}
+      {/* ── LEARN ─────────────────────────────────────────────────────────── */}
       <section className="py-28 border-b border-white/10 bg-[#0d0d0d]">
         <div className="max-w-[1200px] mx-auto px-6">
-          <h2 className="text-3xl md:text-4xl font-black mb-16">
-            What You Will Learn
-          </h2>
-
+          <h2 className="text-3xl md:text-4xl font-black mb-16">{learnHeadline}</h2>
           <div className="grid md:grid-cols-2 gap-6">
-            {[
-              "AI-driven digital marketing strategies",
-              "Performance & growth analytics",
-              "Marketing automation & workflows",
-              "SEO, paid ads & campaign optimization",
-              "Customer segmentation & personalization",
-              "A/B testing & experimentation",
-              "AI tools for content & creatives",
-              "Go-to-market planning",
-              "Brand & product positioning",
-              "Marketing dashboards & reporting",
-            ].map((item) => (
-              <div
-                key={item}
-                className="p-5 rounded-xl border border-white/10 bg-white/5 hover:bg-pink-500/5 hover:border-pink-500/30 transition"
-              >
+            {learnItems.map(item => (
+              <div key={item}
+                className="p-5 rounded-xl border border-white/10 bg-white/5 transition cursor-default"
+                onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.background = `${accent}0d`; (e.currentTarget as HTMLDivElement).style.borderColor = `${accent}4d`; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.background = 'rgba(255,255,255,0.05)'; (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(255,255,255,0.1)'; }}>
                 {item}
               </div>
             ))}
@@ -139,110 +163,31 @@ export default function InternXAIMarketingSpecialistPage() {
         </div>
       </section>
 
-      {/* INTERNSHIP EXPERIENCE */}
+      {/* ── EXPERIENCE ────────────────────────────────────────────────────── */}
       <section className="py-28 border-b border-white/10">
         <div className="max-w-[1200px] mx-auto px-6">
-          <h2 className="text-3xl md:text-4xl font-black mb-16">
-            Internship Experience
-          </h2>
-
+          <h2 className="text-3xl md:text-4xl font-black mb-16">{expHeadline}</h2>
           <div className="grid md:grid-cols-3 gap-8">
-            <Feature
-              icon={Megaphone}
-              title="Real Campaigns"
-              desc="Work on live AI-powered marketing campaigns and funnels."
-            />
-            <Feature
-              icon={BarChart3}
-              title="Growth Metrics"
-              desc="Measure ROI, CAC, LTV, and performance metrics."
-            />
-            <Feature
-              icon={ArrowRight}
-              title="Career Readiness"
-              desc="Portfolio projects, interview prep, and placement guidance."
-            />
+            {expCards.map(c => { const Icon = ICON_MAP[c.icon] ?? ArrowRight; return <Feature key={c.id} icon={Icon} title={c.title} desc={c.description} accent={accent} />; })}
           </div>
         </div>
       </section>
 
-      {/* FINAL CTA */}
+      {/* ── FINAL CTA ─────────────────────────────────────────────────────── */}
       <section className="relative py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-tr from-pink-600/20 via-transparent to-transparent" />
-
+        <div className="absolute inset-0 pointer-events-none" style={{ background: `linear-gradient(to top right, ${accent}33, transparent)` }} />
         <div className="relative max-w-[900px] mx-auto px-6 text-center">
-          <h2 className="text-4xl md:text-5xl font-black">
-            Become an AI-Powered Marketing Leader
-          </h2>
-
-          <p className="mt-6 text-slate-400">
-            Build future-ready marketing skills powered by AI and data.
-          </p>
-
+          <h2 className="text-4xl md:text-5xl font-black">{ctaHeadline}</h2>
+          <p className="mt-6 text-slate-400">{ctaBody}</p>
           <div className="mt-14 flex justify-center gap-4">
-            <Link
-              href="/b2c/apply"
-              className="bg-pink-600 hover:bg-pink-500 px-14 py-5 rounded-xl font-black text-xs uppercase tracking-widest shadow-xl shadow-pink-600/40"
-            >
-              Apply Now
-            </Link>
-            <Link
-              href="/b2c/contact"
-              className="border border-white/20 px-14 py-5 rounded-xl font-bold text-xs uppercase tracking-widest"
-            >
-              Talk to Advisor
-            </Link>
+            <Link href={ctaPrimHref} className="px-14 py-5 rounded-xl font-black text-xs uppercase tracking-widest shadow-xl"
+              style={{ background: accent, boxShadow: `0 20px 30px ${accent}66` }}>{ctaPrimLabel}</Link>
+            <Link href={ctaSecHref} className="border border-white/20 px-14 py-5 rounded-xl font-bold text-xs uppercase tracking-widest">{ctaSecLabel}</Link>
           </div>
         </div>
       </section>
 
       <Footer />
     </main>
-  );
-}
-
-/* ---------- COMPONENTS ---------- */
-
-function Chip({
-  icon,
-  label,
-}: {
-  icon: React.ReactNode;
-  label: string;
-}) {
-  return (
-    <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-sm text-slate-300">
-      <span className="text-pink-400">{icon}</span>
-      <span>{label}</span>
-    </div>
-  );
-}
-
-function Feature({
-  icon: Icon,
-  title,
-  desc,
-}: {
-  icon: any;
-  title: string;
-  desc: string;
-}) {
-  return (
-    <div className="p-8 rounded-2xl border border-white/10 bg-white/5 hover:border-pink-500/30 hover:bg-pink-500/5 transition">
-      <Icon className="w-7 h-7 text-pink-400 mb-5" />
-      <h3 className="font-bold text-lg mb-3">{title}</h3>
-      <p className="text-sm text-slate-400 leading-relaxed">{desc}</p>
-    </div>
-  );
-}
-
-function Stat({ label, value }: { label: string; value: string }) {
-  return (
-    <div>
-      <div className="text-3xl font-black text-pink-400">{value}</div>
-      <div className="mt-2 text-sm text-slate-400 uppercase tracking-widest">
-        {label}
-      </div>
-    </div>
   );
 }
