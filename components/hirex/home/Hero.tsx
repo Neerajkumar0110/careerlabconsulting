@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight, ShieldCheck, Zap, Search, MapPin } from 'lucide-react';
 import { usePageContent } from '@/hooks/usePageContent';
 import { useRouter } from 'next/navigation';
+import { SmartSearchBox } from '../SmartSearchBox';
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 interface Partner { name: string; logo: string }
@@ -186,37 +187,13 @@ export default function Hero() {
         </p>
 
         {/* Search bar */}
-        <div className="max-w-4xl mx-auto mb-10 px-2">
-          <div className="bg-white/5 backdrop-blur-xl border border-white/10 p-2 md:p-3 rounded-3xl md:rounded-full flex flex-col md:flex-row items-center gap-3 shadow-2xl">
-            <div className="flex items-center gap-3 flex-1 w-full px-4 border-b md:border-b-0 md:border-r border-white/10 pb-3 md:pb-0">
-              <Search className="shrink-0" size={20} style={{ color: accentColor1 }} />
-              <input
-                type="text"
-                placeholder={searchPlaceholder}
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                className="bg-transparent border-none outline-none text-white w-full placeholder:text-slate-500 text-sm md:text-base py-2"
-              />
-            </div>
-            <div className="flex items-center gap-3 flex-1 w-full px-4">
-              <MapPin className="shrink-0" size={20} style={{ color: accentColor2 }} />
-              <input
-                type="text"
-                placeholder={locationPlaceholder}
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                className="bg-transparent border-none outline-none text-white w-full placeholder:text-slate-500 text-sm md:text-base py-2"
-              />
-            </div>
-            <button
-              onClick={handleSearch}
-              className="w-full md:w-auto text-white font-black px-8 py-4 rounded-2xl md:rounded-full transition-all text-sm uppercase tracking-wider flex items-center justify-center gap-2"
-              style={{ background: accentColor1 }}
-            >
-              Find Jobs <ArrowRight size={16} />
-            </button>
-          </div>
-        </div>
+        <SmartSearchBox
+          query={query}
+          location={location}
+          onQueryChange={setQuery}
+          onLocationChange={setLocation}
+          onSearch={handleSearch}
+        />
 
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row justify-center gap-5 mb-16">

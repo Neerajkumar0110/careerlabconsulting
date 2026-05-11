@@ -12,6 +12,7 @@ import {
   Star, Zap, TrendingUp, ArrowRight, LayoutDashboard, Menu,
 } from 'lucide-react';
 import Logo from '@/components/freelancex/logo/logo';
+import { SmartGigSearchBox } from '@/components/freelancex/SmartGigSearchBox';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://clc-products-real-backend.vercel.app';
 
@@ -575,7 +576,8 @@ function BrowseGigsPage() {
   const [authLoading, setAuthLoading] = useState(true);
   const [appliedGigIds, setAppliedGigIds] = useState<Set<string>>(new Set());
   const [query, setQuery] = useState('');
-  const [search, setSearch] = useState('');
+  // const [search, setSearch] = useState('');
+  const [searchedQuery,   setSearchedQuery]   = useState('');
   const [remoteOnly, setRemoteOnly] = useState(false);
   const [budgetMin, setBudgetMin] = useState('');
   const [budgetMax, setBudgetMax] = useState('');
@@ -604,29 +606,68 @@ function BrowseGigsPage() {
       .then(r => r.ok ? r.json() : []).then((p: any[]) => setAppliedGigIds(new Set(p.map((x: any) => x.gigId)))).catch(() => {});
   }, [authUser]);
 
+  // useEffect(() => {
+  //   const qParam = searchParams.get('q');
+  //   if (qParam) {
+  //     setQuery(qParam);
+  //     setSearch(qParam); // if you're using separate UI state
+  //   }
+  //   setIsInitialized(true);
+  // }, [searchParams]);
+
   useEffect(() => {
     const qParam = searchParams.get('q');
     if (qParam) {
       setQuery(qParam);
-      setSearch(qParam); // if you're using separate UI state
+      setSearchedQuery(qParam);
     }
     setIsInitialized(true);
   }, [searchParams]);
 
+  // const fetchGigs = useCallback(async (cursor?: string) => {
+  //   const params = new URLSearchParams();
+    
+  //   // Fix: query and skillFilter are separate — don't let skillFilter overwrite query
+  //   if (query) params.set('q', query);
+  //   if (skillFilter) params.set('q', skillFilter); // skillFilter takes priority when set
+  //   if (query && skillFilter) params.set('q', `${query} ${skillFilter}`); // combine both
+    
+  //   if (remoteOnly) params.set('remote', 'true');
+  //   if (budgetMin) params.set('budgetMin', budgetMin);
+  //   if (budgetMax) params.set('budgetMax', budgetMax);
+  //   if (cursor) params.set('cursor', cursor);
+  //   params.set('limit', '12');
+    
+  //   try {
+  //     const res = await fetch(`${API_BASE}/api/freelancex/gigs?${params}`, { credentials: 'include' });
+  //     const data = await res.json();
+  //     if (cursor) {
+  //       setGigs(prev => {
+  //         const ids = new Set(prev.map(g => g.id));
+  //         return [...prev, ...data.gigs.filter((g: Gig) => !ids.has(g.id))];
+  //       });
+  //     } else {
+  //       setGigs(data.gigs); // fresh results on new search — don't append
+  //     }
+  //     setNextCursor(data.nextCursor);
+  //     setHasMore(data.hasMore);
+  //   } catch {}
+  // }, [query, remoteOnly, budgetMin, budgetMax, skillFilter]);
+
   const fetchGigs = useCallback(async (cursor?: string) => {
     const params = new URLSearchParams();
-    
-    // Fix: query and skillFilter are separate — don't let skillFilter overwrite query
-    if (query) params.set('q', query);
-    if (skillFilter) params.set('q', skillFilter); // skillFilter takes priority when set
-    if (query && skillFilter) params.set('q', `${query} ${skillFilter}`); // combine both
-    
-    if (remoteOnly) params.set('remote', 'true');
-    if (budgetMin) params.set('budgetMin', budgetMin);
-    if (budgetMax) params.set('budgetMax', budgetMax);
-    if (cursor) params.set('cursor', cursor);
+  
+    // Use the committed search term only (avoids mid-keystroke refetches)
+    if (searchedQuery) params.set('q', searchedQuery);
+    if (skillFilter)   params.set('q', skillFilter);                         // skill pill takes priority
+    if (searchedQuery && skillFilter) params.set('q', `${searchedQuery} ${skillFilter}`);
+  
+    if (remoteOnly)  params.set('remote', 'true');
+    if (budgetMin)   params.set('budgetMin', budgetMin);
+    if (budgetMax)   params.set('budgetMax', budgetMax);
+    if (cursor)      params.set('cursor', cursor);
     params.set('limit', '12');
-    
+  
     try {
       const res = await fetch(`${API_BASE}/api/freelancex/gigs?${params}`, { credentials: 'include' });
       const data = await res.json();
@@ -636,12 +677,12 @@ function BrowseGigsPage() {
           return [...prev, ...data.gigs.filter((g: Gig) => !ids.has(g.id))];
         });
       } else {
-        setGigs(data.gigs); // fresh results on new search — don't append
+        setGigs(data.gigs);
       }
       setNextCursor(data.nextCursor);
       setHasMore(data.hasMore);
     } catch {}
-  }, [query, remoteOnly, budgetMin, budgetMax, skillFilter]);
+  }, [searchedQuery, remoteOnly, budgetMin, budgetMax, skillFilter]);  // ← searchedQuery, not query
 
   const loadMore = useCallback(async () => {
     if (!hasMore || !nextCursor || isFetchingRef.current) return;
@@ -664,6 +705,15 @@ function BrowseGigsPage() {
 
     fetchGigs().finally(() => setLoading(false));
   }, [fetchGigs, isInitialized]);
+
+  const handleSearch = (overrideQuery?: string) => {
+    const q = overrideQuery !== undefined ? overrideQuery : query;
+    const p = new URLSearchParams();
+    if (q.trim()) p.set('q', q.trim());
+    router.push(`/freelancex/gigs?${p.toString()}`, { scroll: false });
+    setSearchedQuery(q);
+    setNextCursor(null);
+  };
 
   const handleSelectGig = async (gig: Gig) => {
     setSelectedGig(gig as GigDetail);
@@ -691,17 +741,28 @@ function BrowseGigsPage() {
     setAuthUser(null); setLogoutLoading(false);
   };
 
+  // const clearFilters = () => {
+  //   setSearch('');
+  //   setQuery('');
+  //   setBudgetMin('');
+  //   setBudgetMax('');
+  //   setRemoteOnly(false);
+  //   setSkillFilter('');
+
+  // router.replace('/freelancex/gigs');
+  // };
+
   const clearFilters = () => {
-    setSearch('');
     setQuery('');
+    setSearchedQuery('');
     setBudgetMin('');
     setBudgetMax('');
     setRemoteOnly(false);
     setSkillFilter('');
-
-  router.replace('/freelancex/gigs');
+    router.replace('/freelancex/gigs');
   };
-  const hasActiveFilters = search || budgetMin || budgetMax || remoteOnly || skillFilter;
+
+  const hasActiveFilters = query || budgetMin || budgetMax || remoteOnly || skillFilter;
 
   return (
     <main className="min-h-screen bg-[#020617] text-white font-sans selection:bg-indigo-500/30">
@@ -716,7 +777,7 @@ function BrowseGigsPage() {
       <Navbar authUser={authUser} authLoading={authLoading} onLogout={handleLogout} logoutLoading={logoutLoading} />
 
       {/* ── HERO SECTION ── */}
-      <section className="relative z-10 pt-28 sm:pt-36 pb-16 sm:pb-20 overflow-hidden">
+      <section className="relative z-20 pt-28 sm:pt-36 pb-16 sm:pb-20">
         {/* Hero-specific glow layers */}
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[600px] bg-gradient-radial from-indigo-600/10 via-blue-600/5 to-transparent blur-3xl" />
@@ -862,32 +923,18 @@ function BrowseGigsPage() {
             </div>
           </div>
 
-          {/* ── Search bar ── */}
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55, duration: 0.55 }}
+          {/* ── Freelancex Search bar ── */}
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55, duration: 0.55 } }
             className="mt-10 max-w-3xl">
-            <div className="flex items-center gap-2 bg-white/[0.05] border border-white/12 rounded-2xl p-2 shadow-2xl backdrop-blur-sm focus-within:border-indigo-500/50 focus-within:bg-white/[0.07] transition-all">
-              <Search className="w-4 h-4 text-slate-500 ml-2 shrink-0" />
-              <input type="text" placeholder="Search by title, skill, or keyword..."
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-                onKeyDown={e => { if (e.key === 'Enter') { setQuery(search); setSkillFilter(''); } } }
-                className="flex-1 bg-transparent text-sm text-white placeholder:text-slate-600 outline-none py-2 min-w-0" />
-              {search && (
-                <button onClick={() => { setSearch(''); setQuery(''); }} className="p-1.5 hover:bg-white/5 rounded-lg transition-all">
-                  <X className="w-3.5 h-3.5 text-slate-500" />
-                </button>
-              )}
-              <button onClick={() => { setQuery(search); setSkillFilter(''); }}
-                className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 rounded-xl text-xs font-black text-white uppercase tracking-widest transition-all shrink-0 shadow-lg shadow-indigo-600/25">
-                Search
-              </button>
-              <motion.button onClick={() => setShowFilters(!showFilters)} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                className={`flex items-center gap-1.5 px-3 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all shrink-0 ${showFilters || hasActiveFilters ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'bg-white/5 border border-white/10 text-slate-400 hover:text-white'}`}>
-                <SlidersHorizontal className="w-3.5 h-3.5" />
-                <span className="hidden sm:block">Filters</span>
-                {hasActiveFilters && <span className="w-1.5 h-1.5 rounded-full bg-white" />}
-              </motion.button>
-            </div>
+            <SmartGigSearchBox
+              query={query}
+              onQueryChange={setQuery}
+              onSearch={handleSearch}
+              onQueryClear={() => {
+                setSearchedQuery('');
+                handleSearch('');
+              }}
+            />
 
             {/* Filters panel */}
             <AnimatePresence>

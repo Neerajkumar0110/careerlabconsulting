@@ -8,6 +8,7 @@ import { usePageContent } from '@/hooks/usePageContent';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useMemo } from 'react';
+import { SmartGigSearchBox } from '../SmartGigSearchBox';
 
 function safeParse<T>(raw: string, fallback: T): T {
   try { return JSON.parse(raw) as T; } catch { return fallback; }
@@ -244,7 +245,7 @@ export default function Hero() {
         <p className="text-[14px] md:text-[17px] text-slate-400 max-w-3xl mx-auto mb-10 leading-relaxed font-medium"
           dangerouslySetInnerHTML={{ __html: subtext }} />
 
-        <div className="max-w-3xl mx-auto mb-10 relative z-20">
+        {/* <div className="max-w-3xl mx-auto mb-10 relative z-20">
   <div className="flex flex-col sm:flex-row items-center gap-2 bg-white/[0.03] border border-white/10 rounded-[1.5rem] p-2 backdrop-blur-md transition-all hover:border-white/20 focus-within:border-blue-500/50 shadow-2xl">
 
     <div className="pl-4 hidden sm:block text-slate-400">
@@ -270,7 +271,16 @@ export default function Hero() {
     </button>
 
   </div>
-        </div>
+        </div> */}
+
+        <SmartGigSearchBox
+          query={query}
+          onQueryChange={setQuery}
+          onSearch={handleSearch}
+          onQueryClear={() => {
+            setQuery('');
+          }}
+        />
 
         <div className="flex flex-col sm:flex-row justify-center gap-5 mb-10 relative z-10">
           <button className="flex items-center justify-center gap-3 text-white px-10 py-5 rounded-[1.5rem] text-sm font-black uppercase tracking-widest transition-all shadow-xl active:scale-95"

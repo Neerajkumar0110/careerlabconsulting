@@ -13,6 +13,7 @@ import {
   Flame, Trophy, Rocket, Target,
 } from 'lucide-react';
 import Logo from '@/components/hirex/logo';
+import { SmartSearchBox } from '@/components/hirex/SmartSearchBox';
 
 const API_BASE = process.env.NEXT_PUBLIC_HIREX_API_URL || 'https://clc-products-real-backend.vercel.app';
 
@@ -510,8 +511,14 @@ const HERO_SKILLS = ['React', 'Node.js', 'Python', 'Golang', 'TypeScript', 'AWS'
 function HirexSearchInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  // const [query, setQuery] = useState(searchParams.get('q') || '');
+  // const [location, setLocation] = useState(searchParams.get('location') || '');
+  // const [filters, setFilters] = useState<Filters>({ isRemote: '', salaryMin: '', salaryMax: '' });
+  // const [activeFilters, setActiveFilters] = useState<Filters>({ isRemote: '', salaryMin: '', salaryMax: '' });
   const [query, setQuery] = useState(searchParams.get('q') || '');
   const [location, setLocation] = useState(searchParams.get('location') || '');
+  const [searchedQuery, setSearchedQuery] = useState(searchParams.get('q') || '');
+  const [searchedLocation, setSearchedLocation] = useState(searchParams.get('location') || '');
   const [filters, setFilters] = useState<Filters>({ isRemote: '', salaryMin: '', salaryMax: '' });
   const [activeFilters, setActiveFilters] = useState<Filters>({ isRemote: '', salaryMin: '', salaryMax: '' });
   const [view, setView] = useState<'grid' | 'list'>('list');
@@ -526,23 +533,48 @@ function HirexSearchInner() {
   const sentinelRef = useRef<HTMLDivElement>(null);
   const loadingMore = useRef(false);
 
-  const buildParams = useCallback((cursor?: string) => {
+  // const buildParams = useCallback((cursor?: string) => {
+  //   const p = new URLSearchParams();
+  //   if (query.trim()) p.set('q', query.trim());
+  //   if (location.trim()) p.set('location', location.trim());
+  //   if (activeFilters.isRemote) p.set('remote', activeFilters.isRemote);
+  //   if (activeFilters.salaryMin) p.set('salaryMin', activeFilters.salaryMin);
+  //   if (activeFilters.salaryMax) p.set('salaryMax', activeFilters.salaryMax);
+  //   if (cursor) p.set('cursor', cursor);
+  //   return p.toString();
+  // }, [query, location, activeFilters]);
+
+  const buildParams = useCallback((
+    cursor?: string,
+    overrideQuery?: string,
+    overrideLocation?: string,
+    overrideFilters?: Filters
+  ) => {
     const p = new URLSearchParams();
-    if (query.trim()) p.set('q', query.trim());
-    if (location.trim()) p.set('location', location.trim());
-    if (activeFilters.isRemote) p.set('remote', activeFilters.isRemote);
-    if (activeFilters.salaryMin) p.set('salaryMin', activeFilters.salaryMin);
-    if (activeFilters.salaryMax) p.set('salaryMax', activeFilters.salaryMax);
+    const q = overrideQuery !== undefined ? overrideQuery : searchedQuery;
+    const loc = overrideLocation !== undefined ? overrideLocation : searchedLocation;
+    const f = overrideFilters ?? activeFilters;
+    if (q.trim()) p.set('q', q.trim());
+    if (loc.trim()) p.set('location', loc.trim());
+    if (f.isRemote) p.set('remote', f.isRemote);
+    if (f.salaryMin) p.set('salaryMin', f.salaryMin);
+    if (f.salaryMax) p.set('salaryMax', f.salaryMax);
     if (cursor) p.set('cursor', cursor);
     return p.toString();
-  }, [query, location, activeFilters]);
+  }, [searchedQuery, searchedLocation, activeFilters]);
 
-  const fetchJobs = useCallback(async (reset = true) => {
+  const fetchJobs = useCallback(async (
+    reset = true,
+    overrideQuery?: string,
+    overrideLocation?: string,
+    overrideFilters?: Filters
+  ) => {
     if (loading) return;
     setLoading(true); setError('');
     try {
       const cursor = reset ? undefined : (nextCursor ?? undefined);
-      const res = await fetch(`${API_BASE}/api/hirex/jobs?${buildParams(cursor)}`);
+      const params = buildParams(cursor, overrideQuery, overrideLocation, overrideFilters);
+      const res = await fetch(`${API_BASE}/api/hirex/jobs?${params}`);
       if (!res.ok) throw new Error('Failed to load jobs.');
       const data = await res.json();
       if (reset) setJobs(data.jobs); else setJobs(prev => [...prev, ...data.jobs]);
@@ -550,6 +582,19 @@ function HirexSearchInner() {
     } catch (e: any) { setError(e.message); }
     finally { setLoading(false); setInitialLoad(false); loadingMore.current = false; }
   }, [buildParams, loading, nextCursor]);
+  // const fetchJobs = useCallback(async (reset = true) => {
+  //   if (loading) return;
+  //   setLoading(true); setError('');
+  //   try {
+  //     const cursor = reset ? undefined : (nextCursor ?? undefined);
+  //     const res = await fetch(`${API_BASE}/api/hirex/jobs?${buildParams(cursor)}`);
+  //     if (!res.ok) throw new Error('Failed to load jobs.');
+  //     const data = await res.json();
+  //     if (reset) setJobs(data.jobs); else setJobs(prev => [...prev, ...data.jobs]);
+  //     setNextCursor(data.nextCursor); setHasMore(data.hasMore);
+  //   } catch (e: any) { setError(e.message); }
+  //   finally { setLoading(false); setInitialLoad(false); loadingMore.current = false; }
+  // }, [buildParams, loading, nextCursor]);
 
   useEffect(() => {
     fetch(`${API_BASE}/api/hirex/jobs/companies`).then(r => r.ok ? r.json() : null).then(d => d && setCompanies(d.companies)).catch(() => {});
@@ -564,16 +609,57 @@ function HirexSearchInner() {
     obs.observe(el); return () => obs.disconnect();
   }, [hasMore, loading, fetchJobs]);
 
-  const handleSearch = () => {
+  const isFirstRender = useRef(true);
+  useEffect(() => {
+    if (isFirstRender.current) { isFirstRender.current = false; return; }
+    setNextCursor(null);
+    fetchJobs(true, searchedQuery, searchedLocation, activeFilters);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchedQuery, searchedLocation, activeFilters]);
+
+  // const handleSearch = () => {
+  //   const p = new URLSearchParams();
+  //   if (query.trim()) p.set('q', query.trim());
+  //   if (location.trim()) p.set('location', location.trim());
+  //   router.push(`/hirex/jobs?${p.toString()}`, { scroll: false });
+  //   setNextCursor(null); fetchJobs(true);
+  // };
+
+  const handleSearch = (overrideQuery?: string, overrideLocation?: string) => {
+    const q = overrideQuery !== undefined ? overrideQuery : query;
+    const loc = overrideLocation !== undefined ? overrideLocation : location;
     const p = new URLSearchParams();
-    if (query.trim()) p.set('q', query.trim());
-    if (location.trim()) p.set('location', location.trim());
+    if (q.trim()) p.set('q', q.trim());
+    if (loc.trim()) p.set('location', loc.trim());
     router.push(`/hirex/jobs?${p.toString()}`, { scroll: false });
-    setNextCursor(null); fetchJobs(true);
+    setSearchedQuery(q);
+    setSearchedLocation(loc);
+    setNextCursor(null);
   };
 
-  const handleApplyFilters = () => { setActiveFilters(filters); setFiltersOpen(false); setNextCursor(null); };
-  const handleResetFilters = () => { const e: Filters = { isRemote: '', salaryMin: '', salaryMax: '' }; setFilters(e); setActiveFilters(e); };
+  const handleApplyFilters = () => {
+  setActiveFilters(filters);
+  setFiltersOpen(false);
+  setNextCursor(null);
+};
+
+const handleResetFilters = () => {
+  const e: Filters = { isRemote: '', salaryMin: '', salaryMax: '' };
+  setFilters(e);
+  setActiveFilters(e);
+};
+
+const handleClearAll = () => {
+  const emptyFilters: Filters = { isRemote: '', salaryMin: '', salaryMax: '' };
+  setQuery('');
+  setLocation('');
+  setSearchedQuery('');
+  setSearchedLocation('');
+  setFilters(emptyFilters);
+  setActiveFilters(emptyFilters);
+  setNextCursor(null);
+  router.push('/hirex/jobs', { scroll: false });
+};
   const activeFilterCount = [activeFilters.isRemote, activeFilters.salaryMin, activeFilters.salaryMax].filter(Boolean).length;
 
   return (
@@ -649,50 +735,21 @@ function HirexSearchInner() {
           </motion.div>
 
           {/* Search box — hero version */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="w-full max-w-3xl mx-auto mb-6"
-          >
-            <div className="relative p-1.5 bg-white/[0.05] backdrop-blur-xl border border-white/[0.12] rounded-2xl shadow-2xl shadow-black/40">
-              {/* Inner glow */}
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-500/[0.06] to-cyan-500/[0.03] pointer-events-none" />
-              <div className="relative flex flex-col sm:flex-row gap-0">
-                <div className="flex items-center gap-3 flex-1 px-4 border-b sm:border-b-0 sm:border-r border-white/[0.08]">
-                  <Search className="w-4 h-4 text-blue-400 shrink-0" />
-                  <input
-                    type="text"
-                    placeholder="Job title, skill, or company…"
-                    value={query}
-                    onChange={e => setQuery(e.target.value)}
-                    onKeyDown={e => e.key === 'Enter' && handleSearch()}
-                    className="bg-transparent outline-none text-white w-full placeholder:text-slate-600 text-sm py-3.5 font-medium"
-                  />
-                  {query && <button onClick={() => {setQuery(''); handleSearch();}} className="text-slate-600 hover:text-slate-400"><X className="w-3.5 h-3.5" /></button>}
-                </div>
-                <div className="flex items-center gap-3 flex-1 px-4">
-                  <MapPin className="w-4 h-4 text-cyan-400 shrink-0" />
-                  <input
-                    type="text"
-                    placeholder="City, state, or 'Remote'…"
-                    value={location}
-                    onChange={e => setLocation(e.target.value)}
-                    onKeyDown={e => e.key === 'Enter' && handleSearch()}
-                    className="bg-transparent outline-none text-white w-full placeholder:text-slate-600 text-sm py-3.5 font-medium"
-                  />
-                  {location && <button onClick={() => setLocation('')} className="text-slate-600 hover:text-slate-400"><X className="w-3.5 h-3.5" /></button>}
-                </div>
-                <div className="px-1.5 flex items-center py-1.5">
-                  <button onClick={handleSearch}
-                    className="flex items-center gap-2 bg-gradient-to-r from-blue-500 to-cyan-400 hover:from-blue-500 hover:to-cyan-300 text-white font-black px-6 py-3.5 rounded-xl transition-all text-sm uppercase tracking-wider shadow-lg shadow-emerald-900/40 whitespace-nowrap w-full sm:w-auto justify-center"
-                  >
-                    Find Jobs <ArrowRight className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </motion.div>
+          <SmartSearchBox
+            query={query}
+            location={location}
+            onQueryChange={setQuery}
+            onLocationChange={setLocation}
+            onSearch={handleSearch}
+            onQueryClear={() => {
+              setSearchedQuery('');
+              handleSearch('', location);
+            }}
+            onLocationClear={() => {
+              setSearchedLocation('');
+              handleSearch(query, '');
+            }}
+          />
 
           {/* Popular skills */}
           <motion.div
@@ -708,7 +765,12 @@ function HirexSearchInner() {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.5 + i * 0.04 }}
-                onClick={() => { setQuery(skill); setTimeout(() => handleSearch(), 50); }}
+                onClick={() => {
+                  setQuery(skill);
+                  setSearchedQuery(skill);
+                  setSearchedLocation(location);
+                  handleSearch(skill, location);
+                }}
                 className="px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/[0.08] hover:border-blue-500/30 hover:bg-blue-500/10 text-slate-400 hover:text-blue-300 text-[11px] font-semibold transition-all"
               >
                 {skill}
@@ -781,13 +843,23 @@ function HirexSearchInner() {
                   {!initialLoad && (
                     <p className="text-xs text-slate-500">
                       <span className="text-white font-bold">{jobs.length}{hasMore ? '+' : ''}</span>
-                      {query || location ? <> results{query ? ` for "${query}"` : ''}{location ? ` in ${location}` : ''}</> : <> open positions</>}
+                      {searchedQuery || searchedLocation
+                        ? <> results{searchedQuery ? ` for "${searchedQuery}"` : ''}{searchedLocation ? ` in ${searchedLocation}` : ''}</>
+                        : <> open positions</>}
                     </p>
                   )}
                   {activeFilters.isRemote === 'true' && (
                     <span className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-bold">
                       Remote <button onClick={() => setActiveFilters(f => ({ ...f, isRemote: '' }))} className="hover:text-red-400 transition-colors"><X className="w-2.5 h-2.5" /></button>
                     </span>
+                  )}
+                  {(searchedQuery || searchedLocation || activeFilterCount > 0) && (
+                    <button
+                      onClick={handleClearAll}
+                      className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 text-[10px] font-bold transition-all"
+                    >
+                      <X className="w-2.5 h-2.5" />Clear All
+                    </button>
                   )}
                 </div>
                 <div className="flex items-center gap-2">

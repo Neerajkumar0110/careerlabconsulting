@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 
 type ContentMap = Record<string, Record<string, string | null>>;
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://clc-products-real-backend.vercel.app';
 
 export function usePageContent(pageKey: string) {
   const [content, setContent] = useState<ContentMap>({});
