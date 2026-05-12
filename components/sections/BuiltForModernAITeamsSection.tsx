@@ -308,7 +308,7 @@ export default function WhoThisIsBuiltForSection2() {
   return (
     <section
       className="relative overflow-hidden bg-[#030810]"
-      style={{ padding: '8rem 0 9rem' }}
+      style={{ padding: '4rem 0 5rem' }}
     >
       {/* Inject CSS once */}
       <style>{CSS}</style>
