@@ -33,7 +33,7 @@ export default function B2BHome() {
       <CompanyJourney />
       <TrustSection />
       <ExecutionFlow /> 
-      <B2BProductTabs />
+      {/* <B2BProductTabs /> */}
       <SuccessStories />
       <FoundersVision />
       <MethodologySection />
