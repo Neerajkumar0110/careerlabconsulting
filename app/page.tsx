@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Navbar from "@/components/layout/Navbar";
 import HeroB2B from "@/components/sections/HeroB2B";
 import { Analytics } from "@vercel/analytics/next"; 
+import BuiltForModernAITeamsSection from '@/components/sections/BuiltForModernAITeamsSection';
 
 const B2BPricingSection = dynamic(() => import("@/components/sections/B2BPricingSection"));
 const FeatureGrid = dynamic(() => import("@/components/sections/FeatureGrid"));
@@ -26,7 +27,8 @@ export default function B2BHome() {
     <main className="min-h-screen bg-[#020617] selection:bg-blue-500/30">
       <Navbar />
       <HeroB2B />
-      <B2BPricingSection />
+      {/* <B2BPricingSection /> */}
+      <BuiltForModernAITeamsSection/>
       <FeatureGrid />
       <CompanyJourney />
       <TrustSection />

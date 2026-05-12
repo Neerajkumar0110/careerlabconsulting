@@ -1673,7 +1673,7 @@ export default function FreelancerDashboardPage() {
 
   const incomplete = isProfileIncomplete(user.freelancerProfile);
 
-  console.log('PROFILE CHECK:', user.freelancerProfile, incomplete);
+  // console.log('PROFILE CHECK:', user.freelancerProfile, incomplete);
 
   if (incomplete) {
     setEditOpen(true);

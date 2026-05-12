@@ -16,11 +16,11 @@ export function usePageContent(pageKey: string) {
         if (!res.ok) throw new Error();
         const data = await res.json();
         setContent(data.content ?? {});
-        console.log(data.content);
+        // console.log(data.content);
         
       } catch {
         // silently fall back to hardcoded defaults — page still renders
-        console.log("Loading Page Failed...");
+        // console.log("Loading Page Failed...");
         
       } finally {
         setLoading(false);
