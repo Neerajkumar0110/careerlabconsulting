@@ -3,13 +3,14 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import Script from 'next/script'; 
+import Script from 'next/script'; // Optimized script loading
 import { 
   Github, Twitter, Linkedin, Mail, ArrowUpRight, 
   Home, Box, Briefcase, Phone, X, Globe, MapPin, 
   Navigation, Facebook, Instagram, Youtube 
 } from 'lucide-react';
 
+// Static data moved outside component to optimize re-renders
 const footerLinks = {
   "Solutions": [
     { name: 'AI Agents', href: '/ai-agents' },
@@ -40,22 +41,25 @@ const socialLinks = [
 ];
 
 const locations = [
-  { country: "India (HQ)", city: "Gurugram", address: "5th Floor, Cyber Green Part-1, DLF Building No-2, Sector 25, Gurugram, 122002", phone: "+918700236923" },
-  { country: "India (Branch)", city: "Bengaluru", address: "21, Raheja Towers, Mahatma Gandhi Rd, Ashok Nagar, Bengaluru, 560001", phone: "+918700236923" },
-  { country: "USA", city: "San Francisco", address: "128 Geary St, San Francisco California 94108, United States", phone: "+12128146245" },
-  { country: "UK", city: "London", address: "2nd Floor, 23 Great Portland Street, London", phone: "+447888873245" },
-  { country: "UAE", city: "Dubai", address: "Office-403, Al Mankhool, Dubai, United Arab Emirates", phone: "+971524009232" },
-  { country: "Singapore", city: "Singapore", address: "TripleOne Somerset, 111 Somerset Road, #04-01, 238164", phone: "+6568151432" },
-  { country: "South Africa", city: "Cape Town", address: "3, Deneb House, 371 Browning Road, Cape Town, 7872", phone: "+278755063412" },
-  { country: "Germany", city: "Berlin", address: "Grünberger Str. 54, 10245 Berlin, Germany", phone: "+493051588345" }
+  { country: "India (HQ)", city: "Gurugram", address: "5th Floor, Cyber Green Part-1, DLF Building No-2, Sector 25, Gurugram, 122002", phone: "+918700236923", lat: 28.4955, lng: 77.0829 },
+  { country: "India (Branch)", city: "Bengaluru", address: "21, Raheja Towers, Mahatma Gandhi Rd, Ashok Nagar, Bengaluru, 560001", phone: "+918700236923", lat: 12.9716, lng: 77.5946 },
+  { country: "USA", city: "San Francisco", address: "128 Geary St, San Francisco California 94108, United States", phone: "+12128146245", lat: 37.7875, lng: -122.4052 },
+  { country: "UK", city: "London", address: "2nd Floor, 23 Great Portland Street, London", phone: "+447888873245", lat: 51.5194, lng: -0.1438 },
+  { country: "UAE", city: "Dubai", address: "Office-403, Al Mankhool, Dubai, United Arab Emirates", phone: "+971524009232", lat: 25.2532, lng: 55.2865 },
+  { country: "Singapore", city: "Singapore", address: "TripleOne Somerset, 111 Somerset Road, #04-01, 238164", phone: "+6568151432", lat: 1.3003, lng: 103.8387 },
+  { country: "South Africa", city: "Cape Town", address: "3, Deneb House, 371 Browning Road, Cape Town, 7872", phone: "+278755063412", lat: -33.9886, lng: 18.6273 },
+  { country: "Germany", city: "Berlin", address: "Grünberger Str. 54, 10245 Berlin, Germany", phone: "+493051588345", lat: 52.5117, lng: 13.4530 }
 ];
+
 
 const productList = ["AI Voice", "AI CRM", "AI HRMS", "AI ERP", "AI LMS", "AI TwinX", "AI School Management", "AI University Management", "AI Legal", "AI Admin"];
 
 export default function B2BFooter() {
   const [isProductOpen, setIsProductOpen] = useState(false);
   const [currentYear, setCurrentYear] = useState(2025); 
-  const whatsappNumber = "919810984968";
+  // const whatsappNumber = "919810984968";
+  const whatsappNumber = "918700236923";
+  
 
   useEffect(() => {
     setCurrentYear(new Date().getFullYear());
@@ -66,16 +70,21 @@ export default function B2BFooter() {
       <footer className="bg-[#020617] pt-20 pb-24 md:pb-12 border-t border-white/5 relative overflow-hidden" aria-labelledby="footer-heading">
         <h2 id="footer-heading" className="sr-only">Career Lab Consulting - Enterprise AI Solutions</h2>
         
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[1000px] h-[400px] bg-blue-600/5 blur-[120px] -z-10 pointer-events-none" />
+        {/* Ambient Background Effect */}
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[1000px] h-[400px] bg-blue-600/5 blur-[120px] -z-10" />
 
         <div className="max-w-[1400px] mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-20">
             
+            {/* Brand Column */}
             <div className="lg:col-span-3 flex flex-col items-start">
-              <Link href="/" aria-label="Career Lab Consulting" className='pb-5'>
-                <img src="/logo.png" alt="Career Lab Consulting"
-                  className="object-contain h-10 w-auto"
-                  loading="eager"
+              <Link href="/" aria-label="Career Lab Home">
+                <Image 
+                  src="/logo.png" 
+                  alt="Career Lab Consulting Logo" 
+                  width={192} 
+                  height={64}
+                  className="w-48 h-auto mb-6 filter drop-shadow-[0_0_15px_rgba(59,130,246,0.3)]" 
                 />
               </Link>
               <p className="text-slate-400 text-sm leading-relaxed font-medium mb-10">
@@ -146,48 +155,151 @@ export default function B2BFooter() {
           </div>
 
           {/* Locations Section */}
+          
           <section className="mb-20" aria-label="Global Locations">
-            <div className="flex items-center justify-between mb-10 border-b border-white/10 pb-6">
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-full bg-blue-600/10 flex items-center justify-center">
-                  <Globe className="w-5 h-5 text-blue-500" aria-hidden="true" />
-                </div>
-                <div>
-                  <h3 className="text-white font-black text-sm tracking-widest uppercase">Global Presence</h3>
-                  <p className="text-slate-500 text-[10px] font-bold uppercase tracking-wider mt-1">Operating across 8 primary tech hubs</p>
+  <div className="flex items-center justify-between mb-12 border-b border-white/10 pb-6">
+    <div className="flex items-center gap-4">
+      <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center border border-blue-500/30 shadow-lg shadow-blue-500/10">
+        <Globe className="w-6 h-6 text-blue-400" aria-hidden="true" />
+      </div>
+      <div>
+        <h3 className="text-white font-black text-base tracking-widest uppercase bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">Global Presence</h3>
+        <p className="text-slate-400 text-[11px] font-semibold uppercase tracking-wider mt-1.5">Operating across 8 primary tech hubs worldwide</p>
+      </div>
+    </div>
+  </div>
+  
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    {locations.map((loc, idx) => (
+      <div 
+        key={idx} 
+        className="group relative bg-gradient-to-br from-slate-900/50 to-slate-800/30 hover:from-slate-800/70 hover:to-slate-900/50 border border-slate-700/50 hover:border-blue-500/60 rounded-3xl p-6 transition-all duration-700 flex flex-col h-full hover:-translate-y-3 hover:shadow-2xl hover:shadow-blue-500/20 backdrop-blur-sm overflow-hidden"
+      >
+        {/* Ambient Glow Effect */}
+        <div className="absolute -top-20 -right-20 w-40 h-40 bg-blue-500/10 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+        <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-cyan-500/10 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+        
+        {/* Map Preview - Only Top Half */}
+        <div className="absolute top-0 left-0 right-0 h-[56%] bg-gradient-to-br from-slate-950/98 via-slate-900/98 to-slate-950/98 backdrop-blur-xl rounded-t-3xl opacity-0 group-hover:opacity-100 transition-all duration-700 z-10 overflow-hidden border-b-2 border-blue-500/40 shadow-xl shadow-blue-500/20">
+          <div className="relative w-full h-full p-2">
+            {/* Map Container with Enhanced Styling */}
+            <div className="relative w-full h-full rounded-2xl overflow-hidden ring-2 ring-blue-500/20 shadow-2xl">
+              <img
+                src={`https://tile.openstreetmap.org/14/${Math.floor((loc.lng + 180) / 360 * Math.pow(2, 14))}/${Math.floor((1 - Math.log(Math.tan(loc.lat * Math.PI / 180) + 1 / Math.cos(loc.lat * Math.PI / 180)) / Math.PI) / 2 * Math.pow(2, 14))}.png`}
+                alt={`Map of ${loc.city}`}
+                className="w-full h-full object-cover scale-110 group-hover:scale-100 transition-transform duration-1000 will-change-transform"
+                loading="lazy"
+                style={{ filter: 'grayscale(0.4) brightness(0.6) contrast(1.3) saturate(0.8)' }}
+              />
+              
+              {/* Animated Grid Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-cyan-500/5" />
+              
+              {/* Enhanced Marker with Ripple Effect */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="relative w-10 h-10 flex items-center justify-center">
+                  
+                  {/* Outer Pulse */}
+                  <div className="absolute left-1/2 top-1/2 w-20 h-20 -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-500/20 animate-ping"
+                    style={{ animationDuration: '2s' }}
+                  />
+
+                  {/* Inner Pulse */}
+                  <div className="absolute left-1/2 top-1/2 w-16 h-16 -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-500/30 animate-ping"
+                    style={{ animationDuration: '2.5s', animationDelay: '0.3s' }}
+                  />
+
+                  {/* Marker */}
+                  <div className="relative z-10 w-10 h-10 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-full border-4 border-white shadow-2xl flex items-center justify-center ring-4 ring-blue-500/30">
+                    <div className="w-4 h-4 bg-white rounded-full shadow-inner" />
+                  </div>
+
                 </div>
               </div>
             </div>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {locations.map((loc, idx) => (
-                <div key={idx} className="group relative bg-white/[0.02] hover:bg-white/[0.05] border border-white/5 hover:border-blue-500/40 rounded-3xl p-7 transition-all duration-500 flex flex-col h-full hover:-translate-y-2">
-                  <div className="flex items-center justify-between mb-6">
-                    <div className="space-y-2">
-                      <span className="inline-block px-2.5 py-1 rounded-lg bg-blue-600/20 text-blue-400 font-black text-[9px] uppercase tracking-[0.2em] border border-blue-500/30">{loc.country}</span>
-                      <h4 className="text-white font-bold text-lg">{loc.city}</h4>
-                    </div>
-                    <MapPin className="w-5 h-5 text-slate-500 group-hover:text-blue-400 transition-colors" aria-hidden="true" />
-                  </div>
-                  <p className="text-slate-400 text-sm leading-relaxed mb-8 flex-grow font-medium">{loc.address}</p>
-                  <div className="space-y-4">
-                    <a href={`tel:${loc.phone}`} className="flex items-center gap-3 text-slate-300 text-sm font-bold hover:text-blue-400 transition-colors">
-                      <Phone className="w-4 h-4 text-blue-500" aria-hidden="true" />
-                      <span>{loc.phone}</span>
-                    </a>
-                    <a 
-                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(loc.address)}`} 
-                      target="_blank" 
-                      rel="noopener noreferrer" 
-                      className="flex items-center justify-center gap-2 w-full py-4 bg-white/5 group-hover:bg-blue-600 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all border border-white/5 group-hover:border-transparent"
-                    >
-                      <Navigation className="w-3.5 h-3.5" aria-hidden="true" /> Get Directions
-                    </a>
-                  </div>
+            {/* Sophisticated Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-slate-900/40 to-slate-950/90 rounded-2xl" />
+            
+            {/* Compact Location Label at Bottom */}
+            <div className="absolute bottom-3 left-5 right-5 flex justify-center">
+              <div className="flex items-center gap-2 bg-slate-900/90 backdrop-blur-xl rounded-full px-3 py-1.5 border border-slate-700/50 shadow-lg w-fit max-w-full">
+                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-md shadow-blue-500/40">
+                  <MapPin className="w-3 h-3 text-white" />
                 </div>
-              ))}
+
+                <div className="flex items-center gap-1 min-w-0">
+                  <h4 className="font-bold text-sm text-white truncate">
+                    {loc.city}
+                  </h4>
+
+                  <span className="text-[10px] text-blue-400 font-semibold uppercase tracking-wide whitespace-nowrap">
+                    {loc.country}
+                  </span>
+                </div>
+              </div>
             </div>
-          </section>
+          </div>
+        </div>
+
+        {/* Original Card Content - Enhanced */}
+        <div className="relative z-[5] flex items-start justify-between mb-3">
+          <div className="space-y-3 flex-1">
+            {/* Country Badge with Gradient */}
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-gradient-to-r from-blue-600/30 to-cyan-600/30 text-blue-300 font-black text-[10px] uppercase tracking-[0.15em] border border-blue-500/40 shadow-lg shadow-blue-500/10 backdrop-blur-sm">
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
+              {loc.country}
+            </span>
+            {/* City Name with Gradient Text */}
+            <h4 className="text-white font-black text-xl tracking-tight bg-gradient-to-br from-white via-blue-100 to-cyan-200 bg-clip-text text-transparent">
+              {loc.city}
+            </h4>
+          </div>
+          {/* Animated Map Icon */}
+          <div className="flex-shrink-0 w-11 h-11 rounded-xl bg-slate-800/50 border border-slate-700/50 flex items-center justify-center group-hover:bg-blue-500/20 group-hover:border-blue-500/40 transition-all duration-500 group-hover:scale-110 group-hover:rotate-12">
+            <MapPin className="w-5 h-5 text-slate-500 group-hover:text-blue-400 transition-all duration-500 group-hover:scale-110" aria-hidden="true" />
+          </div>
+        </div>
+
+        {/* Address with Better Typography */}
+        <p className="relative z-[5] text-slate-400 text-[13px] leading-relaxed mb-auto font-medium tracking-wide">
+          {loc.address}
+        </p>
+
+        {/* Contact Section - Enhanced - Always Visible */}
+        <div className="relative z-20 space-y-3 mt-6 pt-6 border-t border-slate-700/30">
+          {/* Phone Link with Hover Effect */}
+          <a 
+            href={`tel:${loc.phone}`} 
+            className="flex items-center gap-3 mb-2 text-slate-300 text-sm font-bold hover:text-blue-400 transition-all duration-300 group/phone p-2 -m-2 rounded-xl hover:bg-slate-800/50"
+          >
+            <div className="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/30 flex items-center justify-center group-hover/phone:bg-blue-500/20 group-hover/phone:border-blue-500/50 transition-all duration-300">
+              <Phone className="w-4 h-4 text-blue-400 group-hover/phone:scale-110 transition-transform duration-300" aria-hidden="true" />
+            </div>
+            <span className="group-hover/phone:tracking-wide transition-all duration-300">{loc.phone}</span>
+          </a>
+          
+          {/* Directions Button - Premium Style */}
+          <a 
+            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(loc.address)}`} 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="relative flex items-center justify-center gap-2.5 w-full py-4 bg-gradient-to-r from-slate-800/60 to-slate-700/60 group-hover:from-blue-600 group-hover:to-blue-500 text-white rounded-2xl text-[11px] font-black uppercase tracking-[0.15em] transition-all duration-500 border border-slate-700/50 group-hover:border-transparent shadow-lg group-hover:shadow-2xl group-hover:shadow-blue-500/30 overflow-hidden"
+          >
+            {/* Shine Effect */}
+            <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+            
+            <Navigation className="w-4 h-4 group-hover:rotate-45 transition-transform duration-500" aria-hidden="true" /> 
+            <span className="relative">
+              <span className="group-hover:hidden">Get Directions</span>
+              <span className="hidden group-hover:inline">Open in Maps</span>
+            </span>
+          </a>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
 
           {/* Copyright & Legal */}
           <div className="pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8">

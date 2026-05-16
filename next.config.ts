@@ -35,7 +35,8 @@ const nextConfig: NextConfig = {
       { protocol: 'https', hostname: 'lh3.googleusercontent.com', pathname: '/d/**' },
       { protocol: 'https', hostname: 'drive.google.com', pathname: '/**' },
       { protocol: 'http', hostname: 'googleusercontent.com', pathname: '/**' },
-      { protocol: 'https', hostname: 'googleusercontent.com', pathname: '/**' }
+      { protocol: 'https', hostname: 'googleusercontent.com', pathname: '/**' },
+      { protocol: 'https', hostname: 'res.cloudinary.com'},
     ],
   },
 
