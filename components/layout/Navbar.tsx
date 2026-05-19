@@ -320,11 +320,15 @@ export default function Navbar() {
   };
 
   const MegaMenuContent = ({ items, menuType }: { items: any[], menuType: string }) => (
-    <div 
-      className="fixed inset-x-0 top-20 flex justify-center px-6 pt-2 z-[999] h-fit" 
-      onMouseLeave={() => setActiveMenu(null)}
+    
+    <div
+      className="fixed inset-x-0 top-20 flex justify-center px-6 pt-2 z-[999] h-fit"
     >
-      <div className="absolute inset-0 -z-10 h-screen w-screen" onMouseEnter={() => setActiveMenu(null)} />
+      <div
+        className="fixed inset-x-0 top-20 bottom-0 -z-10"
+        onMouseEnter={() => setActiveMenu(null)}
+      />
+
       <div className="w-full max-w-[1200px] bg-[#0b0f1a] border border-white/10 rounded-2xl shadow-[0_40px_80px_-20px_rgba(0,0,0,0.8)] overflow-hidden flex min-h-[550px]">
         <div className="w-[300px] bg-[#0a0d16] p-4 border-r border-white/10 flex-shrink-0">
           <div className="space-y-1">
@@ -400,9 +404,13 @@ export default function Navbar() {
                 Products
               </Link>
               {['services', 'industries'].map((menu) => (
-                <div key={menu} className="h-full flex items-center" 
-                  onMouseEnter={() => handleMenuEnter(menu)} 
-                  onMouseLeave={() => setActiveMenu(null)}>
+              
+                <div
+                  key={menu}
+                  className="relative h-full flex items-center"
+                  onMouseEnter={() => handleMenuEnter(menu)}
+                  onMouseLeave={() => setActiveMenu(null)}
+                >
                   <button 
                     className={`flex items-center gap-2 text-[10px] font-bold uppercase tracking-[2px] transition-all hover:text-white ${activeMenu === menu ? 'text-blue-400' : 'text-slate'}`}
                     aria-expanded={activeMenu === menu}
@@ -410,11 +418,16 @@ export default function Navbar() {
                   >
                     {menu} <ChevronDown className={`w-3 h-3 transition-transform duration-300 ${activeMenu === menu ? 'rotate-180' : ''}`} />
                   </button>
+
                   {activeMenu === menu && (
-                    <MegaMenuContent 
-                      items={menu === 'services' ? servicesMenu : industriesMenu} 
-                      menuType={menu} 
-                    />
+                    <>
+                     
+                      <div className="fixed inset-x-0 top-20 h-2 z-[998]" />
+                      <MegaMenuContent 
+                        items={menu === 'services' ? servicesMenu : industriesMenu} 
+                        menuType={menu} 
+                      />
+                    </>
                   )}
                 </div>
               ))}
@@ -639,7 +652,7 @@ export default function Navbar() {
                   </div>
                 ) : (
                   <>
-                    {searchResults.products.length > 0 && (
+                    {searchResults.products && searchResults.products.length > 0 && (
                       <div className="bg-white/5 border border-white/10 rounded-xl p-4">
                         <h3 className="text-xs font-black uppercase tracking-widest text-blue-400 mb-3 flex items-center gap-2">
                           <Package className="w-4 h-4" />
