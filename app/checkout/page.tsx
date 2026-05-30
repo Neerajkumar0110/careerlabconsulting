@@ -94,6 +94,12 @@ function CheckoutContent() {
 
     try {
       if (paymentMethod === 'phonepe') {
+        localStorage.setItem('pending_enrollment', JSON.stringify({
+          ...userDetails,
+          amount: finalAmountPaise,
+          planName,
+          planCategory,
+        }));
         const res = await fetch('/api/phonepe/initiate', { 
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
